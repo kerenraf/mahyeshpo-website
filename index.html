@@ -12,7 +12,7 @@
         /* סגנון כפתור ניהול משרות */
         .admin-button {
             position: fixed;
-            left: 20px; /* בצד שמאל של המסך */
+            left: 20px;
             bottom: 20px;
             width: 40px;
             height: 40px;
@@ -35,7 +35,7 @@
         
         /* הגדלת הגמדה בדף הראשי */
         .hero-section .gnome-character {
-            width: 180px; /* הגדלת רוחב */
+            width: 180px;
             height: auto;
             bottom: 20px;
             right: 10%;
@@ -89,6 +89,70 @@
         .hero-section .gnome-character {
             animation: float 3s ease-in-out infinite;
         }
+
+        /* גמדה בכרטיס משרה - במקום כפתור */
+        .job-card-gnome {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .job-card-gnome:hover {
+            transform: scale(1.1);
+        }
+
+        .job-card-gnome img {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 2px 8px rgba(246, 152, 152, 0.4));
+        }
+
+        .job-card-gnome .gnome-tooltip {
+            position: absolute;
+            background: #2D2D2D;
+            color: #ffffff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            top: -50px;
+            width: 120px;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border: 2px solid #F69898;
+            z-index: 100;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .job-card-gnome .gnome-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #2D2D2D;
+        }
+
+        .job-card-gnome:hover .gnome-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* עדכון הכרטיס להכיל הגמדה */
+        .job-card {
+            position: relative;
+            padding-bottom: 80px; /* מקום לגמדה */
+        }
     </style>
 </head>
 <body>
@@ -101,7 +165,6 @@
     <header class="header">
         <div class="container">
             <div class="header-inner">
-                <!-- מסתיר את הלוגו המקורי ומחליף אותו בטקסט -->
                 <div class="text-logo-container" style="margin: 0; padding: 0;">
                     <h2 class="text-logo" style="font-size: 1.5rem;">מה יש פה?</h2>
                 </div>
@@ -113,7 +176,6 @@
                 <nav class="main-nav" id="mainNav">
                     <ul>
                         <li><a href="index.html" class="active">דף הבית</a></li>
-                        <!-- הסרת הלשונית "ניהול משרות" מהתפריט הראשי -->
                         <li><a href="#contact">צור קשר</a></li>
                         <li><a href="terms.html">תקנון אתר</a></li>
                     </ul>
@@ -131,13 +193,11 @@
         </div>
         
         <div class="hero-content">
-            <!-- כותרת טקסטואלית גדולה באמצע -->
             <div class="text-logo-container">
                 <h1 class="text-logo">מה יש פה?</h1>
                 <p class="text-slogan">לוח משרות חזק למקום עבודה מדוייק!</p>
             </div>
             
-            <!-- כותרת המשרה המושלמת בדיוק כמו בתמונה -->
             <div>
                 <h2 class="main-title">
                     מצא את <span class="highlight">המשרה</span><br>
@@ -436,7 +496,6 @@
     <!-- כותרת תחתונה -->
     <footer class="footer">
         <div class="container">
-            <!-- כותרת טקסטואלית במקום לוגו -->
             <div class="text-logo-container" style="margin: 0 0 20px 0; padding: 0;">
                 <h2 class="text-logo" style="font-size: 2rem;">מה יש פה?</h2>
                 <p class="text-slogan" style="font-size: 1rem; margin-bottom: 10px;">לוח משרות חזק למקום עבודה מדוייק!</p>
@@ -444,7 +503,6 @@
             
             <div class="footer-links">
                 <a href="index.html" class="footer-link">דף הבית</a>
-                <!-- הסרת הקישור לניהול משרות גם בפוטר -->
                 <a href="#search" class="footer-link">חיפוש משרות</a>
                 <a href="#contact" class="footer-link">צור קשר</a>
                 <a href="terms.html" class="footer-link">תקנון אתר</a>
@@ -467,91 +525,131 @@
     <script src="js/search.js"></script>
     <script src="js/forms.js"></script>
     
-    <!-- קוד JavaScript לטעינת והצגת משרות מה-localStorage -->
+    <!-- קוד JavaScript מעודכן לטעינת והצגת משרות -->
     <script>
         // משתנה גלובלי לשמירת רשימת המשרות
         let allJobs = [];
         
         // טעינת משרות בעת טעינת הדף
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 הדף נטען - טוען משרות...');
             loadJobsFromStorage();
         });
 
-        // פונקציה לטעינת משרות מה-localStorage
+        // פונקציה לטעינת משרות מה-localStorage עם בדיקות מפורטות
         function loadJobsFromStorage() {
+            console.log('🔍 בודק משרות ב-localStorage...');
+            
             const savedJobs = localStorage.getItem('jobs');
+            console.log('📦 נתונים גולמיים:', savedJobs ? 'קיימים' : 'לא קיימים');
+            
             if (savedJobs) {
-                allJobs = JSON.parse(savedJobs);
+                try {
+                    allJobs = JSON.parse(savedJobs);
+                    console.log('✅ סה"כ משרות נטענו:', allJobs.length);
+                    
+                    // סינון רק משרות פעילות
+                    const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
+                    console.log('🟢 משרות פעילות:', activeJobs.length);
+                    
+                    // הצגת המשרות בדף הבית
+                    displayJobsInHomepage(activeJobs);
+                    
+                } catch (error) {
+                    console.error('❌ שגיאה בפענוח המשרות:', error);
+                    allJobs = [];
+                    displayJobsInHomepage([]);
+                }
+            } else {
+                console.log('📭 אין משרות שמורות');
+                allJobs = [];
+                displayJobsInHomepage([]);
+            }
+        }
+
+        // פונקציה להצגת משרות בדף הבית - מעודכנת עם גמדה במקום כפתור
+        function displayJobsInHomepage(jobs) {
+            console.log('🎨 מציג', jobs.length, 'משרות');
+            
+            const jobsContainer = document.getElementById('jobsContainer');
+            
+            if (!jobsContainer) {
+                console.error('❌ לא נמצא jobsContainer');
+                return;
+            }
+            
+            jobsContainer.innerHTML = '';
+            
+            if (jobs.length === 0) {
+                jobsContainer.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #ccc;">
+                        <h3>אין משרות פעילות כרגע</h3>
+                        <p>ייבא משרות דרך <a href="job-management.html" style="color: #F69898;">עמוד הניהול</a></p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // מיפוי קטגוריות לצבעים
+            const categoryColorMap = {
+                'מזון ומסעדנות': 'category-food',
+                'חינוך והוראה': 'category-education',  
+                'פיתוח ותוכנה': 'category-tech',
+                'מחשבים ורשתות תקשורת': 'category-computers',
+                'מחשבים ורשתות': 'category-computers',
+                'עולם הרכבים והליסינג': 'category-automotive',
+                'רכבים וליסינג': 'category-automotive',
+                'שיווק ומכירות': 'category-marketing',
+                'בריאות ורפואה': 'category-health',
+                'משאבי אנוש': 'category-hr',
+                'ביטחון ושמירה': 'category-security',
+                'תיירות ונופש': 'category-tourism',
+                'בנייה והנדסה': 'category-construction',
+                'הנהלה וניהול': 'category-admin',
+                'לוגיסטיקה ותחבורה': 'category-logistics',
+                'אחר': 'category-other'
+            };
+            
+            // הצג עד 9 משרות בדף הבית
+            const jobsToShow = jobs.slice(0, 9);
+            
+            jobsToShow.forEach((job, index) => {
+                const jobCard = document.createElement('div');
+                jobCard.className = 'job-card fade-up';
+                jobCard.style.animationDelay = `${index * 0.1}s`;
+                jobCard.setAttribute('data-job-index', index);
                 
-                // סינון רק משרות פעילות
-                const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
+                // הכנת מיקום להצגה
+                const location = job.city ? `${job.city}, ${job.region || 'מרכז'}` : job.region || 'מרכז';
                 
-                // הצגת המשרות בדף הבית
-function displayJobsInHomepage(jobs) {
-    const jobsContainer = document.getElementById('jobsContainer');
-    jobsContainer.innerHTML = '';
-    
-    if (jobs.length === 0) {
-        jobsContainer.innerHTML = '<p style="text-align: center; width: 100%; padding: 20px;">לא נמצאו משרות תואמות</p>';
-        return;
-    }
-    
-    // מיפוי קטגוריות לצבעים
-    const categoryColorMap = {
-        'מזון ומסעדנות': 'category-food',
-        'חינוך והוראה': 'category-education',  
-        'פיתוח ותוכנה': 'category-tech',
-        'מחשבים ורשתות תקשורת': 'category-computers',
-        'מחשבים ורשתות': 'category-computers',
-        'עולם הרכבים והליסינג': 'category-automotive',
-        'רכבים וליסינג': 'category-automotive',
-        'שיווק ומכירות': 'category-marketing',
-        'בריאות ורפואה': 'category-health',
-        'משאבי אנוש': 'category-hr',
-        'ביטחון ושמירה': 'category-security',
-        'תיירות ונופש': 'category-tourism',
-        'בנייה והנדסה': 'category-construction',
-        'הנהלה וניהול': 'category-admin',
-        'לוגיסטיקה ותחבורה': 'category-logistics',
-        'אחר': 'category-other'
-    };
-    
-    // הצג עד 9 משרות בדף הבית
-    const jobsToShow = jobs.slice(0, 9);
-    
-    jobsToShow.forEach((job, index) => {
-        const jobCard = document.createElement('div');
-        jobCard.className = 'job-card fade-up';
-        jobCard.style.animationDelay = `${index * 0.1}s`;
-        jobCard.setAttribute('data-job-index', index);
-        jobCard.onclick = function() { openJobModal(index, jobs); };
+                // הכנת תיאור קצר (עד 100 תווים)
+                const shortDescription = job.description ? 
+                    job.description.substring(0, 100) + (job.description.length > 100 ? '...' : '') : 
+                    'אין תיאור זמין';
+                
+                // קביעת הצבע לפי הקטגוריה
+                const categoryClass = categoryColorMap[job.category] || 'category-other';
+                
+                jobCard.innerHTML = `
+                    <div class="job-number">${job.jobNumber || (index + 1)}</div>
+                    <h3 class="job-title">${job.title}</h3>
+                    <div class="job-company">${job.company}</div>
+                    <div class="job-location">${location}</div>
+                    <div class="job-description">${shortDescription}</div>
+                    <div class="job-badge ${categoryClass}">${job.category || 'אחר'}</div>
+                    
+                    <div class="job-card-gnome" onclick="event.stopPropagation(); openJobModal(${index}, jobs);">
+                        <img src="images/gnome.png" alt="גמדה פרטים">
+                        <div class="gnome-tooltip">לחץ לפרטים נוספים!</div>
+                    </div>
+                `;
+                
+                jobsContainer.appendChild(jobCard);
+            });
+            
+            console.log('✅ הצגת משרות הושלמה!');
+        }
         
-        // הכנת מיקום להצגה
-        const location = job.city ? `${job.city}, ${job.region || 'מרכז'}` : job.region || 'מרכז';
-        
-        // הכנת תיאור קצר (עד 100 תווים)
-        const shortDescription = job.description ? job.description.substring(0, 100) + (job.description.length > 100 ? '...' : '') : '';
-        
-        // קביעת הצבע לפי הקטגוריה - רק לתווית
-        const categoryClass = categoryColorMap[job.category] || 'category-other';
-        
-        jobCard.innerHTML = `
-            <div>
-                <div class="job-number">${job.jobNumber || (index + 1)}</div>
-                <h3 class="job-title">${job.title}</h3>
-                <div class="job-company">${job.company}</div>
-                <div class="job-location">${location}</div>
-                <div class="job-description">${shortDescription}</div>
-                <div class="job-badge ${categoryClass}">${job.category || 'אחר'}</div>
-            </div>
-            <button class="job-details-btn" onclick="event.stopPropagation(); openJobModal(${index}, jobs);">
-                <i class="fas fa-info-circle"></i> פרטים נוספים
-            </button>
-        `;
-        
-        jobsContainer.appendChild(jobCard);
-    });
-}        
         // פונקציה לפתיחת מודל פרטי משרה
         function openJobModal(index, jobs) {
             const job = jobs[index];
@@ -585,8 +683,6 @@ function displayJobsInHomepage(jobs) {
         // פונקציה להגשת מועמדות למשרה
         function submitApplication(event) {
             event.preventDefault();
-            
-            // כאן אפשר להוסיף בדיקות תקינות וכו'
             
             // הצגת הודעת הצלחה
             document.getElementById('application-form').style.display = 'none';
@@ -672,8 +768,6 @@ function displayJobsInHomepage(jobs) {
         function submitContactForm(event) {
             event.preventDefault();
             
-            // כאן אפשר להוסיף שליחת טופס יצירת קשר לשרת
-            
             // איפוס הטופס והצגת הודעת הצלחה
             document.getElementById('contact-form').reset();
             document.getElementById('contact-success').style.display = 'block';
@@ -685,6 +779,20 @@ function displayJobsInHomepage(jobs) {
             
             return false;
         }
+
+        // מאזין לשינויים ב-localStorage (רענון אוטומטי כשמייבאים משרות חדשות)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'jobs') {
+                console.log('🔄 זוהה שינוי במשרות - רוענן התצוגה');
+                loadJobsFromStorage();
+            }
+        });
+
+        // רענון כשחוזרים לדף
+        window.addEventListener('focus', function() {
+            console.log('👁️ הדף זוכה בפוקוס - בודק עדכונים');
+            loadJobsFromStorage();
+        });
     </script>
 </body>
 </html>
