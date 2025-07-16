@@ -26,7 +26,7 @@
                 <nav class="main-nav" id="mainNav">
                     <ul>
                         <li><a href="index.html" class="active">דף הבית</a></li>
-                        <li><a href="job-management.html">ניהול משרות</a></li>
+                        <!-- הסרת הלשונית "ניהול משרות" מהתפריט הראשי -->
                         <li><a href="#contact">צור קשר</a></li>
                         <li><a href="terms.html">תקנון אתר</a></li>
                     </ul>
@@ -115,7 +115,7 @@
             
             <div class="search-buttons">
                 <div class="search-button-container">
-                    <button class="btn" id="searchButton">
+                    <button class="btn" id="searchButton" onclick="filterJobs()">
                         חיפוש
                     </button>
                     <div class="gnome-character gnome-search">
@@ -123,7 +123,7 @@
                         <div class="gnome-tooltip">לחצו כאן לחיפוש!</div>
                     </div>
                 </div>
-                <button class="btn btn-secondary" id="clearButton">נקה</button>
+                <button class="btn btn-secondary" id="clearButton" onclick="clearFilters()">נקה</button>
             </div>
         </div>
     </section>
@@ -357,7 +357,7 @@
             
             <div class="footer-links">
                 <a href="index.html" class="footer-link">דף הבית</a>
-                <a href="job-management.html" class="footer-link">ניהול משרות</a>
+                <!-- הסרת הקישור לניהול משרות גם בפוטר -->
                 <a href="#search" class="footer-link">חיפוש משרות</a>
                 <a href="#contact" class="footer-link">צור קשר</a>
                 <a href="terms.html" class="footer-link">תקנון אתר</a>
@@ -379,5 +379,180 @@
     <script src="js/main.js"></script>
     <script src="js/search.js"></script>
     <script src="js/forms.js"></script>
+    
+    <!-- קוד JavaScript לטעינת והצגת משרות מה-localStorage -->
+    <script>
+        // משתנה גלובלי לשמירת רשימת המשרות
+        let allJobs = [];
+        
+        // טעינת משרות בעת טעינת הדף
+        document.addEventListener('DOMContentLoaded', function() {
+            loadJobsFromStorage();
+        });
+
+        // פונקציה לטעינת משרות מה-localStorage
+        function loadJobsFromStorage() {
+            const savedJobs = localStorage.getItem('jobs');
+            if (savedJobs) {
+                allJobs = JSON.parse(savedJobs);
+                
+                // סינון רק משרות פעילות
+                const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
+                
+                // הצגת המשרות בדף הבית
+                displayJobsInHomepage(activeJobs);
+            }
+        }
+        
+        // פונקציה להצגת משרות בדף הבית
+        function displayJobsInHomepage(jobs) {
+            const jobsContainer = document.getElementById('jobsContainer');
+            jobsContainer.innerHTML = '';
+            
+            if (jobs.length === 0) {
+                jobsContainer.innerHTML = '<p style="text-align: center; width: 100%; padding: 20px;">לא נמצאו משרות תואמות</p>';
+                return;
+            }
+            
+            // הצג עד 9 משרות בדף הבית
+            const jobsToShow = jobs.slice(0, 9);
+            
+            jobsToShow.forEach((job, index) => {
+                const jobCard = document.createElement('div');
+                jobCard.className = 'job-card fade-up';
+                jobCard.style.animationDelay = `${index * 0.1}s`;
+                jobCard.setAttribute('data-job-index', index);
+                jobCard.onclick = function() { openJobModal(index, jobs); };
+                
+                // הכנת מיקום להצגה
+                const location = job.city ? `${job.city}, ${job.region || 'מרכז'}` : job.region || 'מרכז';
+                
+                // הכנת תיאור קצר (עד 100 תווים)
+                const shortDescription = job.description ? job.description.substring(0, 100) + (job.description.length > 100 ? '...' : '') : '';
+                
+                jobCard.innerHTML = `
+                    <div class="job-number">${index + 1}</div>
+                    <h3 class="job-title">${job.title}</h3>
+                    <div class="job-company">${job.company}</div>
+                    <div class="job-location">${location}</div>
+                    <div class="job-description">${shortDescription}</div>
+                    <div class="job-badge">${job.type || 'משרה מלאה'}</div>
+                `;
+                
+                jobsContainer.appendChild(jobCard);
+            });
+        }
+        
+        // פונקציה לפתיחת מודל פרטי משרה
+        function openJobModal(index, jobs) {
+            const job = jobs[index];
+            
+            document.getElementById('modal-job-title').textContent = job.title;
+            document.getElementById('modal-job-company').textContent = job.company;
+            document.getElementById('modal-job-location').textContent = job.city ? `${job.city}, ${job.region || 'מרכז'}` : job.region || 'מרכז';
+            document.getElementById('modal-job-type').textContent = job.type || 'משרה מלאה';
+            document.getElementById('modal-job-category').textContent = job.category || 'אחר';
+            document.getElementById('modal-job-description').textContent = job.description || 'אין תיאור';
+            document.getElementById('modal-job-requirements').textContent = job.requirements || 'אין דרישות מיוחדות';
+            
+            // שמירת מזהה המשרה בטופס
+            document.getElementById('job-id-input').value = index;
+            document.getElementById('job-title-input').value = job.title;
+            
+            // הצגת המודל
+            document.getElementById('job-modal').style.display = 'block';
+        }
+        
+        // פונקציה לסגירת מודל פרטי משרה
+        function closeJobModal() {
+            document.getElementById('job-modal').style.display = 'none';
+        }
+        
+        // פונקציה להגשת מועמדות למשרה
+        function submitApplication(event) {
+            event.preventDefault();
+            
+            // כאן אפשר להוסיף בדיקות תקינות וכו'
+            
+            // הצגת הודעת הצלחה
+            document.getElementById('application-form').style.display = 'none';
+            document.getElementById('success-message').style.display = 'block';
+            
+            return false;
+        }
+        
+        // פונקציה לטיפול בבחירת קובץ
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('file-name').textContent = file.name;
+            }
+        }
+        
+        // פונקציה לבחירת קטגוריה
+        function selectCategory(category) {
+            document.getElementById('categoryFilter').value = category;
+            document.getElementById('searchInput').focus();
+            
+            // גלילה לאזור החיפוש
+            document.getElementById('search').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // פונקציה לסינון משרות
+        function filterJobs() {
+            const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const region = document.getElementById('regionFilter').value;
+            
+            let filteredJobs = allJobs.filter(job => {
+                // סינון לפי סטטוס (רק משרות פעילות)
+                if (job.status === 'לא פעיל') return false;
+                
+                // סינון לפי טקסט חופשי
+                if (searchText && !jobMatchesSearch(job, searchText)) return false;
+                
+                // סינון לפי קטגוריה
+                if (category && job.category !== category) return false;
+                
+                // סינון לפי אזור
+                if (region && job.region !== region) return false;
+                
+                return true;
+            });
+            
+            // הצגת המשרות המסוננות
+            displayJobsInHomepage(filteredJobs);
+        }
+        
+        // פונקציה לבדיקה אם משרה מתאימה לחיפוש
+        function jobMatchesSearch(job, searchText) {
+            return (
+                (job.title && job.title.toLowerCase().includes(searchText)) ||
+                (job.company && job.company.toLowerCase().includes(searchText)) ||
+                (job.description && job.description.toLowerCase().includes(searchText)) ||
+                (job.requirements && job.requirements.toLowerCase().includes(searchText)) ||
+                (job.city && job.city.toLowerCase().includes(searchText))
+            );
+        }
+        
+        // פונקציה לניקוי מסננים
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('regionFilter').value = '';
+            
+            // הצגת כל המשרות הפעילות
+            const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
+            displayJobsInHomepage(activeJobs);
+        }
+        
+        // פונקציה לגלילה לראש הדף
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
 </body>
 </html>
