@@ -108,3 +108,422 @@
 .bounce {
     animation: bounce 2s infinite;
 }
+/* === אנימציות משופרות למובייל === */
+
+/* אנימציות בסיסיות */
+@keyframes float {
+    0% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-10px) rotate(3deg);
+    }
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: scale(0.9);
+    }
+    50% {
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(0.95);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+    20%, 40%, 60%, 80% { transform: translateX(3px); }
+}
+
+@keyframes shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+@keyframes pulsate {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    20% {
+        transform: scale(25, 25);
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(40, 40);
+    }
+}
+
+/* אנימציות נוספות מותאמות למובייל */
+@keyframes floatMobile {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+    }
+    33% {
+        transform: translateY(-8px) translateX(3px) rotate(2deg) scale(1.02);
+    }
+    66% {
+        transform: translateY(-4px) translateX(-3px) rotate(-1deg) scale(1.01);
+    }
+    100% {
+        transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes colorPulse {
+    0% {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0 rgba(246, 152, 152, 0.4);
+    }
+    50% {
+        border-color: #ff8383;
+        box-shadow: 0 0 0 10px rgba(246, 152, 152, 0);
+    }
+    100% {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0 rgba(246, 152, 152, 0);
+    }
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blinkCaret {
+    from, to { border-color: transparent }
+    50% { border-color: var(--primary-color); }
+}
+
+@keyframes gradientFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes wiggle {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(3deg); }
+    75% { transform: rotate(-3deg); }
+}
+
+@keyframes shine {
+    from {
+        background-position: -200% 0;
+    }
+    to {
+        background-position: 200% 0;
+    }
+}
+
+/* שיפורים לאנימציות גמדה */
+@keyframes gnomeWave {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(15deg); }
+}
+
+@keyframes gnomeJump {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+@keyframes gnomeSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* === קלאסים לאנימציות === */
+.fade-up {
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+}
+
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.slide-in-right {
+    opacity: 0;
+    animation: slideInRight 0.5s ease forwards;
+}
+
+.slide-in-left {
+    opacity: 0;
+    animation: slideInLeft 0.5s ease forwards;
+}
+
+.slide-in-up {
+    opacity: 0;
+    animation: slideInUp 0.5s ease forwards;
+}
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+.pulsate {
+    animation: pulsate 2s infinite;
+}
+
+.bounce {
+    animation: bounce 2s infinite;
+}
+
+.color-pulse {
+    animation: colorPulse 2s infinite;
+}
+
+.wiggle {
+    animation: wiggle 2s ease-in-out infinite;
+}
+
+.float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.float-mobile {
+    animation: floatMobile 5s ease-in-out infinite;
+}
+
+.shine {
+    position: relative;
+    overflow: hidden;
+}
+
+.shine::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(30deg);
+    animation: shine 3s infinite linear;
+    pointer-events: none;
+}
+
+/* אנימציות מיוחדות לאלמנטים ספציפיים */
+.typing-text {
+    display: inline-block;
+    overflow: hidden;
+    border-right: 0.15em solid var(--primary-color);
+    white-space: nowrap;
+    margin: 0 auto;
+    letter-spacing: 0.15em;
+    animation: 
+        typing 3.5s steps(40, end),
+        blinkCaret 0.75s step-end infinite;
+}
+
+.gradient-text {
+    background: linear-gradient(45deg, var(--primary-color), #ff8383, var(--primary-color));
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: gradientFlow 3s ease infinite;
+}
+
+.fade-up-stagger > * {
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+}
+
+.fade-up-stagger > *:nth-child(1) { animation-delay: 0.1s; }
+.fade-up-stagger > *:nth-child(2) { animation-delay: 0.2s; }
+.fade-up-stagger > *:nth-child(3) { animation-delay: 0.3s; }
+.fade-up-stagger > *:nth-child(4) { animation-delay: 0.4s; }
+.fade-up-stagger > *:nth-child(5) { animation-delay: 0.5s; }
+.fade-up-stagger > *:nth-child(6) { animation-delay: 0.6s; }
+.fade-up-stagger > *:nth-child(7) { animation-delay: 0.7s; }
+.fade-up-stagger > *:nth-child(8) { animation-delay: 0.8s; }
+
+/* אפקטים נוספים */
+.shadow-pulse {
+    animation: shadowPulse 2s infinite;
+}
+
+@keyframes shadowPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(246, 152, 152, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(246, 152, 152, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(246, 152, 152, 0);
+    }
+}
+
+.ghost-button {
+    position: relative;
+    overflow: hidden;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    background: transparent;
+    transition: color 0.3s ease;
+}
+
+.ghost-button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-color);
+    transition: all 0.3s ease;
+    z-index: -1;
+}
+
+.ghost-button:hover {
+    color: white;
+}
+
+.ghost-button:hover:before {
+    left: 0;
+}
+
+/* אנימציות לשדות קלט */
+.input-focus {
+    transition: all 0.3s ease;
+}
+
+.input-focus:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(246, 152, 152, 0.2);
+}
+
+/* אנימציות מותאמות לגמדה */
+.gnome-wave {
+    transform-origin: 70% 80%;
+    animation: gnomeWave 2s ease-in-out infinite;
+}
+
+.gnome-jump {
+    animation: gnomeJump 1.5s ease-in-out infinite;
+}
+
+.gnome-spin {
+    animation: gnomeSpin 1.5s linear infinite;
+    animation-play-state: paused;
+}
+
+.gnome-spin:hover {
+    animation-play-state: running;
+}
+
+/* התאמה למובייל */
+@media (max-width: 768px) {
+    /* התאמות ספציפיות למובייל */
+    .float {
+        animation-duration: 4s; /* האטת האנימציה במובייל */
+    }
+    
+    .fade-up, .fade-in, .slide-in-right, .slide-in-left, .slide-in-up {
+        animation-duration: 0.7s; /* האטת האנימציות במובייל */
+    }
+    
+    /* הגבלת כמות האנימציות במקביל לשיפור ביצועים */
+    .limit-animations {
+        animation: none !important;
+    }
+}
