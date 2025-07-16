@@ -35,6 +35,68 @@ body {
     padding: 0 20px;
 }
 
+/* סגנונות לכותרת טקסטואלית במקום לוגו */
+.text-logo {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #F69898; /* ורוד - אותו צבע שמוגדר ב-primary-color */
+    text-align: center;
+    margin: 0;
+    line-height: 1.2;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.text-slogan {
+    font-size: 1.5rem;
+    color: white;
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 40px;
+    font-weight: 300;
+}
+
+.main-title {
+    font-size: 2.8rem;
+    color: white;
+    text-align: right;
+    font-weight: bold;
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+.main-title .highlight {
+    color: #F69898; /* ורוד */
+}
+
+/* מכיל את הכותרת הראשית והסלוגן */
+.text-logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 15px;
+    margin: 20px 0 40px 0;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* להסתיר את תגיות הלוגו המקוריות */
+.logo, .hero-logo-container {
+    display: none !important;
+}
+
+/* עיצוב עמוד הבית מחדש */
+.hero-content {
+    text-align: right;
+    padding: 0 20px;
+}
+
+.hero-description {
+    text-align: right;
+    margin-bottom: 30px;
+    font-size: 1.2rem;
+}
+
 /* כותרת עליונה (Header) */
 .header {
     position: fixed;
