@@ -624,140 +624,83 @@ function handleFileUpload(event) {
 
 // עיבוד קובץ CSV
 function parseCSV(csvData) {
-    try {
-        // שורות ועמודות פשוטות לדוגמה
-        const lines = csvData.split('\n');
-        if (lines.length === 0) {
-            alert('קובץ CSV ריק או לא תקין');
-            return;
-        }
+    // שורות ועמודות פשוטות לדוגמה, יש להחליף בספריית CSV אמיתית
+    const lines = csvData.split('\n');
+    const headers = lines[0].split(',').map(header => header.trim());
+    
+    const jobsData = [];
+    
+    for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
         
-        const headers = lines[0].split(',').map(header => header.trim());
-        if (headers.length === 0) {
-            alert('לא נמצאו כותרות בקובץ CSV');
-            return;
-        }
+        const values = lines[i].split(',');
+        const job = {};
         
-        const jobsData = [];
-        
-        for (let i = 1; i < lines.length; i++) {
-            if (!lines[i].trim()) continue;
-            
-            // טיפול בערכים עם פסיקים בתוכם (בתוך מירכאות)
-            let values = [];
-            let currentValue = '';
-            let insideQuotes = false;
-            
-            for (let char of lines[i]) {
-                if (char === '"') {
-                    insideQuotes = !insideQuotes;
-                } else if (char === ',' && !insideQuotes) {
-                    values.push(currentValue);
-                    currentValue = '';
-                } else {
-                    currentValue += char;
-                }
-            }
-            // הוספת הערך האחרון
-            values.push(currentValue);
-            
-            // אם מספר הערכים קטן ממספר הכותרות, הוסף ערכים ריקים
-            while (values.length < headers.length) {
-                values.push('');
-            }
-            
-            const job = {};
-            
-            for (let j = 0; j < headers.length; j++) {
-                let value = values[j] ? values[j].trim() : '';
-                // מיפוי כותרות (עברית או אנגלית)
-                if (headers[j].includes('מספר') || headers[j].toLowerCase().includes('number')) {
-                    job.jobNumber = value;
-                } else if (headers[j].includes('כותרת') || headers[j].toLowerCase().includes('title')) {
-                    job.title = value;
-                } else if (headers[j].includes('חברה') || headers[j].toLowerCase().includes('company')) {
-                    job.company = value;
-                } else if (headers[j].includes('קטגוריה') || headers[j].toLowerCase().includes('category')) {
-                    job.category = value;
-                } else if (headers[j].includes('עיר') || headers[j].toLowerCase().includes('city')) {
-                    job.city = value;
-                } else if (headers[j].includes('אזור') || headers[j].toLowerCase().includes('region')) {
-                    job.region = value;
-                } else if (headers[j].includes('סוג') || headers[j].toLowerCase().includes('type')) {
-                    job.type = value;
-                } else if (headers[j].includes('תיאור') || headers[j].toLowerCase().includes('description')) {
-                    job.description = value;
-                } else if (headers[j].includes('דרישות') || headers[j].toLowerCase().includes('requirements')) {
-                    job.requirements = value;
-                } else if (headers[j].includes('סטטוס') || headers[j].toLowerCase().includes('status')) {
-                    job.status = value;
-                }
-            }
-            
-            // וודא שיש לפחות כותרת וחברה
-            if (job.title && job.company) {
-                jobsData.push(job);
+        for (let j = 0; j < headers.length; j++) {
+            let value = values[j] ? values[j].trim() : '';
+            // מיפוי כותרות (עברית או אנגלית)
+            if (headers[j].includes('מספר') || headers[j].toLowerCase().includes('number')) {
+                job.jobNumber = value;
+            } else if (headers[j].includes('כותרת') || headers[j].toLowerCase().includes('title')) {
+                job.title = value;
+            } else if (headers[j].includes('חברה') || headers[j].toLowerCase().includes('company')) {
+                job.company = value;
+            } else if (headers[j].includes('קטגוריה') || headers[j].toLowerCase().includes('category')) {
+                job.category = value;
+            } else if (headers[j].includes('עיר') || headers[j].toLowerCase().includes('city')) {
+                job.city = value;
+            } else if (headers[j].includes('אזור') || headers[j].toLowerCase().includes('region')) {
+                job.region = value;
+            } else if (headers[j].includes('סוג') || headers[j].toLowerCase().includes('type')) {
+                job.type = value;
+            } else if (headers[j].includes('תיאור') || headers[j].toLowerCase().includes('description')) {
+                job.description = value;
+            } else if (headers[j].includes('דרישות') || headers[j].toLowerCase().includes('requirements')) {
+                job.requirements = value;
+            } else if (headers[j].includes('סטטוס') || headers[j].toLowerCase().includes('status')) {
+                job.status = value;
             }
         }
         
-        if (jobsData.length > 0) {
-            jobs = jobsData;
-            saveJobs();
-            displayJobs();
-            closeImportModal();
-        } else {
-            alert('לא נמצאו משרות תקינות בקובץ. אנא בדוק את פורמט הקובץ ונסה שנית.');
-        }
-    } catch (error) {
-        console.error('שגיאה בעיבוד קובץ CSV:', error);
-        alert('שגיאה בעיבוד קובץ CSV. נסה שנית או השתמש בתבנית CSV אחרת.');
+        // הוסף את המשרה בכל מקרה
+        jobsData.push(job);
+    }
+    
+    if (jobsData.length > 0) {
+        jobs = jobsData;
+        saveJobs();
+        displayJobs();
+        closeImportModal();
+    } else {
+        alert('לא נמצאו משרות בקובץ. אנא בדוק את פורמט הקובץ ונסה שנית.');
     }
 }
 
 // עיבוד קובץ JSON
 function parseJSON(jsonData) {
     try {
-        let parsedData;
-        try {
-            parsedData = JSON.parse(jsonData);
-        } catch (e) {
-            console.error('שגיאה בפירוש JSON:', e);
-            alert('הקובץ אינו בפורמט JSON תקין. אנא בדוק את הקובץ ונסה שנית.');
-            return;
-        }
+        const parsedData = JSON.parse(jsonData);
         
-        if (!Array.isArray(parsedData)) {
-            console.warn('JSON אינו מערך:', typeof parsedData);
-            if (typeof parsedData === 'object' && parsedData !== null) {
-                // אם ה-JSON הוא אובייקט ולא מערך, ננסה להמיר אותו למערך
-                parsedData = [parsedData];
-            } else {
-                alert('פורמט JSON לא תקין. הקובץ צריך להכיל מערך של אובייקטי משרות.');
-                return;
-            }
-        }
-        
-        if (parsedData.length === 0) {
-            alert('לא נמצאו נתונים בקובץ JSON.');
-            return;
-        }
-        
-        const validJobs = parsedData.filter(job => job && job.title && job.company);
-        
-        if (validJobs.length > 0) {
-            jobs = validJobs;
+        if (Array.isArray(parsedData)) {
+            // הנתונים הם מערך
+            jobs = parsedData;
+            saveJobs();
+            displayJobs();
+            closeImportModal();
+        } else if (typeof parsedData === 'object') {
+            // הנתונים הם אובייקט בודד
+            jobs = [parsedData];
             saveJobs();
             displayJobs();
             closeImportModal();
         } else {
-            alert('לא נמצאו משרות תקינות בקובץ. וודא שלכל משרה יש לפחות כותרת וחברה.');
+            alert('פורמט JSON לא תקין. הקובץ צריך להכיל מערך או אובייקט של משרות.');
         }
     } catch (error) {
         console.error('שגיאה בפענוח קובץ JSON:', error);
         alert('שגיאה בפענוח קובץ JSON. וודא שהקובץ מכיל JSON תקין.');
     }
-}
-        
+}        
         // פתיחת חלון הוספת/עריכת משרה
         function openAddJobModal() {
             document.getElementById('edit-modal-title').textContent = 'הוספת משרה חדשה';
