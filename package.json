@@ -1,0 +1,16 @@
+{
+  "name": "mahyeshpo-website",
+  "version": "1.0.0",
+  "description": "אתר 'מה יש פה?' - לוח משרות",
+  "main": "index.js",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "formidable": "^2.1.1",
+    "nodemailer": "^6.9.3"
+  },
+  "devDependencies": {
+    "vercel": "^30.0.0"
+  }
+}
