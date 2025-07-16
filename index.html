@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מה יש פה? - מצא את העבודה המושלמת</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- כותרת עליונה -->
+    <header class="header">
+        <div class="container">
+            <div class="header-inner">
+                <div class="logo">
+                    <img src="images/logo.png" alt="מה יש פה? לוגו" />
+                </div>
+                
+                <button class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <nav class="main-nav" id="mainNav">
+                    <ul>
+                        <li><a href="index.html" class="active">דף הבית</a></li>
+                        <li><a href="job-management.html">ניהול משרות</a></li>
+                        <li><a href="#contact">צור קשר</a></li>
+                        <li><a href="terms.html">תקנון אתר</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- חלק ראשי -->
+    <section class="hero-section">
+        <div class="hero-bg"></div>
+        <div class="hero-circles">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+        </div>
+        
+        <div class="hero-content">
+            <div class="hero-logo-container">
+                <img src="images/logo.png" alt="מה יש פה? לוגו" class="hero-logo">
+            </div>
+            
+            <h1 class="hero-subtitle">מצא את המשרה המושלמת בשבילך</h1>
+            
+            <p class="hero-description">אלפי משרות מעודכנות באזורים שונים ברחבי הארץ, מותאמות בדיוק לצרכים שלך</p>
+            
+            <div class="hero-buttons">
+                <a href="#search" class="btn">חיפוש משרות</a>
+                <a href="#" class="btn btn-secondary">עוד עלינו</a>
+            </div>
+        </div>
+        
+        <div class="gnome-character">
+            <img src="images/gnome.png" alt="גמדה עוזרת">
+            <div class="gnome-tooltip">אני אעזור לך למצוא משרה!</div>
+        </div>
+    </section>
+
+    <!-- חיפוש משרות -->
+    <section id="search" class="search-section">
+        <div class="container">
+            <h3 class="search-title">חיפוש משרות</h3>
+            
+            <div class="search-grid">
+                <div class="form-group">
+                    <label class="form-label">חיפוש חופשי</label>
+                    <input type="text" class="form-control" id="searchInput" placeholder="הקלד מילות חיפוש...">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">קטגוריה</label>
+                    <select class="form-control" id="categoryFilter">
+                        <option value="">כל הקטגוריות</option>
+                        <option value="מזון ומסעדנות">מזון ומסעדנות</option>
+                        <option value="חינוך והוראה">חינוך והוראה</option>
+                        <option value="פיתוח ותוכנה">פיתוח ותוכנה</option>
+                        <option value="מחשבים ורשתות תקשורת">מחשבים ורשתות</option>
+                        <option value="עולם הרכבים והליסינג">רכבים וליסינג</option>
+                        <option value="שיווק ומכירות">שיווק ומכירות</option>
+                        <option value="בריאות ורפואה">בריאות ורפואה</option>
+                        <option value="אחר">אחר</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">אזור</label>
+                    <select class="form-control" id="regionFilter">
+                        <option value="">כל האזורים</option>
+                        <option value="מרכז">מרכז</option>
+                        <option value="צפון">צפון</option>
+                        <option value="חיפה">חיפה וקריות</option>
+                        <option value="ירושלים">ירושלים והסביבה</option>
+                        <option value="דרום">דרום</option>
+                        <option value="שרון">שרון</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="search-buttons">
+                <div class="search-button-container">
+                    <button class="btn" id="searchButton">
+                        חיפוש
+                    </button>
+                    <div class="gnome-character gnome-search">
+                        <img src="images/gnome.png" alt="גמדה מחפשת">
+                        <div class="gnome-tooltip">לחצו כאן לחיפוש!</div>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" id="clearButton">נקה</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- קטגוריות מובילות -->
+    <section class="categories">
+        <div class="container">
+            <h3 class="section-title">קטגוריות מובילות</h3>
+            <div class="categories-grid">
+                <div class="category-card fade-up" onclick="selectCategory('מזון ומסעדנות')">
+                    <div class="category-icon">🍽️</div>
+                    <div class="category-title">מזון ומסעדנות</div>
+                    <div class="category-desc">מלצרים, טבחים, ברמנים</div>
+                </div>
+                
+                <div class="category-card fade-up delay-1" onclick="selectCategory('חינוך והוראה')">
+                    <div class="category-icon">📚</div>
+                    <div class="category-title">חינוך והוראה</div>
+                    <div class="category-desc">מורים, מדריכים, מחנכים</div>
+                </div>
+                
+                <div class="category-card fade-up delay-2" onclick="selectCategory('פיתוח ותוכנה')">
+                    <div class="category-icon">💻</div>
+                    <div class="category-title">פיתוח ותוכנה</div>
+                    <div class="category-desc">מפתחים, מתכנתים, QA</div>
+                </div>
+                
+                <div class="category-card fade-up delay-3" onclick="selectCategory('שיווק ומכירות')">
+                    <div class="category-icon">📊</div>
+                    <div class="category-title">שיווק ומכירות</div>
+                    <div class="category-desc">אנשי מכירות, מנהלי שיווק</div>
+                </div>
+                
+                <div class="category-card fade-up delay-4" onclick="selectCategory('בריאות ורפואה')">
+                    <div class="category-icon">⚕️</div>
+                    <div class="category-title">בריאות ורפואה</div>
+                    <div class="category-desc">אחים/ות, רופאים, פרמדיקים</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- רשימת משרות -->
+    <section class="jobs">
+        <div class="container">
+            <h3 class="section-title">משרות מומלצות</h3>
+            <div class="jobs-grid" id="jobsContainer">
+                <!-- משרות יוצגו כאן דינמית -->
+            </div>
+        </div>
+    </section>
+
+    <!-- יצירת קשר -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h3 class="section-title">צור קשר</h3>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h4>דברו איתנו</h4>
+                    <p>יש לכם שאלות או הצעות? אנחנו כאן כדי לעזור!</p>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>kerenraf@gmail.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>052-1234567</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>רחוב הראשונים 123, תל אביב</span>
+                    </div>
+                    <div class="social-contact">
+                        <a href="#" class="social-icon-sm"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon-sm"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon-sm"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-icon-sm"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="contact-form-container">
+                    <form id="contact-form" onsubmit="return submitContactForm(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="contact-name">שם מלא</label>
+                                <input type="text" id="contact-name" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-email">אימייל</label>
+                                <input type="email" id="contact-email" class="form-input" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-subject">נושא</label>
+                            <input type="text" id="contact-subject" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-message">הודעה</label>
+                            <textarea id="contact-message" class="form-input" rows="5" required></textarea>
+                        </div>
+                        <div class="submit-button-container">
+                            <button type="submit" class="form-submit">שלח הודעה</button>
+                            <div class="gnome-character contact-gnome">
+                                <img src="images/gnome.png" alt="גמדה שולחת הודעה">
+                                <div class="gnome-tooltip">שלחו לנו הודעה!</div>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="contact-success" class="success-message" style="display: none;">
+                        <div class="success-icon">✅</div>
+                        <h4 class="success-title pulsate">ההודעה נשלחה בהצלחה!</h4>
+                        <p>תודה שפנית אלינו. נחזור אליך בהקדם האפשרי.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- מודל פרטי משרה -->
+    <div id="job-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-job-title" class="modal-title">כותרת המשרה</h3>
+                <div class="modal-gnome-container">
+                    <div class="gnome-character modal-gnome">
+                        <img src="images/gnome.png" alt="גמדה מציגה משרה">
+                        <div class="gnome-tooltip">הנה פרטי המשרה המלאים!</div>
+                    </div>
+                    <span class="close" onclick="closeJobModal()">&times;</span>
+                </div>
+            </div>
+            
+            <div class="job-details">
+                <div class="job-detail-row">
+                    <div class="job-detail-item">
+                        <span class="job-detail-label">חברה:</span>
+                        <span id="modal-job-company" class="job-detail-value"></span>
+                    </div>
+                    <div class="job-detail-item">
+                        <span class="job-detail-label">מיקום:</span>
+                        <span id="modal-job-location" class="job-detail-value"></span>
+                    </div>
+                </div>
+                <div class="job-detail-row">
+                    <div class="job-detail-item">
+                        <span class="job-detail-label">סוג משרה:</span>
+                        <span id="modal-job-type" class="job-detail-value"></span>
+                    </div>
+                    <div class="job-detail-item">
+                        <span class="job-detail-label">קטגוריה:</span>
+                        <span id="modal-job-category" class="job-detail-value"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <h4 class="job-section-title">תיאור המשרה</h4>
+            <div id="modal-job-description" class="job-description"></div>
+            
+            <h4 class="job-section-title">דרישות התפקיד</h4>
+            <div id="modal-job-requirements" class="job-requirements"></div>
+            
+            <div class="application-form">
+                <div class="form-title-container">
+                    <h4 class="form-title">הגשת מועמדות</h4>
+                    <div class="gnome-character form-gnome">
+                        <img src="images/gnome.png" alt="גמדה עוזרת בהגשה">
+                        <div class="gnome-tooltip">אני אעזור לך להגיש מועמדות!</div>
+                    </div>
+                </div>
+                
+                <form id="application-form" action="/api/send-application" method="post" enctype="multipart/form-data" onsubmit="return submitApplication(event)">
+                    <input type="hidden" id="job-id-input" name="jobId">
+                    <input type="hidden" id="job-title-input" name="jobTitle">
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="full-name">שם מלא <span class="form-required">*</span></label>
+                            <input type="text" id="full-name" name="fullName" class="form-input" placeholder="הקלד/י את שמך המלא">
+                            <div id="name-error" class="validation-error">נא להזין שם מלא</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="phone">טלפון נייד <span class="form-required">*</span></label>
+                            <input type="tel" id="phone" name="phone" class="form-input" placeholder="050-0000000" dir="ltr">
+                            <div id="phone-error" class="validation-error">נא להזין מספר טלפון תקין (לדוגמה: 050-0000000)</div>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label class="form-label">קורות חיים</label>
+                            <div class="form-file-upload" onclick="document.getElementById('cv-file').click()">
+                                <div class="file-icon">📄</div>
+                                <p><strong>לחץ/י כאן להעלאת קובץ קורות חיים</strong></p>
+                                <p style="font-size: 0.8rem; color: #cccccc; margin-top: 5px;">PDF, DOC, DOCX</p>
+                            </div>
+                            <input type="file" id="cv-file" name="cvFile" class="file-input" accept=".pdf,.doc,.docx" onchange="handleFileSelect(event)">
+                            <div id="file-name" class="file-name"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="submit-button-container">
+                        <button type="submit" class="form-submit">שלח/י מועמדות</button>
+                        <div class="gnome-character submit-gnome">
+                            <img src="images/gnome.png" alt="גמדה שולחת מועמדות">
+                            <div class="gnome-tooltip">לחצו לשליחת המועמדות!</div>
+                        </div>
+                    </div>
+                </form>
+                
+                <div id="success-message" class="success-message">
+                    <div class="success-icon">✅</div>
+                    <h4 class="success-title pulsate">מועמדותך נשלחה בהצלחה!</h4>
+                    <p>תודה על הגשת המועמדות. נחזור אליך בהקדם.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- אלמנט הגמדה הצפה -->
+    <div class="gnome-float pulse" onclick="scrollToTop()" id="floatingGnome">
+        <img src="images/gnome.png" alt="גמדה עוזרת">
+        <div class="gnome-tooltip">לחזרה לראש הדף!</div>
+    </div>
+    
+    <!-- כותרת תחתונה -->
+    <footer class="footer">
+        <div class="container">
+            <img src="images/logo.png" alt="מה יש פה?" class="footer-logo">
+            
+            <div class="footer-links">
+                <a href="index.html" class="footer-link">דף הבית</a>
+                <a href="job-management.html" class="footer-link">ניהול משרות</a>
+                <a href="#search" class="footer-link">חיפוש משרות</a>
+                <a href="#contact" class="footer-link">צור קשר</a>
+                <a href="terms.html" class="footer-link">תקנון אתר</a>
+                <a href="#" class="footer-link">מדיניות פרטיות</a>
+            </div>
+            
+            <div class="footer-social">
+                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            
+            <p class="copyright">© 2025 מה יש פה? - כל הזכויות שמורות</p>
+        </div>
+    </footer>
+
+    <!-- סקריפטים -->
+    <script src="js/main.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/forms.js"></script>
+</body>
+</html>
