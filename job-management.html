@@ -10,13 +10,19 @@
     <link rel="stylesheet" href="css/animations.css">
     <style>
         /* סגנונות לדף ניהול משרות */
-        .admin-login-container {
+        #adminLoginSection {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
             background: #222222;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
         }
         
         .admin-login-box {
@@ -37,7 +43,7 @@
             font-weight: bold;
         }
         
-        .admin-content {
+        #adminContentSection {
             display: none; /* מוסתר כברירת מחדל עד להזנת סיסמה נכונה */
         }
         
@@ -92,47 +98,18 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
-        /* סגנונות למיפוי קבצים */
-        #mapping-modal .modal-content {
-            max-width: 800px;
-            margin: auto;
-        }
-        
-        #mapping-modal .table {
+
+        /* סגנון למיפוי */
+        #mapping-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
             width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-        }
-        
-        #mapping-modal .table th,
-        #mapping-modal .table td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: right;
-        }
-        
-        #mapping-modal .table th {
-            background-color: #f8f8f8;
-        }
-        
-        #mapping-modal .form-control {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        
-        #mapping-modal .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            padding: 15px 0;
-            border-top: 1px solid #ddd;
-            margin-top: 20px;
-        }
-        
-        #mapping-modal .modal-footer button {
-            margin-right: 10px;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
         }
     </style>
 </head>
@@ -143,7 +120,7 @@
     </div>
 
     <!-- מסך כניסה למערכת הניהול -->
-    <div class="admin-login-container" id="adminLoginSection">
+    <div id="adminLoginSection">
         <div class="admin-login-box">
             <div class="text-logo-container" style="margin: 0 0 30px 0; padding: 0;">
                 <h2 class="text-logo" style="font-size: 2rem;">מה יש פה?</h2>
@@ -173,7 +150,7 @@
     </div>
 
     <!-- תוכן ניהול המשרות (מוסתר עד להזנת סיסמה נכונה) -->
-    <div class="admin-content" id="adminContentSection">
+    <div id="adminContentSection">
         <!-- כותרת עליונה -->
         <header class="header">
             <div class="container">
@@ -476,60 +453,37 @@
     </div>
 
     <!-- סקריפטים -->
-    <script src="js/main.js"></script>
     <script>
-        // קוד JavaScript לבדיקת סיסמה ולהצגת תוכן הניהול
+        // רשימת משרות גלובלית
+        let jobs = [];
+        let currentPage = 1;
+        const jobsPerPage = 10;
+        
+        // פונקציה להצגת מסך הכניסה
         function showLoginForm() {
             document.getElementById('adminLoginSection').style.display = 'flex';
         }
         
+        // פונקציה לבדיקת סיסמה
         function checkAdminPassword() {
             const password = document.getElementById('adminPassword').value;
-            const correctPassword = "yarin080708"; // הסיסמה שהוגדרה
+            const correctPassword = "yarin080708"; // הסיסמה שהגדרת
             
             if (password === correctPassword) {
-                // הסיסמה נכונה - הצג את תוכן הניהול
+                // הסיסמה נכונה - הצגת תוכן הניהול
                 document.getElementById('adminLoginSection').style.display = 'none';
                 document.getElementById('adminContentSection').style.display = 'block';
                 
-                // שמירת מצב הכניסה בזיכרון המקומי (אופציונלי)
+                // שמירת מצב ההתחברות
                 sessionStorage.setItem('adminAuthenticated', 'true');
                 
-                // טען את רשימת המשרות הקיימת
+                // טעינת משרות מה-localStorage
                 loadJobs();
             } else {
-                // הסיסמה שגויה - הצג הודעת שגיאה
+                // סיסמה שגויה - הצגת הודעת שגיאה
                 document.getElementById('adminErrorMessage').style.display = 'block';
             }
         }
-        
-        // בדיקה אם המשתמש כבר מחובר (אופציונלי)
-        window.onload = function() {
-            if (sessionStorage.getItem('adminAuthenticated') === 'true') {
-                document.getElementById('adminLoginSection').style.display = 'none';
-                document.getElementById('adminContentSection').style.display = 'block';
-                
-                // טען את רשימת המשרות הקיימת
-                loadJobs();
-            } else {
-                document.getElementById('adminLoginSection').style.display = 'flex';
-                document.getElementById('adminContentSection').style.display = 'none';
-            }
-            
-            // התחברות עם לחיצה על Enter
-            document.getElementById('adminPassword').addEventListener('keyup', function(event) {
-                if (event.key === 'Enter') {
-                    checkAdminPassword();
-                }
-            });
-        };
-        
-        // ניהול משרות
-        let jobs = [];
-        let currentPage = 1;
-        const jobsPerPage = 10;
-        let uploadedFileData = null;
-        let uploadedFileType = null;
         
         // טעינת משרות מה-localStorage
         function loadJobs() {
@@ -556,12 +510,12 @@
             }, 3000);
         }
         
-        // הצגת המשרות בטבלה
+        // הצגת משרות בטבלה
         function displayJobs() {
             const tableBody = document.getElementById('jobsTableBody');
             tableBody.innerHTML = '';
             
-            // חישוב מספר דפים
+            // חישוב מספר הדפים
             const totalPages = Math.ceil(jobs.length / jobsPerPage);
             
             // חישוב טווח המשרות להצגה
@@ -643,6 +597,17 @@
             }
         }
         
+        // פתיחת חלון ייבוא משרות
+        function openImportModal() {
+            document.getElementById('import-modal').style.display = 'block';
+        }
+        
+        // סגירת חלון ייבוא משרות
+        function closeImportModal() {
+            document.getElementById('import-modal').style.display = 'none';
+            document.getElementById('file-input').value = '';
+        }
+        
         // טיפול בהעלאת קובץ
         function handleFileUpload(event) {
             const file = event.target.files[0];
@@ -652,14 +617,12 @@
             
             reader.onload = function(e) {
                 try {
-                    uploadedFileData = e.target.result;
-                    
                     if (file.name.endsWith('.csv')) {
-                        uploadedFileType = 'csv';
-                        showMappingConfirmation(uploadedFileData, 'csv');
+                        // עיבוד קובץ CSV
+                        parseCSV(e.target.result);
                     } else if (file.name.endsWith('.json')) {
-                        uploadedFileType = 'json';
-                        showMappingConfirmation(uploadedFileData, 'json');
+                        // עיבוד קובץ JSON
+                        parseJSON(e.target.result);
                     } else {
                         alert('פורמט קובץ לא נתמך. אנא העלה קובץ CSV או JSON.');
                     }
@@ -672,207 +635,9 @@
             reader.readAsText(file);
         }
         
-        // הצגת חלון אישור מיפוי
-        function showMappingConfirmation(fileData, fileType) {
-            // יצירת חלון מיפוי
-            if (document.getElementById('mapping-modal')) {
-                document.getElementById('mapping-modal').remove();
-            }
-            
-            let mappingModal = document.createElement('div');
-            mappingModal.className = 'modal';
-            mappingModal.id = 'mapping-modal';
-            mappingModal.style.display = 'block';
-            
-            // תוכן החלון
-            let modalContent = document.createElement('div');
-            modalContent.className = 'modal-content';
-            
-            // כותרת החלון
-            let modalHeader = document.createElement('div');
-            modalHeader.className = 'modal-header';
-            modalHeader.innerHTML = `
-                <h3 class="modal-title">אישור מיפוי שדות</h3>
-                <span class="close" onclick="closeMappingModal()">&times;</span>
-            `;
-            
-            // גוף החלון
-            let modalBody = document.createElement('div');
-            modalBody.className = 'modal-body';
-            modalBody.innerHTML = '<p>המערכת מיפתה אוטומטית את השדות הבאים. אנא אשר או שנה את המיפוי:</p>';
-            
-            // טבלת מיפוי
-            let mappingTable = document.createElement('table');
-            mappingTable.className = 'table';
-            
-            // כותרת הטבלה
-            let tableHeader = document.createElement('thead');
-            tableHeader.innerHTML = '<tr><th>שדה במערכת</th><th>שדה בקובץ</th></tr>';
-            mappingTable.appendChild(tableHeader);
-            
-            // גוף הטבלה
-            let tableBody = document.createElement('tbody');
-            
-            // שדות המערכת
-            const systemFields = [
-                { id: 'jobNumber', name: 'מספר משרה' },
-                { id: 'title', name: 'כותרת משרה' },
-                { id: 'company', name: 'חברה' },
-                { id: 'category', name: 'קטגוריה' },
-                { id: 'city', name: 'עיר' },
-                { id: 'region', name: 'אזור' },
-                { id: 'type', name: 'סוג משרה' },
-                { id: 'description', name: 'תיאור המשרה' },
-                { id: 'requirements', name: 'דרישות התפקיד' },
-                { id: 'status', name: 'סטטוס' }
-            ];
-            
-            // רשימת שדות בקובץ
-            let fileFields = [];
-            if (fileType === 'csv') {
-                const lines = fileData.split('\n');
-                if (lines.length > 0) {
-                    fileFields = lines[0].split(',').map(header => header.trim());
-                }
-            } else if (fileType === 'json') {
-                try {
-                    const parsedData = JSON.parse(fileData);
-                    if (Array.isArray(parsedData) && parsedData.length > 0) {
-                        fileFields = Object.keys(parsedData[0]);
-                    } else if (typeof parsedData === 'object') {
-                        fileFields = Object.keys(parsedData);
-                    }
-                } catch (e) {
-                    console.error('שגיאה בפירוש JSON:', e);
-                }
-            }
-            
-            // מיפוי אוטומטי
-            const autoMapping = {};
-            
-            fileFields.forEach((header, index) => {
-                const headerLower = header.toLowerCase();
-                
-                if (header.includes('מספר') || headerLower.includes('number')) {
-                    autoMapping.jobNumber = index;
-                } else if (header.includes('כותרת') || headerLower.includes('title')) {
-                    autoMapping.title = index;
-                } else if (header.includes('חברה') || headerLower.includes('company')) {
-                    autoMapping.company = index;
-                } else if (header.includes('קטגוריה') || headerLower.includes('category')) {
-                    autoMapping.category = index;
-                } else if (header.includes('עיר') || headerLower.includes('city')) {
-                    autoMapping.city = index;
-                } else if (header.includes('אזור') || headerLower.includes('region')) {
-                    autoMapping.region = index;
-                } else if (header.includes('סוג') || headerLower.includes('type')) {
-                    autoMapping.type = index;
-                } else if (header.includes('תיאור') || headerLower.includes('description')) {
-                    autoMapping.description = index;
-                } else if (header.includes('דרישות') || headerLower.includes('requirements')) {
-                    autoMapping.requirements = index;
-                } else if (header.includes('סטטוס') || headerLower.includes('status')) {
-                    autoMapping.status = index;
-                }
-            });
-            
-            // יצירת שורות הטבלה
-            systemFields.forEach(field => {
-                const row = document.createElement('tr');
-                
-                // שם שדה המערכת
-                const systemCell = document.createElement('td');
-                systemCell.textContent = field.name;
-                row.appendChild(systemCell);
-                
-                // תיבת בחירה לשדה הקובץ
-                const fileCell = document.createElement('td');
-                const select = document.createElement('select');
-                select.id = 'map-' + field.id;
-                select.className = 'form-control';
-                
-                // אפשרות ריקה
-                const emptyOption = document.createElement('option');
-                emptyOption.value = '';
-                emptyOption.textContent = '-- לא למפות --';
-                select.appendChild(emptyOption);
-                
-                // אפשרויות מהקובץ
-                fileFields.forEach((header, index) => {
-                    const option = document.createElement('option');
-                    option.value = index;
-                    option.textContent = header;
-                    
-                    // בחירה אוטומטית לפי המיפוי
-                    if (autoMapping[field.id] === index) {
-                        option.selected = true;
-                    }
-                    
-                    select.appendChild(option);
-                });
-                
-                fileCell.appendChild(select);
-                row.appendChild(fileCell);
-                
-                tableBody.appendChild(row);
-            });
-            
-            mappingTable.appendChild(tableBody);
-            modalBody.appendChild(mappingTable);
-            
-            // כפתורים
-            let modalFooter = document.createElement('div');
-            modalFooter.className = 'modal-footer';
-            modalFooter.innerHTML = `
-                <button type="button" class="btn btn-secondary" onclick="closeMappingModal()">ביטול</button>
-                <button type="button" class="btn" onclick="processFileWithMapping('${fileType}')">ייבא משרות</button>
-            `;
-            
-            // הרכבת החלון
-            modalContent.appendChild(modalHeader);
-            modalContent.appendChild(modalBody);
-            modalContent.appendChild(modalFooter);
-            mappingModal.appendChild(modalContent);
-            
-            // הוספת החלון לעמוד
-            document.body.appendChild(mappingModal);
-        }
-        
-        // סגירת חלון מיפוי
-        function closeMappingModal() {
-            const modal = document.getElementById('mapping-modal');
-            if (modal) {
-                modal.remove();
-            }
-            closeImportModal();
-        }
-        
-        // עיבוד הקובץ עם המיפוי שנבחר
-        function processFileWithMapping(fileType) {
-            // יצירת מפת שדות לפי הבחירה
-            const mapping = {};
-            const systemFields = ['jobNumber', 'title', 'company', 'category', 'city', 'region', 'type', 'description', 'requirements', 'status'];
-            
-            systemFields.forEach(field => {
-                const select = document.getElementById('map-' + field);
-                if (select && select.value !== '') {
-                    mapping[field] = parseInt(select.value);
-                }
-            });
-            
-            // עיבוד הקובץ לפי סוג
-            if (fileType === 'csv') {
-                processCSVWithMapping(uploadedFileData, mapping);
-            } else if (fileType === 'json') {
-                processJSONWithMapping(uploadedFileData, mapping);
-            }
-            
-            // סגירת חלון המיפוי
-            closeMappingModal();
-        }
-        
-        // עיבוד קובץ CSV עם מיפוי
-        function processCSVWithMapping(csvData, mapping) {
+        // עיבוד קובץ CSV
+        function parseCSV(csvData) {
+            // שורות ועמודות פשוטות לדוגמה, יש להחליף בספריית CSV אמיתית
             const lines = csvData.split('\n');
             const headers = lines[0].split(',').map(header => header.trim());
             
@@ -884,76 +649,70 @@
                 const values = lines[i].split(',');
                 const job = {};
                 
-                // יצירת המשרה לפי המיפוי
-                for (const [field, index] of Object.entries(mapping)) {
-                    if (index >= 0 && index < values.length) {
-                        job[field] = values[index] ? values[index].trim() : '';
+                for (let j = 0; j < headers.length; j++) {
+                    let value = values[j] ? values[j].trim() : '';
+                    // מיפוי כותרות (עברית או אנגלית)
+                    if (headers[j].includes('מספר') || headers[j].toLowerCase().includes('number')) {
+                        job.jobNumber = value;
+                    } else if (headers[j].includes('כותרת') || headers[j].toLowerCase().includes('title')) {
+                        job.title = value;
+                    } else if (headers[j].includes('חברה') || headers[j].toLowerCase().includes('company')) {
+                        job.company = value;
+                    } else if (headers[j].includes('קטגוריה') || headers[j].toLowerCase().includes('category')) {
+                        job.category = value;
+                    } else if (headers[j].includes('עיר') || headers[j].toLowerCase().includes('city')) {
+                        job.city = value;
+                    } else if (headers[j].includes('אזור') || headers[j].toLowerCase().includes('region')) {
+                        job.region = value;
+                    } else if (headers[j].includes('סוג') || headers[j].toLowerCase().includes('type')) {
+                        job.type = value;
+                    } else if (headers[j].includes('תיאור') || headers[j].toLowerCase().includes('description')) {
+                        job.description = value;
+                    } else if (headers[j].includes('דרישות') || headers[j].toLowerCase().includes('requirements')) {
+                        job.requirements = value;
+                    } else if (headers[j].includes('סטטוס') || headers[j].toLowerCase().includes('status')) {
+                        job.status = value;
                     }
                 }
                 
-                // הוסף רק אם יש לפחות כותרת וחברה
-                if (job.title && job.company) {
-                    jobsData.push(job);
-                }
+                // הוסף את המשרה ללא תנאי
+                jobsData.push(job);
             }
             
             if (jobsData.length > 0) {
                 jobs = jobsData;
                 saveJobs();
                 displayJobs();
+                closeImportModal();
             } else {
-                alert('לא נמצאו משרות תקינות בקובץ לאחר המיפוי');
+                alert('לא נמצאו משרות בקובץ. אנא בדוק את פורמט הקובץ ונסה שנית.');
             }
         }
         
-        // עיבוד קובץ JSON עם מיפוי
-        function processJSONWithMapping(jsonData, mapping) {
+        // עיבוד קובץ JSON
+        function parseJSON(jsonData) {
             try {
                 const parsedData = JSON.parse(jsonData);
-                const dataArray = Array.isArray(parsedData) ? parsedData : [parsedData];
                 
-                const jobsData = [];
-                
-                for (const item of dataArray) {
-                    const job = {};
-                    const keys = Object.keys(item);
-                    
-                    // יצירת המשרה לפי המיפוי
-                    for (const [field, index] of Object.entries(mapping)) {
-                        if (index >= 0 && index < keys.length) {
-                            const key = keys[index];
-                            job[field] = item[key];
-                        }
-                    }
-                    
-                    // הוסף רק אם יש לפחות כותרת וחברה
-                    if (job.title && job.company) {
-                        jobsData.push(job);
-                    }
-                }
-                
-                if (jobsData.length > 0) {
-                    jobs = jobsData;
+                if (Array.isArray(parsedData)) {
+                    // קבל את כל המשרות ללא סינון
+                    jobs = parsedData;
                     saveJobs();
                     displayJobs();
+                    closeImportModal();
+                } else if (typeof parsedData === 'object') {
+                    // קובץ מכיל אובייקט בודד
+                    jobs = [parsedData];
+                    saveJobs();
+                    displayJobs();
+                    closeImportModal();
                 } else {
-                    alert('לא נמצאו משרות תקינות בקובץ לאחר המיפוי');
+                    alert('פורמט JSON לא תקין. הקובץ צריך להכיל מערך או אובייקט של משרות.');
                 }
             } catch (error) {
                 console.error('שגיאה בפענוח קובץ JSON:', error);
                 alert('שגיאה בפענוח קובץ JSON. וודא שהקובץ מכיל JSON תקין.');
             }
-        }
-        
-        // פתיחת חלון ייבוא משרות
-        function openImportModal() {
-            document.getElementById('import-modal').style.display = 'block';
-        }
-        
-        // סגירת חלון ייבוא משרות
-        function closeImportModal() {
-            document.getElementById('import-modal').style.display = 'none';
-            document.getElementById('file-input').value = '';
         }
         
         // פתיחת חלון הוספת/עריכת משרה
@@ -1046,8 +805,8 @@
         
         // סינון רשימת המשרות
         function filterJobsList() {
-            // פונקציונליות סינון תוסף בהמשך
-            alert('פונקציונליות סינון תוסף בהמשך');
+            // יתווסף בהמשך
+            alert('פונקציונליות סינון תתווסף בהמשך');
         }
         
         // ניקוי מסננים
@@ -1099,6 +858,30 @@
                 behavior: 'smooth'
             });
         }
+        
+        // בדיקה אם המשתמש כבר מחובר ואתחול הדף
+        document.addEventListener('DOMContentLoaded', function() {
+            // בדיקה אם המשתמש כבר מחובר (בסשן)
+            if (sessionStorage.getItem('adminAuthenticated') === 'true') {
+                // המשתמש כבר מחובר - הצג את תוכן הניהול
+                document.getElementById('adminLoginSection').style.display = 'none';
+                document.getElementById('adminContentSection').style.display = 'block';
+                
+                // טען את רשימת המשרות
+                loadJobs();
+            } else {
+                // המשתמש לא מחובר - הצג את מסך הכניסה
+                document.getElementById('adminLoginSection').style.display = 'flex';
+                document.getElementById('adminContentSection').style.display = 'none';
+            }
+            
+            // התחברות עם לחיצה על Enter
+            document.getElementById('adminPassword').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    checkAdminPassword();
+                }
+            });
+        });
     </script>
 </body>
 </html>
