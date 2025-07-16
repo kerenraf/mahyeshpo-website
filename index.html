@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מה יש פה? - מצא את העבודה המושלמת</title>
+    <title>מה יש פה? - לוח משרות חזק למקום עבודה מדוייק</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/mobile.css">
@@ -14,8 +14,9 @@
     <header class="header">
         <div class="container">
             <div class="header-inner">
-                <div class="logo">
-                    <img src="images/logo.png" alt="מה יש פה? לוגו" />
+                <!-- מסתיר את הלוגו המקורי ומחליף אותו בטקסט -->
+                <div class="text-logo-container" style="margin: 0; padding: 0;">
+                    <h2 class="text-logo" style="font-size: 1.5rem;">מה יש פה?</h2>
                 </div>
                 
                 <button class="mobile-menu-toggle">
@@ -43,17 +44,26 @@
         </div>
         
         <div class="hero-content">
-            <div class="hero-logo-container">
-                <img src="images/logo.png" alt="מה יש פה? לוגו" class="hero-logo">
+            <!-- כותרת טקסטואלית גדולה באמצע -->
+            <div class="text-logo-container">
+                <h1 class="text-logo">מה יש פה?</h1>
+                <p class="text-slogan">לוח משרות חזק למקום עבודה מדוייק!</p>
             </div>
             
-            <h1 class="hero-subtitle">מצא את המשרה המושלמת בשבילך</h1>
-            
-            <p class="hero-description">אלפי משרות מעודכנות באזורים שונים ברחבי הארץ, מותאמות בדיוק לצרכים שלך</p>
-            
-            <div class="hero-buttons">
-                <a href="#search" class="btn">חיפוש משרות</a>
-                <a href="#" class="btn btn-secondary">עוד עלינו</a>
+            <!-- כותרת המשרה המושלמת בדיוק כמו בתמונה -->
+            <div>
+                <h2 class="main-title">
+                    מצא את <span class="highlight">המשרה</span><br>
+                    <span class="highlight">המושלמת</span><br>
+                    בשבילך
+                </h2>
+                
+                <p class="hero-description">אלפי משרות מעודכנות באזורים שונים ברחבי הארץ, מותאמות בדיוק לצרכים שלך</p>
+                
+                <div class="hero-buttons">
+                    <a href="#search" class="btn">חיפוש משרות</a>
+                    <a href="#" class="btn btn-secondary">עוד עלינו</a>
+                </div>
             </div>
         </div>
         
@@ -339,7 +349,11 @@
     <!-- כותרת תחתונה -->
     <footer class="footer">
         <div class="container">
-            <img src="images/logo.png" alt="מה יש פה?" class="footer-logo">
+            <!-- כותרת טקסטואלית במקום לוגו -->
+            <div class="text-logo-container" style="margin: 0 0 20px 0; padding: 0;">
+                <h2 class="text-logo" style="font-size: 2rem;">מה יש פה?</h2>
+                <p class="text-slogan" style="font-size: 1rem; margin-bottom: 10px;">לוח משרות חזק למקום עבודה מדוייק!</p>
+            </div>
             
             <div class="footer-links">
                 <a href="index.html" class="footer-link">דף הבית</a>
