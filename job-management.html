@@ -8,316 +8,845 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/mobile.css">
     <link rel="stylesheet" href="css/animations.css">
+    <style>
+        /* סגנונות לדף ניהול משרות */
+        .admin-login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: #222222;
+        }
+        
+        .admin-login-box {
+            background: #333333;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            border: 2px solid #F69898;
+        }
+        
+        .admin-login-title {
+            color: #F69898;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        
+        .admin-content {
+            display: none; /* מוסתר כברירת מחדל עד להזנת סיסמה נכונה */
+        }
+        
+        /* כפתור צדדי לגישה לניהול */
+        .admin-access-button {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #F69898;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-access-button:hover {
+            transform: translateY(-50%) scale(1.1);
+            background: #e58080;
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        /* הודעות הצלחה */
+        .success-notification {
+            background: rgba(40, 167, 69, 0.9);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 9999;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
-    <!-- כותרת עליונה -->
-    <header class="header">
-        <div class="container">
-            <div class="header-inner">
-                <div class="logo">
-                    <img src="images/logo.png" alt="מה יש פה? לוגו" />
-                </div>
-                
-                <button class="mobile-menu-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-                
-                <nav class="main-nav" id="mainNav">
-                    <ul>
-                        <li><a href="index.html">דף הבית</a></li>
-                        <li><a href="job-management.html" class="active">ניהול משרות</a></li>
-                        <li><a href="index.html#contact">צור קשר</a></li>
-                        <li><a href="terms.html">תקנון אתר</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </header>
+    <!-- כפתור צדדי לגישה לניהול -->
+    <div class="admin-access-button" onclick="showLoginForm()">
+        <i class="fas fa-lock"></i>
+    </div>
 
-    <!-- תוכן ראשי -->
-    <main class="container">
-        <h1 class="page-title">ניהול משרות</h1>
-        
-        <!-- כלי ניהול -->
-        <section class="admin-section fade-up">
-            <h2 class="admin-title">כלי ניהול</h2>
-            <div class="admin-grid">
-                <div class="admin-card fade-up delay-1" onclick="openImportModal()">
-                    <div class="admin-icon"><i class="fas fa-file-import"></i></div>
-                    <div class="admin-card-title">ייבוא משרות</div>
-                    <div class="admin-card-desc">ייבא משרות מקובץ CSV או JSON</div>
-                </div>
-                
-                <div class="admin-card fade-up delay-2" onclick="openAddJobModal()">
-                    <div class="admin-icon"><i class="fas fa-plus-circle"></i></div>
-                    <div class="admin-card-title">הוספת משרה</div>
-                    <div class="admin-card-desc">הוסף משרה חדשה באופן ידני</div>
-                </div>
-                
-                <div class="admin-card fade-up delay-3" onclick="exportJobs()">
-                    <div class="admin-icon"><i class="fas fa-file-export"></i></div>
-                    <div class="admin-card-title">ייצוא משרות</div>
-                    <div class="admin-card-desc">ייצא משרות לקובץ CSV או Excel</div>
-                </div>
-                
-                <div class="admin-card fade-up delay-4" onclick="location.href='index.html'">
-                    <div class="admin-icon"><i class="fas fa-eye"></i></div>
-                    <div class="admin-card-title">צפייה באתר</div>
-                    <div class="admin-card-desc">עבור לדף הראשי של האתר</div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- רשימת משרות -->
-        <section class="jobs-list-section fade-up">
-            <h2 class="admin-title">רשימת משרות</h2>
-            
-            <div class="search-filters">
-                <input type="text" class="form-control" id="searchJobsInput" placeholder="חיפוש חופשי...">
-                
-                <select class="form-control" id="categoryFilterAdmin">
-                    <option value="">כל הקטגוריות</option>
-                    <option value="מזון ומסעדנות">מזון ומסעדנות</option>
-                    <option value="חינוך והוראה">חינוך והוראה</option>
-                    <option value="פיתוח ותוכנה">פיתוח ותוכנה</option>
-                    <option value="מחשבים ורשתות תקשורת">מחשבים ורשתות</option>
-                    <option value="עולם הרכבים והליסינג">רכבים וליסינג</option>
-                    <option value="שיווק ומכירות">שיווק ומכירות</option>
-                    <option value="בריאות ורפואה">בריאות ורפואה</option>
-                    <option value="אחר">אחר</option>
-                </select>
-                
-                <select class="form-control" id="statusFilterAdmin">
-                    <option value="">כל הסטטוסים</option>
-                    <option value="פעיל">פעיל</option>
-                    <option value="לא פעיל">לא פעיל</option>
-                </select>
+    <!-- מסך כניסה למערכת הניהול -->
+    <div class="admin-login-container" id="adminLoginSection">
+        <div class="admin-login-box">
+            <div class="text-logo-container" style="margin: 0 0 30px 0; padding: 0;">
+                <h2 class="text-logo" style="font-size: 2rem;">מה יש פה?</h2>
+                <p class="text-slogan" style="font-size: 1rem; margin-bottom: 10px;">לוח משרות חזק למקום עבודה מדוייק!</p>
             </div>
             
-            <div class="filter-buttons">
-                <div class="search-button-container">
-                    <button class="btn" onclick="filterJobsList()">
-                        חיפוש
+            <h2 class="admin-login-title">כניסה למערכת ניהול</h2>
+            
+            <div class="form-group">
+                <label class="form-label">סיסמה</label>
+                <input type="password" id="adminPassword" class="form-control">
+            </div>
+            
+            <button class="btn login-button" onclick="checkAdminPassword()">כניסה</button>
+            
+            <div id="adminErrorMessage" class="error-message">סיסמה שגויה, נסה שנית</div>
+            
+            <p style="margin-top: 30px; color: #cccccc;">
+                <a href="index.html" style="color: #F69898; text-decoration: none;">חזרה לדף הבית</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- הודעת הצלחה -->
+    <div id="successNotification" class="success-notification">
+        המשרות נשמרו בהצלחה ויוצגו באתר
+    </div>
+
+    <!-- תוכן ניהול המשרות (מוסתר עד להזנת סיסמה נכונה) -->
+    <div class="admin-content" id="adminContentSection">
+        <!-- כותרת עליונה -->
+        <header class="header">
+            <div class="container">
+                <div class="header-inner">
+                    <!-- כותרת טקסטואלית במקום לוגו -->
+                    <div class="text-logo-container" style="margin: 0; padding: 0;">
+                        <h2 class="text-logo" style="font-size: 1.5rem;">מה יש פה?</h2>
+                    </div>
+                    
+                    <button class="mobile-menu-toggle">
+                        <i class="fas fa-bars"></i>
                     </button>
-                    <div class="gnome-character gnome-search">
-                        <img src="images/gnome.png" alt="גמדה מחפשת">
-                        <div class="gnome-tooltip">לחצו כאן לחיפוש!</div>
-                    </div>
-                </div>
-                <button class="btn btn-secondary" onclick="clearJobsFilters()">נקה</button>
-            </div>
-            
-            <div class="table-container">
-                <table class="jobs-table" id="jobsTable">
-                    <thead>
-                        <tr>
-                            <th style="width: 80px;">מס' משרה</th>
-                            <th>כותרת</th>
-                            <th>חברה</th>
-                            <th>קטגוריה</th>
-                            <th>מיקום</th>
-                            <th>סטטוס</th>
-                            <th style="width: 180px;">פעולות</th>
-                        </tr>
-                    </thead>
-                    <tbody id="jobsTableBody">
-                        <!-- Will be populated by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="pagination" id="jobsPagination">
-                <!-- Will be populated by JavaScript -->
-            </div>
-        </section>
-    </main>
-    
-    <!-- מודל ייבוא משרות -->
-    <div id="import-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">ייבא משרות מקובץ</h3>
-                <div class="modal-gnome-container">
-                    <div class="gnome-character modal-gnome">
-                        <img src="images/gnome.png" alt="גמדה עוזרת בייבוא">
-                        <div class="gnome-tooltip">אני יכולה לעזור לך לייבא משרות!</div>
-                    </div>
-                    <span class="close" onclick="closeImportModal()">&times;</span>
+                    
+                    <nav class="main-nav" id="mainNav">
+                        <ul>
+                            <li><a href="index.html">דף הבית</a></li>
+                            <li><a href="job-management.html" class="active">ניהול משרות</a></li>
+                            <li><a href="index.html#contact">צור קשר</a></li>
+                            <li><a href="terms.html">תקנון אתר</a></li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
+        </header>
 
-            <div id="login-section">
-                <div class="login-form">
-                    <h4 class="login-title">גישה למערכת ניהול</h4>
-                    <div class="form-group">
-                        <label class="form-label">סיסמה</label>
-                        <input type="password" id="password" class="form-control">
-                    </div>
-                    <button class="btn login-button" onclick="checkLogin()">כניסה</button>
-                </div>
-            </div>
+        <!-- תוכן ראשי -->
+        <main class="container">
+            <h1 class="page-title">ניהול משרות</h1>
             
-            <div id="import-section" style="display: none;" class="import-section">
-                <p>העלה קובץ CSV או JSON עם רשימת המשרות שלך</p>
-                
-                <div class="file-upload" onclick="document.getElementById('file-input').click()">
-                    <div style="font-size: 2.5rem; margin-bottom: 10px;">📁</div>
-                    <p><strong>לחץ כאן להעלאת קובץ</strong></p>
-                    <p>תומך בקבצי CSV ו-JSON</p>
-                </div>
-                
-                <input type="file" id="file-input" accept=".csv,.json" style="display: none;" onchange="handleFileUpload(event)">
-                
-                <div class="file-info">
-                    <h4>פורמט נתמך:</h4>
-                    <p><strong>CSV:</strong> עם כותרות בעברית או אנגלית</p>
-                    <p><strong>JSON:</strong> מערך של אובייקטי משרות</p>
+            <!-- כלי ניהול -->
+            <section class="admin-section fade-up">
+                <h2 class="admin-title">כלי ניהול</h2>
+                <div class="admin-grid">
+                    <div class="admin-card fade-up delay-1" onclick="openImportModal()">
+                        <div class="admin-icon"><i class="fas fa-file-import"></i></div>
+                        <div class="admin-card-title">ייבוא משרות</div>
+                        <div class="admin-card-desc">ייבא משרות מקובץ CSV או JSON</div>
+                    </div>
                     
-                    <h4>שדות נתמכים:</h4>
-                    <p>מספר משרה, כותרת, חברה, קטגוריה, עיר, אזור, סוג משרה, תיאור, דרישות</p>
+                    <div class="admin-card fade-up delay-2" onclick="openAddJobModal()">
+                        <div class="admin-icon"><i class="fas fa-plus-circle"></i></div>
+                        <div class="admin-card-title">הוספת משרה</div>
+                        <div class="admin-card-desc">הוסף משרה חדשה באופן ידני</div>
+                    </div>
+                    
+                    <div class="admin-card fade-up delay-3" onclick="exportJobs()">
+                        <div class="admin-icon"><i class="fas fa-file-export"></i></div>
+                        <div class="admin-card-title">ייצוא משרות</div>
+                        <div class="admin-card-desc">ייצא משרות לקובץ CSV או Excel</div>
+                    </div>
+                    
+                    <div class="admin-card fade-up delay-4" onclick="location.href='index.html'">
+                        <div class="admin-icon"><i class="fas fa-eye"></i></div>
+                        <div class="admin-card-title">צפייה באתר</div>
+                        <div class="admin-card-desc">עבור לדף הראשי של האתר</div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- רשימת משרות -->
+            <section class="jobs-list-section fade-up">
+                <h2 class="admin-title">רשימת משרות</h2>
+                
+                <div class="search-filters">
+                    <input type="text" class="form-control" id="searchJobsInput" placeholder="חיפוש חופשי...">
+                    
+                    <select class="form-control" id="categoryFilterAdmin">
+                        <option value="">כל הקטגוריות</option>
+                        <option value="מזון ומסעדנות">מזון ומסעדנות</option>
+                        <option value="חינוך והוראה">חינוך והוראה</option>
+                        <option value="פיתוח ותוכנה">פיתוח ותוכנה</option>
+                        <option value="מחשבים ורשתות תקשורת">מחשבים ורשתות</option>
+                        <option value="עולם הרכבים והליסינג">רכבים וליסינג</option>
+                        <option value="שיווק ומכירות">שיווק ומכירות</option>
+                        <option value="בריאות ורפואה">בריאות ורפואה</option>
+                        <option value="אחר">אחר</option>
+                    </select>
+                    
+                    <select class="form-control" id="statusFilterAdmin">
+                        <option value="">כל הסטטוסים</option>
+                        <option value="פעיל">פעיל</option>
+                        <option value="לא פעיל">לא פעיל</option>
+                    </select>
                 </div>
                 
-                <button class="btn" onclick="downloadTemplate()">הורד תבנית CSV</button>
+                <div class="filter-buttons">
+                    <div class="search-button-container">
+                        <button class="btn" onclick="filterJobsList()">
+                            חיפוש
+                        </button>
+                        <div class="gnome-character gnome-search">
+                            <img src="images/gnome.png" alt="גמדה מחפשת">
+                            <div class="gnome-tooltip">לחצו כאן לחיפוש!</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="clearJobsFilters()">נקה</button>
+                </div>
+                
+                <div class="table-container">
+                    <table class="jobs-table" id="jobsTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">מס' משרה</th>
+                                <th>כותרת</th>
+                                <th>חברה</th>
+                                <th>קטגוריה</th>
+                                <th>מיקום</th>
+                                <th>סטטוס</th>
+                                <th style="width: 180px;">פעולות</th>
+                            </tr>
+                        </thead>
+                        <tbody id="jobsTableBody">
+                            <!-- Will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination" id="jobsPagination">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </section>
+        </main>
+        
+        <!-- מודל ייבוא משרות -->
+        <div id="import-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">ייבא משרות מקובץ</h3>
+                    <div class="modal-gnome-container">
+                        <div class="gnome-character modal-gnome">
+                            <img src="images/gnome.png" alt="גמדה עוזרת בייבוא">
+                            <div class="gnome-tooltip">אני יכולה לעזור לך לייבא משרות!</div>
+                        </div>
+                        <span class="close" onclick="closeImportModal()">&times;</span>
+                    </div>
+                </div>
+                
+                <div class="import-section">
+                    <p>העלה קובץ CSV או JSON עם רשימת המשרות שלך</p>
+                    
+                    <div class="file-upload" onclick="document.getElementById('file-input').click()">
+                        <div style="font-size: 2.5rem; margin-bottom: 10px;">📁</div>
+                        <p><strong>לחץ כאן להעלאת קובץ</strong></p>
+                        <p>תומך בקבצי CSV ו-JSON</p>
+                    </div>
+                    
+                    <input type="file" id="file-input" accept=".csv,.json" style="display: none;" onchange="handleFileUpload(event)">
+                    
+                    <div class="file-info">
+                        <h4>פורמט נתמך:</h4>
+                        <p><strong>CSV:</strong> עם כותרות בעברית או אנגלית</p>
+                        <p><strong>JSON:</strong> מערך של אובייקטי משרות</p>
+                        
+                        <h4>שדות נתמכים:</h4>
+                        <p>מספר משרה, כותרת, חברה, קטגוריה, עיר, אזור, סוג משרה, תיאור, דרישות</p>
+                    </div>
+                    
+                    <button class="btn" onclick="downloadTemplate()">הורד תבנית CSV</button>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <!-- מודל הוספת/עריכת משרה -->
-    <div id="job-edit-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="edit-modal-title" class="modal-title">הוספת משרה חדשה</h3>
-                <div class="modal-gnome-container">
-                    <div class="gnome-character modal-gnome">
-                        <img src="images/gnome.png" alt="גמדה עוזרת בעריכה">
-                        <div class="gnome-tooltip">אני אעזור לך להוסיף משרה!</div>
+        
+        <!-- מודל הוספת/עריכת משרה -->
+        <div id="job-edit-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="edit-modal-title" class="modal-title">הוספת משרה חדשה</h3>
+                    <div class="modal-gnome-container">
+                        <div class="gnome-character modal-gnome">
+                            <img src="images/gnome.png" alt="גמדה עוזרת בעריכה">
+                            <div class="gnome-tooltip">אני אעזור לך להוסיף משרה!</div>
+                        </div>
+                        <span class="close" onclick="closeEditModal()">&times;</span>
                     </div>
-                    <span class="close" onclick="closeEditModal()">&times;</span>
                 </div>
+                
+                <form id="job-edit-form" onsubmit="return saveJob(event)">
+                    <input type="hidden" id="edit-job-id">
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">מספר משרה</label>
+                            <input type="text" id="edit-job-number" class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">כותרת משרה <span class="form-required">*</span></label>
+                            <input type="text" id="edit-job-title" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">חברה <span class="form-required">*</span></label>
+                            <input type="text" id="edit-job-company" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">קטגוריה</label>
+                            <select id="edit-job-category" class="form-input">
+                                <option value="מזון ומסעדנות">מזון ומסעדנות</option>
+                                <option value="חינוך והוראה">חינוך והוראה</option>
+                                <option value="פיתוח ותוכנה">פיתוח ותוכנה</option>
+                                <option value="מחשבים ורשתות תקשורת">מחשבים ורשתות</option>
+                                <option value="עולם הרכבים והליסינג">רכבים וליסינג</option>
+                                <option value="שיווק ומכירות">שיווק ומכירות</option>
+                                <option value="בריאות ורפואה">בריאות ורפואה</option>
+                                <option value="אחר">אחר</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">עיר</label>
+                            <input type="text" id="edit-job-city" class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">אזור</label>
+                            <select id="edit-job-region" class="form-input">
+                                <option value="מרכז">מרכז</option>
+                                <option value="צפון">צפון</option>
+                                <option value="חיפה">חיפה וקריות</option>
+                                <option value="ירושלים">ירושלים והסביבה</option>
+                                <option value="דרום">דרום</option>
+                                <option value="שרון">שרון</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">סוג משרה</label>
+                            <select id="edit-job-type" class="form-input">
+                                <option value="משרה מלאה">משרה מלאה</option>
+                                <option value="משרה חלקית">משרה חלקית</option>
+                                <option value="סטודנט">סטודנט</option>
+                                <option value="פרילנס">פרילנס</option>
+                                <option value="אחר">אחר</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">סטטוס</label>
+                            <select id="edit-job-status" class="form-input">
+                                <option value="פעיל">פעיל</option>
+                                <option value="לא פעיל">לא פעיל</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">תיאור המשרה <span class="form-required">*</span></label>
+                        <textarea id="edit-job-description" class="form-input" rows="5" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">דרישות התפקיד</label>
+                        <textarea id="edit-job-requirements" class="form-input" rows="5"></textarea>
+                        <p class="form-help">הפרד בין דרישות שונות באמצעות ירידת שורה</p>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">ביטול</button>
+                        <button type="submit" class="btn">שמור משרה</button>
+                    </div>
+                </form>
             </div>
-            
-            <form id="job-edit-form" onsubmit="return saveJob(event)">
-                <input type="hidden" id="edit-job-id">
-                
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label">מספר משרה</label>
-                        <input type="text" id="edit-job-number" class="form-input">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">כותרת משרה <span class="form-required">*</span></label>
-                        <input type="text" id="edit-job-title" class="form-input" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">חברה <span class="form-required">*</span></label>
-                        <input type="text" id="edit-job-company" class="form-input" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">קטגוריה</label>
-                        <select id="edit-job-category" class="form-input">
-                            <option value="מזון ומסעדנות">מזון ומסעדנות</option>
-                            <option value="חינוך והוראה">חינוך והוראה</option>
-                            <option value="פיתוח ותוכנה">פיתוח ותוכנה</option>
-                            <option value="מחשבים ורשתות תקשורת">מחשבים ורשתות</option>
-                            <option value="עולם הרכבים והליסינג">רכבים וליסינג</option>
-                            <option value="שיווק ומכירות">שיווק ומכירות</option>
-                            <option value="בריאות ורפואה">בריאות ורפואה</option>
-                            <option value="אחר">אחר</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">עיר</label>
-                        <input type="text" id="edit-job-city" class="form-input">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">אזור</label>
-                        <select id="edit-job-region" class="form-input">
-                            <option value="מרכז">מרכז</option>
-                            <option value="צפון">צפון</option>
-                            <option value="חיפה">חיפה וקריות</option>
-                            <option value="ירושלים">ירושלים והסביבה</option>
-                            <option value="דרום">דרום</option>
-                            <option value="שרון">שרון</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">סוג משרה</label>
-                        <select id="edit-job-type" class="form-input">
-                            <option value="משרה מלאה">משרה מלאה</option>
-                            <option value="משרה חלקית">משרה חלקית</option>
-                            <option value="סטודנט">סטודנט</option>
-                            <option value="פרילנס">פרילנס</option>
-                            <option value="אחר">אחר</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">סטטוס</label>
-                        <select id="edit-job-status" class="form-input">
-                            <option value="פעיל">פעיל</option>
-                            <option value="לא פעיל">לא פעיל</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">תיאור המשרה <span class="form-required">*</span></label>
-                    <textarea id="edit-job-description" class="form-input" rows="5" required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">דרישות התפקיד</label>
-                    <textarea id="edit-job-requirements" class="form-input" rows="5"></textarea>
-                    <p class="form-help">הפרד בין דרישות שונות באמצעות ירידת שורה</p>
-                </div>
-                
-                <div class="form-buttons">
-                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">ביטול</button>
-                    <button type="submit" class="btn">שמור משרה</button>
-                </div>
-            </form>
         </div>
-    </div>
-    
-    <!-- אלמנט הגמדה הצפה -->
-    <div class="gnome-float pulse" onclick="scrollToTop()" id="floatingGnome">
-        <img src="images/gnome.png" alt="גמדה עוזרת">
-        <div class="gnome-tooltip">לחזרה לראש הדף!</div>
-    </div>
-    
-    <!-- כותרת תחתונה -->
-    <footer class="footer">
-        <div class="container">
-            <img src="images/logo.png" alt="מה יש פה?" class="footer-logo">
-            
-            <div class="footer-links">
-                <a href="index.html" class="footer-link">דף הבית</a>
-                <a href="job-management.html" class="footer-link">ניהול משרות</a>
-                <a href="index.html#search" class="footer-link">חיפוש משרות</a>
-                <a href="index.html#contact" class="footer-link">צור קשר</a>
-                <a href="terms.html" class="footer-link">תקנון אתר</a>
-                <a href="#" class="footer-link">מדיניות פרטיות</a>
-            </div>
-            
-            <div class="footer-social">
-                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
-            </div>
-            
-            <p class="copyright">© 2025 מה יש פה? - כל הזכויות שמורות</p>
+        
+        <!-- אלמנט הגמדה הצפה -->
+        <div class="gnome-float pulse" onclick="scrollToTop()" id="floatingGnome">
+            <img src="images/gnome.png" alt="גמדה עוזרת">
+            <div class="gnome-tooltip">לחזרה לראש הדף!</div>
         </div>
-    </footer>
+        
+        <!-- כותרת תחתונה -->
+        <footer class="footer">
+            <div class="container">
+                <!-- כותרת טקסטואלית במקום לוגו -->
+                <div class="text-logo-container" style="margin: 0 0 20px 0; padding: 0;">
+                    <h2 class="text-logo" style="font-size: 2rem;">מה יש פה?</h2>
+                    <p class="text-slogan" style="font-size: 1rem; margin-bottom: 10px;">לוח משרות חזק למקום עבודה מדוייק!</p>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="index.html" class="footer-link">דף הבית</a>
+                    <a href="job-management.html" class="footer-link">ניהול משרות</a>
+                    <a href="index.html#search" class="footer-link">חיפוש משרות</a>
+                    <a href="index.html#contact" class="footer-link">צור קשר</a>
+                    <a href="terms.html" class="footer-link">תקנון אתר</a>
+                    <a href="#" class="footer-link">מדיניות פרטיות</a>
+                </div>
+                
+                <div class="footer-social">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+                </div>
+                
+                <p class="copyright">© 2025 מה יש פה? - כל הזכויות שמורות</p>
+            </div>
+        </footer>
+    </div>
 
     <!-- סקריפטים -->
     <script src="js/main.js"></script>
-    <script src="js/management.js"></script>
+    <script>
+        // קוד JavaScript לבדיקת סיסמה ולהצגת תוכן הניהול
+        function showLoginForm() {
+            document.getElementById('adminLoginSection').style.display = 'flex';
+        }
+        
+        function checkAdminPassword() {
+            const password = document.getElementById('adminPassword').value;
+            const correctPassword = "yarin080708"; // הסיסמה שהוגדרה
+            
+            if (password === correctPassword) {
+                // הסיסמה נכונה - הצג את תוכן הניהול
+                document.getElementById('adminLoginSection').style.display = 'none';
+                document.getElementById('adminContentSection').style.display = 'block';
+                
+                // שמירת מצב הכניסה בזיכרון המקומי (אופציונלי)
+                sessionStorage.setItem('adminAuthenticated', 'true');
+                
+                // טען את רשימת המשרות הקיימת
+                loadJobs();
+            } else {
+                // הסיסמה שגויה - הצג הודעת שגיאה
+                document.getElementById('adminErrorMessage').style.display = 'block';
+            }
+        }
+        
+        // בדיקה אם המשתמש כבר מחובר (אופציונלי)
+        window.onload = function() {
+            if (sessionStorage.getItem('adminAuthenticated') === 'true') {
+                document.getElementById('adminLoginSection').style.display = 'none';
+                document.getElementById('adminContentSection').style.display = 'block';
+                
+                // טען את רשימת המשרות הקיימת
+                loadJobs();
+            } else {
+                document.getElementById('adminLoginSection').style.display = 'flex';
+                document.getElementById('adminContentSection').style.display = 'none';
+            }
+            
+            // התחברות עם לחיצה על Enter
+            document.getElementById('adminPassword').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    checkAdminPassword();
+                }
+            });
+        };
+        
+        // ניהול משרות
+        let jobs = [];
+        let currentPage = 1;
+        const jobsPerPage = 10;
+        
+        // טעינת משרות מה-localStorage
+        function loadJobs() {
+            const savedJobs = localStorage.getItem('jobs');
+            if (savedJobs) {
+                jobs = JSON.parse(savedJobs);
+                displayJobs();
+            }
+        }
+        
+        // שמירת משרות ב-localStorage
+        function saveJobs() {
+            localStorage.setItem('jobs', JSON.stringify(jobs));
+            showSuccessNotification();
+        }
+        
+        // הצגת הודעת הצלחה
+        function showSuccessNotification() {
+            const notification = document.getElementById('successNotification');
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // הצגת המשרות בטבלה
+        function displayJobs() {
+            const tableBody = document.getElementById('jobsTableBody');
+            tableBody.innerHTML = '';
+            
+            // חישוב מספר דפים
+            const totalPages = Math.ceil(jobs.length / jobsPerPage);
+            
+            // חישוב טווח המשרות להצגה
+            const startIndex = (currentPage - 1) * jobsPerPage;
+            const endIndex = Math.min(startIndex + jobsPerPage, jobs.length);
+            const jobsToShow = jobs.slice(startIndex, endIndex);
+            
+            // הוספת שורות לטבלה
+            jobsToShow.forEach((job, index) => {
+                const actualIndex = startIndex + index;
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${job.jobNumber || '-'}</td>
+                    <td>${job.title}</td>
+                    <td>${job.company}</td>
+                    <td>${job.category || 'אחר'}</td>
+                    <td>${job.city ? job.city + ', ' + (job.region || 'מרכז') : job.region || 'מרכז'}</td>
+                    <td class="${job.status === 'לא פעיל' ? 'status-inactive' : 'status-active'}">${job.status || 'פעיל'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-view" onclick="viewJob(${actualIndex})">הצג</button>
+                            <button class="btn btn-sm btn-edit" onclick="editJob(${actualIndex})">ערוך</button>
+                            <button class="btn btn-sm btn-delete" onclick="deleteJob(${actualIndex})">מחק</button>
+                        </div>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // עדכון דפדוף
+            updatePagination(totalPages);
+        }
+        
+        // עדכון דפדוף
+        function updatePagination(totalPages) {
+            const pagination = document.getElementById('jobsPagination');
+            pagination.innerHTML = '';
+            
+            if (totalPages <= 1) {
+                return;
+            }
+            
+            // כפתור קודם
+            if (currentPage > 1) {
+                const prevBtn = document.createElement('div');
+                prevBtn.className = 'page-item';
+                prevBtn.innerHTML = '&laquo;';
+                prevBtn.onclick = () => {
+                    currentPage--;
+                    displayJobs();
+                };
+                pagination.appendChild(prevBtn);
+            }
+            
+            // הצגת מספרי דפים
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('div');
+                pageBtn.className = 'page-item' + (i === currentPage ? ' active' : '');
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => {
+                    currentPage = i;
+                    displayJobs();
+                };
+                pagination.appendChild(pageBtn);
+            }
+            
+            // כפתור הבא
+            if (currentPage < totalPages) {
+                const nextBtn = document.createElement('div');
+                nextBtn.className = 'page-item';
+                nextBtn.innerHTML = '&raquo;';
+                nextBtn.onclick = () => {
+                    currentPage++;
+                    displayJobs();
+                };
+                pagination.appendChild(nextBtn);
+            }
+        }
+        
+        // טיפול בהעלאת קובץ
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    if (file.name.endsWith('.csv')) {
+                        // עיבוד קובץ CSV
+                        parseCSV(e.target.result);
+                    } else if (file.name.endsWith('.json')) {
+                        // עיבוד קובץ JSON
+                        parseJSON(e.target.result);
+                    } else {
+                        alert('פורמט קובץ לא נתמך. אנא העלה קובץ CSV או JSON.');
+                    }
+                } catch (error) {
+                    console.error('שגיאה בעיבוד הקובץ:', error);
+                    alert('שגיאה בעיבוד הקובץ. אנא בדוק את פורמט הקובץ ונסה שנית.');
+                }
+            };
+            
+            if (file.name.endsWith('.csv')) {
+                reader.readAsText(file);
+            } else {
+                reader.readAsText(file);
+            }
+        }
+        
+        // עיבוד קובץ CSV
+        function parseCSV(csvData) {
+            // שורות ועמודות פשוטות לדוגמה, יש להחליף בספריית CSV אמיתית
+            const lines = csvData.split('\n');
+            const headers = lines[0].split(',').map(header => header.trim());
+            
+            const jobsData = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                
+                const values = lines[i].split(',');
+                const job = {};
+                
+                for (let j = 0; j < headers.length; j++) {
+                    let value = values[j] ? values[j].trim() : '';
+                    // מיפוי כותרות (עברית או אנגלית)
+                    if (headers[j].includes('מספר') || headers[j].toLowerCase().includes('number')) {
+                        job.jobNumber = value;
+                    } else if (headers[j].includes('כותרת') || headers[j].toLowerCase().includes('title')) {
+                        job.title = value;
+                    } else if (headers[j].includes('חברה') || headers[j].toLowerCase().includes('company')) {
+                        job.company = value;
+                    } else if (headers[j].includes('קטגוריה') || headers[j].toLowerCase().includes('category')) {
+                        job.category = value;
+                    } else if (headers[j].includes('עיר') || headers[j].toLowerCase().includes('city')) {
+                        job.city = value;
+                    } else if (headers[j].includes('אזור') || headers[j].toLowerCase().includes('region')) {
+                        job.region = value;
+                    } else if (headers[j].includes('סוג') || headers[j].toLowerCase().includes('type')) {
+                        job.type = value;
+                    } else if (headers[j].includes('תיאור') || headers[j].toLowerCase().includes('description')) {
+                        job.description = value;
+                    } else if (headers[j].includes('דרישות') || headers[j].toLowerCase().includes('requirements')) {
+                        job.requirements = value;
+                    } else if (headers[j].includes('סטטוס') || headers[j].toLowerCase().includes('status')) {
+                        job.status = value;
+                    }
+                }
+                
+                // וודא שיש לפחות כותרת וחברה
+                if (job.title && job.company) {
+                    jobsData.push(job);
+                }
+            }
+            
+            if (jobsData.length > 0) {
+                jobs = jobsData;
+                saveJobs();
+                displayJobs();
+                closeImportModal();
+            } else {
+                alert('לא נמצאו משרות תקינות בקובץ. אנא בדוק את פורמט הקובץ ונסה שנית.');
+            }
+        }
+        
+        // עיבוד קובץ JSON
+        function parseJSON(jsonData) {
+            try {
+                const parsedData = JSON.parse(jsonData);
+                
+                if (Array.isArray(parsedData) && parsedData.length > 0) {
+                    const validJobs = parsedData.filter(job => job.title && job.company);
+                    
+                    if (validJobs.length > 0) {
+                        jobs = validJobs;
+                        saveJobs();
+                        displayJobs();
+                        closeImportModal();
+                    } else {
+                        alert('לא נמצאו משרות תקינות בקובץ. וודא שלכל משרה יש לפחות כותרת וחברה.');
+                    }
+                } else {
+                    alert('פורמט JSON לא תקין. הקובץ צריך להכיל מערך של אובייקטי משרות.');
+                }
+            } catch (error) {
+                console.error('שגיאה בפענוח קובץ JSON:', error);
+                alert('שגיאה בפענוח קובץ JSON. וודא שהקובץ מכיל JSON תקין.');
+            }
+        }
+        
+        // פתיחת חלון ייבוא משרות
+        function openImportModal() {
+            document.getElementById('import-modal').style.display = 'block';
+        }
+        
+        // סגירת חלון ייבוא משרות
+        function closeImportModal() {
+            document.getElementById('import-modal').style.display = 'none';
+            document.getElementById('file-input').value = '';
+        }
+        
+        // פתיחת חלון הוספת/עריכת משרה
+        function openAddJobModal() {
+            document.getElementById('edit-modal-title').textContent = 'הוספת משרה חדשה';
+            document.getElementById('job-edit-form').reset();
+            document.getElementById('edit-job-id').value = '';
+            document.getElementById('job-edit-modal').style.display = 'block';
+        }
+        
+        // עריכת משרה קיימת
+        function editJob(index) {
+            const job = jobs[index];
+            document.getElementById('edit-modal-title').textContent = 'עריכת משרה';
+            document.getElementById('edit-job-id').value = index;
+            document.getElementById('edit-job-number').value = job.jobNumber || '';
+            document.getElementById('edit-job-title').value = job.title || '';
+            document.getElementById('edit-job-company').value = job.company || '';
+            document.getElementById('edit-job-category').value = job.category || 'אחר';
+            document.getElementById('edit-job-city').value = job.city || '';
+            document.getElementById('edit-job-region').value = job.region || 'מרכז';
+            document.getElementById('edit-job-type').value = job.type || 'משרה מלאה';
+            document.getElementById('edit-job-status').value = job.status || 'פעיל';
+            document.getElementById('edit-job-description').value = job.description || '';
+            document.getElementById('edit-job-requirements').value = job.requirements || '';
+            
+            document.getElementById('job-edit-modal').style.display = 'block';
+        }
+        
+        // סגירת חלון עריכה
+        function closeEditModal() {
+            document.getElementById('job-edit-modal').style.display = 'none';
+        }
+        
+        // שמירת משרה
+        function saveJob(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('edit-job-id').value;
+            const job = {
+                jobNumber: document.getElementById('edit-job-number').value,
+                title: document.getElementById('edit-job-title').value,
+                company: document.getElementById('edit-job-company').value,
+                category: document.getElementById('edit-job-category').value,
+                city: document.getElementById('edit-job-city').value,
+                region: document.getElementById('edit-job-region').value,
+                type: document.getElementById('edit-job-type').value,
+                status: document.getElementById('edit-job-status').value,
+                description: document.getElementById('edit-job-description').value,
+                requirements: document.getElementById('edit-job-requirements').value
+            };
+            
+            if (id === '') {
+                // הוספת משרה חדשה
+                jobs.push(job);
+            } else {
+                // עדכון משרה קיימת
+                jobs[parseInt(id)] = job;
+            }
+            
+            saveJobs();
+            displayJobs();
+            closeEditModal();
+            return false;
+        }
+        
+        // מחיקת משרה
+        function deleteJob(index) {
+            if (confirm('האם אתה בטוח שברצונך למחוק את המשרה הזו?')) {
+                jobs.splice(index, 1);
+                saveJobs();
+                displayJobs();
+            }
+        }
+        
+        // הצגת פרטי משרה
+        function viewJob(index) {
+            alert('פונקציונליות זו תוסף בהמשך');
+        }
+        
+        // סינון רשימת המשרות
+        function filterJobsList() {
+            // פונקציונליות סינון תוסף בהמשך
+            alert('פונקציונליות סינון תוסף בהמשך');
+        }
+        
+        // ניקוי מסננים
+        function clearJobsFilters() {
+            document.getElementById('searchJobsInput').value = '';
+            document.getElementById('categoryFilterAdmin').value = '';
+            document.getElementById('statusFilterAdmin').value = '';
+            displayJobs();
+        }
+        
+        // ייצוא משרות
+        function exportJobs() {
+            if (jobs.length === 0) {
+                alert('אין משרות לייצוא');
+                return;
+            }
+            
+            // ייצוא בפורמט JSON
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(jobs, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "jobs_export.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+        
+        // הורדת תבנית CSV
+        function downloadTemplate() {
+            const csvContent = 'מספר משרה,כותרת,חברה,קטגוריה,עיר,אזור,סוג משרה,סטטוס,תיאור,דרישות\n' +
+                '1001,מפתח/ת Full Stack,חברת הייטק בע"מ,פיתוח ותוכנה,תל אביב,מרכז,משרה מלאה,פעיל,"תיאור המשרה כאן","דרישה 1\nדרישה 2\nדרישה 3"\n' +
+                '1002,מנהל/ת מכירות,חברת שיווק,שיווק ומכירות,חיפה,צפון,משרה מלאה,פעיל,"תיאור המשרה כאן","דרישה 1\nדרישה 2\nדרישה 3"';
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'template.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
 </body>
 </html>
