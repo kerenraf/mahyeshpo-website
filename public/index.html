@@ -1,1 +1,2088 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מה יש פה? - מצא את העבודה המושלמת</title>
+    <style>
+        :root {
+            --primary-color: #F69898;
+            --primary-hover: #e58080;
+            --dark-bg: #333333;
+            --darker-bg: #222222;
+            --lightest-bg: #555555;
+            --text-light: #ffffff;
+            --text-muted: #cccccc;
+            --success-color: #28a745;
+            --error-color: #ff6b6b;
+            --border-radius: 12px;
+            --input-radius: 8px;
+            --box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            --transition: all 0.3s ease;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000000;
+            color: white;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: var(--dark-bg);
+            padding: 20px 0;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 60px 0;
+            background: linear-gradient(145deg, rgba(51,51,51,0.9) 0%, rgba(34,34,34,0.9) 100%);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(246,152,152,0.1) 0%, rgba(0,0,0,0) 70%);
+            z-index: 0;
+        }
+
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn {
+            background: linear-gradient(to right, var(--primary-color), #ff9e9e);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0 10px;
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 12px rgba(246,152,152,0.3);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            background: linear-gradient(to right, #e58080, #ff8a8a);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(246,152,152,0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            box-shadow: 0 6px 15px rgba(255,255,255,0.2);
+        }
+
+        .search-section {
+            background: linear-gradient(145deg, var(--dark-bg) 0%, #2a2a2a 100%);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            margin-bottom: 40px;
+            box-shadow: var(--box-shadow);
+            border: 1px solid #444;
+        }
+
+        .search-title {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .search-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            padding: 14px;
+            border: 1px solid #555555;
+            border-radius: var(--input-radius);
+            background: #444;
+            color: white;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(246, 152, 152, 0.25);
+        }
+
+        .search-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .categories {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 35px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .category-card {
+            background: linear-gradient(145deg, #3a3a3a, var(--dark-bg));
+            padding: 25px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid #444444;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card:hover {
+            background: linear-gradient(145deg, #444444, #383838);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0) 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            transform: translate(-30%, -30%);
+            pointer-events: none;
+        }
+
+        .category-card:hover::before {
+            opacity: 1;
+        }
+
+        .category-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+        }
+
+        .category-card:hover .category-icon {
+            transform: scale(1.1);
+        }
+
+        .category-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+
+        .category-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .job-card {
+            background: linear-gradient(145deg, #3a3a3a, var(--dark-bg));
+            padding: 25px;
+            border-radius: var(--border-radius);
+            border: 1px solid #444444;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .job-card:hover {
+            background: linear-gradient(145deg, #444444, #383838);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .job-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), #ff9e9e, var(--primary-color));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .job-card:hover::after {
+            opacity: 1;
+        }
+
+        .job-title {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            transition: var(--transition);
+        }
+
+        .job-card:hover .job-title {
+            color: #ff9e9e;
+        }
+
+        .job-company {
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .job-location {
+            color: #aaaaaa;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .job-location::before {
+            content: '📍';
+            margin-left: 5px;
+            font-size: 0.85rem;
+        }
+
+        .job-description {
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .job-badge {
+            background: #7c3aed;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .category-food { background: linear-gradient(to right, #fef3c7, #fde68a); color: #92400e; } /* Soft yellow */
+        .category-education { background: linear-gradient(to right, #dbeafe, #bfdbfe); color: #1e40af; } /* Light blue */
+        .category-tech { background: linear-gradient(to right, #e0e7ff, #c7d2fe); color: #5b21b6; } /* Lavender */
+        .category-computers { background: linear-gradient(to right, #d1fae5, #a7f3d0); color: #065f46; } /* Mint green */
+        .category-automotive { background: linear-gradient(to right, #fecaca, #fca5a5); color: #991b1b; } /* Soft pink-red */
+        .category-marketing { background: linear-gradient(to right, #fce7f3, #fbcfe8); color: #be185d; } /* Soft pink */
+        .category-admin { background: linear-gradient(to right, #fed7aa, #fdba74); color: #9a3412; } /* Peach */
+        .category-logistics { background: linear-gradient(to right, #e5e7eb, #d1d5db); color: #374151; } /* Light gray */
+        .category-hr { background: linear-gradient(to right, #f3e8ff, #e9d5ff); color: #7c2d12; } /* Light purple */
+        .category-security { background: linear-gradient(to right, #d1d5db, #9ca3af); color: #111827; } /* Cool gray */
+        .category-health { background: linear-gradient(to right, #dcfce7, #bbf7d0); color: #166534; } /* Soft green */
+        .category-tourism { background: linear-gradient(to right, #fef08a, #fde047); color: #365314; } /* Soft lime */
+        .category-construction { background: linear-gradient(to right, #fed7aa, #fdba74); color: #c2410c; } /* Soft orange */
+        .category-other { background: linear-gradient(to right, #f3f4f6, #e5e7eb); color: #6b7280; } /* Very light gray */
+
+        .job-number {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(to right, var(--primary-color), #ff9e9e);
+            color: white;
+            border-radius: 12px;
+            min-width: 30px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 2px 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            z-index: 2;
+        }
+
+        /* Modal Styles - Enhanced */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--darker-bg);
+            margin: 4% auto;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 650px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid var(--primary-color);
+            box-shadow: var(--box-shadow);
+            position: relative;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
+        }
+
+        .modal-title {
+            color: var(--primary-color);
+            font-size: 1.6rem;
+            font-weight: bold;
+        }
+
+        .close {
+            color: var(--text-muted);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Job Details Section */
+        .job-details {
+            background: var(--dark-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 25px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .job-detail-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .job-detail-item {
+            padding-bottom: 8px;
+        }
+
+        .job-detail-label {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .job-detail-value {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .job-section-title {
+            color: var(--primary-color);
+            margin: 20px 0 10px 0;
+            font-size: 1.2rem;
+            position: relative;
+            padding-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .job-section-title::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--primary-color);
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 50%;
+        }
+
+        .job-description, .job-requirements {
+            background: var(--dark-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            white-space: pre-line;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Application Form - Significantly Enhanced */
+        .application-form {
+            margin-top: 30px;
+            background: linear-gradient(145deg, #3a3a3a, #2d2d2d);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            border: 1px solid #444;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .application-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), #ff9e9e, var(--primary-color));
+            animation: shimmer 3s infinite linear;
+            background-size: 200% 100%;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
+
+        .form-title {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.3rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .form-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: var(--primary-color);
+            margin: 8px auto 0;
+            border-radius: 3px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #555555;
+            border-radius: var(--input-radius);
+            background: var(--lightest-bg);
+            color: white;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(246, 152, 152, 0.25);
+        }
+
+        .form-file-upload {
+            border: 2px dashed var(--primary-color);
+            background: rgba(246, 152, 152, 0.05);
+            padding: 25px 15px;
+            border-radius: var(--input-radius);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .form-file-upload:hover {
+            background: rgba(246, 152, 152, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .file-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .form-file-upload:hover .file-icon {
+            transform: scale(1.1);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .form-submit {
+            background: linear-gradient(to right, var(--primary-color), #ff9e9e);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: var(--input-radius);
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        .form-submit:hover {
+            background: linear-gradient(to right, #e58080, #ff8a8a);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(246, 152, 152, 0.4);
+        }
+
+        .form-submit:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(246, 152, 152, 0.4);
+        }
+
+        .form-submit::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .form-submit:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 0.3;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+
+        .form-required {
+            color: var(--primary-color);
+            font-size: 0.8rem;
+            margin-right: 4px;
+        }
+
+        .validation-error {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+            animation: shake 0.5s;
+            padding-right: 18px;
+            position: relative;
+        }
+
+        .validation-error::before {
+            content: "⚠️";
+            position: absolute;
+            right: 0;
+            top: 1px;
+            font-size: 0.7rem;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+            20%, 40%, 60%, 80% { transform: translateX(3px); }
+        }
+
+        .success-message {
+            display: none;
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            color: #4cd964;
+            padding: 25px 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-top: 25px;
+            animation: fadeIn 0.5s;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: bounceIn 0.6s;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Extra Animation for Success Elements */
+        .success-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #4cd964;
+        }
+
+        .pulsate {
+            animation: pulsate 2s infinite;
+        }
+
+        @keyframes pulsate {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .import-section {
+            text-align: center;
+        }
+
+        .file-upload {
+            border: 2px dashed var(--primary-color);
+            background: #444444;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-upload:hover {
+            background: #555555;
+            transform: translateY(-3px);
+        }
+
+        .file-info {
+            background: #444444;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            text-align: right;
+        }
+
+        .file-info h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .mapping-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+            padding: 10px;
+            background: #444444;
+            border-radius: 8px;
+        }
+
+        .mapping-label {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .mapping-select {
+            padding: 8px;
+            border: 1px solid #555555;
+            border-radius: 6px;
+            background: #555555;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .field-preview {
+            background: #666666;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #cccccc;
+            max-height: 60px;
+            overflow: hidden;
+        }
+
+        /* סגנונות לדמות הגמדה */
+        .gnome-character {
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+            transition: transform 0.3s ease;
+            z-index: 2;
+        }
+
+        .gnome-character img {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .gnome-search {
+            position: absolute;
+            right: -15px;
+            bottom: -10px;
+            transform: scale(0.8);
+        }
+
+        .gnome-button {
+            margin-right: 10px;
+            transform: scale(0.9);
+        }
+
+        .gnome-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            height: 80px;
+            width: auto;
+            cursor: pointer;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+            z-index: 100;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .gnome-modal {
+            position: absolute;
+            top: -40px;
+            right: 50px;
+            transform: scale(0.8) rotate(5deg);
+        }
+
+        .gnome-form {
+            position: absolute;
+            top: -30px;
+            right: 20px;
+            transform: scale(0.8);
+        }
+
+        .search-with-gnome {
+            position: relative;
+        }
+
+        .btn-with-gnome {
+            padding-right: 45px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* אנימציות לדמות הגמדה */
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-10px) rotate(3deg);
+            }
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: scale(0.9);
+            }
+            50% {
+                transform: scale(1);
+            }
+        }
+
+        .gnome-character:hover {
+            transform: scale(1.1);
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(0.95);
+            }
+        }
+
+        .gnome-tooltip {
+            position: absolute;
+            background: white;
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            top: -60px;
+            right: 0;
+            width: 150px;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+            transform: translateY(10px);
+            z-index: 10;
+        }
+
+        .gnome-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 15px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid white;
+        }
+
+        .gnome-character:hover .gnome-tooltip {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* תיקון לסגנון הכפתורים עם הגמדה */
+        .search-buttons {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Additional animations */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-up {
+            animation: fadeUp 0.5s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        /* Responsive Styles */
+        @media (min-width: 768px) {
+            .search-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+            
+            .hero h2 {
+                font-size: 3rem;
+            }
+            
+            .search-buttons {
+                justify-content: center;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .categories-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        @media (max-width: 767px) {
+            .mapping-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+                padding: 20px;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            .btn {
+                margin: 5px;
+                padding: 12px 20px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .job-detail-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+  <header class="header">
+        <div class="container">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div class="site-logo" style="max-width: 200px;">
+                    <img src="logo.png" alt="מה יש פה?" style="width: 100%; height: auto;">
+                </div>
+                <h1>מה יש פה?</h1>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h2 class="fade-up">מצא את העבודה המושלמת בשבילך</h2>
+            <p class="fade-up delay-1">אלפי משרות מעודכנות באזורים שונים ברחבי הארץ</p>
+            <a href="#search" class="btn btn-with-gnome fade-up delay-2">
+                חיפוש משרות
+                <span class="gnome-character gnome-button">
+                    <img src="gnome.png" alt="גמדה מחפשת">
+                    <div class="gnome-tooltip">לחצו עליי כדי לחפש משרות!</div>
+                </span>
+            </a>
+            <a href="#contact" class="btn btn-secondary fade-up delay-3">צור קשר</a>
+        </div>
+    </section>
+
+    <section id="search" class="search-section">
+        <div class="container">
+            <h3 class="search-title">חיפוש משרות</h3>
+            
+            <div class="search-grid">
+                <div class="form-group">
+                    <label class="form-label">חיפוש חופשי</label>
+                    <input type="text" class="form-control" id="searchInput" placeholder="הקלד מילות חיפוש...">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">קטגוריה</label>
+                    <select class="form-control" id="categoryFilter">
+                        <option value="">כל הקטגוריות</option>
+                        <option value="מזון ומסעדנות">מזון ומסעדנות</option>
+                        <option value="חינוך והוראה">חינוך והוראה</option>
+                        <option value="פיתוח ותוכנה">פיתוח ותוכנה</option>
+                        <option value="מחשבים ורשתות תקשורת">מחשבים ורשתות</option>
+                        <option value="עולם הרכבים והליסינג">רכבים וליסינג</option>
+                        <option value="שיווק ומכירות">שיווק ומכירות</option>
+                        <option value="בריאות ורפואה">בריאות ורפואה</option>
+                        <option value="אחר">אחר</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">אזור</label>
+                    <select class="form-control" id="regionFilter">
+                        <option value="">כל האזורים</option>
+                        <option value="מרכז">מרכז</option>
+                        <option value="חיפה קריות והצפון">צפון</option>
+                        <option value="ירושליים והסביבה">ירושלים</option>
+                        <option value="דרום">דרום</option>
+                        <option value="שרון">שרון</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="search-buttons">
+                <button class="btn btn-with-gnome" onclick="searchJobs()">
+                    חיפוש
+                    <span class="gnome-character gnome-button">
+                        <img src="gnome.png" alt="גמדה מחפשת">
+                        <div class="gnome-tooltip">לחצו עליי כדי לחפש משרות!</div>
+                    </span>
+                </button>
+                <button class="btn btn-secondary" onclick="clearFilters()">נקה</button>
+                <button class="btn btn-secondary" onclick="openImportModal()">ייבא משרות</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="categories">
+        <div class="container">
+            <h3 class="section-title">קטגוריות מובילות</h3>
+            <div class="categories-grid">
+                <div class="category-card fade-up" onclick="selectCategory('מזון ומסעדנות')">
+                    <div class="category-icon">🍽️</div>
+                    <div class="category-title">מזון ומסעדנות</div>
+                    <div class="category-desc">מלצרים, טבחים, ברמנים</div>
+                </div>
+                
+                <div class="category-card fade-up delay-1" onclick="selectCategory('חינוך והוראה')">
+                    <div class="category-icon">📚</div>
+                    <div class="category-title">חינוך והוראה</div>
+                    <div class="category-desc">מורים, מדריכים, מחנכים</div>
+                </div>
+                
+                <div class="category-card fade-up delay-2" onclick="selectCategory('פיתוח ותוכנה')">
+                    <div class="category-icon">💻</div>
+                    <div class="category-title">פיתוח ותוכנה</div>
+                    <div class="category-desc">מפתחים, מתכנתים, QA</div>
+                </div>
+                
+                <div class="category-card fade-up delay-3" onclick="selectCategory('שיווק ומכירות')">
+                    <div class="category-icon">📊</div>
+                    <div class="category-title">שיווק ומכירות</div>
+                    <div class="category-desc">אנשי מכירות, מנהלי שיווק</div>
+                </div>
+                
+                <div class="category-card fade-up delay-4" onclick="selectCategory('בריאות ורפואה')">
+                    <div class="category-icon">⚕️</div>
+                    <div class="category-title">בריאות ורפואה</div>
+                    <div class="category-desc">אחים/ות, רופאים, פרמדיקים</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="jobs">
+        <div class="container">
+            <h3 class="section-title">משרות מומלצות</h3>
+            <div class="jobs-grid" id="jobsContainer">
+                <!-- Jobs will be populated here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Job Modal with Application Form -->
+    <div id="job-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-job-title" class="modal-title">כותרת המשרה</h3>
+                <span class="gnome-character gnome-modal">
+                    <img src="gnome.png" alt="גמדה מציגה משרה">
+                    <div class="gnome-tooltip">הנה פרטי המשרה המלאים!</div>
+                </span>
+                <span class="close" onclick="closeJobModal()">&times;</span>
+            </div>
+            
+            <div class="job-details">
+                <div class="job-detail-row">
+                    <div class="job-detail-item">
+                        <span class="job-detail-label">חברה:</span>
+                        <span id="modal-job-company" class="job-detail-value"></span>
+                    </div>
+                    <div class="job-detail-item">
+                        <span class="job-detail-label">מיקום:</span>
+                        <span id="modal-job-location" class="job-detail-value"></span>
+                    </div>
+                </div>
+                <div class="job-detail-row">
+                    <div class="job-detail-item">
+                        <span class="job-detail-label">סוג משרה:</span>
+                        <span id="modal-job-type" class="job-detail-value"></span>
+                    </div>
+                    <div class="job-detail-item">
+                        <span class="job-detail-label">קטגוריה:</span>
+                        <span id="modal-job-category" class="job-detail-value"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <h4 class="job-section-title">תיאור המשרה</h4>
+            <div id="modal-job-description" class="job-description"></div>
+            
+            <h4 class="job-section-title">דרישות התפקיד</h4>
+            <div id="modal-job-requirements" class="job-requirements"></div>
+            
+            <div class="application-form">
+                <h4 class="form-title">
+                    הגשת מועמדות
+                    <span class="gnome-character gnome-form">
+                        <img src="gnome.png" alt="גמדה עוזרת בהגשה">
+                        <div class="gnome-tooltip">אני אעזור לך להגיש מועמדות!</div>
+                    </span>
+                </h4>
+                <form id="application-form" action="/api/send-application" method="post" enctype="multipart/form-data" onsubmit="return submitApplication(event)">
+                    <input type="hidden" id="job-id-input" name="jobId">
+                    <input type="hidden" id="job-title-input" name="jobTitle">
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="full-name">שם מלא <span class="form-required">*</span></label>
+                            <input type="text" id="full-name" name="fullName" class="form-input" placeholder="הקלד/י את שמך המלא">
+                            <div id="name-error" class="validation-error">נא להזין שם מלא</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="phone">טלפון נייד <span class="form-required">*</span></label>
+                            <input type="tel" id="phone" name="phone" class="form-input" placeholder="050-0000000" dir="ltr">
+                            <div id="phone-error" class="validation-error">נא להזין מספר טלפון תקין (לדוגמה: 050-0000000)</div>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label class="form-label">קורות חיים <span class="form-required">*</span></label>
+                            <div class="form-file-upload" onclick="document.getElementById('cv-file').click()">
+                                <div class="file-icon">📄</div>
+                                <p><strong>לחץ/י כאן להעלאת קובץ קורות חיים</strong></p>
+                                <p style="font-size: 0.8rem; color: #cccccc; margin-top: 5px;">PDF, DOC, DOCX</p>
+                            </div>
+                            <input type="file" id="cv-file" name="cvFile" class="file-input" accept=".pdf,.doc,.docx" onchange="handleFileSelect(event)">
+                            <div id="file-name" class="file-name"></div>
+                            <div id="cv-error" class="validation-error">נא להעלות קובץ קורות חיים</div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="form-submit btn-with-gnome">
+                        שלח/י מועמדות
+                        <span class="gnome-character" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%) scale(0.7);">
+                            <img src="gnome.png" alt="גמדה שולחת מועמדות">
+                        </span>
+                    </button>
+                </form>
+                
+                <div id="success-message" class="success-message">
+                    <div class="success-icon">✅</div>
+                    <h4 class="success-title pulsate">מועמדותך נשלחה בהצלחה!</h4>
+                    <p>תודה על הגשת המועמדות. נחזור אליך בהקדם.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div id="import-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">ייבא משרות מקובץ</h3>
+                <span class="gnome-character gnome-modal">
+                    <img src="gnome.png" alt="גמדה עוזרת בייבוא">
+                    <div class="gnome-tooltip">אני יכולה לעזור לך לייבא משרות!</div>
+                </span>
+                <span class="close" onclick="closeImportModal()">&times;</span>
+            </div>
+            
+            <div class="import-section">
+                <p>העלה קובץ CSV או JSON עם רשימת המשרות שלך</p>
+                
+                <div class="file-upload" onclick="document.getElementById('file-input').click()">
+                    <div style="font-size: 2.5rem; margin-bottom: 10px;">📁</div>
+                    <p><strong>לחץ כאן להעלאת קובץ</strong></p>
+                    <p>תומך בקבצי CSV ו-JSON</p>
+                </div>
+                
+                <input type="file" id="file-input" accept=".csv,.json" style="display: none;" onchange="handleFileUpload(event)">
+                
+                <div class="file-info">
+                    <h4>פורמט נתמך:</h4>
+                    <p><strong>CSV:</strong> עם כותרות בעברית או אנגלית</p>
+                    <p><strong>JSON:</strong> מערך של אובייקטי משרות</p>
+                    
+                    <h4>שדות נתמכים:</h4>
+                    <p>מספר משרה, כותרת, חברה, קטגוריה, עיר, אזור, סוג משרה, תיאור, דרישות</p>
+                </div>
+                
+                <button class="btn" onclick="downloadTemplate()">הורד תבנית CSV</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mapping Modal -->
+    <div id="mapping-modal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title">מיפוי שדות</h3>
+                <span class="gnome-character gnome-modal">
+                    <img src="gnome.png" alt="גמדה עוזרת במיפוי">
+                    <div class="gnome-tooltip">בואו נמפה את השדות יחד!</div>
+                </span>
+                <span class="close" onclick="closeMappingModal()">&times;</span>
+            </div>
+            
+            <div style="text-align: right;">
+                <p style="margin-bottom: 20px; color: #cccccc;">התאם את השדות מהקובץ שלך לשדות של האתר:</p>
+                
+                <div id="mapping-container" style="margin-bottom: 20px;">
+                </div>
+                
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                    <button class="btn btn-secondary" onclick="closeMappingModal()">ביטול</button>
+                    <button class="btn btn-with-gnome" onclick="processMappedData()">
+                        ייבא משרות
+                        <span class="gnome-character" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%) scale(0.7);">
+                            <img src="gnome.png" alt="גמדה מייבאת">
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- הגמדה הצפה בתחתית הדף -->
+    <div class="gnome-float pulse" onclick="scrollToTop()" id="floatingGnome">
+        <img src="gnome.png" alt="גמדה עוזרת">
+        <div class="gnome-tooltip" style="width: 120px; top: -50px; right: -30px;">לחזרה לראש הדף!</div>
+    </div>
+
+    <script>
+        let rawImportData = [];
+        let fileHeaders = [];
+        let currentFileType = '';
+        let selectedFileName = '';
+
+        const fieldMapping = {
+            'jobNumber': ['jobNumber', 'job_number', 'מספר משרה', 'מס משרה', 'Job Number'],
+            'title': ['title', 'Title', 'כותרת', 'כותרת משרה', 'שם משרה'],
+            'company': ['company', 'Company', 'חברה', 'שם חברה'],
+            'category': ['category', 'Category', 'קטגוריה'],
+            'city': ['city', 'City', 'עיר', 'יישוב'],
+            'region': ['region', 'Region', 'אזור'],
+            'jobType': ['jobType', 'JobType', 'סוג משרה', 'היקף משרה'],
+            'description': ['description', 'Description', 'תיאור', 'תיאור משרה'],
+            'requirements': ['requirements', 'Requirements', 'דרישות', 'דרישות תפקיד'],
+            'status': ['status', 'Status', 'סטטוס']
+        };
+
+        const targetFields = {
+            'jobNumber': 'מספר משרה',
+            'title': 'כותרת המשרה *',
+            'company': 'שם החברה *',
+            'category': 'קטגוריה',
+            'city': 'עיר',
+            'region': 'אזור',
+            'jobType': 'סוג משרה',
+            'description': 'תיאור המשרה',
+            'requirements': 'דרישות התפקיד',
+            'status': 'סטטוס'
+        };
+
+        const categoryMapping = {
+            'מזון': 'מזון ומסעדנות',
+            'מסעדנות': 'מזון ומסעדנות',
+            'food': 'מזון ומסעדנות',
+            'restaurant': 'מזון ומסעדנות',
+            'חינוך': 'חינוך והוראה',
+            'הוראה': 'חינוך והוראה',
+            'education': 'חינוך והוראה',
+            'teaching': 'חינוך והוראה',
+            'פיתוח': 'פיתוח ותוכנה',
+            'תוכנה': 'פיתוח ותוכנה',
+            'תכנות': 'פיתוח ותוכנה',
+            'היי-טק': 'פיתוח ותוכנה',
+            'טכנולוגיה': 'פיתוח ותוכנה',
+            'development': 'פיתוח ותוכנה',
+            'software': 'פיתוח ותוכנה',
+            'tech': 'פיתוח ותוכנה',
+            'programming': 'פיתוח ותוכנה',
+            'מחשבים': 'מחשבים ורשתות תקשורת',
+            'רשתות': 'מחשבים ורשתות תקשורת',
+            'it': 'מחשבים ורשתות תקשורת',
+            'computers': 'מחשבים ורשתות תקשורת',
+            'network': 'מחשבים ורשתות תקשורת',
+            'רכב': 'עולם הרכבים והליסינג',
+            'רכבים': 'עולם הרכבים והליסינג',
+            'ליסינג': 'עולם הרכבים והליסינג',
+            'automotive': 'עולם הרכבים והליסינג',
+            'cars': 'עולם הרכבים והליסינג',
+            'שיווק': 'שיווק ומכירות',
+            'מכירות': 'שיווק ומכירות',
+            'marketing': 'שיווק ומכירות',
+            'sales': 'שיווק ומכירות',
+            'רפואה': 'בריאות ורפואה',
+            'בריאות': 'בריאות ורפואה',
+            'medical': 'בריאות ורפואה',
+            'health': 'בריאות ורפואה',
+            'healthcare': 'בריאות ורפואה',
+            'אדמיניסטרציה': 'אדמיניסטרציה',
+            'admin': 'אדמיניסטרציה',
+            'administration': 'אדמיניסטרציה',
+            'לוגיסטיקה': 'לוגיסטיקה ורכש',
+            'רכש': 'לוגיסטיקה ורכש',
+            'logistics': 'לוגיסטיקה ורכש',
+            'procurement': 'לוגיסטיקה ורכש',
+            'משאבי אנוש': 'משאבי אנוש',
+            'hr': 'משאבי אנוש',
+            'human resources': 'משאבי אנוש',
+            'אבטחה': 'אבטחה',
+            'security': 'אבטחה',
+            'תיירות': 'תיירות ומלונאות',
+            'מלונאות': 'תיירות ומלונאות',
+            'tourism': 'תיירות ומלונאות',
+            'hospitality': 'תיירות ומלונאות',
+            'hotel': 'תיירות ומלונאות',
+            'בנייה': 'בנייה ותשתיות',
+            'תשתיות': 'בנייה ותשתיות',
+            'construction': 'בנייה ותשתיות',
+            'infrastructure': 'בנייה ותשתיות'
+        };
+
+        const categoryColors = {
+            'מזון ומסעדנות': 'category-food',
+            'חינוך והוראה': 'category-education',
+            'פיתוח ותוכנה': 'category-tech',
+            'מחשבים ורשתות תקשורת': 'category-computers',
+            'עולם הרכבים והליסינג': 'category-automotive',
+            'שיווק ומכירות': 'category-marketing',
+            'אדמיניסטרציה': 'category-admin',
+            'לוגיסטיקה ורכש': 'category-logistics',
+            'משאבי אנוש': 'category-hr',
+            'אבטחה': 'category-security',
+            'בריאות ורפואה': 'category-health',
+            'תיירות ומלונאות': 'category-tourism',
+            'בנייה ותשתיות': 'category-construction',
+            'אחר': 'category-other'
+        };
+
+        let jobs = [
+            {
+                id: 1,
+                jobNumber: "JS001",
+                title: "מפתח/ת Full Stack",
+                company: "טכנולוגיות מתקדמות בע\"מ",
+                category: "פיתוח ותוכנה",
+                city: "תל אביב",
+                region: "מרכז",
+                location: "תל אביב - מרכז",
+                jobType: "משרה מלאה",
+                description: "אנו מחפשים מפתח/ת Full Stack עם ניסיון בטכנולוגיות React, Node.js ו-MongoDB. התפקיד כולל פיתוח מערכות מורכבות, עבודה בצוות מקצועי ומתן פתרונות טכנולוגיים מתקדמים.",
+                requirements: "ניסיון של 3+ שנים בפיתוח Full Stack\nידע מעמיק ב-JavaScript\nניסיון עם React ו-Node.js\nיכולת עבודה בצוות\nאנגלית ברמה טובה",
+                status: "פעיל"
+            },
+            {
+                id: 2,
+                jobNumber: "WS002",
+                title: "מלצר/ית למסעדה יוקרתית",
+                company: "מסעדת השף",
+                category: "מזון ומסעדנות",
+                city: "חיפה",
+                region: "חיפה קריות והצפון",
+                location: "חיפה - צפון",
+                jobType: "משרה חלקית",
+                description: "דרושים מלצרים/ות למסעדה יוקרתית בחיפה. ניסיון קודם - יתרון. העבודה במשמרות גמישות, אווירה משפחתית ותנאים מעולים!",
+                requirements: "ניסיון קודם בהגשה - יתרון\nיחסי אנוש מעולים\nזמינות לעבודה בערבים וסופי שבוע\nיכולת עבודה בצוות",
+                status: "פעיל"
+            },
+            {
+                id: 3,
+                jobNumber: "TE003",
+                title: "מורה לאנגלית",
+                company: "בית ספר יסודי",
+                category: "חינוך והוראה",
+                city: "ירושלים",
+                region: "ירושליים והסביבה",
+                location: "ירושלים",
+                jobType: "משרה מלאה",
+                description: "דרוש/ה מורה לאנגלית לבית ספר יסודי בירושלים. המשרה כוללת הוראת אנגלית לכיתות א'-ו', הכנת מערכי שיעור ובדיקת מבחנים.",
+                requirements: "תואר ראשון בהוראת אנגלית או תחום רלוונטי\nתעודת הוראה\nניסיון בהוראה - יתרון\nיחסי אנוש מעולים\nיכולת עבודה בסביבה דינמית",
+                status: "פעיל"
+            }
+        ];
+
+        function displayJobs(jobsToShow = jobs) {
+            const container = document.getElementById('jobsContainer');
+            container.innerHTML = '';
+            
+            const filteredJobs = jobsToShow.filter(job => job.status === 'פעיל');
+            
+            if (filteredJobs.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #cccccc;">לא נמצאו משרות</p>';
+                return;
+            }
+            
+            filteredJobs.forEach((job, index) => {
+                const jobCard = document.createElement('div');
+                jobCard.className = 'job-card';
+                jobCard.classList.add('fade-up');
+                
+                // Add animation delay based on index
+                if (index < 5) {
+                    jobCard.classList.add(`delay-${index % 5}`);
+                }
+                
+                jobCard.onclick = () => openJobModal(job);
+                
+                // Ensure category is standardized and get color class
+                const standardizedCategory = standardizeCategory(job.category);
+                const categoryColorClass = categoryColors[standardizedCategory] || 'category-other';
+                
+                jobCard.innerHTML = `
+                    ${job.jobNumber ? `<div class="job-number">${job.jobNumber}</div>` : ''}
+                    <div class="job-badge ${categoryColorClass}">${standardizedCategory}</div>
+                    <div class="job-title">${job.title}</div>
+                    <div class="job-company">${job.company || ''}</div>
+                    <div class="job-location">${job.location || ''}</div>
+                    <div class="job-description">${(job.description || '').substring(0, 150)}${job.description && job.description.length > 150 ? '...' : ''}</div>
+                    <div class="gnome-character" style="position: absolute; bottom: -15px; right: -15px; transform: scale(0.7);">
+                        <img src="gnome.png" alt="גמדה מציעה מידע נוסף">
+                        <div class="gnome-tooltip">לחצו לפרטים נוספים על המשרה!</div>
+                    </div>
+                `;
+                
+                container.appendChild(jobCard);
+            });
+        }
+
+        function searchJobs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const region = document.getElementById('regionFilter').value;
+            
+            const filteredJobs = jobs.filter(job => {
+                const matchesSearch = !searchTerm || 
+                    job.title.toLowerCase().includes(searchTerm) ||
+                    (job.company && job.company.toLowerCase().includes(searchTerm)) ||
+                    (job.description && job.description.toLowerCase().includes(searchTerm));
+                
+                const matchesCategory = !category || job.category === category;
+                const matchesRegion = !region || job.region === region;
+                
+                return matchesSearch && matchesCategory && matchesRegion;
+            });
+            
+            displayJobs(filteredJobs);
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('regionFilter').value = '';
+            displayJobs();
+        }
+
+        function selectCategory(category) {
+            document.getElementById('categoryFilter').value = category;
+            searchJobs();
+            document.getElementById('search').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function openJobModal(job) {
+            document.getElementById('modal-job-company').textContent = job.company || '';
+            document.getElementById('modal-job-location').textContent = job.location || '';
+            document.getElementById('modal-job-type').textContent = job.jobType || '';
+            document.getElementById('modal-job-category').textContent = job.category || '';
+            document.getElementById('modal-job-description').textContent = job.description || '';
+            document.getElementById('modal-job-requirements').textContent = job.requirements || '';
+            
+            const titleElement = document.getElementById('modal-job-title');
+            if (job.jobNumber) {
+                titleElement.textContent = `${job.title} (מס' ${job.jobNumber})`;
+            } else {
+                titleElement.textContent = job.title;
+            }
+            
+            // Reset form
+            document.getElementById('application-form').reset();
+            document.getElementById('file-name').textContent = '';
+            document.getElementById('success-message').style.display = 'none';
+            
+            // Store job data in form for submission
+            document.getElementById('job-id-input').value = job.id;
+            document.getElementById('job-title-input').value = job.title;
+            
+            // Reset validation errors
+            const errorElements = document.querySelectorAll('.validation-error');
+            errorElements.forEach(el => el.style.display = 'none');
+            
+            document.getElementById('job-modal').style.display = 'block';
+            // Add this to prevent background scrolling when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function validateForm() {
+            let isValid = true;
+            const fullName = document.getElementById('full-name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const fileInput = document.getElementById('cv-file');
+            
+            // Validate full name
+            if (fullName === '') {
+                document.getElementById('name-error').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('name-error').style.display = 'none';
+            }
+            
+            // Validate phone (Israeli mobile format)
+            const phoneRegex = /^05\d{1}[-]?\d{7}$|^05\d{1}[-]?\d{3}[-]?\d{4}$/;
+            if (!phoneRegex.test(phone)) {
+                document.getElementById('phone-error').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('phone-error').style.display = 'none';
+            }
+            
+            // Validate CV file
+            if (fileInput.files.length === 0) {
+                document.getElementById('cv-error').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('cv-error').style.display = 'none';
+            }
+            
+            return isValid;
+        }
+        
+        function submitApplication(event) {
+            event.preventDefault();
+            
+            if (validateForm()) {
+                const form = document.getElementById('application-form');
+                const formData = new FormData(form);
+                
+                // Display loading state
+                const submitButton = form.querySelector('button[type="submit"]');
+                const originalButtonText = submitButton.innerText;
+                submitButton.innerText = '...שולח';
+                submitButton.disabled = true;
+                
+                fetch('/api/send-application', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Reset button
+                    submitButton.innerText = originalButtonText;
+                    submitButton.disabled = false;
+                    
+                    if (data.success) {
+                        // Show success message
+                        document.getElementById('success-message').style.display = 'block';
+                        
+                        // Scroll to the success message
+                        document.getElementById('success-message').scrollIntoView({ behavior: 'smooth' });
+                        
+                        // Reset form and file name
+                        form.reset();
+                        document.getElementById('file-name').textContent = '';
+                    } else {
+                        // Show error
+                        alert('שגיאה: ' + (data.message || 'אירעה שגיאה בשליחת הטופס'));
+                    }
+                })
+                .catch(error => {
+                    // Reset button
+                    submitButton.innerText = originalButtonText;
+                    submitButton.disabled = false;
+                    
+                    // Show error
+                    console.error('Error:', error);
+                    alert('שגיאה בשליחת הטופס. נא לנסות שוב מאוחר יותר.');
+                });
+            }
+            
+            return false; // Prevent default form submission
+        }
+        
+        function closeJobModal() {
+            document.getElementById('job-modal').style.display = 'none';
+            // Re-enable scrolling when modal is closed
+            document.body.style.overflow = '';
+        }
+        
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                selectedFileName = file.name;
+                document.getElementById('file-name').textContent = selectedFileName;
+                document.getElementById('cv-error').style.display = 'none';
+            }
+        }
+        
+        function openImportModal() {
+            document.getElementById('import-modal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeImportModal() {
+            document.getElementById('import-modal').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+        
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            try {
+                const text = await file.text();
+                currentFileType = file.name.split('.').pop().toLowerCase();
+                
+                if (currentFileType === 'json') {
+                    const jsonData = JSON.parse(text);
+                    rawImportData = Array.isArray(jsonData) ? jsonData : [jsonData];
+                    
+                    if (rawImportData.length > 0) {
+                        fileHeaders = Object.keys(rawImportData[0]);
+                    }
+                } else if (currentFileType === 'csv') {
+                    rawImportData = parseCSV(text);
+                    
+                    if (rawImportData.length > 0) {
+                        fileHeaders = Object.keys(rawImportData[0]);
+                    }
+                }
+                
+                if (rawImportData.length === 0) {
+                    alert('לא נמצאו נתונים בקובץ');
+                    return;
+                }
+                
+                showMappingModal();
+                closeImportModal();
+                
+            } catch (error) {
+                alert('שגיאה בקריאת הקובץ: ' + error.message);
+            }
+        }
+        
+        function showMappingModal() {
+            const container = document.getElementById('mapping-container');
+            container.innerHTML = '';
+            
+            const preview = document.createElement('div');
+            preview.style.marginBottom = '20px';
+            preview.style.padding = '15px';
+            preview.style.background = '#444444';
+            preview.style.borderRadius = '8px';
+            preview.innerHTML = `
+                <h4 style="color: #F69898; margin-bottom: 10px;">דוגמה מהקובץ:</h4>
+                <div style="font-size: 0.9rem; color: #cccccc;">
+                    ${JSON.stringify(rawImportData[0], null, 2).substring(0, 300)}...
+                </div>
+            `;
+            container.appendChild(preview);
+            
+            fileHeaders.forEach(header => {
+                const mappingRow = document.createElement('div');
+                mappingRow.className = 'mapping-row';
+                
+                const bestMatch = findBestMatch(header);
+                const sampleData = rawImportData.slice(0, 3).map(item => item[header]).filter(val => val).join(', ');
+                
+                mappingRow.innerHTML = `
+                    <div>
+                        <div class="mapping-label">שדה מהקובץ: "${header}"</div>
+                        <div class="field-preview">דוגמה: ${sampleData.substring(0, 100)}</div>
+                    </div>
+                    <div>
+                        <label style="color: #cccccc; margin-bottom: 5px; display: block;">מפה לשדה באתר:</label>
+                        <select class="mapping-select" data-source-field="${header}">
+                            <option value="">לא לייבא שדה זה</option>
+                            ${Object.entries(targetFields).map(([key, label]) => 
+                                `<option value="${key}" ${key === bestMatch ? 'selected' : ''}>${label}</option>`
+                            ).join('')}
+                        </select>
+                    </div>
+                `;
+                
+                container.appendChild(mappingRow);
+            });
+            
+            document.getElementById('mapping-modal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function findBestMatch(fieldName) {
+            const cleanField = fieldName.toString().trim().toLowerCase().replace(/['"]/g, '');
+            
+            for (const [internalField, variations] of Object.entries(fieldMapping)) {
+                for (const variation of variations) {
+                    if (variation.toLowerCase() === cleanField || 
+                        cleanField.includes(variation.toLowerCase()) ||
+                        variation.toLowerCase().includes(cleanField)) {
+                        return internalField;
+                    }
+                }
+            }
+            
+            return '';
+        }
+        
+        function processMappedData() {
+            const mappingSelects = document.querySelectorAll('.mapping-select');
+            const fieldMappings = {};
+            
+            mappingSelects.forEach(select => {
+                const sourceField = select.getAttribute('data-source-field');
+                const targetField = select.value;
+                
+                if (targetField) {
+                    fieldMappings[targetField] = sourceField;
+                }
+            });
+            
+            if (!fieldMappings.title) {
+                alert('חובה למפות לפחות את שדה "כותרת המשרה"');
+                return;
+            }
+            
+            const processedJobs = rawImportData.map((rawJob, index) => {
+                const newId = Math.max(...jobs.map(j => j.id || 0)) + 1 + index;
+                
+                const job = {
+                    id: newId,
+                    jobNumber: rawJob[fieldMappings.jobNumber] || '',
+                    title: rawJob[fieldMappings.title] || 'משרה ללא כותרת',
+                    company: rawJob[fieldMappings.company] || 'חברה לא צוינה',
+                    category: standardizeCategory(rawJob[fieldMappings.category] || 'אחר'),
+                    city: rawJob[fieldMappings.city] || '',
+                    region: rawJob[fieldMappings.region] || '',
+                    jobType: rawJob[fieldMappings.jobType] || 'לא צוין',
+                    description: rawJob[fieldMappings.description] || 'תיאור לא זמין',
+                    requirements: rawJob[fieldMappings.requirements] || '',
+                    status: rawJob[fieldMappings.status] || 'פעיל'
+                };
+                
+                job.location = job.city && job.region ? `${job.city} - ${job.region}` : (job.city || job.region || 'מיקום לא צוין');
+                
+                return job;
+            });
+            
+            jobs.push(...processedJobs);
+            displayJobs();
+            closeMappingModal();
+            
+            alert(`יובאו בהצלחה ${processedJobs.length} משרות!`);
+            
+            rawImportData = [];
+            fileHeaders = [];
+            document.getElementById('file-input').value = '';
+        }
+        
+        function closeMappingModal() {
+            document.getElementById('mapping-modal').style.display = 'none';
+            document.body.style.overflow = '';
+            rawImportData = [];
+            fileHeaders = [];
+            document.getElementById('file-input').value = '';
+        }
+        
+        function standardizeCategory(category) {
+            if (!category) return 'אחר';
+            
+            // Convert to lowercase for better matching
+            const lowerCategory = category.toString().toLowerCase().trim();
+            
+            // Check direct mapping first
+            if (categoryMapping[category]) {
+                return categoryMapping[category];
+            }
+            
+            // Check lowercase mapping
+            if (categoryMapping[lowerCategory]) {
+                return categoryMapping[lowerCategory];
+            }
+            
+            // Check partial matches
+            for (const [key, value] of Object.entries(categoryMapping)) {
+                if (lowerCategory.includes(key.toLowerCase()) || key.toLowerCase().includes(lowerCategory)) {
+                    return value;
+                }
+            }
+            
+            // If no mapping found, return original category or default
+            return category || 'אחר';
+        }
+        
+        function parseCSV(text) {
+            const lines = text.split('\n').filter(line => line.trim());
+            if (lines.length < 2) return [];
+            
+            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+            const jobs = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
+                const job = {};
+                
+                headers.forEach((header, index) => {
+                    job[header] = values[index] || '';
+                });
+                
+                jobs.push(job);
+            }
+            
+            return jobs;
+        }
+        
+        function downloadTemplate() {
+            const template = `מספר משרה,כותרת משרה,שם חברה,קטגוריה,עיר,אזור,סוג משרה,תיאור משרה,דרישות תפקיד
+JS001,מפתח Full Stack,חברת טכנולוגיה,פיתוח ותוכנה,תל אביב,מרכז,משרה מלאה,פיתוח אפליקציות ווב מתקדמות,React;Node.js;MongoDB
+WS002,מלצר/ית,מסעדת השף,מזון ומסעדנות,ירושלים,ירושלים,משרה חלקית,שירות לקוחות במסעדה יוקרתית,ניסיון קודם;יחסי אנוש טובים
+TE003,מורה לאנגלית,בית ספר יסודי,חינוך והוראה,חיפה,צפון,משרה מלאה,הוראת אנגלית לילדים,תואר באנגלית;תעודת הוראה
+IT004,מנהל מערכות,חברת היי טק,מחשבים ורשתות תקשורת,תל אביב,מרכז,משרה מלאה,ניהול רשתות ומערכות,ניסיון בשרתים;הסמכות
+MK005,איש מכירות,חברת שיווק,שיווק ומכירות,חיפה,צפון,משרה מלאה,מכירות B2B,ניסיון במכירות;יחסי אנוש`;
+            
+            const blob = new Blob([template], { type: 'text/csv;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'job_template.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // פונקציה לגלילה לראש הדף
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // הצגת הגמדה הצפה רק כאשר המשתמש גולל מטה
+        window.addEventListener('scroll', function() {
+            const floatingGnome = document.getElementById('floatingGnome');
+            if (window.scrollY > 300) {
+                floatingGnome.style.display = 'block';
+            } else {
+                floatingGnome.style.display = 'none';
+            }
+        });
+        
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const importModal = document.getElementById('import-modal');
+            const jobModal = document.getElementById('job-modal');
+            const mappingModal = document.getElementById('mapping-modal');
+            
+            if (event.target === importModal) {
+                closeImportModal();
+            }
+            if (event.target === jobModal) {
+                closeJobModal();
+            }
+            if (event.target === mappingModal) {
+                closeMappingModal();
+            }
+        };
+        
+        // Prevent Enter key from submitting the form prematurely
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && event.target.tagName !== 'TEXTAREA') {
+                const submitButton = event.target.form?.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    event.preventDefault();
+                    submitButton.click();
+                }
+            }
+        });
+        
+        // Add animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            displayJobs();
+            
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchJobs();
+                }
+            });
+            
+            // הסתרת הגמדה הצפה בהתחלה
+            document.getElementById('floatingGnome').style.display = 'none';
+            
+            // Optional: Animate elements on scroll
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.fade-up');
+                elements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        element.classList.add('active');
+                    }
+                });
+            };
+            
+            window.addEventListener('scroll', animateOnScroll);
+            animateOnScroll(); // Run once on page load
+        });
+    </script>
+</body>
+</html>
