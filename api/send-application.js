@@ -99,7 +99,7 @@ module.exports = async (req, res) => {
     // שליחת המייל
     const info = await transporter.sendMail({
       from: `"מה יש פה?" <${process.env.SMTP_USER}>`,
-      to: 'kcs@kerencs.com',
+      to: 'kerenraf@gmail.com',
       subject: subject,
       html: htmlMessage,
       attachments: [
