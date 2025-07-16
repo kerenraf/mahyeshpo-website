@@ -235,14 +235,7 @@
                     <label class="form-label">קטגוריה</label>
                     <select class="form-control" id="categoryFilter">
                         <option value="">כל הקטגוריות</option>
-                        <option value="מזון ומסעדנות">מזון ומסעדנות</option>
-                        <option value="חינוך והוראה">חינוך והוראה</option>
-                        <option value="פיתוח ותוכנה">פיתוח ותוכנה</option>
-                        <option value="מחשבים ורשתות תקשורת">מחשבים ורשתות</option>
-                        <option value="עולם הרכבים והליסינג">רכבים וליסינג</option>
-                        <option value="שיווק ומכירות">שיווק ומכירות</option>
-                        <option value="בריאות ורפואה">בריאות ורפואה</option>
-                        <option value="אחר">אחר</option>
+                        <!-- קטגוריות יתווספו דינמית דרך JavaScript -->
                     </select>
                 </div>
                 
@@ -280,35 +273,7 @@
         <div class="container">
             <h3 class="section-title">קטגוריות מובילות</h3>
             <div class="categories-grid">
-                <div class="category-card fade-up" onclick="selectCategory('מזון ומסעדנות')">
-                    <div class="category-icon">🍽️</div>
-                    <div class="category-title">מזון ומסעדנות</div>
-                    <div class="category-desc">מלצרים, טבחים, ברמנים</div>
-                </div>
-                
-                <div class="category-card fade-up delay-1" onclick="selectCategory('חינוך והוראה')">
-                    <div class="category-icon">📚</div>
-                    <div class="category-title">חינוך והוראה</div>
-                    <div class="category-desc">מורים, מדריכים, מחנכים</div>
-                </div>
-                
-                <div class="category-card fade-up delay-2" onclick="selectCategory('פיתוח ותוכנה')">
-                    <div class="category-icon">💻</div>
-                    <div class="category-title">פיתוח ותוכנה</div>
-                    <div class="category-desc">מפתחים, מתכנתים, QA</div>
-                </div>
-                
-                <div class="category-card fade-up delay-3" onclick="selectCategory('שיווק ומכירות')">
-                    <div class="category-icon">📊</div>
-                    <div class="category-title">שיווק ומכירות</div>
-                    <div class="category-desc">אנשי מכירות, מנהלי שיווק</div>
-                </div>
-                
-                <div class="category-card fade-up delay-4" onclick="selectCategory('בריאות ורפואה')">
-                    <div class="category-icon">⚕️</div>
-                    <div class="category-title">בריאות ורפואה</div>
-                    <div class="category-desc">אחים/ות, רופאים, פרמדיקים</div>
-                </div>
+                <!-- קוביות הקטגוריות יווצרו כאן דינמית על ידי JavaScript -->
             </div>
         </div>
     </section>
@@ -525,11 +490,12 @@
     <script src="js/search.js"></script>
     <script src="js/forms.js"></script>
     
-    <!-- קוד JavaScript מעודכן לטעינת והצגת משרות - עם תיקון למובייל -->
+    <!-- קוד JavaScript מעודכן לטעינת והצגת משרות עם קטגוריות דינמיות -->
     <script>
         // משתנים גלובליים
         let allJobs = [];
         let filteredJobs = []; // מערך לשמירת המשרות המסוננות
+        let uniqueCategories = []; // מערך לשמירת הקטגוריות הייחודיות
 
         // פונקציה לאיתחול הדף - מחכה לטעינה מלאה של המסמך
         document.addEventListener('DOMContentLoaded', function() {
@@ -613,8 +579,14 @@
                             console.error('❌ שגיאה בשמירה לאחסון מקומי:', e);
                         }
                         
-                        // נרמול קטגוריות
-                        normalizeJobCategories(allJobs);
+                        // איסוף הקטגוריות הייחודיות מהמשרות
+                        extractUniqueCategories(allJobs);
+                        
+                        // עדכון רשימת הקטגוריות בסינון
+                        updateCategoryFilters();
+                        
+                        // עדכון תצוגת הקטגוריות בדף הבית
+                        updateCategoryCards();
                         
                         // סינון רק משרות פעילות
                         const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
@@ -649,6 +621,143 @@
                 });
         }
 
+        // פונקציה לחילוץ הקטגוריות הייחודיות מהמשרות
+        function extractUniqueCategories(jobs) {
+            // איסוף כל הקטגוריות הקיימות במשרות
+            const categories = jobs
+                .filter(job => job.category) // סינון רק משרות עם קטגוריה
+                .map(job => job.category.trim()) // חילוץ הקטגוריה
+                .filter((category, index, self) => 
+                    self.indexOf(category) === index && category !== ''); // הסרת כפילויות וערכים ריקים
+            
+            // מיון הקטגוריות לפי סדר א"ב
+            uniqueCategories = categories.sort();
+            
+            console.log('🏷️ קטגוריות ייחודיות שנמצאו:', uniqueCategories);
+        }
+
+        // פונקציה לעדכון רשימת הקטגוריות בסינון
+        function updateCategoryFilters() {
+            const categoryFilter = document.getElementById('categoryFilter');
+            
+            if (!categoryFilter) {
+                console.error('❌ לא נמצא אלמנט סינון קטגוריות');
+                return;
+            }
+            
+            // שמירת האפשרות הנבחרת הנוכחית
+            const selectedValue = categoryFilter.value;
+            
+            // ניקוי האפשרויות הקיימות
+            categoryFilter.innerHTML = '<option value="">כל הקטגוריות</option>';
+            
+            // הוספת הקטגוריות הייחודיות
+            uniqueCategories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categoryFilter.appendChild(option);
+            });
+            
+            // שחזור הבחירה הקודמת, אם אפשרי
+            if (selectedValue && uniqueCategories.includes(selectedValue)) {
+                categoryFilter.value = selectedValue;
+            }
+        }
+
+        // פונקציה לעדכון קוביות הקטגוריות בדף הבית
+        function updateCategoryCards() {
+            const categoriesGrid = document.querySelector('.categories-grid');
+            
+            if (!categoriesGrid) {
+                console.error('❌ לא נמצא אלמנט רשת קטגוריות');
+                return;
+            }
+            
+            // ניקוי הקוביות הקיימות
+            categoriesGrid.innerHTML = '';
+            
+            // מיפוי אייקונים לקטגוריות
+            const categoryIcons = {
+                // האייקונים נשארים גנריים ויתאימו לכל קטגוריה שתגיע מהקובץ
+                'default': '📦'
+            };
+            
+            // מיפוי תיאורים לקטגוריות
+            const categoryDescriptions = {
+                // התיאורים נשארים גנריים ויתאימו לכל קטגוריה שתגיע מהקובץ
+                'default': 'משרות מגוונות'
+            };
+            
+            // הגבלה עד 10 קטגוריות (או פחות אם יש פחות)
+            const categoriesToShow = uniqueCategories.slice(0, Math.min(10, uniqueCategories.length));
+            
+            // יצירת קוביות קטגוריה
+            categoriesToShow.forEach((category, index) => {
+                const card = document.createElement('div');
+                card.className = `category-card fade-up delay-${index % 5}`;
+                card.onclick = function() { selectCategory(category); };
+                
+                // בחירת אייקון לקטגוריה
+                let icon = '📦'; // ברירת מחדל
+                
+                // בחירת תיאור גנרי לקטגוריה
+                let description = 'משרות מגוונות';
+                
+                // התאמת אייקונים לקטגוריות נפוצות
+                if (category.includes('מזון') || category.includes('מסעד')) {
+                    icon = '🍽️';
+                    description = 'מלצרים, טבחים, ברמנים';
+                } else if (category.includes('חינוך') || category.includes('הוראה')) {
+                    icon = '📚';
+                    description = 'מורים, מדריכים, מחנכים';
+                } else if (category.includes('פיתוח') || category.includes('תוכנה') || category.includes('הייטק')) {
+                    icon = '💻';
+                    description = 'מפתחים, מתכנתים, QA';
+                } else if (category.includes('מחשב') || category.includes('רשתות')) {
+                    icon = '🖥️';
+                    description = 'IT, תמיכה טכנית, תקשורת';
+                } else if (category.includes('רכב') || category.includes('ליסינג')) {
+                    icon = '🚗';
+                    description = 'נהגים, מכונאים, סוכני מכירות';
+                } else if (category.includes('שיווק') || category.includes('מכירות')) {
+                    icon = '📊';
+                    description = 'אנשי מכירות, מנהלי שיווק';
+                } else if (category.includes('בריאות') || category.includes('רפואה')) {
+                    icon = '⚕️';
+                    description = 'אחים/ות, רופאים, פרמדיקים';
+                } else if (category.includes('משאבי אנוש') || category.includes('גיוס')) {
+                    icon = '👥';
+                    description = 'גיוס, הדרכה, רווחה';
+                } else if (category.includes('אבטחה') || category.includes('ביטחון') || category.includes('שמירה')) {
+                    icon = '🔒';
+                    description = 'מאבטחים, שומרים, בודקים';
+                } else if (category.includes('תיירות') || category.includes('נופש')) {
+                    icon = '✈️';
+                    description = 'מדריכי טיולים, דיילים, מלונאות';
+                } else if (category.includes('בנייה') || category.includes('הנדסה')) {
+                    icon = '🏗️';
+                    description = 'מהנדסים, אדריכלים, פועלי בניין';
+                } else if (category.includes('הנהלה') || category.includes('ניהול')) {
+                    icon = '📋';
+                    description = 'מנהלים, מנהלי תפעול, עוזרים';
+                } else if (category.includes('לוגיסטיקה') || category.includes('תחבורה')) {
+                    icon = '🚚';
+                    description = 'מחסנאים, נהגים, מנהלי תפעול';
+                }
+                
+                card.innerHTML = `
+                    <div class="category-icon">${icon}</div>
+                    <div class="category-title">${category}</div>
+                    <div class="category-desc">${description}</div>
+                `;
+                
+                categoriesGrid.appendChild(card);
+            });
+            
+            console.log('✅ עודכנו', categoriesToShow.length, 'קוביות קטגוריה');
+        }
+
         // פונקציה לטעינת משרות מהאחסון המקומי - משופרת
         function loadJobsFromStorage() {
             console.log('🔍 בודק משרות באחסון המקומי...');
@@ -660,8 +769,14 @@
                     allJobs = JSON.parse(savedJobs);
                     console.log('✅ סה"כ משרות נטענו מהאחסון המקומי:', allJobs.length);
                     
-                    // נרמול קטגוריות
-                    normalizeJobCategories(allJobs);
+                    // איסוף הקטגוריות הייחודיות מהמשרות
+                    extractUniqueCategories(allJobs);
+                    
+                    // עדכון רשימת הקטגוריות בסינון
+                    updateCategoryFilters();
+                    
+                    // עדכון תצוגת הקטגוריות בדף הבית
+                    updateCategoryCards();
                     
                     // סינון רק משרות פעילות
                     const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
@@ -710,6 +825,39 @@
                     status: "פעיל",
                     description: "לחברת שיווק מובילה דרוש/ה מנהל/ת מכירות עם ניסיון. התפקיד כולל ניהול צוות מכירות, עמידה ביעדים ופיתוח אסטרטגיות מכירה.",
                     requirements: "ניסיון של 5 שנים בתחום המכירות\nיכולת ניהול צוות\nאוריינטציה תוצאתית"
+                },
+                {
+                    jobNumber: "1003",
+                    title: "אח/ות מוסמך/ת",
+                    company: "מרכז רפואי",
+                    category: "בריאות ורפואה",
+                    city: "ירושלים",
+                    region: "ירושלים",
+                    status: "פעיל",
+                    description: "למרכז רפואי דרוש/ה אח/ות מוסמך/ת למחלקה פנימית. עבודה במשמרות.",
+                    requirements: "תעודת אח/ות מוסמך/ת\nניסיון של שנתיים לפחות\nיכולת עבודה בצוות"
+                },
+                {
+                    jobNumber: "1004",
+                    title: "מורה למתמטיקה",
+                    company: "בית ספר תיכון",
+                    category: "חינוך והוראה",
+                    city: "רחובות",
+                    region: "מרכז",
+                    status: "פעיל",
+                    description: "לבית ספר תיכון דרוש/ה מורה למתמטיקה לכיתות י'-יב', 5 יח\"ל.",
+                    requirements: "תואר ראשון במתמטיקה או הנדסה\nתעודת הוראה\nניסיון בהגשה לבגרות - יתרון"
+                },
+                {
+                    jobNumber: "1005",
+                    title: "מנהל/ת לוגיסטיקה",
+                    company: "חברת הובלות",
+                    category: "לוגיסטיקה ותחבורה",
+                    city: "אשדוד",
+                    region: "דרום",
+                    status: "פעיל",
+                    description: "לחברת הובלות ולוגיסטיקה דרוש/ה מנהל/ת לוגיסטיקה. התפקיד כולל ניהול מערך ההפצה, תכנון מסלולים ופיקוח על צי הרכב.",
+                    requirements: "ניסיון של 3 שנים בתחום הלוגיסטיקה\nהיכרות עם מערכות ניהול מלאי\nיכולת עבודה בתנאי לחץ"
                 }
             ];
             
@@ -722,109 +870,17 @@
                 console.error('❌ שגיאה בשמירת משרות לדוגמה:', e);
             }
             
+            // איסוף הקטגוריות הייחודיות מהמשרות
+            extractUniqueCategories(sampleJobs);
+            
+            // עדכון רשימת הקטגוריות בסינון
+            updateCategoryFilters();
+            
+            // עדכון תצוגת הקטגוריות בדף הבית
+            updateCategoryCards();
+            
+            // הצגת המשרות בדף
             displayJobsInHomepage(sampleJobs);
-        }
-
-        // פונקציה לנרמול קטגוריות - ללא שינוי
-        function normalizeJobCategories(jobs) {
-            // טבלת התאמה בין שמות קטגוריות לא סטנדרטיים לשמות סטנדרטיים
-            const categoryMap = {
-                // קטגוריות מזון
-                'מזון': 'מזון ומסעדנות',
-                'מסעדנות': 'מזון ומסעדנות',
-                'מלצרות': 'מזון ומסעדנות',
-                'שף': 'מזון ומסעדנות',
-                'מסעדות': 'מזון ומסעדנות',
-                'טבחות': 'מזון ומסעדנות',
-                
-                // קטגוריות חינוך
-                'חינוך': 'חינוך והוראה',
-                'הוראה': 'חינוך והוראה',
-                'מורים': 'חינוך והוראה',
-                'גני ילדים': 'חינוך והוראה',
-                'בתי ספר': 'חינוך והוראה',
-                
-                // קטגוריות תוכנה
-                'פיתוח': 'פיתוח ותוכנה',
-                'תוכנה': 'פיתוח ותוכנה',
-                'מתכנתים': 'פיתוח ותוכנה',
-                'הייטק': 'פיתוח ותוכנה',
-                'תכנות': 'פיתוח ותוכנה',
-                'full stack': 'פיתוח ותוכנה',
-                'frontend': 'פיתוח ותוכנה',
-                'backend': 'פיתוח ותוכנה',
-                
-                // קטגוריות מחשבים
-                'מחשבים': 'מחשבים ורשתות תקשורת',
-                'רשתות': 'מחשבים ורשתות תקשורת',
-                'תקשורת': 'מחשבים ורשתות תקשורת',
-                'it': 'מחשבים ורשתות תקשורת',
-                'תמיכה טכנית': 'מחשבים ורשתות תקשורת',
-                
-                // קטגוריות רכבים
-                'רכב': 'עולם הרכבים והליסינג',
-                'רכבים': 'עולם הרכבים והליסינג',
-                'ליסינג': 'עולם הרכבים והליסינג',
-                'נהיגה': 'עולם הרכבים והליסינג',
-                'נהגים': 'עולם הרכבים והליסינג',
-                
-                // קטגוריות שיווק
-                'שיווק': 'שיווק ומכירות',
-                'מכירות': 'שיווק ומכירות',
-                'פרסום': 'שיווק ומכירות',
-                'דיגיטל': 'שיווק ומכירות',
-                'תוכן': 'שיווק ומכירות',
-                
-                // קטגוריות בריאות
-                'בריאות': 'בריאות ורפואה',
-                'רפואה': 'בריאות ורפואה',
-                'רופאים': 'בריאות ורפואה',
-                'אחיות': 'בריאות ורפואה',
-                'רוקחות': 'בריאות ורפואה'
-            };
-            
-            // רשימת הקטגוריות הסטנדרטיות
-            const standardCategories = [
-                'מזון ומסעדנות',
-                'חינוך והוראה',
-                'פיתוח ותוכנה',
-                'מחשבים ורשתות תקשורת',
-                'עולם הרכבים והליסינג',
-                'שיווק ומכירות',
-                'בריאות ורפואה',
-                'אחר'
-            ];
-            
-            // עדכון הקטגוריה לכל משרה
-            jobs.forEach(job => {
-                if (job.category) {
-                    const category = job.category.trim();
-                    
-                    // בדיקה אם הקטגוריה כבר סטנדרטית
-                    if (standardCategories.includes(category)) {
-                        return; // הקטגוריה כבר תקינה
-                    }
-                    
-                    // חיפוש במפה
-                    const normalizedCategory = categoryMap[category.toLowerCase()];
-                    if (normalizedCategory) {
-                        job.category = normalizedCategory;
-                    } else {
-                        // אם לא נמצאה התאמה, בדיקה אם חלק מהמחרוזת תואם
-                        for (const [key, value] of Object.entries(categoryMap)) {
-                            if (category.toLowerCase().includes(key.toLowerCase())) {
-                                job.category = value;
-                                return;
-                            }
-                        }
-                        
-                        // אם עדיין לא נמצאה התאמה, השארת הקטגוריה המקורית
-                        console.log(`⚠️ קטגוריה לא סטנדרטית: ${category}`);
-                    }
-                } else {
-                    job.category = 'אחר';
-                }
-            });
         }
 
         // פונקציה להצגת משרות בדף הבית - משופרת עם טיפול שגיאות
@@ -851,25 +907,23 @@
                 return;
             }
             
-            // מיפוי קטגוריות לצבעים - עם גיבוי לקטגוריות נוספות
-            const categoryColorMap = {
-                'מזון ומסעדנות': 'category-food',
-                'חינוך והוראה': 'category-education',  
-                'פיתוח ותוכנה': 'category-tech',
-                'מחשבים ורשתות תקשורת': 'category-computers',
-                'מחשבים ורשתות': 'category-computers',
-                'עולם הרכבים והליסינג': 'category-automotive',
-                'רכבים וליסינג': 'category-automotive',
-                'שיווק ומכירות': 'category-marketing',
-                'בריאות ורפואה': 'category-health',
-                'משאבי אנוש': 'category-hr',
-                'ביטחון ושמירה': 'category-security',
-                'תיירות ונופש': 'category-tourism',
-                'בנייה והנדסה': 'category-construction',
-                'הנהלה וניהול': 'category-admin',
-                'לוגיסטיקה ותחבורה': 'category-logistics',
-                'אחר': 'category-other'
-            };
+            // מיפוי דינמי של קטגוריות לצבעים
+            const categoryColorMap = {};
+            
+            // צבעים בסיסיים לשימוש חוזר
+            const colorClasses = [
+                'category-food', 'category-education', 'category-tech', 
+                'category-computers', 'category-automotive', 'category-marketing', 
+                'category-health', 'category-hr', 'category-security', 
+                'category-tourism', 'category-construction', 'category-admin', 
+                'category-logistics', 'category-other'
+            ];
+            
+            // הקצאת צבעים לקטגוריות באופן דינמי
+            uniqueCategories.forEach((category, index) => {
+                // מחזוריות על צבעים קיימים
+                categoryColorMap[category] = colorClasses[index % colorClasses.length];
+            });
             
             try {
                 // הצג עד 9 משרות בדף הבית
@@ -1043,7 +1097,7 @@
             filterJobs();
         }
 
-        // פונקציה לסינון משרות - מעודכנת להתחשב בנרמול קטגוריות
+        // פונקציה לסינון משרות
         function filterJobs() {
             const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
             const category = document.getElementById('categoryFilter').value;
@@ -1065,7 +1119,7 @@
                         return false;
                     }
                     
-                    // סינון לפי קטגוריה - אחרי נרמול הקטגוריות
+                    // סינון לפי קטגוריה
                     if (category && job.category !== category) {
                         return false;
                     }
@@ -1108,7 +1162,7 @@
             document.getElementById('categoryFilter').value = '';
             document.getElementById('regionFilter').value = '';
             
-            // הצגת כל המשרות הפעילות
+// הצגת כל המשרות הפעילות
             const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
             filteredJobs = [];
             displayJobsInHomepage(activeJobs);
