@@ -619,7 +619,11 @@ function handleFileUpload(event) {
         }
     };
     
-    reader.readAsText(file);
+    if (file.name.endsWith('.csv')) {
+        reader.readAsText(file);
+    } else {
+        reader.readAsText(file);
+    }
 }
 
 // עיבוד קובץ CSV
@@ -662,7 +666,7 @@ function parseCSV(csvData) {
             }
         }
         
-        // הוסף את המשרה בכל מקרה
+        // הוסף את המשרה ללא בדיקת תנאים
         jobsData.push(job);
     }
     
@@ -681,26 +685,20 @@ function parseJSON(jsonData) {
     try {
         const parsedData = JSON.parse(jsonData);
         
-        if (Array.isArray(parsedData)) {
-            // הנתונים הם מערך
+        if (Array.isArray(parsedData) && parsedData.length > 0) {
+            // קבל את כל המשרות ללא סינון
             jobs = parsedData;
             saveJobs();
             displayJobs();
             closeImportModal();
-        } else if (typeof parsedData === 'object') {
-            // הנתונים הם אובייקט בודד
-            jobs = [parsedData];
-            saveJobs();
-            displayJobs();
-            closeImportModal();
         } else {
-            alert('פורמט JSON לא תקין. הקובץ צריך להכיל מערך או אובייקט של משרות.');
+            alert('פורמט JSON לא תקין. הקובץ צריך להכיל מערך של אובייקטי משרות.');
         }
     } catch (error) {
         console.error('שגיאה בפענוח קובץ JSON:', error);
         alert('שגיאה בפענוח קובץ JSON. וודא שהקובץ מכיל JSON תקין.');
     }
-}        
+}
         // פתיחת חלון הוספת/עריכת משרה
         function openAddJobModal() {
             document.getElementById('edit-modal-title').textContent = 'הוספת משרה חדשה';
