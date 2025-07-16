@@ -491,44 +491,50 @@
             }
         }
         
-        // פונקציה להצגת משרות בדף הבית
-        function displayJobsInHomepage(jobs) {
-            const jobsContainer = document.getElementById('jobsContainer');
-            jobsContainer.innerHTML = '';
-            
-            if (jobs.length === 0) {
-                jobsContainer.innerHTML = '<p style="text-align: center; width: 100%; padding: 20px;">לא נמצאו משרות תואמות</p>';
-                return;
-            }
-            
-            // הצג עד 9 משרות בדף הבית
-            const jobsToShow = jobs.slice(0, 9);
-            
-            jobsToShow.forEach((job, index) => {
-                const jobCard = document.createElement('div');
-                jobCard.className = 'job-card fade-up';
-                jobCard.style.animationDelay = `${index * 0.1}s`;
-                jobCard.setAttribute('data-job-index', index);
-                jobCard.onclick = function() { openJobModal(index, jobs); };
-                
-                // הכנת מיקום להצגה
-                const location = job.city ? `${job.city}, ${job.region || 'מרכז'}` : job.region || 'מרכז';
-                
-                // הכנת תיאור קצר (עד 100 תווים)
-                const shortDescription = job.description ? job.description.substring(0, 100) + (job.description.length > 100 ? '...' : '') : '';
-                
-                jobCard.innerHTML = `
-                    <div class="job-number">${index + 1}</div>
-                    <h3 class="job-title">${job.title}</h3>
-                    <div class="job-company">${job.company}</div>
-                    <div class="job-location">${location}</div>
-                    <div class="job-description">${shortDescription}</div>
-                    <div class="job-badge">${job.type || 'משרה מלאה'}</div>
-                `;
-                
-                jobsContainer.appendChild(jobCard);
-            });
-        }
+// פונקציה להצגת משרות בדף הבית - מתוקנת
+function displayJobsInHomepage(jobs) {
+    const jobsContainer = document.getElementById('jobsContainer');
+    jobsContainer.innerHTML = '';
+    
+    if (jobs.length === 0) {
+        jobsContainer.innerHTML = '<p style="text-align: center; width: 100%; padding: 20px;">לא נמצאו משרות תואמות</p>';
+        return;
+    }
+    
+    // הצג עד 9 משרות בדף הבית
+    const jobsToShow = jobs.slice(0, 9);
+    
+    jobsToShow.forEach((job, index) => {
+        const jobCard = document.createElement('div');
+        jobCard.className = 'job-card fade-up';
+        jobCard.style.animationDelay = `${index * 0.1}s`;
+        jobCard.setAttribute('data-job-index', index);
+        jobCard.onclick = function() { openJobModal(index, jobs); };
+        
+        // הכנת מיקום להצגה
+        const location = job.city ? `${job.city}, ${job.region || 'מרכז'}` : job.region || 'מרכז';
+        
+        // הכנת תיאור קצר (עד 100 תווים)
+        const shortDescription = job.description ? job.description.substring(0, 100) + (job.description.length > 100 ? '...' : '') : '';
+        
+        // *** התיקון הראשי - שינוי מספר המשרה וכפתור פרטים נוספים ***
+        jobCard.innerHTML = `
+            <div>
+                <div class="job-number">${job.jobNumber || (index + 1)}</div>
+                <h3 class="job-title">${job.title}</h3>
+                <div class="job-company">${job.company}</div>
+                <div class="job-location">${location}</div>
+                <div class="job-description">${shortDescription}</div>
+                <div class="job-badge">${job.type || 'משרה מלאה'}</div>
+            </div>
+            <button class="job-details-btn" onclick="event.stopPropagation(); openJobModal(${index}, jobs);">
+                <i class="fas fa-info-circle"></i> פרטים נוספים
+            </button>
+        `;
+        
+        jobsContainer.appendChild(jobCard);
+    });
+}
         
         // פונקציה לפתיחת מודל פרטי משרה
         function openJobModal(index, jobs) {
