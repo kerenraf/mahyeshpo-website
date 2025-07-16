@@ -58,6 +58,9 @@ body {
 .logo {
     display: flex;
     align-items: center;
+    background: rgba(255, 255, 255, 0.9); /* רקע לבן שקוף למחצה עבור הלוגו */
+    padding: 5px 10px;
+    border-radius: 8px;
 }
 
 .logo img {
