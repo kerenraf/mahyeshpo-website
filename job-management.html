@@ -276,6 +276,10 @@
             animation: fadeIn 0.3s;
         }
 
+        .github-update-notification {
+            z-index: 9999;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -538,6 +542,44 @@
             margin-top: 1rem;
         }
 
+        /* סטטוס גיבוי */
+        .backup-status {
+            background: #333;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            border: 1px solid #444;
+        }
+        
+        .backup-status-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        
+        .backup-status-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+        
+        .backup-status-icon.active {
+            background: #28a745;
+        }
+        
+        .backup-status-icon.inactive {
+            background: #dc3545;
+        }
+        
+        .backup-date {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-right: 5px;
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .admin-grid {
@@ -650,11 +692,34 @@
                         <div class="admin-card-title">ייצוא משרות</div>
                         <div class="admin-card-desc">ייצא משרות לקובץ CSV או Excel</div>
                     </div>
+
+                    <div class="admin-card" onclick="exportForGitHub()">
+                        <div class="admin-icon"><i class="fab fa-github"></i></div>
+                        <div class="admin-card-title">ייצוא ל-GitHub</div>
+                        <div class="admin-card-desc">ייצוא משרות לעדכון במאגר GitHub</div>
+                    </div>
                     
                     <div class="admin-card" onclick="location.href='index.html'">
                         <div class="admin-icon"><i class="fas fa-eye"></i></div>
                         <div class="admin-card-title">צפייה באתר</div>
                         <div class="admin-card-desc">עבור לדף הראשי של האתר</div>
+                    </div>
+                </div>
+
+                <!-- סטטוס גיבוי משרות -->
+                <div id="backup-status" class="backup-status" style="display: none;">
+                    <div style="font-weight: bold; margin-bottom: 8px;">סטטוס גיבוי משרות:</div>
+                    
+                    <div class="backup-status-item">
+                        <div id="local-storage-status" class="backup-status-icon inactive"></div>
+                        <div>localStorage: <span id="local-storage-count">0</span> משרות</div>
+                        <div class="backup-date" id="local-storage-date"></div>
+                    </div>
+                    
+                    <div class="backup-status-item">
+                        <div id="github-status" class="backup-status-icon inactive"></div>
+                        <div>GitHub: <span id="github-count">0</span> משרות</div>
+                        <div class="backup-date" id="github-date"></div>
                     </div>
                 </div>
             </section>
@@ -714,7 +779,6 @@
                 </div>
             </section>
         </main>
-        
         <!-- מודל ייבוא משרות -->
         <div id="import-modal" class="modal">
             <div class="modal-content">
@@ -929,19 +993,87 @@
             }
         }
         
-        // טעינת משרות מה-localStorage
+        // טעינת משרות
         function loadJobs() {
-            const savedJobs = localStorage.getItem('jobs');
-            if (savedJobs) {
-                jobs = JSON.parse(savedJobs);
-                displayJobs();
-            }
+            console.log('🔍 טוען משרות לדף הניהול...');
+            
+            // ננסה קודם לטעון מ-GitHub
+            const gitHubRawUrl = 'https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/data.js/jobs(1).json';
+            
+            fetch(gitHubRawUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`בעיה בטעינת קובץ המשרות: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('✅ טעינה מוצלחת של', data.length, 'משרות מ-GitHub');
+                    
+                    // שימוש בנתונים מ-GitHub
+                    jobs = data;
+                    
+                    // שמירה באחסון מקומי
+                    localStorage.setItem('jobs', JSON.stringify(jobs));
+                    localStorage.setItem('jobs_last_updated', new Date().toISOString());
+                    
+                    // הצגת המשרות בדף הניהול
+                    displayJobs();
+                    
+                    // עדכון סטטוס הגיבוי
+                    updateBackupStatus();
+                })
+                .catch(error => {
+                    console.error('❌ שגיאה בטעינה מ-GitHub:', error);
+                    
+                    // אם יש שגיאה, ננסה לטעון מהאחסון המקומי
+                    const savedJobs = localStorage.getItem('jobs');
+                    if (savedJobs) {
+                        jobs = JSON.parse(savedJobs);
+                        displayJobs();
+                        updateBackupStatus();
+                    }
+                });
         }
         
         // שמירת משרות ב-localStorage
         function saveJobs() {
+            // שמירה באחסון המקומי
             localStorage.setItem('jobs', JSON.stringify(jobs));
+            localStorage.setItem('jobs_last_updated', new Date().toISOString());
+            
+            // הצגת הודעת הצלחה
             showSuccessNotification();
+            
+            // עדכון סטטוס הגיבוי
+            updateBackupStatus();
+            
+            // הצגת הודעה על אפשרות לעדכן את ה-GitHub
+            showGitHubUpdateNotification();
+        }
+        
+        // פונקציה להצגת הודעה על עדכון GitHub
+        function showGitHubUpdateNotification() {
+            // יצירת הודעה צפה
+            const notification = document.createElement('div');
+            notification.className = 'github-update-notification';
+            notification.innerHTML = `
+                <div style="background: #2c2c2c; border: 1px solid #F69898; padding: 15px; border-radius: 8px; position: fixed; bottom: 80px; left: 20px; z-index: 9999; box-shadow: 0 4px 15px rgba(0,0,0,0.3); max-width: 300px;">
+                    <h4 style="margin: 0 0 10px 0; color: #F69898;">המשרות נשמרו מקומית</h4>
+                    <p style="margin: 0 0 10px 0; color: #ffffff;">שינויים נשמרו באחסון המקומי, אך לא בשרת GitHub.</p>
+                    <button onclick="exportForGitHub()" style="background: #F69898; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-right: 5px;">עדכן ב-GitHub</button>
+                    <button onclick="this.parentNode.remove()" style="background: #555; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">סגור</button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // הסרה אוטומטית אחרי 15 שניות
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 15000);
         }
         
         // הצגת הודעת הצלחה
@@ -995,6 +1127,9 @@
             });
             
             updatePagination(totalPages);
+            
+            // עדכון סטטוס הגיבוי
+            updateBackupStatus();
         }
         
         // עדכון דפדוף
@@ -1504,6 +1639,40 @@
             downloadAnchorNode.remove();
         }
         
+        // פונקציה לייצוא קובץ JSON לעדכון ב-GitHub
+        function exportForGitHub() {
+            // יצירת תוכן JSON מפורמט יפה
+            const jobsJson = JSON.stringify(jobs, null, 2);
+            
+            // יצירת קובץ להורדה
+            const blob = new Blob([jobsJson], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            // יצירת קישור להורדה
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = 'jobs.json';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            
+            // שחרור משאבים
+            URL.revokeObjectURL(url);
+            
+            // הצגת הנחיות
+            alert(`
+הקובץ jobs.json הורד למחשב שלך.
+
+כדי לעדכן את המאגר ב-GitHub:
+1. התחברי ל-GitHub
+2. נווטי לקובץ data.js/jobs(1).json במאגר שלך
+3. לחצי על כפתור "עריכה" (סמל עיפרון)
+4. מחקי את כל התוכן
+5. העתיקי והדביקי את התוכן של הקובץ החדש שהורדת
+6. לחצי על "Commit changes" בתחתית הדף
+`);
+        }
+        
         // הורדת תבנית CSV
         function downloadTemplate() {
             const csvContent = 'מספר משרה,כותרת,חברה,קטגוריה,עיר,אזור,סוג משרה,סטטוס,תיאור,דרישות\n' +
@@ -1519,6 +1688,65 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        // פונקציה לעדכון סטטוס הגיבוי
+        function updateBackupStatus() {
+            // הצגת הסטטוס
+            document.getElementById('backup-status').style.display = 'block';
+            
+            // בדיקת localStorage
+            const localJobs = localStorage.getItem('jobs');
+            const localDate = localStorage.getItem('jobs_last_updated');
+            
+            // בדיקת GitHub
+            checkGitHubStatus();
+            
+            // עדכון סטטוס localStorage
+            if (localJobs) {
+                try {
+                    const localJobsCount = JSON.parse(localJobs).length;
+                    document.getElementById('local-storage-status').className = 'backup-status-icon active';
+                    document.getElementById('local-storage-count').textContent = localJobsCount;
+                    document.getElementById('local-storage-date').textContent = localDate ? formatDate(localDate) : '';
+                } catch (e) {
+                    console.error('שגיאה בבדיקת localStorage:', e);
+                }
+            }
+        }
+
+        // פונקציה לבדיקת סטטוס GitHub
+        function checkGitHubStatus() {
+            const gitHubRawUrl = 'https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/data.js/jobs(1).json';
+            
+            fetch(gitHubRawUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`בעיה בטעינת קובץ המשרות: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('github-status').className = 'backup-status-icon active';
+                    document.getElementById('github-count').textContent = data.length;
+                    document.getElementById('github-date').textContent = 'זמין באתר';
+                })
+                .catch(error => {
+                    console.error('שגיאה בבדיקת GitHub:', error);
+                    document.getElementById('github-status').className = 'backup-status-icon inactive';
+                    document.getElementById('github-count').textContent = '0';
+                    document.getElementById('github-date').textContent = 'לא זמין';
+                });
+        }
+
+        // פונקציה לפורמט תאריך
+        function formatDate(isoDate) {
+            try {
+                const date = new Date(isoDate);
+                return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth()+1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+            } catch (e) {
+                return '';
+            }
         }
         
         // אתחול הדף
