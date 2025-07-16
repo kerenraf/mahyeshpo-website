@@ -10,13 +10,19 @@
     <link rel="stylesheet" href="css/animations.css">
     <style>
         /* סגנונות לדף ניהול משרות */
-        .admin-login-container {
+        #adminLoginSection {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
             background: #222222;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
         }
         
         .admin-login-box {
@@ -37,7 +43,7 @@
             font-weight: bold;
         }
         
-        .admin-content {
+        #adminContentSection {
             display: none; /* מוסתר כברירת מחדל עד להזנת סיסמה נכונה */
         }
         
@@ -101,7 +107,7 @@
     </div>
 
     <!-- מסך כניסה למערכת הניהול -->
-    <div class="admin-login-container" id="adminLoginSection">
+    <div id="adminLoginSection">
         <div class="admin-login-box">
             <div class="text-logo-container" style="margin: 0 0 30px 0; padding: 0;">
                 <h2 class="text-logo" style="font-size: 2rem;">מה יש פה?</h2>
@@ -131,7 +137,7 @@
     </div>
 
     <!-- תוכן ניהול המשרות (מוסתר עד להזנת סיסמה נכונה) -->
-    <div class="admin-content" id="adminContentSection">
+    <div id="adminContentSection">
         <!-- כותרת עליונה -->
         <header class="header">
             <div class="container">
@@ -434,58 +440,37 @@
     </div>
 
     <!-- סקריפטים -->
-    <script src="js/main.js"></script>
     <script>
-        // קוד JavaScript לבדיקת סיסמה ולהצגת תוכן הניהול
+        // רשימת משרות גלובלית
+        let jobs = [];
+        let currentPage = 1;
+        const jobsPerPage = 10;
+        
+        // פונקציה להצגת מסך הכניסה
         function showLoginForm() {
             document.getElementById('adminLoginSection').style.display = 'flex';
         }
         
+        // פונקציה לבדיקת סיסמה
         function checkAdminPassword() {
             const password = document.getElementById('adminPassword').value;
-            const correctPassword = "yarin080708"; // הסיסמה שהוגדרה
+            const correctPassword = "yarin080708"; // הסיסמה שהגדרת
             
             if (password === correctPassword) {
-                // הסיסמה נכונה - הצג את תוכן הניהול
+                // הסיסמה נכונה - הצגת תוכן הניהול
                 document.getElementById('adminLoginSection').style.display = 'none';
                 document.getElementById('adminContentSection').style.display = 'block';
                 
-                // שמירת מצב הכניסה בזיכרון המקומי (אופציונלי)
+                // שמירת מצב ההתחברות
                 sessionStorage.setItem('adminAuthenticated', 'true');
                 
-                // טען את רשימת המשרות הקיימת
+                // טעינת משרות מה-localStorage
                 loadJobs();
             } else {
-                // הסיסמה שגויה - הצג הודעת שגיאה
+                // סיסמה שגויה - הצגת הודעת שגיאה
                 document.getElementById('adminErrorMessage').style.display = 'block';
             }
         }
-        
-        // בדיקה אם המשתמש כבר מחובר (אופציונלי)
-        window.onload = function() {
-            if (sessionStorage.getItem('adminAuthenticated') === 'true') {
-                document.getElementById('adminLoginSection').style.display = 'none';
-                document.getElementById('adminContentSection').style.display = 'block';
-                
-                // טען את רשימת המשרות הקיימת
-                loadJobs();
-            } else {
-                document.getElementById('adminLoginSection').style.display = 'flex';
-                document.getElementById('adminContentSection').style.display = 'none';
-            }
-            
-            // התחברות עם לחיצה על Enter
-            document.getElementById('adminPassword').addEventListener('keyup', function(event) {
-                if (event.key === 'Enter') {
-                    checkAdminPassword();
-                }
-            });
-        };
-        
-        // ניהול משרות
-        let jobs = [];
-        let currentPage = 1;
-        const jobsPerPage = 10;
         
         // טעינת משרות מה-localStorage
         function loadJobs() {
@@ -512,12 +497,12 @@
             }, 3000);
         }
         
-        // הצגת המשרות בטבלה
+        // הצגת משרות בטבלה
         function displayJobs() {
             const tableBody = document.getElementById('jobsTableBody');
             tableBody.innerHTML = '';
             
-            // חישוב מספר דפים
+            // חישוב מספר הדפים
             const totalPages = Math.ceil(jobs.length / jobsPerPage);
             
             // חישוב טווח המשרות להצגה
@@ -597,6 +582,17 @@
                 };
                 pagination.appendChild(nextBtn);
             }
+        }
+        
+        // פתיחת חלון ייבוא משרות
+        function openImportModal() {
+            document.getElementById('import-modal').style.display = 'block';
+        }
+        
+        // סגירת חלון ייבוא משרות
+        function closeImportModal() {
+            document.getElementById('import-modal').style.display = 'none';
+            document.getElementById('file-input').value = '';
         }
         
         // טיפול בהעלאת קובץ
@@ -711,17 +707,6 @@
             }
         }
         
-        // פתיחת חלון ייבוא משרות
-        function openImportModal() {
-            document.getElementById('import-modal').style.display = 'block';
-        }
-        
-        // סגירת חלון ייבוא משרות
-        function closeImportModal() {
-            document.getElementById('import-modal').style.display = 'none';
-            document.getElementById('file-input').value = '';
-        }
-        
         // פתיחת חלון הוספת/עריכת משרה
         function openAddJobModal() {
             document.getElementById('edit-modal-title').textContent = 'הוספת משרה חדשה';
@@ -797,13 +782,14 @@
         
         // הצגת פרטי משרה
         function viewJob(index) {
-            alert('פונקציונליות זו תוסף בהמשך');
+            const job = jobs[index];
+            alert(`פרטי משרה: ${job.title}\nחברה: ${job.company}\nקטגוריה: ${job.category || 'אחר'}\nמיקום: ${job.city || ''}, ${job.region || 'מרכז'}`);
         }
         
         // סינון רשימת המשרות
         function filterJobsList() {
-            // פונקציונליות סינון תוסף בהמשך
-            alert('פונקציונליות סינון תוסף בהמשך');
+            // יתווסף בהמשך
+            alert('פונקציונליות סינון תתווסף בהמשך');
         }
         
         // ניקוי מסננים
@@ -847,6 +833,30 @@
             link.click();
             document.body.removeChild(link);
         }
+        
+        // בדיקה אם המשתמש כבר מחובר ואתחול הדף
+        document.addEventListener('DOMContentLoaded', function() {
+            // בדיקה אם המשתמש כבר מחובר (בסשן)
+            if (sessionStorage.getItem('adminAuthenticated') === 'true') {
+                // המשתמש כבר מחובר - הצג את תוכן הניהול
+                document.getElementById('adminLoginSection').style.display = 'none';
+                document.getElementById('adminContentSection').style.display = 'block';
+                
+                // טען את רשימת המשרות
+                loadJobs();
+            } else {
+                // המשתמש לא מחובר - הצג את מסך הכניסה
+                document.getElementById('adminLoginSection').style.display = 'flex';
+                document.getElementById('adminContentSection').style.display = 'none';
+            }
+            
+            // התחברות עם לחיצה על Enter
+            document.getElementById('adminPassword').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    checkAdminPassword();
+                }
+            });
+        });
     </script>
 </body>
 </html>
