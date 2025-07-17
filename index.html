@@ -93,8 +93,8 @@
         /* גמדה בכרטיס משרה - עם כיתוב */
         .job-card-gnome {
             position: absolute;
-            bottom: 15px;
-            left: 95px; /* עודכן למיקום חדש */
+            bottom: -5px; /* מיקום נמוך יותר בתחתית הכרטיס */
+            left: 115px; /* הוזזה שמאלה יותר כדי למנוע התנגשות */
             width: 50px;
             height: auto;
             cursor: pointer;
@@ -115,13 +115,17 @@
         }
         
         .job-card-gnome-text {
+            display: inline-block;
             font-size: 12px;
             color: #555;
             font-weight: bold;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
-            padding: 2px 5px;
+            padding: 3px 8px;
             white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-top: 2px;
+            width: auto;
         }
 
         .job-card-gnome .gnome-tooltip {
@@ -160,17 +164,16 @@
             visibility: visible;
         }
 
-        /* עדכון הכרטיס להכיל הגמדה */
         .job-card {
             position: relative;
-            padding-bottom: 80px; /* מקום לגמדה */
+            padding-bottom: 85px; /* מקום מוגדל לגמדה */
         }
         
         /* כפתורים בכרטיס משרה */
         .contact-buttons {
             position: absolute;
             right: 15px;
-            bottom: 15px;
+            bottom: 10px; /* מיקום נמוך יותר */
             display: flex;
             gap: 8px;
             z-index: 10;
@@ -671,13 +674,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 id="modal-job-title" class="modal-title">כותרת המשרה</h3>
-                <div class="modal-gnome-container">
-                    <div class="gnome-character modal-gnome">
-                        <img src="images/gnome.png" alt="גמדה מציגה משרה">
-                        <div class="gnome-tooltip">הנה פרטי המשרה המלאים!</div>
-                    </div>
-                    <span class="close" onclick="closeJobModal()">&times;</span>
-                </div>
+                <span class="close" onclick="closeJobModal()">&times;</span>
             </div>
             
             <div class="job-details">
