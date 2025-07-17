@@ -1663,7 +1663,7 @@ function closeAboutModal() {
 
 // פונקציה לטעינת משרות מ-GitHub
 function loadJobsFromGitHub() {
-    const gitHubRawUrl = '/data/jobs.json';
+const url = 'https://kerenraf.github.io/mahyeshpo-website/data/jobs.json';
     
     fetch(gitHubRawUrl)
         .then(response => {
