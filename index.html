@@ -90,16 +90,17 @@
             animation: float 3s ease-in-out infinite;
         }
 
-        /* גמדה בכרטיס משרה - במקום כפתור */
+        /* גמדה בכרטיס משרה - עם כיתוב */
         .job-card-gnome {
             position: absolute;
             bottom: 15px;
             left: 95px; /* עודכן למיקום חדש */
             width: 50px;
-            height: 50px;
+            height: auto;
             cursor: pointer;
             transition: all 0.3s ease;
             z-index: 10;
+            text-align: center;
         }
 
         .job-card-gnome:hover {
@@ -110,6 +111,17 @@
             width: 100%;
             height: auto;
             filter: drop-shadow(0 2px 8px rgba(246, 152, 152, 0.4));
+            margin-bottom: 5px;
+        }
+        
+        .job-card-gnome-text {
+            font-size: 12px;
+            color: #555;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 2px 5px;
+            white-space: nowrap;
         }
 
         .job-card-gnome .gnome-tooltip {
@@ -1265,9 +1277,9 @@
                     const location = job.city ? `${job.city}, ${job.region || 'מרכז'}` : job.region || 'מרכז';
                     
 // הכנת תיאור קצר (עד 100 תווים) - עם בדיקת תקינות
-                    const shortDescription = job.description ? 
+                    let shortDescription = job.description ? 
                         job.description.substring(0, 100) + (job.description.length > 100 ? '...' : '') : 
-                        'אין תיאור זמין';
+                        'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
                     
                     // קביעת הצבע לפי הקטגוריה - עם ברירת מחדל
                     const categoryClass = categoryColorMap[job.category] || 'category-other';
@@ -1291,6 +1303,7 @@
                         
                         <div class="job-card-gnome">
                             <img src="images/gnome.png" alt="גמדה פרטים">
+                            <div class="job-card-gnome-text">לפרטים נוספים</div>
                             <div class="gnome-tooltip">לחץ לפרטים נוספים!</div>
                         </div>
                         
@@ -1348,8 +1361,8 @@
                 document.getElementById('modal-job-location').textContent = job.city ? `${job.city}, ${job.region || 'מרכז'}` : job.region || 'מרכז';
                 document.getElementById('modal-job-type').textContent = job.type || 'משרה מלאה';
                 document.getElementById('modal-job-category').textContent = job.category || 'אחר';
-                document.getElementById('modal-job-description').textContent = job.description || 'אין תיאור משרה';
-                document.getElementById('modal-job-requirements').textContent = job.requirements || 'אין דרישות מיוחדות';
+                document.getElementById('modal-job-description').textContent = job.description || 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
+                document.getElementById('modal-job-requirements').textContent = job.requirements || 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
                 
                 // איפוס שדות הטופס המינימלי
                 document.getElementById('mini-name').value = '';
