@@ -1285,7 +1285,7 @@
                     const categoryClass = categoryColorMap[job.category] || 'category-other';
                     
                     // הכנת טקסט להודעה
-                    const messageText = `שלום, אני מעוניין/ת במשרה: ${job.title || 'משרה'} (${job.jobNumber || index + 1}) בחברת ${job.company || 'החברה'}`;
+                    const messageText = `שלום, אני מעוניין/ת במשרה: ${job.title || 'משרה'} (${job.jobNumber || index + 1})`;
                     
                     // הכנת קישורים
                     const whatsappText = encodeURIComponent(messageText);
@@ -1460,9 +1460,8 @@
             // בניית הודעה עם הפרטים
             const jobTitle = job.title || 'משרה';
             const jobNumber = job.jobNumber || (jobIndex + 1);
-            const company = job.company || 'החברה';
             
-            const messageText = `שלום, אני מעוניין/ת במשרה: ${jobTitle} (${jobNumber}) בחברת ${company}
+            const messageText = `שלום, אני מעוניין/ת במשרה: ${jobTitle} (${jobNumber})
 שם מלא: ${name}
 טלפון: ${phone}`;
             
