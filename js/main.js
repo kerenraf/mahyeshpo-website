@@ -868,9 +868,11 @@ function displayJobs(jobsToShow) {
     });
 }
 
-// פונקציה לטעינת משרות מגיטהאב
+// פונקציה לטעינת משרות מגיטהאב - המתוקנת והמלאה
 function loadJobsFromGitHub() {
-    const gitHubRawUrl = 'https://raw.githubusercontent.com/kerenraf/ma-yesh-po-jobs/main/jobs.json';
+    const gitHubRawUrl = 'https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/data/jobs.json';
+    
+    console.log('📡 טוען משרות מ:', gitHubRawUrl);
     
     fetch(gitHubRawUrl)
         .then(response => {
@@ -881,16 +883,23 @@ function loadJobsFromGitHub() {
         })
         .then(data => {
             console.log('✅ טעינה מוצלחת של', data.length, 'משרות מגיטהאב');
-            jobs = data; // עדכון המאגר המקומי
+            
+            // עדכון מאגר המשרות
+            jobs = data;
+            
+            // הצגת המשרות
             displayJobs(jobs);
+            
+            console.log('🎯 הוצגו המשרות מגיטהאב');
         })
         .catch(error => {
             console.error('❌ שגיאה בטעינה מגיטהאב:', error);
-            console.log('🔄 משתמש במשרות מקומיות');
-            displayJobs(jobs); // שימוש במאגר המקומי
+            console.log('🔄 משתמש במשרות גיבוי');
+            
+            // במקרה של שגיאה - הצג את משרות הגיבוי שכבר מוגדרות
+            displayJobs(jobs);
         });
 }
-
 // פונקציה לפתיחת מודל משרה
 function openJobModal(job) {
     // כאן תוסיפי את הקוד לפתיחת המודל
