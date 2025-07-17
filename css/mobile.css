@@ -1,8 +1,63 @@
 /* === CSS למובייל משופר === */
 @media (max-width: 768px) {
+    /* === תיקון ליישור הרקע השחור בכותרת העליונה === */
+    .header, 
+    header {
+        width: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        position: fixed !important;
+        top: 0 !important;
+        margin: 0 !important;
+        padding: 8px 0 !important;
+        background-color: #000 !important; /* וידוא רקע שחור */
+        box-sizing: border-box !important;
+        z-index: 1000 !important;
+    }
+    
+    /* אם יש מיכל פנימי בכותרת, גם אותו צריך לתקן */
+    .header-inner,
+    .header .container,
+    header .container {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 15px !important; /* מרווח בצדדים */
+        box-sizing: border-box !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+    
+    /* תיקון ספציפי לכותרת "מה יש פה?" */
+    .header h1,
+    header h1,
+    .text-logo,
+    .header .text-logo {
+        width: 100% !important;
+        text-align: center !important;
+        margin: 0 auto !important;
+    }
+    
     /* === שינויים בסיסיים === */
     .container {
         padding: 0 15px;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* וידוא שכל האלמנטים מכבדים את גבולות המסך */
+    * {
+        box-sizing: border-box !important;
+        max-width: 100% !important;
+    }
+    
+    /* תיקון למקרה שיש תמונת רקע שיצרה את הבעיה */
+    .hero-bg, 
+    .circle,
+    .header-bg {
+        width: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
     }
     
     /* === סידור מחדש - סדר האלמנטים === */
@@ -29,23 +84,6 @@
     }
 
     /* === שיפור כותרת עליונה === */
-    .header {
-        padding: 8px 0;
-    }
-    
-    .header-inner {
-        justify-content: space-between;
-    }
-    
-    .text-logo-container {
-        margin: 0;
-        padding: 0;
-    }
-    
-    .text-logo {
-        font-size: 1.6rem;
-    }
-    
     .mobile-menu-toggle {
         display: block;
         padding: 8px;
@@ -111,16 +149,20 @@
         padding-top: 65px;
         padding-bottom: 120px !important; /* מרווח גדול יותר בתחתית */
         overflow: visible;
+        width: 100% !important;
     }
     
     .hero-content {
         max-width: 100%;
         text-align: center;
+        padding: 0 15px !important;
+        box-sizing: border-box !important;
     }
     
     .text-logo-container {
         margin: 20px 0;
         padding: 10px 0;
+        width: 100% !important;
     }
     
     .text-logo {
@@ -184,6 +226,8 @@
         margin: 50px 0 20px;
         padding: 25px 15px;
         border-radius: 15px;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
     
     .search-title {
@@ -246,6 +290,8 @@
     /* === משרות - מעל הקטגוריות === */
     .jobs {
         margin-top: 20px;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
     
     .section-title {
@@ -256,6 +302,7 @@
     .jobs-grid {
         grid-template-columns: 1fr;
         gap: 20px;
+        width: 100% !important;
     }
     
     /* === כפתור פרטים נוספים למשרות === */
@@ -273,6 +320,7 @@
         transition: all 0.3s ease;
         border-radius: 12px;
         overflow: hidden;
+        width: 100% !important;
     }
     
     .job-card:hover {
@@ -325,11 +373,14 @@
     .categories {
         margin: 30px 0;
         padding: 0;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
     
     .categories-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 15px;
+        width: 100% !important;
     }
     
     .category-card {
@@ -354,11 +405,14 @@
     .contact-section {
         padding: 30px 0;
         margin: 30px 0;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
     
     .contact-container {
         grid-template-columns: 1fr;
         gap: 25px;
+        width: 100% !important;
     }
     
     .contact-info {
@@ -513,6 +567,7 @@
     .footer {
         padding: 30px 0;
         margin-top: 40px;
+        width: 100% !important;
     }
     
     .footer-links {
@@ -776,4 +831,14 @@
             display: none !important;
         }
     }
+}
+
+/* תיקון לגלישות ברוחב */
+body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
 }
