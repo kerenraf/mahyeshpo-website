@@ -12,7 +12,7 @@
     <!-- קישור לספריית נגישות -->
     <script src="https://cdn.enable.co.il/licenses/enable-L2098s5rbtvqk9c8f-0322-2326/init.js"></script>
     <style>
-        /* עיצוב כפתור הנגישות החלופי - באמצע הצד השמאלי */
+        /* עיצוב כפתור הנגישות - אחד בלבד */
         .accessibility-btn {
             position: fixed;
             left: 20px;
@@ -44,7 +44,7 @@
             transform: translateY(-50%) scale(0.95);
         }
 
-        /* הסתרת כפתור הנגישות החלופי אם הספרייה נטענת */
+        /* הסתרת כפתור הנגישות אם הספרייה נטענת */
         .enable-loaded .accessibility-btn {
             display: none;
         }
@@ -457,6 +457,7 @@
             gap: 15px;
             margin-top: 20px;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .contact-method-btn {
@@ -496,6 +497,7 @@
         /* עיצוב אזור שיטות יצירת קשר */
         .contact-methods {
             margin-bottom: 30px;
+            text-align: center;
         }
 
         .contact-methods h4 {
@@ -514,6 +516,8 @@
             gap: 15px;
             margin-bottom: 30px;
             max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .contact-method-card {
@@ -580,23 +584,143 @@
         }
 
         .or-divider span {
+            position: relative;
             background-color: white;
             padding: 0 20px;
             color: #666;
             font-weight: 600;
         }
 
-        /* עיצוב מודל "עוד עלינו" */
+        /* עיצוב משופר לטופס יצירת קשר */
+        .contact-form-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        #contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-group {
+            flex: 1;
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f9f9f9;
+        }
+
+        .form-input:focus {
+            border-color: #F69898;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(246, 152, 152, 0.2);
+            background-color: #fff;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+            font-size: 0.95rem;
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-button-container {
+            position: relative;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .form-submit {
+            background: linear-gradient(135deg, #F69898 0%, #FF6B6B 100%);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(246, 152, 152, 0.3);
+        }
+
+        .form-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(246, 152, 152, 0.4);
+        }
+
+        .contact-gnome {
+            position: absolute;
+            right: -60px;
+            bottom: -10px;
+            width: 70px;
+        }
+
+        .success-message {
+            background-color: #f0fff4;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid #68D391;
+            margin-top: 20px;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            color: #68D391;
+            margin-bottom: 15px;
+        }
+
+        .success-title {
+            color: #38A169;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .pulsate {
+            animation: pulsate 2s infinite;
+        }
+
+        @keyframes pulsate {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* עיצוב מודל "עוד עלינו" - פתרון לבעיית ההיעלמות */
         .about-modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 9999;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(3px);
+            overflow-y: auto;
         }
 
         .about-modal-content {
@@ -609,18 +733,10 @@
             max-height: 95vh;
             overflow-y: auto;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            position: relative;
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         /* כותרת המודל */
@@ -664,6 +780,7 @@
             border-radius: 50%;
             background-color: rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
+            z-index: 10;
         }
 
         .about-close:hover {
@@ -673,8 +790,7 @@
 
         /* תוכן המודל */
         .about-modal-body {
-            padding: 20px;
-            padding-bottom: 30px;
+            padding: 25px;
             line-height: 1.6;
             color: #333;
         }
@@ -819,6 +935,12 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(246, 152, 152, 0.4);
         }
+
+        /* וידוא שהתוכן של המודל לא נעלם */
+        .about-modal-body *, .benefits-list li {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
         
         /* התאמות למובייל */
         @media (max-width: 768px) {
@@ -916,6 +1038,25 @@
                 padding: 15px;
             }
 
+            /* התאמות טופס יצירת קשר במובייל */
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .contact-form-container {
+                padding: 20px 15px;
+            }
+
+            .form-submit {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .contact-gnome {
+                display: none; /* הסתרת הגמדה בטופס במובייל */
+            }
+
             /* התאמות מודל "עוד עלינו" למובייל */
             .about-modal-content {
                 margin: 1% auto;
@@ -1007,7 +1148,7 @@
         <i class="fas fa-cog"></i>
     </a>
     
-    <!-- כפתור נגישות חלופי -->
+    <!-- כפתור נגישות אחד בלבד (הסרנו את הכפתור השני) -->
     <div id="fallback-accessibility" class="accessibility-btn" title="נגישות" onclick="toggleAccessibility()">
         <i class="fas fa-universal-access"></i>
     </div>
@@ -1060,7 +1201,7 @@
                 
                 <div class="hero-buttons">
                     <a href="#search" class="btn">חיפוש משרות</a>
-                    <a href="#" class="btn btn-secondary" onclick="openAboutModal()">עוד עלינו</a>
+                    <a href="#" class="btn btn-secondary" id="aboutBtn">עוד עלינו</a>
                 </div>
             </div>
         </div>
@@ -1136,7 +1277,7 @@
         </div>
     </section>
 
-    <!-- יצירת קשר -->
+    <!-- יצירת קשר - עם עיצוב משופר -->
     <section id="contact" class="contact-section">
         <div class="container">
             <h3 class="section-title">צור קשר</h3>
@@ -1288,27 +1429,31 @@
             
             <p class="contact-instruction">בחר דרך ליצירת קשר:</p>
             
+            <div class="modal-buttons-container">
+                <!-- כפתורים ייווצרו דינמית -->
+            </div>
+            
             <div class="modal-footer">
                 <button onclick="closeJobModal()" class="modal-close-button">חזרה לרשימת המשרות</button>
             </div>
         </div>
     </div>
 
-    <!-- מודל "עוד עלינו" -->
+    <!-- מודל "עוד עלינו" - עם תיקון לבעיית ההיעלמות -->
     <div id="aboutModal" class="about-modal">
         <div class="about-modal-content">
             <div class="about-modal-header">
                 <h2 class="about-modal-title">מי אנחנו?</h2>
                 <p class="about-modal-subtitle">הכירו את הצוות מאחורי "מה יש פה?"</p>
-                <span class="about-close" onclick="closeAboutModal()">&times;</span>
+                <span class="about-close">&times;</span>
             </div>
             
             <div class="about-modal-body">
-                <div class="about-intro fade-in">
+                <div class="about-intro">
                     ברוכים הבאים למקום שבו חיפוש עבודה הופך לחוויה נעימה ויעילה
                 </div>
                 
-                <div class="about-main-text fade-in">
+                <div class="about-main-text">
                     <strong>מה יש פה?</strong> הוא לוח משרות חכם, פשוט ואנושי – שנועד לעזור לך למצוא את <em>העבודה שמתאימה לך באמת</em>.
                     <br><br>
                     לא משנה אם אתה חייל משוחרר, אמא שמחפשת משרת אם, סטודנטית, איש הייטק או מחליף קריירה – כאן תמצא משרות מסוננות, אמיתיות, ועם ממשק שלא עושה כאב ראש.
@@ -1360,7 +1505,7 @@
             </div>
 
             <div class="about-modal-footer">
-                <button class="about-close-button" onclick="closeAboutModal()">
+                <button class="about-close-button">
                     <i class="fas fa-times"></i> סגור
                 </button>
             </div>
@@ -1439,11 +1584,81 @@
                 clearButton.addEventListener('click', clearFilters);
             }
             
+            // מאזין אירועים למודל "עוד עלינו"
+            const aboutBtn = document.getElementById('aboutBtn');
+            if (aboutBtn) {
+                aboutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openAboutModal();
+                });
+            }
+            
+            // מאזיני אירועים לכפתורי סגירת המודל
+            const aboutCloseBtn = document.querySelector('.about-close');
+            const aboutCloseButtonFooter = document.querySelector('.about-close-button');
+            
+            if (aboutCloseBtn) {
+                aboutCloseBtn.addEventListener('click', closeAboutModal);
+            }
+            
+            if (aboutCloseButtonFooter) {
+                aboutCloseButtonFooter.addEventListener('click', closeAboutModal);
+            }
+            
             window.addEventListener('storage', function(e) {
                 if (e.key === 'jobs') {
                     loadJobsFromStorage();
                 }
             });
+            
+            // מאזין אירועים לסגירה בלחיצה על מסך או ESC
+            window.addEventListener('click', function(event) {
+                const aboutModal = document.getElementById('aboutModal');
+                const jobModal = document.getElementById('job-modal');
+                
+                if (event.target === aboutModal) {
+                    closeAboutModal();
+                }
+                if (event.target === jobModal) {
+                    closeJobModal();
+                }
+            });
+            
+            document.addEventListener('keydown', function(event) {
+if (event.key === 'Escape') {
+                    closeAboutModal();
+                    closeJobModal();
+                }
+            });
+        }
+
+        // פונקציות לניהול מודל "עוד עלינו" - עם תיקון לבעיית ההיעלמות
+        function openAboutModal() {
+            const aboutModal = document.getElementById('aboutModal');
+            if (!aboutModal) return;
+            
+            // וידוא שכל התוכן גלוי לפני הצגת המודל
+            const modalContent = aboutModal.querySelector('.about-modal-content');
+            if (modalContent) {
+                // וידוא שכל האלמנטים גלויים
+                const elements = aboutModal.querySelectorAll('.about-intro, .about-main-text, .why-section, .human-section, .benefits-list li');
+                elements.forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.visibility = 'visible';
+                });
+            }
+            
+            // הצגת המודל עם אנימציה מתאימה
+            aboutModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAboutModal() {
+            const aboutModal = document.getElementById('aboutModal');
+            if (!aboutModal) return;
+            
+            aboutModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
 
         // פונקציה לטעינת משרות מ-GitHub
@@ -1594,7 +1809,7 @@
                     region: "צפון",
                     status: "פעיל",
                     description: "מנהל/ת מכירות עם ניסיון",
-requirements: "ניסיון 5+ שנים במכירות"
+                    requirements: "ניסיון 5+ שנים במכירות"
                 }
             ];
             
@@ -1869,50 +2084,35 @@ requirements: "ניסיון 5+ שנים במכירות"
             });
         }
 
-        // פונקציה ליצירת קשר
+        // פונקציה ליצירת קשר - עם שיפור המראה
         function submitContactForm(event) {
             event.preventDefault();
             
+            // בדיקת תקינות הטופס
+            const name = document.getElementById('contact-name').value.trim();
+            const email = document.getElementById('contact-email').value.trim();
+            const subject = document.getElementById('contact-subject').value.trim();
+            const message = document.getElementById('contact-message').value.trim();
+            
+            if (!name || !email || !subject || !message) {
+                alert('נא למלא את כל השדות בטופס');
+                return false;
+            }
+            
+            // שליחת הטופס - במקרה אמיתי כאן יש לשלוח את הנתונים לשרת
+            console.log('שליחת טופס:', { name, email, subject, message });
+            
+            // איפוס הטופס והצגת הודעת הצלחה
             document.getElementById('contact-form').reset();
             document.getElementById('contact-success').style.display = 'block';
             
+            // הסתרת הודעת ההצלחה אחרי 5 שניות
             setTimeout(function() {
                 document.getElementById('contact-success').style.display = 'none';
             }, 5000);
             
             return false;
         }
-
-        // פונקציות לניהול מודל "עוד עלינו"
-        function openAboutModal() {
-            document.getElementById('aboutModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeAboutModal() {
-            document.getElementById('aboutModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        // סגירת מודלים בלחיצה על רקע או ESC
-        window.onclick = function(event) {
-            const aboutModal = document.getElementById('aboutModal');
-            const jobModal = document.getElementById('job-modal');
-            
-            if (event.target === aboutModal) {
-                closeAboutModal();
-            }
-            if (event.target === jobModal) {
-                closeJobModal();
-            }
-        }
-
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeAboutModal();
-                closeJobModal();
-            }
-        });
 
         // פונקציה לטיפול בכפתור הנגישות
         function toggleAccessibility() {
@@ -1932,21 +2132,4 @@ requirements: "ניסיון 5+ שנים במכירות"
                 document.body.classList.add('enable-loaded');
             }
         });
-
-        // הוספת CSS לאנימציית pulse
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes pulse {
-                0% { transform: translateY(-50%) scale(1); }
-                50% { transform: translateY(-50%) scale(1.05); }
-                100% { transform: translateY(-50%) scale(1); }
-            }
-            
-            .accessibility-btn.pulse {
-                animation: pulse 2s infinite;
-            }
-        `;
-        document.head.appendChild(style);
     </script>
-</body>
-</html>
