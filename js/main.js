@@ -831,6 +831,108 @@ function validateInput(input) {
     hideError(input);
     return true;
 }
+// פונקציה להצגת משרות
+function displayJobs(jobsToShow) {
+    const jobsContainer = document.getElementById('jobsContainer');
+    if (!jobsContainer) return;
+    
+    jobsContainer.innerHTML = '';
+    
+    if (!jobsToShow || jobsToShow.length === 0) {
+        jobsContainer.innerHTML = '<div>אין משרות זמינות</div>';
+        return;
+    }
+    
+    const activeJobs = jobsToShow.filter(job => job.status === 'פעיל');
+    
+    activeJobs.forEach((job, index) => {
+        const jobCard = document.createElement('div');
+        jobCard.className = 'job-card fade-up';
+        
+        const categoryClass = categoryColors[job.category] || 'category-other';
+        
+        jobCard.innerHTML = `
+            <div class="job-number">${job.jobNumber || (index + 1)}</div>
+            <h3 class="job-title">${job.title}</h3>
+            <div class="job-company">${job.company}</div>
+            <div class="job-location">${job.location}</div>
+            <div class="job-description">${job.description.substring(0, 100)}...</div>
+            <div class="job-badge ${categoryClass}">${job.category}</div>
+        `;
+        
+        jobCard.addEventListener('click', function() {
+            openJobModal(job);
+        });
+        
+        jobsContainer.appendChild(jobCard);
+    });
+}
+
+// פונקציה לטעינת משרות מגיטהאב
+function loadJobsFromGitHub() {
+    const gitHubRawUrl = 'https://raw.githubusercontent.com/kerenraf/ma-yesh-po-jobs/main/jobs.json';
+    
+    fetch(gitHubRawUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`שגיאת שרת: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('✅ טעינה מוצלחת של', data.length, 'משרות מגיטהאב');
+            jobs = data; // עדכון המאגר המקומי
+            displayJobs(jobs);
+        })
+        .catch(error => {
+            console.error('❌ שגיאה בטעינה מגיטהאב:', error);
+            console.log('🔄 משתמש במשרות מקומיות');
+            displayJobs(jobs); // שימוש במאגר המקומי
+        });
+}
+
+// פונקציה לפתיחת מודל משרה
+function openJobModal(job) {
+    // כאן תוסיפי את הקוד לפתיחת המודל
+    alert(`פרטי המשרה: ${job.title}\nחברה: ${job.company}\nתיאור: ${job.description}`);
+}
+
+// פונקציה לחיפוש משרות
+function searchJobs() {
+    const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+    const categoryFilter = document.getElementById('categoryFilter')?.value || '';
+    
+    let filteredJobs = jobs.filter(job => {
+        const matchesSearch = !searchTerm || 
+            job.title.toLowerCase().includes(searchTerm) ||
+            job.company.toLowerCase().includes(searchTerm) ||
+            job.description.toLowerCase().includes(searchTerm);
+        
+        const matchesCategory = !categoryFilter || job.category === categoryFilter;
+        
+        return matchesSearch && matchesCategory;
+    });
+    
+    displayJobs(filteredJobs);
+}
+
+// פונקציה לניקוי מסננים
+function clearFilters() {
+    if (document.getElementById('searchInput')) {
+        document.getElementById('searchInput').value = '';
+    }
+    if (document.getElementById('categoryFilter')) {
+        document.getElementById('categoryFilter').value = '';
+    }
+    displayJobs(jobs);
+}
+
+// פונקציה לטעינה מאחסון מקומי
+function loadJobsFromStorage() {
+    // אם יש נתונים מקומיים, השתמש בהם
+    // אחרת טען מגיטהאב
+    loadJobsFromGitHub();
+}
 
 // הצגת שגיאה ליד שדה
 function showError(input, message) {
