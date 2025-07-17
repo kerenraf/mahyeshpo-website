@@ -1606,4 +1606,329 @@
             
             return false;
         }
+    </script>// הכנת תיאור קצר (עד 100 תווים) - עם בדיקת תקינות
+                    let shortDescription = job.description ? 
+                        job.description.substring(0, 100) + (job.description.length > 100 ? '...' : '') : 
+                        'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
+                    
+                    // קביעת הצבע לפי הקטגוריה - עם ברירת מחדל
+                    const categoryClass = categoryColorMap[job.category] || 'category-other';
+                    
+                    // הכנת טקסט להודעה
+                    const messageText = `שלום, אני מעוניין/ת במשרה: ${job.title || 'משרה'} (${job.jobNumber || index + 1})`;
+                    
+                    // הכנת קישורים
+                    const whatsappText = encodeURIComponent(messageText);
+                    const whatsappLink = `https://wa.me/972555504633?text=${whatsappText}`;
+                    const smsLink = `sms:+972555504633?body=${encodeURIComponent(messageText)}`;
+                    
+                    // בניית HTML עם בדיקות תקינות לכל שדה
+                    jobCard.innerHTML = `
+                        <div class="job-number">${job.jobNumber || (index + 1)}</div>
+                        <h3 class="job-title">${job.title || 'משרה ללא כותרת'}</h3>
+                        <div class="job-company">${job.company || 'חברה לא ידועה'}</div>
+                        <div class="job-location">${location}</div>
+                        <div class="job-description">${shortDescription}</div>
+                        <div class="job-badge ${categoryClass}">${job.category || 'אחר'}</div>
+                        
+                        <div class="job-card-gnome">
+                            <img src="images/gnome.png" alt="גמדה פרטים">
+                            <div class="job-card-gnome-text">לפרטים נוספים</div>
+                            <div class="gnome-tooltip">לחץ לפרטים נוספים!</div>
+                        </div>
+                        
+                        <div class="contact-buttons">
+                            <a href="${whatsappLink}" class="contact-button whatsapp-button" target="_blank" title="פנייה בוואטסאפ" onclick="event.stopPropagation();">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                            <a href="${smsLink}" class="contact-button sms-button" title="פנייה ב-SMS" onclick="event.stopPropagation();">
+                                <i class="fas fa-sms"></i>
+                            </a>
+                        </div>
+                    `;
+                    
+                    // הוספת מאזין אירועים לכרטיס משרה
+                    jobCard.addEventListener('click', function() {
+                        // בדיקה אם מדובר במשרות מסוננות או כל המשרות
+                        const currentJobs = filteredJobs.length > 0 ? filteredJobs : jobs;
+                        openJobModal(index, currentJobs);
+                    });
+                    
+                    jobsContainer.appendChild(jobCard);
+                });
+                
+                console.log('✅ הצגת משרות הושלמה!');
+            } catch (error) {
+                console.error('❌ שגיאה בהצגת משרות:', error);
+                jobsContainer.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #ccc;">
+                        <h3>אירעה שגיאה בטעינת המשרות</h3>
+                        <p>נסה לרענן את הדף או <a href="job-management.html" style="color: #F69898;">נהל משרות</a></p>
+                        <p style="color: #888; font-size: 0.8rem; margin-top: 10px;">פירוט השגיאה: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // פונקציה לפתיחת מודל פרטי משרה - משופרת עם כפתורי WhatsApp, SMS וחזרה לחיפוש
+        function openJobModal(index, jobs) {
+            console.log('פותח מודל למשרה מספר', index);
+            
+            // וידוא שיש גישה למשרה
+            if (!jobs || !jobs[index]) {
+                console.error('⚠️ לא נמצאה משרה במיקום', index);
+                alert('אירעה שגיאה בטעינת פרטי המשרה');
+                return;
+            }
+            
+            try {
+                const job = jobs[index];
+                console.log('נטענת משרה:', job.title);
+                
+                // עדכון פרטי המשרה במודל עם בדיקות תקינות
+                document.getElementById('modal-job-title').textContent = job.title || 'משרה ללא כותרת';
+                document.getElementById('modal-job-company').textContent = job.company || 'חברה לא ידועה';
+                document.getElementById('modal-job-location').textContent = job.city ? `${job.city}, ${job.region || 'מרכז'}` : job.region || 'מרכז';
+                document.getElementById('modal-job-type').textContent = job.type || 'משרה מלאה';
+                document.getElementById('modal-job-category').textContent = job.category || 'אחר';
+                document.getElementById('modal-job-description').textContent = job.description || 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
+                document.getElementById('modal-job-requirements').textContent = job.requirements || 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
+                
+                // איפוס שדות הטופס המינימלי
+                document.getElementById('mini-name').value = '';
+                document.getElementById('mini-phone').value = '';
+                document.getElementById('mini-name-error').style.display = 'none';
+                document.getElementById('mini-phone-error').style.display = 'none';
+                
+                // בדיקה אם קיים מיכל כפתורים
+                let buttonsContainer = document.querySelector('.modal-buttons-container');
+                
+                // אם לא קיים מיכל כפתורים, ניצור אותו
+                if (!buttonsContainer) {
+                    buttonsContainer = document.createElement('div');
+                    buttonsContainer.className = 'modal-buttons-container';
+                    
+                    // הוספת המיכל אחרי הטופס המינימלי
+                    const miniForm = document.querySelector('.modal-mini-form');
+                    miniForm.parentNode.insertBefore(buttonsContainer, miniForm.nextSibling);
+                } else {
+                    // ניקוי הכפתורים הקיימים
+                    buttonsContainer.innerHTML = '';
+                }
+                
+                // יצירת כפתור WhatsApp
+                const whatsappButton = document.createElement('button');
+                whatsappButton.className = 'modal-contact-button modal-whatsapp-button';
+                whatsappButton.innerHTML = '<i class="fab fa-whatsapp"></i> פנייה בוואטסאפ';
+                whatsappButton.addEventListener('click', function() {
+                    sendContactWithDetails('whatsapp', job, index);
+                });
+                
+                // יצירת כפתור SMS
+                const smsButton = document.createElement('button');
+                smsButton.className = 'modal-contact-button modal-sms-button';
+                smsButton.innerHTML = '<i class="fas fa-sms"></i> פנייה ב-SMS';
+                smsButton.addEventListener('click', function() {
+                    sendContactWithDetails('sms', job, index);
+                });
+                
+                // יצירת כפתור חזרה לחיפוש
+                const searchButton = document.createElement('button');
+                searchButton.className = 'modal-contact-button modal-search-button';
+                searchButton.innerHTML = '<i class="fas fa-search"></i> חזרה לחיפוש';
+                searchButton.addEventListener('click', function() {
+                    closeJobModal();
+                    document.getElementById('search').scrollIntoView({ behavior: 'smooth' });
+                });
+                
+                // הוספה למיכל הכפתורים
+                buttonsContainer.appendChild(whatsappButton);
+                buttonsContainer.appendChild(smsButton);
+                buttonsContainer.appendChild(searchButton);
+                
+                // הסתרת טופס הגשת המועמדות
+                const applicationForm = document.querySelector('.application-form');
+                if (applicationForm) {
+                    applicationForm.style.display = 'none';
+                }
+                
+                // הצגת המודל
+                document.getElementById('job-modal').style.display = 'block';
+            } catch (error) {
+                console.error('❌ שגיאה בפתיחת מודל משרה:', error);
+                alert('אירעה שגיאה בטעינת פרטי המשרה');
+            }
+        }
+        
+        // פונקציה לשליחת הודעה עם פרטי המועמד
+        function sendContactWithDetails(method, job, jobIndex) {
+            // קבלת פרטי המועמד מהטופס
+            const name = document.getElementById('mini-name').value.trim();
+            const phone = document.getElementById('mini-phone').value.trim();
+            
+            // בדיקת תקינות
+            let isValid = true;
+            
+            if (!name) {
+                document.getElementById('mini-name-error').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('mini-name-error').style.display = 'none';
+            }
+            
+            if (!phone || !isValidPhone(phone)) {
+                document.getElementById('mini-phone-error').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('mini-phone-error').style.display = 'none';
+            }
+            
+            if (!isValid) {
+                return;
+            }
+            
+            // בניית הודעה עם הפרטים
+            const jobTitle = job.title || 'משרה';
+            const jobNumber = job.jobNumber || (jobIndex + 1);
+            
+            const messageText = `שלום, אני מעוניין/ת במשרה: ${jobTitle} (${jobNumber})
+שם מלא: ${name}
+טלפון: ${phone}`;
+            
+            // בחירת המתודה לשליחה
+            if (method === 'whatsapp') {
+                const whatsappText = encodeURIComponent(messageText);
+                const whatsappLink = `https://wa.me/972555504633?text=${whatsappText}`;
+                window.open(whatsappLink, '_blank');
+            } else if (method === 'sms') {
+                const smsLink = `sms:+972555504633?body=${encodeURIComponent(messageText)}`;
+                window.location.href = smsLink;
+            }
+        }
+
+        // פונקציה לסגירת מודל פרטי משרה
+        function closeJobModal() {
+            document.getElementById('job-modal').style.display = 'none';
+        }
+
+        // פונקציה לבדיקת תקינות מספר טלפון
+        function isValidPhone(phone) {
+            // בדיקה בסיסית למספר טלפון ישראלי
+            const phoneRegex = /^(0[23489]|05[0-9])-?[0-9]{7,8}$/;
+            return phoneRegex.test(phone);
+        }
+
+        // פונקציה לטיפול בבחירת קובץ
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('file-name').textContent = file.name;
+            }
+        }
+
+        // פונקציה לבחירת קטגוריה
+        function selectCategory(category) {
+            document.getElementById('categoryFilter').value = category;
+            
+            // גלילה לאזור החיפוש
+            document.getElementById('search').scrollIntoView({ behavior: 'smooth' });
+            
+            // הפעלת חיפוש אוטומטי
+            filterJobs();
+        }
+
+        // פונקציה לסינון משרות
+        function filterJobs() {
+            const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const region = document.getElementById('regionFilter').value;
+            
+            console.log('🔍 מחפש לפי:', {
+                searchText: searchText || '(ריק)',
+                category: category || '(כל הקטגוריות)',
+                region: region || '(כל האזורים)'
+            });
+            
+            try {
+                // שימוש בכל המשרות הפעילות כבסיס לסינון
+                const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
+                
+                filteredJobs = activeJobs.filter(job => {
+                    // סינון לפי טקסט חופשי
+                    if (searchText && !jobMatchesSearch(job, searchText)) {
+                        return false;
+                    }
+                    
+                    // סינון לפי קטגוריה
+                    if (category && job.category !== category) {
+                        return false;
+                    }
+                    
+                    // סינון לפי אזור
+                    if (region && job.region !== region) {
+                        return false;
+                    }
+                    
+                    return true;
+                });
+                
+                console.log(`🔍 נמצאו ${filteredJobs.length} משרות מתוך ${activeJobs.length}`);
+                
+                // הצגת המשרות המסוננות
+                displayJobsInHomepage(filteredJobs);
+            } catch (error) {
+                console.error('❌ שגיאה בסינון משרות:', error);
+                alert('אירעה שגיאה בחיפוש משרות. נסה שוב.');
+            }
+        }
+
+        // פונקציה לבדיקה אם משרה מתאימה לחיפוש
+        function jobMatchesSearch(job, searchText) {
+            // חיפוש בכל השדות הרלוונטיים
+            return (
+                (job.title && job.title.toLowerCase().includes(searchText)) ||
+                (job.company && job.company.toLowerCase().includes(searchText)) ||
+                (job.description && job.description.toLowerCase().includes(searchText)) ||
+                (job.requirements && job.requirements.toLowerCase().includes(searchText)) ||
+                (job.city && job.city.toLowerCase().includes(searchText)) ||
+                (job.region && job.region.toLowerCase().includes(searchText)) ||
+                (job.category && job.category.toLowerCase().includes(searchText))
+            );
+        }
+
+        // פונקציה לניקוי מסננים
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('regionFilter').value = '';
+            
+            // הצגת כל המשרות הפעילות
+            const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
+            filteredJobs = [];
+            displayJobsInHomepage(activeJobs);
+        }
+
+        // פונקציה לגלילה לראש הדף
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // פונקציה ליצירת קשר
+        function submitContactForm(event) {
+            event.preventDefault();
+            
+            // איפוס הטופס והצגת הודעת הצלחה
+            document.getElementById('contact-form').reset();
+            document.getElementById('contact-success').style.display = 'block';
+            
+            // הסתרת הודעת ההצלחה אחרי 5 שניות
+            setTimeout(function() {
+                document.getElementById('contact-success').style.display = 'none';
+            }, 5000);
+            
+            return false;
+        }
     </script>
