@@ -1,3 +1,40 @@
+/* הסרת כפתור הנגישות הנוכחי ותיקון כפתור האדמין - תקף לכל הגדלים */
+.accessibility-btn, #fallback-accessibility {
+    display: none !important;
+}
+
+.admin-button {
+    position: fixed !important;
+    left: 20px !important;
+    top: 50% !important;
+    bottom: auto !important;
+    transform: translateY(-50%) !important;
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50% !important;
+    background-color: #2c3e50 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    color: white !important;
+    font-size: 20px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+    cursor: pointer !important;
+    z-index: 1000 !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid #3498db !important;
+}
+
+.admin-button:hover {
+    background-color: #3498db !important;
+    transform: translateY(-50%) scale(1.1) !important;
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4) !important;
+}
+
+.admin-button:active {
+    transform: translateY(-50%) scale(0.95) !important;
+}
+
 /* === CSS למובייל משופר === */
 @media (max-width: 768px) {
     /* === תיקון ליישור הרקע השחור בכותרת העליונה === */
@@ -261,12 +298,22 @@
         width: 100%;
     }
     
-    /* תיקון גמדה בכפתור חיפוש */
+    /* תיקון גמדה בכפתור חיפוש - ביטול ההטיה */
     .search-button-container .gnome-character {
-        right: -35px;
-        top: 15px;
-        width: 50px;
-        transform: rotate(15deg);
+        right: -25px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important; /* ביטול הסיבוב ומיקום במרכז אנכי */
+        width: 45px !important;
+        height: auto !important;
+    }
+    
+    .gnome-search .gnome-tooltip {
+        top: -40px !important;
+        right: -15px !important;
+        width: 110px !important;
+        font-size: 0.8rem !important;
+        transform: none !important;
+        left: auto !important;
     }
     
     /* תיקון ספציפי לגמדה בכפתור "נקה" */
@@ -276,15 +323,6 @@
         top: 50% !important;
         transform: translateY(-50%) !important;
         width: 50px !important;
-    }
-    
-    .gnome-search .gnome-tooltip {
-        top: -40px;
-        right: -15px;
-        width: 110px;
-        font-size: 0.8rem;
-        transform: none;
-        left: auto;
     }
 
     /* === משרות - מעל הקטגוריות === */
@@ -552,15 +590,6 @@
         width: 100px;
         font-size: 0.8rem;
         top: -45px;
-    }
-    
-    /* === כפתור ניהול === */
-    .admin-button {
-        width: 35px;
-        height: 35px;
-        bottom: 15px;
-        left: 15px;
-        font-size: 0.9rem;
     }
 
     /* === פוטר === */
@@ -831,14 +860,4 @@
             display: none !important;
         }
     }
-}
-
-/* תיקון לגלישות ברוחב */
-body {
-    overflow-x: hidden !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    box-sizing: border-box !important;
 }
