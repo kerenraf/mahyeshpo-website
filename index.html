@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>מה יש פה? - לוח משרות חזק למקום עבודה מדוייק</title>
+    <!-- רכיב נגישות -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/mobile.css">
     <link rel="stylesheet" href="css/animations.css">
+    <!-- קישור לספריית נגישות -->
+    <script src="https://cdn.enable.co.il/licenses/enable-L2098s5rbtvqk9c8f-0322-2326/init.js"></script>
     <style>
         /* סגנון כפתור ניהול משרות */
         .admin-button {
@@ -476,6 +479,11 @@
     <a href="job-management.html" class="admin-button" title="ניהול משרות">
         <i class="fas fa-cog"></i>
     </a>
+    
+    <!-- כפתור נגישות חלופי (במקרה שהספרייה לא נטענת) -->
+    <div id="fallback-accessibility" class="accessibility-btn" title="נגישות" onclick="toggleAccessibility()">
+        <i class="fas fa-universal-access"></i>
+    </div>
 
     <!-- כותרת עליונה -->
     <header class="header">
