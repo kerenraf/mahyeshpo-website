@@ -1,61 +1,327 @@
-// פונקציה להצגת משרות
-function displayJobs(jobsToShow = jobs) {
-    const container = document.getElementById('jobsContainer');
-    if (!container) return;
+// מילון הטיות נפוצות בעברית (זכר/נקבה/רבים)
+const inflectionDictionary = {
+    // תפקידים והטיות
+    "מנהל": ["מנהלת", "מנהלים", "מנהלות", "ניהול"],
+    "מנהלת": ["מנהל", "מנהלים", "מנהלות", "ניהול"],
+    "מפתח": ["מפתחת", "מפתחים", "מפתחות", "פיתוח"],
+    "מפתחת": ["מפתח", "מפתחים", "מפתחות", "פיתוח"],
+    "מתכנת": ["מתכנתת", "מתכנתים", "מתכנתות", "תכנות"],
+    "מתכנתת": ["מתכנת", "מתכנתים", "מתכנתות", "תכנות"],
+    "מורה": ["מורים", "מורות", "הוראה"],
+    "מוכר": ["מוכרת", "מוכרים", "מוכרות", "מכירות"],
+    "מוכרת": ["מוכר", "מוכרים", "מוכרות", "מכירות"],
+    "אחראי": ["אחראית", "אחראים", "אחראיות", "אחריות"],
+    "אחראית": ["אחראי", "אחראים", "אחראיות", "אחריות"],
+    "עובד": ["עובדת", "עובדים", "עובדות", "עבודה"],
+    "עובדת": ["עובד", "עובדים", "עובדות", "עבודה"],
+    "מהנדס": ["מהנדסת", "מהנדסים", "מהנדסות", "הנדסה"],
+    "מהנדסת": ["מהנדס", "מהנדסים", "מהנדסות", "הנדסה"],
+    "מעצב": ["מעצבת", "מעצבים", "מעצבות", "עיצוב"],
+    "מעצבת": ["מעצב", "מעצבים", "מעצבות", "עיצוב"],
+    "מנקה": ["מנקים", "מנקות", "ניקיון"],
+    "אח": ["אחות", "אחים", "אחיות"],
+    "אחות": ["אח", "אחים", "אחיות"],
+    "נהג": ["נהגת", "נהגים", "נהגות", "נהיגה"],
+    "נהגת": ["נהג", "נהגים", "נהגות", "נהיגה"],
+    "מזכיר": ["מזכירה", "מזכירים", "מזכירות"],
+    "מזכירה": ["מזכיר", "מזכירים", "מזכירות"],
     
+    // תחומי עבודה והטיות
+    "מכירות": ["מכירה", "מוכר", "מוכרת"],
+    "שיווק": ["משווק", "משווקת", "שיווקי", "שיווקית"],
+    "תכנות": ["מתכנת", "מתכנתת", "תכנות", "קוד", "פיתוח"],
+    "פיתוח": ["מפתח", "מפתחת", "פיתוח", "תוכנה"],
+    "הייטק": ["טכנולוגיה", "מחשבים", "תוכנה", "פיתוח"],
+    "הוראה": ["מורה", "מורים", "מורות", "חינוך", "הדרכה"],
+    "לוגיסטיקה": ["שילוח", "מחסן", "מחסנאי", "מחסנאית"],
+    "מסעדה": ["מסעדנות", "שף", "שפית", "טבח", "טבחית", "מלצר", "מלצרית"],
+    "רפואה": ["רופא", "רופאה", "אח", "אחות", "בריאות"],
+    "אבטחה": ["מאבטח", "מאבטחת", "שמירה", "שומר", "שומרת"],
+    
+    // מילים נרדפות שכיחות
+    "משרה": ["תפקיד", "עבודה", "משרות", "ג'וב", "גוב"],
+    "עבודה": ["תפקיד", "משרה", "ג'וב", "גוב"],
+    "משכורת": ["שכר", "תשלום", "תגמול"],
+    "שכר": ["משכורת", "תשלום", "תגמול"],
+    "נסיון": ["ניסיון", "וותק", "ידע"],
+    "ניסיון": ["נסיון", "וותק", "ידע"],
+    
+    // מילות קישור ומילות יחס להתעלמות
+    "של": [],
+    "עם": [],
+    "את": [],
+    "בתחום": [],
+    "ב": [],
+    "ל": [],
+    "דרוש": ["דרושה", "דרושים", "דרושות"],
+    "דרושה": ["דרוש", "דרושים", "דרושות"]
+};
+
+// פונקציה להרחבת מילות החיפוש עם הטיות וצורות חלופיות
+function expandSearchTerms(searchText) {
+    if (!searchText) return [];
+    
+    // פיצול לפי רווחים
+    const terms = searchText.toLowerCase().trim().split(/\s+/);
+    const expandedTerms = new Set();
+    
+    // הוספת המילים המקוריות לסט
+    terms.forEach(term => expandedTerms.add(term));
+    
+    // הרחבת כל מילה עם הטיות אפשריות
+    terms.forEach(term => {
+        // הוספת מילה ללא ו' החיבור/ה' הידיעה אם קיימת
+        if (term.startsWith('ו') && term.length > 1) {
+            expandedTerms.add(term.substring(1));
+        }
+        if (term.startsWith('ה') && term.length > 1) {
+            expandedTerms.add(term.substring(1));
+        }
+        if (term.startsWith('ש') && term.length > 1) {
+            expandedTerms.add(term.substring(1));
+        }
+        if (term.startsWith('ב') && term.length > 1) {
+            expandedTerms.add(term.substring(1));
+        }
+        if (term.startsWith('ל') && term.length > 1) {
+            expandedTerms.add(term.substring(1));
+        }
+        
+        // הוספת הטיות מהמילון
+        if (inflectionDictionary[term]) {
+            inflectionDictionary[term].forEach(inflection => {
+                expandedTerms.add(inflection.toLowerCase());
+            });
+        }
+    });
+    
+    return Array.from(expandedTerms);
+}
+
+// פונקציית עזר להגבלת קצב הקריאות לפונקציה (debounce)
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func.apply(this, args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// פונקציה לעדכון הצעות החיפוש
+function updateSuggestions(matchingJobs, searchText, container) {
+    // ניקוי ההצעות הקיימות
     container.innerHTML = '';
     
-    const filteredJobs = jobsToShow.filter(job => job.status === 'פעיל');
-    
-    if (filteredJobs.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: #cccccc;">לא נמצאו משרות</p>';
+    if (matchingJobs.length === 0) {
+        container.style.display = 'none';
         return;
     }
     
-    filteredJobs.forEach((job, index) => {
-        const jobCard = document.createElement('div');
-        jobCard.className = 'job-card';
-        jobCard.classList.add('fade-up');
-        
-        // הוספת השהיה לאנימציה
-        if (index < 5) {
-            jobCard.classList.add(`delay-${index % 5}`);
+    // יצירת סט של הצעות ייחודיות מכותרות המשרות המתאימות
+    const suggestions = new Set();
+    
+    // הוספת כותרות משרות
+    matchingJobs.forEach(job => {
+        if (job.title) {
+            suggestions.add(job.title);
         }
-        
-        jobCard.onclick = () => openJobModal(job);
-        
-        // הבטחת סטנדרטיזציה של הקטגוריה וקבלת קלאס צבע
-        const categoryColorClass = categoryColors[job.category] || 'category-other';
-        
-        jobCard.innerHTML = `
-            ${job.jobNumber ? `<div class="job-number">${job.jobNumber}</div>` : ''}
-            <div class="job-badge ${categoryColorClass}">${job.category}</div>
-            <div class="job-title">${job.title}</div>
-            <div class="job-company">${job.company || ''}</div>
-            <div class="job-location">${job.location || ''}</div>
-            <div class="job-description">${(job.description || '').substring(0, 150)}${job.description && job.description.length > 150 ? '...' : ''}</div>
-            <div class="gnome-character" style="position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%) scale(0.7);">
-                <img src="images/gnome.png" alt="גמדה מציעה מידע נוסף">
-                <div class="gnome-tooltip">לחצו לפרטים נוספים על המשרה!</div>
-            </div>
-        `;
-        
-        container.appendChild(jobCard);
     });
+    
+    // הוספת קטגוריות
+    matchingJobs.forEach(job => {
+        if (job.category) {
+            suggestions.add(job.category);
+        }
+    });
+    
+    // הגבלה ל-5 הצעות לכל היותר
+    const topSuggestions = Array.from(suggestions).slice(0, 5);
+    
+    if (topSuggestions.length > 0) {
+        // יצירת אלמנטים להצעות
+        topSuggestions.forEach(suggestion => {
+            const suggestionElement = document.createElement('div');
+            suggestionElement.className = 'search-suggestion';
+            suggestionElement.textContent = suggestion;
+            suggestionElement.style.padding = '8px 12px';
+            suggestionElement.style.borderBottom = '1px solid #eee';
+            suggestionElement.style.cursor = 'pointer';
+            
+            // הדגשת מילת החיפוש בתוך ההצעה
+            if (searchText && suggestion.toLowerCase().includes(searchText.toLowerCase())) {
+                const regex = new RegExp(`(${searchText})`, 'gi');
+                suggestionElement.innerHTML = suggestion.replace(regex, '<strong>$1</strong>');
+            }
+            
+            // הוספת הצעה למיכל
+            container.appendChild(suggestionElement);
+            
+            // הוספת אפקט hover
+            suggestionElement.addEventListener('mouseover', function() {
+                this.style.backgroundColor = '#f5f5f5';
+            });
+            
+            suggestionElement.addEventListener('mouseout', function() {
+                this.style.backgroundColor = 'white';
+            });
+        });
+        
+        container.style.display = 'block';
+    } else {
+        container.style.display = 'none';
+    }
 }
 
-// פונקציה לחיפוש משרות
+// פונקציה לאתחול חיפוש דינמי
+function initDynamicSearch() {
+    // הוספת סגנונות CSS למיכל ההצעות
+    const style = document.createElement('style');
+    style.textContent = `
+        .search-suggestions {
+            display: none;
+            position: absolute;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .search-suggestion {
+            padding: 8px 12px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        
+        .search-suggestion:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .search-suggestion strong {
+            color: #f69898;
+            font-weight: bold;
+        }
+    `;
+    document.head.appendChild(style);
+
+    const searchInput = document.getElementById('searchInput');
+    
+    if (searchInput) {
+        // יצירת אלמנט להצעות חיפוש
+        const suggestionsContainer = document.createElement('div');
+        suggestionsContainer.className = 'search-suggestions';
+        
+        // הוספת מיכל ההצעות אחרי שדה החיפוש
+        searchInput.parentNode.style.position = 'relative';
+        searchInput.parentNode.appendChild(suggestionsContainer);
+        
+        // מאזין לאירוע הקלדה בשדה החיפוש
+        searchInput.addEventListener('input', debounce(function() {
+            const searchText = this.value.trim().toLowerCase();
+            
+            if (searchText.length < 2) {
+                suggestionsContainer.style.display = 'none';
+                return;
+            }
+            
+            // הרחבת מילות החיפוש
+            const expandedTerms = expandSearchTerms(searchText);
+            
+            // סינון משרות לפי החיפוש המורחב
+            const matchingJobs = jobs.filter(job => {
+                // בדיקה בסיסית למילות חיפוש מקוריות
+                const basicMatch = !searchText || 
+                    job.title.toLowerCase().includes(searchText) ||
+                    (job.company && job.company.toLowerCase().includes(searchText)) ||
+                    (job.description && job.description.toLowerCase().includes(searchText));
+                
+                if (basicMatch) return true;
+                
+                // בדיקה מורחבת לכל ההטיות
+                for (const term of expandedTerms) {
+                    if (
+                        job.title.toLowerCase().includes(term) ||
+                        (job.company && job.company.toLowerCase().includes(term)) ||
+                        (job.description && job.description.toLowerCase().includes(term))
+                    ) {
+                        return true;
+                    }
+                }
+                
+                return false;
+            }).filter(job => job.status === 'פעיל');
+            
+            // הצגת הצעות בהתבסס על המשרות המתאימות
+            updateSuggestions(matchingJobs, searchText, suggestionsContainer);
+            
+            // הרצת החיפוש באופן אוטומטי אם יש תוצאות
+            if (matchingJobs.length > 0) {
+                // הצגת התוצאות
+                displayJobs(matchingJobs);
+            }
+        }, 300)); // השהייה של 300 מילישניות למניעת חיפושים מיותרים
+        
+        // טיפול בלחיצה על הצעה
+        suggestionsContainer.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('search-suggestion')) {
+                searchInput.value = e.target.textContent;
+                suggestionsContainer.style.display = 'none';
+                
+                // ביצוע חיפוש עם ההצעה שנבחרה
+                searchJobs();
+            }
+        });
+        
+        // הסתרת ההצעות כשמקליקים מחוץ לאזור החיפוש
+        document.addEventListener('click', function(e) {
+            if (e.target !== searchInput && e.target !== suggestionsContainer) {
+                suggestionsContainer.style.display = 'none';
+            }
+        });
+    }
+}
+
+// פונקציה לחיפוש משרות - גרסה משודרגת
 function searchJobs() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const category = document.getElementById('categoryFilter').value;
     const region = document.getElementById('regionFilter').value;
     
+    // הרחבת מילות החיפוש עם הטיות
+    const expandedTerms = expandSearchTerms(searchTerm);
+    
     const filteredJobs = jobs.filter(job => {
         // בדיקת התאמה לחיפוש טקסט חופשי
-        const matchesSearch = !searchTerm || 
-            job.title.toLowerCase().includes(searchTerm) ||
-            (job.company && job.company.toLowerCase().includes(searchTerm)) ||
-            (job.description && job.description.toLowerCase().includes(searchTerm));
+        let matchesSearch = !searchTerm;
+        
+        if (searchTerm) {
+            // בדיקת התאמה בסיסית
+            matchesSearch = job.title.toLowerCase().includes(searchTerm) ||
+                (job.company && job.company.toLowerCase().includes(searchTerm)) ||
+                (job.description && job.description.toLowerCase().includes(searchTerm));
+            
+            // בדיקה מורחבת עם הטיות אם לא נמצאה התאמה בסיסית
+            if (!matchesSearch && expandedTerms.length > 0) {
+                for (const term of expandedTerms) {
+                    if (
+                        job.title.toLowerCase().includes(term) ||
+                        (job.company && job.company.toLowerCase().includes(term)) ||
+                        (job.description && job.description.toLowerCase().includes(term))
+                    ) {
+                        matchesSearch = true;
+                        break;
+                    }
+                }
+            }
+        }
         
         // בדיקת התאמה לקטגוריה
         const matchesCategory = !category || job.category === category;
@@ -71,43 +337,22 @@ function searchJobs() {
     displayJobs(filteredJobs);
 }
 
-// פונקציה לאיפוס סינון
-function clearFilters() {
-    document.getElementById('searchInput').value = '';
-    document.getElementById('categoryFilter').value = '';
-    document.getElementById('regionFilter').value = '';
-    displayJobs(jobs);
-}
-
-// פונקציה לפתיחת מודל משרה
-function openJobModal(job) {
-    document.getElementById('modal-job-company').textContent = job.company || '';
-    document.getElementById('modal-job-location').textContent = job.location || '';
-    document.getElementById('modal-job-type').textContent = job.jobType || '';
-    document.getElementById('modal-job-category').textContent = job.category || '';
-    document.getElementById('modal-job-description').textContent = job.description || '';
-    document.getElementById('modal-job-requirements').textContent = job.requirements || '';
+// אתחול מערכת החיפוש הדינמי בטעינת העמוד
+document.addEventListener('DOMContentLoaded', function() {
+    // אתחול מערכת החיפוש הדינמי
+    initDynamicSearch();
     
-    const titleElement = document.getElementById('modal-job-title');
-    if (job.jobNumber) {
-        titleElement.textContent = `${job.title} (מס' ${job.jobNumber})`;
-    } else {
-        titleElement.textContent = job.title;
+    // הוספת מאזיני אירועים לכפתורי חיפוש
+    const searchButton = document.getElementById('searchButton');
+    if (searchButton) {
+        searchButton.addEventListener('click', searchJobs);
     }
     
-    // איפוס הטופס
-    document.getElementById('application-form').reset();
-    document.getElementById('file-name').textContent = '';
-    document.getElementById('success-message').style.display = 'none';
+    const clearButton = document.getElementById('clearButton');
+    if (clearButton) {
+        clearButton.addEventListener('click', clearFilters);
+    }
     
-    // שמירת פרטי המשרה בטופס
-    document.getElementById('job-id-input').value = job.id;
-    document.getElementById('job-title-input').value = job.title;
-    
-    // איפוס הודעות שגיאה
-    const errorElements = document.querySelectorAll('.validation-error');
-    errorElements.forEach(el => el.style.display = 'none');
-    
-    document.getElementById('job-modal').style.display = 'block';
-    document.body.style.overflow = 'hidden'; // מניעת גלילה ברקע
-}
+    // אתחול תצוגת המשרות
+    displayJobs();
+});
