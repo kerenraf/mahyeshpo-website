@@ -869,9 +869,9 @@ function displayJobs(jobsToShow) {
 }
 
 // פונקציה לטעינת משרות מגיטהאב - המתוקנת והמלאה
+// פונקציה לטעינת משרות מ-GitHub
 function loadJobsFromGitHub() {
-const gitHubRawUrl = '/data/jobs.json';    
-    console.log('📡 טוען משרות מ:', gitHubRawUrl);
+    const gitHubRawUrl = 'data/jobs.json';
     
     fetch(gitHubRawUrl)
         .then(response => {
@@ -881,22 +881,24 @@ const gitHubRawUrl = '/data/jobs.json';
             return response.json();
         })
         .then(data => {
-            console.log('✅ טעינה מוצלחת של', data.length, 'משרות מגיטהאב');
+            console.log('✅ טעינה מוצלחת של', data.length, 'משרות');
             
-            // עדכון מאגר המשרות
-            jobs = data;
-            
-            // הצגת המשרות
-            displayJobs(jobs);
-            
-            console.log('🎯 הוצגו המשרות מגיטהאב');
+            if (data && Array.isArray(data) && data.length > 0) {
+                allJobs = data;
+                localStorage.setItem('jobs', JSON.stringify(allJobs));
+                
+                extractUniqueCategories(allJobs);
+                updateCategoryFilters();
+                updateCategoryCards();
+                
+                const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
+                displayJobsInHomepage(activeJobs);
+                filteredJobs = [];
+            }
         })
         .catch(error => {
-            console.error('❌ שגיאה בטעינה מגיטהאב:', error);
-            console.log('🔄 משתמש במשרות גיבוי');
-            
-            // במקרה של שגיאה - הצג את משרות הגיבוי שכבר מוגדרות
-            displayJobs(jobs);
+            console.error('❌ שגיאה בטעינה:', error);
+            loadJobsFromStorage();
         });
 }
 // פונקציה לפתיחת מודל משרה
