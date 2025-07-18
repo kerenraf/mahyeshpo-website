@@ -762,29 +762,93 @@ function enhanceCategoriesDisplay() {
         return;
     }
     
-    // צביעה דינמית של קטגוריות
+    console.log('משפר תצוגת קטגוריות:', uniqueCategories);
+    
+    // הגדרת מחלקות צבע קבועות מראש לקטגוריות נפוצות
+    const predefinedColors = {
+        'מזון ומסעדנות': 'rgba(255, 99, 132, 0.8)',
+        'חינוך והוראה': 'rgba(54, 162, 235, 0.8)',
+        'פיתוח ותוכנה': 'rgba(75, 192, 192, 0.8)',
+        'מחשבים ורשתות תקשורת': 'rgba(153, 102, 255, 0.8)',
+        'עולם הרכבים והליסינג': 'rgba(255, 159, 64, 0.8)',
+        'שיווק ומכירות': 'rgba(255, 99, 255, 0.8)',
+        'אדמיניסטרציה': 'rgba(99, 255, 132, 0.8)',
+        'לוגיסטיקה ורכש': 'rgba(132, 99, 255, 0.8)',
+        'משאבי אנוש': 'rgba(99, 132, 255, 0.8)',
+        'אבטחה': 'rgba(132, 255, 99, 0.8)',
+        'בריאות ורפואה': 'rgba(255, 132, 99, 0.8)',
+        'תיירות ומלונאות': 'rgba(99, 255, 255, 0.8)',
+        'בנייה ותשתיות': 'rgba(255, 206, 86, 0.8)',
+        'אחר': 'rgba(156, 156, 156, 0.8)'
+    };
+    
+    // הוספת סגנון CSS גלובלי לשיפור תצוגת הקטגוריות
+    const categoryStyle = document.createElement('style');
+    categoryStyle.id = 'category-colors-style';
+    
+    // הסרת סגנון קודם אם קיים
+    const existingStyle = document.getElementById('category-colors-style');
+    if (existingStyle) {
+        existingStyle.remove();
+    }
+    
+    // יצירת CSS לכל הקטגוריות
+    let cssText = '';
+    
     uniqueCategories.forEach((category, index) => {
-        // יצירת צבע דינמי בהתבסס על האינדקס
-        const hue = (index * 35) % 360; // פיזור צבעים ב-HSL
-        const colorClass = `category-color-${index}`;
+        // בחירת צבע - קבוע מראש או דינמי
+        let bgColor;
+        let textColor = '#ffffff'; // טקסט לבן כברירת מחדל
         
-        // הוספת סגנון CSS דינמי
-        const style = document.createElement('style');
-        style.textContent = `
-            .${colorClass} {
-                background: linear-gradient(135deg, hsl(${hue}, 80%, 80%), hsl(${hue}, 70%, 65%));
-                color: hsl(${hue}, 80%, 20%);
+        if (predefinedColors[category]) {
+            bgColor = predefinedColors[category];
+        } else {
+            // יצירת צבע דינמי בהתבסס על האינדקס
+            const hue = (index * 35) % 360; // פיזור צבעים ב-HSL
+            bgColor = `hsla(${hue}, 80%, 65%, 0.8)`;
+            
+            // אם הצבע בהיר, להשתמש בטקסט כהה
+            if (hue > 40 && hue < 200) {
+                textColor = '#333333';
             }
+        }
+        
+        // יצירת class בטוח לשימוש ב-CSS
+        const safeCategory = category.replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+        const className = `category-${safeCategory}`;
+        
+        // הוספת CSS למחלקה
+        cssText += `
+        .job-badge[data-category="${category}"], 
+        .job-badge.${className} {
+            background-color: ${bgColor};
+            color: ${textColor};
+            border-radius: 4px;
+            padding: 3px 8px;
+            font-weight: bold;
+            display: inline-block;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
         `;
-        document.head.appendChild(style);
-        
-        // מציאת כל התגיות בקטגוריה זו
-        document.querySelectorAll(`.job-badge`).forEach(badge => {
-            if (badge.textContent.trim() === category) {
-                badge.classList.add(colorClass);
-            }
-        });
     });
+    
+    // החלת הסגנון
+    categoryStyle.textContent = cssText;
+    document.head.appendChild(categoryStyle);
+    
+    // החלת מחלקות CSS על כל התגיות של הקטגוריות
+    const categoryBadges = document.querySelectorAll('.job-badge');
+    categoryBadges.forEach(badge => {
+        const category = badge.textContent.trim();
+        badge.setAttribute('data-category', category);
+        
+        // הוספת מחלקה ספציפית
+        const safeCategory = category.replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+        badge.classList.add(`category-${safeCategory}`);
+    });
+    
+    console.log('✅ תצוגת קטגוריות שופרה');
 }
 
 // פונקציות לניהול מודל "עוד עלינו" - עם תיקון לבעיית ההיעלמות
@@ -1006,6 +1070,15 @@ function displayJobsInHomepage(jobs) {
     const jobsToShow = jobs.slice(0, 9);
     
     jobsToShow.forEach((job, index) => {
+        // בדיקה וטיפול במקרה ששדות חסרים
+        const jobTitle = job.title || 'משרה ללא כותרת';
+        const jobCompany = job.company || 'חברה לא ידועה';
+        const jobNumber = job.jobNumber || (index + 1).toString();
+        const jobCategory = job.category || 'אחר';
+        
+        // לוג לבדיקת המשרה
+        console.log('מציג משרה:', { title: jobTitle, company: jobCompany, category: jobCategory, number: jobNumber });
+        
         const jobCard = document.createElement('div');
         jobCard.className = 'job-card fade-up';
         jobCard.style.animationDelay = `${index * 0.1}s`;
@@ -1015,20 +1088,20 @@ function displayJobsInHomepage(jobs) {
             job.description.substring(0, 100) + (job.description.length > 100 ? '...' : '') : 
             'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
         
-        const categoryClass = categoryColorMap[job.category] || 'category-other';
-        const messageText = `שלום, אני מעוניין/ת במשרה: ${job.title || 'משרה'} (${job.jobNumber || index + 1})`;
+        const categoryClass = categoryColorMap[jobCategory] || 'category-other';
+        const messageText = `שלום, אני מעוניין/ת במשרה: ${jobTitle} (${jobNumber})`;
         
         const whatsappText = encodeURIComponent(messageText);
         const whatsappLink = `https://wa.me/972555504633?text=${whatsappText}`;
         const smsLink = `sms:+972555504633?body=${encodeURIComponent(messageText)}`;
         
         jobCard.innerHTML = `
-            <div class="job-number">${job.jobNumber || (index + 1)}</div>
-            <h3 class="job-title">${job.title || 'משרה ללא כותרת'}</h3>
-            <div class="job-company">${job.company || 'חברה לא ידועה'}</div>
+            <div class="job-number">${jobNumber}</div>
+            <h3 class="job-title">${jobTitle}</h3>
+            <div class="job-company">${jobCompany}</div>
             <div class="job-location">${location}</div>
             <div class="job-description">${shortDescription}</div>
-            <div class="job-badge ${categoryClass}">${job.category || 'אחר'}</div>
+            <div class="job-badge ${categoryClass}">${jobCategory}</div>
             
             <div class="job-card-gnome">
                 <img src="images/gnome.png" alt="גמדה פרטים">
@@ -1053,6 +1126,11 @@ function displayJobsInHomepage(jobs) {
         
         jobsContainer.appendChild(jobCard);
     });
+    
+    // הוספת קריאה מפורשת לפונקציה enhanceCategoriesDisplay כאן
+    setTimeout(() => {
+        enhanceCategoriesDisplay();
+    }, 100);
 }
 
 // פונקציה לטעינת משרות מ-GitHub
