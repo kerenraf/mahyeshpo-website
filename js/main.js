@@ -870,8 +870,7 @@ function displayJobs(jobsToShow) {
 
 // פונקציה לטעינת משרות מגיטהאב - המתוקנת והמלאה
 function loadJobsFromGitHub() {
-    const gitHubRawUrl = 'https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/data/jobs.json';
-    
+const gitHubRawUrl = '/data/jobs.json';    
     console.log('📡 טוען משרות מ:', gitHubRawUrl);
     
     fetch(gitHubRawUrl)
