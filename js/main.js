@@ -179,11 +179,16 @@ const hardcodedJobs = [
     }
 ];
 
+// משתנים גלובליים
+let allJobs = [];
+let filteredJobs = [];
+let uniqueCategories = [];
+
 // אתחול בטעינת הדף
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 הדף נטען - מתחיל אתחול...');
     
-    // הוספת גיליון סגנון חירום למקרה שה-CSS הרגיל לא נטען
+    // הוספת סגנונות חירום
     addEmergencyStyles();
     
     // הוספת מאזיני אירועים בסיסיים
@@ -192,56 +197,434 @@ document.addEventListener('DOMContentLoaded', function() {
     // שימוש ישיר במשרות המוגדרות בקוד
     console.log('📋 משתמש במשרות מוגדרות קשיח:', hardcodedJobs.length);
     
-    // הפעלת פונקציה ליצירת אזור משרות אם לא קיים
-    createJobsContainerIfNeeded();
+    // קריאה מושהית לטעינת משרות
+    setTimeout(function() {
+        loadHardcodedJobs();
+    }, 500);
+    
+    console.log('✅ אתחול ראשוני הושלם');
+});
+
+// פונקציה להוספת סגנונות חירום
+function addEmergencyStyles() {
+    const emergencyStyles = document.createElement('style');
+    emergencyStyles.id = 'emergency-styles';
+    emergencyStyles.textContent = `
+        .job-card {
+            position: relative;
+            background-color: #333;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            min-height: 250px;
+            cursor: pointer;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            margin-bottom: 20px;
+        }
+        
+        .job-title {
+            margin-top: 25px;
+            font-size: 18px;
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .job-company, .job-location {
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+        
+        .job-description {
+            color: #ddd;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .job-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 15px;
+            background-color: #F69898;
+            color: white;
+        }
+        
+        .job-number {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #F69898;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .job-card-gnome {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            width: 40px;
+            cursor: pointer;
+        }
+        
+        .job-card-gnome img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .contact-buttons {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .contact-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        
+        .whatsapp-button {
+            background-color: #25D366;
+            color: white;
+        }
+        
+        .sms-button {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        #jobsContainer, .jobs-container, .jobs-grid, .jobs-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            padding: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            #jobsContainer, .jobs-container, .jobs-grid, .jobs-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    `;
+    document.head.appendChild(emergencyStyles);
+    console.log('✅ סגנונות חירום נוספו');
+}
+
+// פונקציה לטעינת המשרות המוגדרות מראש
+function loadHardcodedJobs() {
+    console.log('🔄 טוען משרות מוגדרות מראש...');
     
     // ניקוי נתונים קיימים
-    console.log('🧹 מנקה נתונים קיימים...');
     allJobs = [];
     filteredJobs = [];
     uniqueCategories = [];
     
-    // קריאה לפונקציה עם המשרות המוגדרות מראש
-    setTimeout(() => {
-        // טעינת המשרות ישירות
-        allJobs = hardcodedJobs;
-        console.log('✅ משרות נטענו:', allJobs.length);
-        
-        // חילוץ קטגוריות
-        extractUniqueCategories(allJobs);
-        console.log('📋 קטגוריות ייחודיות:', uniqueCategories);
-        
-        // עדכון ממשק משתמש
-        updateCategoryFilters();
-        updateCategoryCards();
-        
-        // הצגת המשרות
-        const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
-        console.log('📋 משרות פעילות להצגה:', activeJobs.length);
-        
-        // יצירת מיכל משרות אם לא קיים
-        createJobsContainerIfNeeded();
-        
-        // ניסיון הצגת המשרות עם טיימר
-        setTimeout(() => {
-            console.log('🔄 מנסה להציג משרות...');
-            displayJobsInContainer(activeJobs, document.getElementById('jobsContainer'));
-            
-            // שיפור תצוגת קטגוריות
-            enhanceCategoriesDisplay();
-            
-            // שיפור תצוגת משרות אם לא הוצגו
-            setTimeout(checkAndFixJobCards, 1000);
-        }, 500);
-        
-        // שאר האתחולים
-        initMobileEnhancements();
-        reorderElementsForMobile();
-        attachEnhancedEventListeners();
-    }, 800);
+    // טעינת המשרות
+    allJobs = hardcodedJobs;
+    console.log('✅ משרות נטענו:', allJobs.length);
     
-    console.log('✅ אתחול ראשוני הושלם');
-});
+    // חילוץ קטגוריות
+    extractUniqueCategories(allJobs);
+    
+    // עדכון ממשק משתמש
+    updateCategoryFilters();
+    updateCategoryCards();
+    
+    // הצגת המשרות
+    const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
+    displayJobs(activeJobs);
+    
+    // בדיקה ותיקון המשרות אחרי זמן קצר
+    setTimeout(function() {
+        checkAndFixJobCards();
+    }, 1000);
+}
+
+// פונקציה לחילוץ קטגוריות ייחודיות
+function extractUniqueCategories(jobs) {
+    console.log('📝 מחלץ קטגוריות ייחודיות...');
+    
+    if (!jobs || !Array.isArray(jobs) || jobs.length === 0) {
+        console.error('❌ מערך המשרות ריק או לא תקין');
+        uniqueCategories = [];
+        return;
+    }
+    
+    const categories = jobs
+        .filter(job => job && job.category)
+        .map(job => job.category.trim())
+        .filter((category, index, self) => self.indexOf(category) === index);
+    
+    uniqueCategories = categories.sort();
+    console.log('✅ קטגוריות ייחודיות:', uniqueCategories);
+}
+
+// פונקציה לעדכון רשימת הקטגוריות
+function updateCategoryFilters() {
+    const categoryFilter = document.getElementById('categoryFilter');
+    if (!categoryFilter) {
+        console.warn('⚠️ לא נמצא פילטר קטגוריות');
+        return;
+    }
+    
+    const selectedValue = categoryFilter.value;
+    categoryFilter.innerHTML = '<option value="">כל הקטגוריות</option>';
+    
+    uniqueCategories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categoryFilter.appendChild(option);
+    });
+    
+    if (selectedValue && uniqueCategories.includes(selectedValue)) {
+        categoryFilter.value = selectedValue;
+    }
+    
+    console.log('✅ פילטרי קטגוריות עודכנו');
+}
+
+// פונקציה לעדכון קוביות הקטגוריות
+function updateCategoryCards() {
+    const categoriesGrid = document.querySelector('.categories-grid');
+    if (!categoriesGrid) {
+        console.warn('⚠️ לא נמצא מיכל קטגוריות');
+        return;
+    }
+    
+    categoriesGrid.innerHTML = '';
+    const categoriesToShow = uniqueCategories.slice(0, 10);
+    
+    categoriesToShow.forEach((category, index) => {
+        const card = document.createElement('div');
+        card.className = `category-card fade-up delay-${index % 5}`;
+        card.style.cssText = `
+            background-color: #333;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        `;
+        card.onclick = function() { selectCategory(category); };
+        
+        let icon = '📦';
+        let description = 'משרות מגוונות';
+        
+        // התאמת אייקונים
+        if (category.includes('מזון')) {
+            icon = '🍽️';
+            description = 'מלצרים, טבחים, ברמנים';
+        } else if (category.includes('חינוך')) {
+            icon = '📚';
+            description = 'מורים, מדריכים, מחנכים';
+        } else if (category.includes('פיתוח')) {
+            icon = '💻';
+            description = 'מפתחים, מתכנתים, QA';
+        }
+        
+        card.innerHTML = `
+            <div class="category-icon" style="font-size: 32px; margin-bottom: 10px;">${icon}</div>
+            <div class="category-title" style="font-weight: bold; font-size: 16px; color: white; margin-bottom: 5px;">${category}</div>
+            <div class="category-desc" style="font-size: 14px; color: #ccc;">${description}</div>
+        `;
+        
+        categoriesGrid.appendChild(card);
+    });
+    
+    console.log('✅ כרטיסי קטגוריות עודכנו');
+}
+
+// פונקציה להצגת המשרות
+function displayJobs(jobs) {
+    console.log('🔄 מציג משרות...');
+    
+    // בדיקת קיום המיכל
+    let jobsContainer = document.getElementById('jobsContainer');
+    
+    // אם המיכל לא קיים, יוצרים אחד חדש
+    if (!jobsContainer) {
+        console.warn('⚠️ לא נמצא מיכל משרות - יוצר חדש');
+        
+        // חיפוש מיכל חלופי
+        const altContainers = [
+            document.querySelector('.jobs-container'),
+            document.querySelector('.jobs-grid'),
+            document.querySelector('.jobs-list'),
+            document.querySelector('.jobs')
+        ];
+        
+        const foundContainer = altContainers.find(c => c !== null);
+        if (foundContainer) {
+            jobsContainer = foundContainer;
+            jobsContainer.id = 'jobsContainer';
+            console.log('✅ נמצא מיכל חלופי');
+        } else {
+            // יצירת מיכל חדש
+            jobsContainer = document.createElement('div');
+            jobsContainer.id = 'jobsContainer';
+            jobsContainer.className = 'jobs-grid';
+            jobsContainer.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 30px;';
+            
+            // הוספת המיכל לעמוד
+            const mainElement = document.querySelector('main');
+            const contentElement = document.querySelector('.content');
+            
+            if (mainElement) {
+                mainElement.appendChild(jobsContainer);
+            } else if (contentElement) {
+                contentElement.appendChild(jobsContainer);
+            } else {
+                document.body.appendChild(jobsContainer);
+            }
+            
+            console.log('✅ מיכל משרות חדש נוצר והוסף לדף');
+        }
+    }
+    
+    // ניקוי המיכל
+    jobsContainer.innerHTML = '';
+    
+    // בדיקה אם יש משרות להצגה
+    if (!jobs || jobs.length === 0) {
+        jobsContainer.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #ccc;">
+                <h3>אין משרות פעילות כרגע</h3>
+                <p>נסה לחפש שוב מאוחר יותר</p>
+            </div>
+        `;
+        console.warn('⚠️ אין משרות להצגה');
+        return;
+    }
+    
+    console.log(`🔄 מציג ${jobs.length} משרות`);
+    
+    // מיפוי צבעי קטגוריות
+    const categoryColorMap = {};
+    const colorClasses = [
+        'category-food', 'category-education', 'category-tech', 
+        'category-computers', 'category-automotive', 'category-marketing', 
+        'category-health', 'category-hr', 'category-security', 
+        'category-tourism', 'category-construction', 'category-admin', 
+        'category-logistics', 'category-other'
+    ];
+    
+    uniqueCategories.forEach((category, index) => {
+        categoryColorMap[category] = colorClasses[index % colorClasses.length];
+    });
+    
+    // הגבלת מספר המשרות שיוצגו
+    const jobsToShow = jobs.slice(0, 9);
+    
+    // מעבר על כל המשרות להצגה
+    jobsToShow.forEach((job, index) => {
+        // בדיקת תקינות המשרה
+        if (!job) {
+            console.error(`❌ משרה במיקום ${index} אינה תקינה`);
+            return;
+        }
+        
+        // בדיקה וטיפול במקרה ששדות חסרים
+        const jobTitle = job.title || 'משרה ללא כותרת';
+        const jobCompany = job.company || 'חברה לא ידועה';
+        const jobNumber = job.jobNumber || (index + 1).toString();
+        const jobCategory = job.category || 'אחר';
+        
+        // לוג מידע על המשרה
+        console.log(`משרה ${index+1}:`, {
+            title: jobTitle,
+            company: jobCompany,
+            category: jobCategory,
+            number: jobNumber
+        });
+        
+        // יצירת כרטיס המשרה
+        const jobCard = document.createElement('article');
+        jobCard.className = 'job-card';
+        jobCard.style.cssText = `
+            position: relative;
+            background-color: #333;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            min-height: 250px;
+            cursor: pointer;
+            display: block;
+            visibility: visible;
+            opacity: 1;
+            z-index: 1;
+            margin-bottom: 20px;
+        `;
+        
+        // הכנת פרטי המשרה
+        const location = job.city ? `${job.city}, ${job.region || 'מרכז'}` : job.region || 'מרכז';
+        let shortDescription = job.description ? 
+            job.description.substring(0, 100) + (job.description.length > 100 ? '...' : '') : 
+            'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
+        
+        // הכנת הודעה לוואטסאפ/סמס
+        const messageText = `שלום, אני מעוניין/ת במשרה: ${jobTitle} (${jobNumber})`;
+        const whatsappText = encodeURIComponent(messageText);
+        const whatsappLink = `https://wa.me/972555504633?text=${whatsappText}`;
+        const smsLink = `sms:+972555504633?body=${encodeURIComponent(messageText)}`;
+        
+        // יצירת תוכן HTML לכרטיס
+        jobCard.innerHTML = `
+            <div class="job-number" style="position: absolute; top: 15px; right: 15px; background-color: #F69898; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold;">${jobNumber}</div>
+            <h3 class="job-title" style="margin-top: 25px; font-size: 18px; color: white; margin-bottom: 10px;">${jobTitle}</h3>
+            <div class="job-company" style="color: #ccc; margin-bottom: 10px;">${jobCompany}</div>
+            <div class="job-location" style="color: #ccc; margin-bottom: 10px;"><i class="fas fa-map-marker-alt"></i> ${location}</div>
+            <div class="job-description" style="color: #ddd; font-size: 14px; margin-bottom: 15px;">${shortDescription}</div>
+            <div class="job-badge" style="display: inline-block; padding: 5px 10px; border-radius: 20px; font-size: 12px; margin-bottom: 15px; background-color: #F69898; color: white;">${jobCategory}</div>
+            
+            <div class="job-card-gnome" style="position: absolute; bottom: 15px; left: 15px; width: 40px; cursor: pointer;">
+                <img src="images/gnome.png" alt="גמדה פרטים" style="width: 100%; height: auto;">
+                <div class="job-card-gnome-text" style="font-size: 10px; text-align: center; color: white;">לפרטים נוספים</div>
+            </div>
+            
+            <div class="contact-buttons" style="position: absolute; bottom: 15px; right: 15px; display: flex; gap: 10px;">
+                <a href="${whatsappLink}" class="contact-button whatsapp-button" target="_blank" title="פנייה בוואטסאפ" onclick="event.stopPropagation();" style="background-color: #25D366; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="${smsLink}" class="contact-button sms-button" title="פנייה ב-SMS" onclick="event.stopPropagation();" style="background-color: #3498db; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                    <i class="fas fa-sms"></i>
+                </a>
+            </div>
+        `;
+        
+        // הוספת מאזין אירועים לפתיחת המודל
+        jobCard.addEventListener('click', function() {
+            const currentJobs = filteredJobs.length > 0 ? filteredJobs : jobs;
+            openJobModal(index, currentJobs);
+        });
+        
+        // הוספת הכרטיס למיכל
+        jobsContainer.appendChild(jobCard);
+    });
+    
+    console.log('✅ המשרות הוצגו בהצלחה');
+    
+    // שיפור תצוגת הקטגוריות
+    enhanceCategoriesDisplay();
+}
 
 // פונקציה לבדיקה ותיקון כרטיסי משרה
 function checkAndFixJobCards() {
@@ -258,7 +641,7 @@ function checkAndFixJobCards() {
     
     if (jobCards.length === 0) {
         console.warn('⚠️ לא נמצאו כרטיסי משרה - מנסה להציג מחדש');
-        displayJobsInContainer(allJobs.filter(job => job.status !== 'לא פעיל'), jobsContainer);
+        displayJobs(allJobs.filter(job => job.status !== 'לא פעיל'));
         return;
     }
     
@@ -275,90 +658,93 @@ function checkAndFixJobCards() {
             card.style.position = 'relative';
             card.style.zIndex = '1';
             
-            // עדכון סגנונות נוספים
-            card.style.backgroundColor = '#333';
-            card.style.color = '#fff';
-            card.style.borderRadius = '10px';
-            card.style.padding = '20px';
-            card.style.margin = '10px 0';
-            card.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
-            
             console.log(`🔧 תיקון כרטיס ${index+1}`);
         }
     });
 }
 
-// פונקציה ליצירת מיכל משרות אם לא קיים
-function createJobsContainerIfNeeded() {
-    console.log('🔍 בודק אם קיים מיכל משרות...');
+// פונקציה לשיפור תצוגת הקטגוריות
+function enhanceCategoriesDisplay() {
+    console.log('🎨 משפר תצוגת קטגוריות...');
     
-    // בדיקת קיום המיכל
-    let jobsContainer = document.getElementById('jobsContainer');
-    if (jobsContainer) {
-        console.log('✅ מיכל משרות קיים כבר');
-        return jobsContainer;
+    // בדיקה שיש קטגוריות
+    if (!uniqueCategories || uniqueCategories.length === 0) {
+        console.warn('⚠️ אין קטגוריות לשיפור תצוגה');
+        return;
     }
     
-    // חיפוש מיכל חלופי לפי מחלקה
-    const altContainers = [
-        document.querySelector('.jobs-container'),
-        document.querySelector('.jobs-grid'),
-        document.querySelector('.jobs-list'),
-        document.querySelector('.jobs')
-    ];
-    
-    // בדיקה אם נמצא מיכל חלופי
-    const foundContainer = altContainers.find(c => c !== null);
-    if (foundContainer) {
-        console.log('✅ נמצא מיכל חלופי:', foundContainer);
-        foundContainer.id = 'jobsContainer';
-        return foundContainer;
+    // מוצא את כל תגיות הקטגוריה
+    const categoryBadges = document.querySelectorAll('.job-badge');
+    if (!categoryBadges || categoryBadges.length === 0) {
+        console.warn('⚠️ לא נמצאו תגיות קטגוריה בדף');
+        return;
     }
     
-    // אם לא נמצא מיכל, יוצרים חדש
-    console.warn('⚠️ לא נמצא מיכל משרות - יוצר חדש');
+    // מגדיר צבעים לקטגוריות
+    const categoryColors = {
+        'מזון ומסעדנות': '#FF9494',
+        'חינוך והוראה': '#94C5FF',
+        'פיתוח ותוכנה': '#94FFD1',
+        'שיווק ומכירות': '#FF94E8',
+        'אחר': '#AAAAAA'
+    };
     
-    // יצירת כותרת ומיכל
-    const jobsSection = document.createElement('section');
-    jobsSection.className = 'jobs-section';
-    jobsSection.style.cssText = 'padding: 40px 20px; text-align: center;';
+    // מחיל צבעים על תגיות הקטגוריה
+    categoryBadges.forEach(badge => {
+        const category = badge.textContent.trim();
+        const color = categoryColors[category] || '#F69898';
+        
+        badge.style.backgroundColor = color;
+        badge.style.color = '#fff';
+        badge.style.fontWeight = 'bold';
+    });
     
-    const sectionTitle = document.createElement('h2');
-    sectionTitle.textContent = 'משרות מומלצות';
-    sectionTitle.style.cssText = 'margin-bottom: 30px; color: #F69898; font-size: 28px;';
+    console.log('✅ תצוגת קטגוריות שופרה');
+}
+
+// פונקציה לבחירת קטגוריה
+function selectCategory(category) {
+    console.log(`🔍 נבחרה קטגוריה: ${category}`);
     
-    jobsContainer = document.createElement('div');
-    jobsContainer.id = 'jobsContainer';
-    jobsContainer.className = 'jobs-grid';
-    jobsContainer.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 30px;';
-    
-    // הוספת המיכל לעמוד
-    jobsSection.appendChild(sectionTitle);
-    jobsSection.appendChild(jobsContainer);
-    
-    // חיפוש מיקום הגיוני להוספת המיכל
-    const mainElement = document.querySelector('main');
-    const contentElement = document.querySelector('.content');
-    const containerElement = document.querySelector('.container');
-    
-    if (mainElement) {
-        mainElement.appendChild(jobsSection);
-    } else if (contentElement) {
-        contentElement.appendChild(jobsSection);
-    } else if (containerElement) {
-        containerElement.appendChild(jobsSection);
+    if (document.getElementById('categoryFilter')) {
+        document.getElementById('categoryFilter').value = category;
+        filterJobs();
     } else {
-        // כאשר אין אלמנט מתאים, מוסיף לפני הפוטר או בסוף הגוף
-        const footer = document.querySelector('footer');
-        if (footer) {
-            document.body.insertBefore(jobsSection, footer);
-        } else {
-            document.body.appendChild(jobsSection);
-        }
+        // סינון ידני
+        const filteredJobs = allJobs.filter(job => 
+            job.status !== 'לא פעיל' && job.category === category
+        );
+        
+        displayJobs(filteredJobs);
+    }
+}
+
+// פונקציה להוספת מאזיני אירועים
+function attachEventListeners() {
+    console.log('🔗 מוסיף מאזיני אירועים...');
+    
+    // מאזין אירועים לכפתור חיפוש
+    const searchButton = document.getElementById('searchButton');
+    if (searchButton) {
+        searchButton.addEventListener('click', filterJobs);
     }
     
-    console.log('✅ מיכל משרות חדש נוצר והוסף לדף');
-    return jobsContainer;
+    // מאזין אירועים לכפתור ניקוי
+    const clearButton = document.getElementById('clearButton');
+    if (clearButton) {
+        clearButton.addEventListener('click', clearFilters);
+    }
+    
+    // מאזין אירועים לשדה חיפוש
+    if (document.getElementById('searchInput')) {
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                filterJobs();
+            }
+        });
+    }
+    
+    console.log('✅ מאזיני אירועים נוספו');
 }
 
 // פונקציה לבדיקה אם המכשיר הוא מובייל
