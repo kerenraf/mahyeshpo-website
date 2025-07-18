@@ -118,14 +118,12 @@ const categoryColors = {
     'אחר': 'category-other'
 };
 
-// משתנים גלובליים
-let allJobs = [];
-let filteredJobs = [];
-let uniqueCategories = [];
-
 // אתחול בטעינת הדף
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 הדף נטען - מתחיל אתחול...');
+    
+    // הוספת גיליון סגנון חירום למקרה שה-CSS הרגיל לא נטען
+    addEmergencyStyles();
     
     // הוספת מאזיני אירועים בסיסיים
     attachEventListeners();
@@ -135,15 +133,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // טעינת משרות - הערה: אנחנו משתמשים במשרות המוגדרות בקוד במקום לנסות לטעון מהשרת
     console.log('⚠️ משתמש במשרות המוגדרות מראש בקוד');
-    createSampleJobs();
     
-    // שאר האתחולים
-    initMobileEnhancements();
-    reorderElementsForMobile();
-    attachEnhancedEventListeners();
-    addLoadingIndicators();
-    initScrollAnimations();
-    handlePageLifecycle();
+    // קריאה לפונקציה עם השהיה קלה כדי לוודא שהדף נטען
+    setTimeout(() => {
+        createSampleJobs();
+        
+        // שאר האתחולים
+        initMobileEnhancements();
+        reorderElementsForMobile();
+        attachEnhancedEventListeners();
+        addLoadingIndicators();
+        initScrollAnimations();
+        handlePageLifecycle();
+    }, 500);
     
     // הסתרת הגמדה הצפה בהתחלה
     if (document.getElementById('floatingGnome')) {
@@ -172,8 +174,130 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    console.log('✅ אתחול הושלם');
+    console.log('✅ אתחול ראשוני הושלם');
 });
+
+// פונקציה להוספת סגנונות חירום למקרה שה-CSS הרגיל לא נטען
+function addEmergencyStyles() {
+    const emergencyStyles = document.createElement('style');
+    emergencyStyles.id = 'emergency-styles';
+    emergencyStyles.textContent = `
+        .job-card {
+            position: relative;
+            background-color: #333;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            min-height: 250px;
+            cursor: pointer;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            margin-bottom: 20px;
+        }
+        
+        .job-title {
+            margin-top: 25px;
+            font-size: 18px;
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .job-company, .job-location {
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+        
+        .job-description {
+            color: #ddd;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .job-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 15px;
+            background-color: #F69898;
+            color: white;
+        }
+        
+        .job-number {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #F69898;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .job-card-gnome {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            width: 40px;
+            cursor: pointer;
+        }
+        
+        .job-card-gnome img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .contact-buttons {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .contact-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        
+        .whatsapp-button {
+            background-color: #25D366;
+            color: white;
+        }
+        
+        .sms-button {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        #jobsContainer, .jobs-container, .jobs-grid, .jobs-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            padding: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            #jobsContainer, .jobs-container, .jobs-grid, .jobs-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    `;
+    document.head.appendChild(emergencyStyles);
+    console.log('✅ סגנונות חירום נוספו');
+}
 
 // פונקציה לבדיקה אם המכשיר הוא מובייל
 function isMobileDevice() {
