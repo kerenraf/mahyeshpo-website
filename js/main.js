@@ -125,14 +125,25 @@ let uniqueCategories = [];
 
 // אתחול בטעינת הדף
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 הדף נטען - טוען משרות...');
-    attachEventListeners();
-    loadJobsFromGitHub();
+    console.log('🚀 הדף נטען - מתחיל אתחול...');
     
-    window.addEventListener('focus', function() {
-        console.log('👁️ הדף זוכה בפוקוס - בודק עדכונים');
-        loadJobsFromStorage();
-    });
+    // הוספת מאזיני אירועים בסיסיים
+    attachEventListeners();
+    
+    // בדיקת נתונים בקונסול
+    console.log('📋 משרות מוגדרות בקוד:', jobs ? jobs.length : 0);
+    
+    // טעינת משרות - הערה: אנחנו משתמשים במשרות המוגדרות בקוד במקום לנסות לטעון מהשרת
+    console.log('⚠️ משתמש במשרות המוגדרות מראש בקוד');
+    createSampleJobs();
+    
+    // שאר האתחולים
+    initMobileEnhancements();
+    reorderElementsForMobile();
+    attachEnhancedEventListeners();
+    addLoadingIndicators();
+    initScrollAnimations();
+    handlePageLifecycle();
     
     // הסתרת הגמדה הצפה בהתחלה
     if (document.getElementById('floatingGnome')) {
@@ -161,23 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // אתחול כל המרכיבים המשופרים למובייל
-    initMobileEnhancements();
-    
-    // ניהול סדר אלמנטים במובייל
-    reorderElementsForMobile();
-    
-    // הוספת מאזיני אירועים נוספים
-    attachEnhancedEventListeners();
-    
-    // הוספת אינדיקטור טעינה לאלמנטים שונים
-    addLoadingIndicators();
-    
-    // הפעלת אנימציות גלילה
-    initScrollAnimations();
-    
-    // טיפול באירועי פוקוס וריענון דף
-    handlePageLifecycle();
+    console.log('✅ אתחול הושלם');
 });
 
 // פונקציה לבדיקה אם המכשיר הוא מובייל
@@ -1027,14 +1022,63 @@ function loadJobsFromStorage() {
 
 // פונקציה ליצירת משרות דוגמה
 function createSampleJobs() {
-    allJobs = jobs;
-    localStorage.setItem('jobs', JSON.stringify(jobs));
+    console.log('✅ יוצר משרות דוגמה ממערך jobs');
     
-    extractUniqueCategories(jobs);
+    // וידוא שמערך jobs תקין
+    if (!jobs || !Array.isArray(jobs) || jobs.length === 0) {
+        console.error('❌ אין מערך jobs תקין ליצירת משרות דוגמה');
+        
+        // יצירת משרות דוגמה מינימליות
+        allJobs = [
+            {
+                id: 1,
+                jobNumber: "JS001",
+                title: "מפתח/ת Full Stack",
+                company: "טכנולוגיות מתקדמות בע\"מ",
+                category: "פיתוח ותוכנה",
+                city: "תל אביב",
+                region: "מרכז",
+                location: "תל אביב - מרכז",
+                jobType: "משרה מלאה",
+                description: "אנו מחפשים מפתח/ת Full Stack עם ניסיון בטכנולוגיות React, Node.js ו-MongoDB.",
+                requirements: "ניסיון של 3+ שנים בפיתוח Full Stack\nידע מעמיק ב-JavaScript",
+                status: "פעיל"
+            },
+            {
+                id: 2,
+                jobNumber: "WS002",
+                title: "מלצר/ית למסעדה יוקרתית",
+                company: "מסעדת השף",
+                category: "מזון ומסעדנות",
+                city: "חיפה",
+                region: "חיפה קריות והצפון",
+                status: "פעיל"
+            }
+        ];
+    } else {
+        // שימוש במערך jobs הקיים
+        allJobs = jobs;
+    }
+    
+    // שמירה באחסון מקומי
+    localStorage.setItem('jobs', JSON.stringify(allJobs));
+    
+    // הדפסת פרטי המשרות לבדיקה
+    console.log('דוגמאות משרות:');
+    allJobs.slice(0, 2).forEach((job, index) => {
+        console.log(`משרה ${index+1}:`, {
+            title: job.title,
+            company: job.company,
+            category: job.category,
+            number: job.jobNumber
+        });
+    });
+    
+    extractUniqueCategories(allJobs);
     updateCategoryFilters();
     updateCategoryCards();
-    enhanceCategoriesDisplay(); // הוספת קריאה לפונקציה שמטפלת בצבעי הקטגוריות
-    displayJobsInHomepage(jobs);
+    enhanceCategoriesDisplay();
+    displayJobsInHomepage(allJobs);
 }
 
 // פונקציה להצגת משרות בדף הבית
@@ -1135,7 +1179,27 @@ function displayJobsInHomepage(jobs) {
 
 // פונקציה לטעינת משרות מ-GitHub
 function loadJobsFromGitHub() {
+    // בדיקה אם יש משרות מוגדרות מראש בקוד - אם כן, נשתמש בהן
+    if (jobs && Array.isArray(jobs) && jobs.length > 0) {
+        console.log('✅ משתמש במשרות המוגדרות מראש:', jobs.length);
+        allJobs = jobs;
+        localStorage.setItem('jobs', JSON.stringify(allJobs));
+        
+        extractUniqueCategories(allJobs);
+        updateCategoryFilters();
+        updateCategoryCards();
+        enhanceCategoriesDisplay();
+        
+        const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
+        displayJobsInHomepage(activeJobs);
+        filteredJobs = [];
+        return;
+    }
+    
+    // אחרת, ננסה לטעון מהשרת
     const gitHubRawUrl = 'https://raw.githubusercontent.com/kerenraf/ma-yesh-po-jobs/main/jobs.json';
+    
+    console.log('🔄 מנסה לטעון משרות מהשרת:', gitHubRawUrl);
     
     fetch(gitHubRawUrl)
         .then(response => {
@@ -1145,7 +1209,8 @@ function loadJobsFromGitHub() {
             return response.json();
         })
         .then(data => {
-            console.log('✅ טעינה מוצלחת של', data.length, 'משרות');
+            console.log('✅ טעינה מוצלחת של', data.length, 'משרות מהשרת');
+            console.log('דוגמה למשרה ראשונה:', data[0]);
             
             if (data && Array.isArray(data) && data.length > 0) {
                 allJobs = data;
@@ -1154,7 +1219,7 @@ function loadJobsFromGitHub() {
                 extractUniqueCategories(allJobs);
                 updateCategoryFilters();
                 updateCategoryCards();
-                enhanceCategoriesDisplay(); // הוספת קריאה לפונקציה שמטפלת בצבעי הקטגוריות
+                enhanceCategoriesDisplay();
                 
                 const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
                 displayJobsInHomepage(activeJobs);
@@ -1162,8 +1227,9 @@ function loadJobsFromGitHub() {
             }
         })
         .catch(error => {
-            console.error('❌ שגיאה בטעינה:', error);
-            loadJobsFromStorage();
+            console.error('❌ שגיאה בטעינה מהשרת:', error);
+            console.log('⚠️ משתמש במשרות מוגדרות מראש כגיבוי');
+            createSampleJobs();
         });
 }
 
