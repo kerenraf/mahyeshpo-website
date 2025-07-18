@@ -118,118 +118,48 @@ const categoryColors = {
     'אחר': 'category-other'
 };
 
+// משתנים גלובליים
+let allJobs = [];
+let filteredJobs = [];
+let uniqueCategories = [];
+
 // אתחול בטעינת הדף
 document.addEventListener('DOMContentLoaded', function() {
-    // הצגת משרות בדף הבית
-    if (document.getElementById('jobsContainer')) {
-        displayJobs(jobs);
-    }
+    console.log('🚀 הדף נטען - טוען משרות...');
+    attachEventListeners();
+    loadJobsFromGitHub();
     
-    // הגדרת אירועים
-    setupEventListeners();
+    window.addEventListener('focus', function() {
+        console.log('👁️ הדף זוכה בפוקוס - בודק עדכונים');
+        loadJobsFromStorage();
+    });
     
     // הסתרת הגמדה הצפה בהתחלה
-    document.getElementById('floatingGnome').style.display = 'none';
+    if (document.getElementById('floatingGnome')) {
+        document.getElementById('floatingGnome').style.display = 'none';
+    }
     
     // גלילה והצגת הגמדה הצפה
     window.addEventListener('scroll', function() {
         const floatingGnome = document.getElementById('floatingGnome');
-        if (window.scrollY > 300) {
-            floatingGnome.style.display = 'block';
-        } else {
-            floatingGnome.style.display = 'none';
+        if (floatingGnome) {
+            if (window.scrollY > 300) {
+                floatingGnome.style.display = 'block';
+            } else {
+                floatingGnome.style.display = 'none';
+            }
         }
     });
     
     // תפריט מובייל
     if (document.querySelector('.mobile-menu-toggle')) {
         document.querySelector('.mobile-menu-toggle').addEventListener('click', function() {
-            document.getElementById('mainNav').classList.toggle('active');
-        });
-    }
-});
-
-// הגדרת אירועים
-function setupEventListeners() {
-    // אירועי חיפוש
-    if (document.getElementById('searchButton')) {
-        document.getElementById('searchButton').addEventListener('click', searchJobs);
-    }
-    
-    if (document.getElementById('clearButton')) {
-        document.getElementById('clearButton').addEventListener('click', clearFilters);
-    }
-    
-    if (document.getElementById('searchInput')) {
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchJobs();
+            const mainNav = document.getElementById('mainNav');
+            if (mainNav) {
+                mainNav.classList.toggle('active');
             }
         });
     }
-    
-    // מניעת סגירה של מודלים בלחיצה מחוץ להם
-    window.onclick = function(event) {
-        const jobModal = document.getElementById('job-modal');
-        const importModal = document.getElementById('import-modal');
-        
-        if (event.target === jobModal) {
-            closeJobModal();
-        }
-        if (event.target === importModal) {
-            closeImportModal();
-        }
-    };
-}
-
-// פונקציה לגלילה לראש הדף
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
-
-// פונקציה לבחירת קטגוריה מקטגוריות מובילות
-function selectCategory(category) {
-    if (document.getElementById('categoryFilter')) {
-        document.getElementById('categoryFilter').value = category;
-        searchJobs();
-        document.getElementById('search').scrollIntoView({ behavior: 'smooth' });
-    }
-}
-
-// פונקציה לסגירת מודל המשרה
-function closeJobModal() {
-    const jobModal = document.getElementById('job-modal');
-    if (jobModal) {
-        jobModal.style.display = 'none';
-        document.body.style.overflow = ''; // חידוש הגלילה
-    }
-}
-
-// פונקציה לסגירת מודל הייבוא
-function closeImportModal() {
-    const importModal = document.getElementById('import-modal');
-    if (importModal) {
-        importModal.style.display = 'none';
-        document.body.style.overflow = '';
-    }
-}
-
-// פונקציה לטיפול בבחירת קובץ קורות חיים
-function handleFileSelect(event) {
-    const file = event.target.files[0];
-    const fileNameElement = document.getElementById('file-name');
-    
-    if (file && fileNameElement) {
-        fileNameElement.textContent = file.name;
-    }
-}
-// === שיפורים בקוד JavaScript ===
-
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 הדף נטען - מתחיל אתחול מובייל משופר...');
     
     // אתחול כל המרכיבים המשופרים למובייל
     initMobileEnhancements();
@@ -240,9 +170,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // הוספת מאזיני אירועים נוספים
     attachEnhancedEventListeners();
     
-    // המשך לטעינת המשרות
-    loadJobsFromGitHub();
-    
     // הוספת אינדיקטור טעינה לאלמנטים שונים
     addLoadingIndicators();
     
@@ -252,6 +179,92 @@ document.addEventListener('DOMContentLoaded', function() {
     // טיפול באירועי פוקוס וריענון דף
     handlePageLifecycle();
 });
+
+// פונקציה לבדיקה אם המכשיר הוא מובייל
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// פונקציה להוספת מאזיני אירועים
+function attachEventListeners() {
+    const searchButton = document.getElementById('searchButton');
+    if (searchButton) {
+        searchButton.addEventListener('click', filterJobs);
+    }
+    
+    const clearButton = document.getElementById('clearButton');
+    if (clearButton) {
+        clearButton.addEventListener('click', clearFilters);
+    }
+    
+    if (document.getElementById('searchInput')) {
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                filterJobs();
+            }
+        });
+    }
+    
+    // מאזין אירועים למודל "עוד עלינו"
+    const aboutBtn = document.getElementById('aboutBtn');
+    if (aboutBtn) {
+        aboutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openAboutModal();
+        });
+    }
+    
+    // מאזיני אירועים לכפתורי סגירת המודל
+    const aboutCloseBtn = document.querySelector('.about-close');
+    const aboutCloseButtonFooter = document.querySelector('.about-close-button');
+    
+    if (aboutCloseBtn) {
+        aboutCloseBtn.addEventListener('click', closeAboutModal);
+    }
+    
+    if (aboutCloseButtonFooter) {
+        aboutCloseButtonFooter.addEventListener('click', closeAboutModal);
+    }
+    
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'jobs') {
+            loadJobsFromStorage();
+        }
+    });
+    
+    // מאזין אירועים לסגירה בלחיצה על מסך או ESC
+    window.addEventListener('click', function(event) {
+        const aboutModal = document.getElementById('aboutModal');
+        const jobModal = document.getElementById('job-modal');
+        
+        if (event.target === aboutModal) {
+            closeAboutModal();
+        }
+        if (event.target === jobModal) {
+            closeJobModal();
+        }
+    });
+    
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeAboutModal();
+            closeJobModal();
+        }
+    });
+    
+    // מניעת סגירה של מודלים בלחיצה מחוץ להם
+    window.onclick = function(event) {
+        const jobModal = document.getElementById('job-modal');
+        const importModal = document.getElementById('import-modal');
+        
+        if (event.target === jobModal) {
+            closeJobModal();
+        }
+        if (importModal && event.target === importModal) {
+            closeImportModal();
+        }
+    };
+}
 
 // פונקציה לאתחול שיפורים במובייל
 function initMobileEnhancements() {
@@ -528,18 +541,30 @@ function enhanceModalInteractions() {
     // מניעת גלילת רקע כשהמודל פתוח
     const originalCloseFunction = window.closeJobModal;
     
-    window.closeJobModal = function() {
-        document.body.style.overflow = ''; // שחרור גלילה
-        originalCloseFunction();
-    };
+    if (typeof originalCloseFunction === 'function') {
+        window.closeJobModal = function() {
+            document.body.style.overflow = ''; // שחרור גלילה
+            if (typeof originalCloseFunction === 'function') {
+                originalCloseFunction();
+            } else {
+                if (jobModal) {
+                    jobModal.style.display = 'none';
+                }
+            }
+        };
+    }
     
     // שמירת פונקציית הפתיחה המקורית
     const originalOpenFunction = window.openJobModal;
     
-    window.openJobModal = function(index, jobs) {
-        document.body.style.overflow = 'hidden'; // נעילת גלילה
-        originalOpenFunction(index, jobs);
-    };
+    if (typeof originalOpenFunction === 'function') {
+        window.openJobModal = function(index, jobs) {
+            document.body.style.overflow = 'hidden'; // נעילת גלילה
+            if (typeof originalOpenFunction === 'function') {
+                originalOpenFunction(index, jobs);
+            }
+        };
+    }
     
     console.log('✅ אינטראקציות מודל שופרו');
 }
@@ -662,6 +687,12 @@ function addLoadingIndicators() {
 
 // אתחול אנימציות גלילה
 function initScrollAnimations() {
+    // בדיקה שהדפדפן תומך ב-IntersectionObserver
+    if (!('IntersectionObserver' in window)) {
+        console.warn('⚠️ הדפדפן לא תומך ב-IntersectionObserver, אנימציות גלילה לא יעבדו');
+        return;
+    }
+    
     // הגדרת אובזרבר גלילה
     const observerOptions = {
         root: null,
@@ -725,6 +756,12 @@ function handlePageLifecycle() {
 
 // שיפור התצוגה של קטגוריות
 function enhanceCategoriesDisplay() {
+    // בדיקה שיש קטגוריות
+    if (!uniqueCategories || uniqueCategories.length === 0) {
+        console.warn('⚠️ אין קטגוריות לשיפור תצוגה');
+        return;
+    }
+    
     // צביעה דינמית של קטגוריות
     uniqueCategories.forEach((category, index) => {
         // יצירת צבע דינמי בהתבסס על האינדקס
@@ -750,128 +787,275 @@ function enhanceCategoriesDisplay() {
     });
 }
 
-// שיפור הצגת המשרות
-function enhanceJobsDisplay(jobs) {
-    // בדיקה אם יש משרות חדשות
-    const now = new Date();
-    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+// פונקציות לניהול מודל "עוד עלינו" - עם תיקון לבעיית ההיעלמות
+function openAboutModal() {
+    const aboutModal = document.getElementById('aboutModal');
+    if (!aboutModal) return;
     
-    jobs.forEach(job => {
-        // סימון משרות חדשות (בהנחה שיש שדה createdAt או דומה)
-        if (job.createdAt) {
-            const jobDate = new Date(job.createdAt);
-            if (jobDate > oneWeekAgo) {
-                job.isNew = true;
-            }
+    // וידוא שכל התוכן גלוי לפני הצגת המודל
+    const modalContent = aboutModal.querySelector('.about-modal-content');
+    if (modalContent) {
+        // וידוא שכל האלמנטים גלויים
+        const elements = aboutModal.querySelectorAll('.about-intro, .about-main-text, .why-section, .human-section, .benefits-list li');
+        elements.forEach(el => {
+            el.style.opacity = '1';
+            el.style.visibility = 'visible';
+        });
+    }
+    
+    // הצגת המודל עם אנימציה מתאימה
+    aboutModal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeAboutModal() {
+    const aboutModal = document.getElementById('aboutModal');
+    if (!aboutModal) return;
+    
+    aboutModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// פונקציה לסגירת מודל המשרה
+function closeJobModal() {
+    const jobModal = document.getElementById('job-modal');
+    if (jobModal) {
+        jobModal.style.display = 'none';
+        document.body.style.overflow = ''; // חידוש הגלילה
+    }
+}
+
+// פונקציה לסגירת מודל הייבוא
+function closeImportModal() {
+    const importModal = document.getElementById('import-modal');
+    if (importModal) {
+        importModal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+// פונקציה לטיפול בבחירת קובץ קורות חיים
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    const fileNameElement = document.getElementById('file-name');
+    
+    if (file && fileNameElement) {
+        fileNameElement.textContent = file.name;
+    }
+}
+
+// פונקציה לגלילה לראש הדף
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// פונקציה לבחירת קטגוריה מקטגוריות מובילות
+function selectCategory(category) {
+    if (document.getElementById('categoryFilter')) {
+        document.getElementById('categoryFilter').value = category;
+        filterJobs();
+        document.getElementById('search').scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// פונקציה לחילוץ קטגוריות ייחודיות
+function extractUniqueCategories(jobs) {
+    if (!jobs || !Array.isArray(jobs)) {
+        console.error('שגיאה: jobs אינו מערך תקין', jobs);
+        uniqueCategories = [];
+        return;
+    }
+    
+    const categories = jobs
+        .filter(job => job && job.category)
+        .map(job => job.category.trim())
+        .filter((category, index, self) => 
+            self.indexOf(category) === index && category !== '');
+    
+    uniqueCategories = categories.sort();
+    console.log('קטגוריות ייחודיות:', uniqueCategories);
+}
+
+// פונקציה לעדכון רשימת הקטגוריות
+function updateCategoryFilters() {
+    const categoryFilter = document.getElementById('categoryFilter');
+    if (!categoryFilter) return;
+    
+    const selectedValue = categoryFilter.value;
+    categoryFilter.innerHTML = '<option value="">כל הקטגוריות</option>';
+    
+    uniqueCategories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categoryFilter.appendChild(option);
+    });
+    
+    if (selectedValue && uniqueCategories.includes(selectedValue)) {
+        categoryFilter.value = selectedValue;
+    }
+}
+
+// פונקציה לעדכון קוביות הקטגוריות
+function updateCategoryCards() {
+    const categoriesGrid = document.querySelector('.categories-grid');
+    if (!categoriesGrid) return;
+    
+    categoriesGrid.innerHTML = '';
+    const categoriesToShow = uniqueCategories.slice(0, 10);
+    
+    categoriesToShow.forEach((category, index) => {
+        const card = document.createElement('div');
+        card.className = `category-card fade-up delay-${index % 5}`;
+        card.onclick = function() { selectCategory(category); };
+        
+        let icon = '📦';
+        let description = 'משרות מגוונות';
+        
+        // התאמת אייקונים
+        if (category.includes('מזון')) {
+            icon = '🍽️';
+            description = 'מלצרים, טבחים, ברמנים';
+        } else if (category.includes('חינוך')) {
+            icon = '📚';
+            description = 'מורים, מדריכים, מחנכים';
+        } else if (category.includes('פיתוח')) {
+            icon = '💻';
+            description = 'מפתחים, מתכנתים, QA';
         }
         
-        // סימון משרות פופולריות לפי צפיות או אחוז המרה
-        if (job.views && job.views > 100) {
-            job.isPopular = true;
-        }
+        card.innerHTML = `
+            <div class="category-icon">${icon}</div>
+            <div class="category-title">${category}</div>
+            <div class="category-desc">${description}</div>
+        `;
+        
+        categoriesGrid.appendChild(card);
     });
 }
 
-// שיפור ביצועי טפסים
-function enhanceFormPerformance() {
-    // מניעת שליחות כפולות
-    const forms = document.querySelectorAll('form');
-    forms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            const submitButton = this.querySelector('[type="submit"]');
-            if (submitButton) {
-                if (submitButton.hasAttribute('data-submitted')) {
-                    e.preventDefault();
-                    return false;
-                }
-                
-                submitButton.setAttribute('data-submitted', 'true');
-                submitButton.disabled = true;
-                
-                setTimeout(() => {
-                    submitButton.removeAttribute('data-submitted');
-                    submitButton.disabled = false;
-                }, 3000);
-            }
-        });
-    });
-    
-    // ולידציה משופרת בטפסים
-    const inputs = document.querySelectorAll('input, textarea');
-    inputs.forEach(input => {
-        input.addEventListener('blur', function() {
-            validateInput(this);
-        });
-    });
+// פונקציה לטעינת משרות מהאחסון המקומי
+function loadJobsFromStorage() {
+    try {
+        const savedJobs = localStorage.getItem('jobs');
+        
+        if (savedJobs) {
+            allJobs = JSON.parse(savedJobs);
+            extractUniqueCategories(allJobs);
+            updateCategoryFilters();
+            updateCategoryCards();
+            
+            const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
+            displayJobsInHomepage(activeJobs);
+            filteredJobs = [];
+        } else {
+            createSampleJobs();
+        }
+    } catch (error) {
+        console.error('❌ שגיאה בטעינה:', error);
+        createSampleJobs();
+    }
 }
 
-// ולידציה משופרת לשדות קלט
-function validateInput(input) {
-    if (!input.value && input.hasAttribute('required')) {
-        showError(input, 'שדה חובה');
-        return false;
-    }
+// פונקציה ליצירת משרות דוגמה
+function createSampleJobs() {
+    allJobs = jobs;
+    localStorage.setItem('jobs', JSON.stringify(jobs));
     
-    if (input.id === 'phone' && input.value) {
-        const phoneRegex = /^(0[23489]|05[0-9])-?[0-9]{7,8}$/;
-        if (!phoneRegex.test(input.value)) {
-            showError(input, 'מספר טלפון לא תקין');
-            return false;
-        }
-    }
-    
-    if (input.id === 'contact-email' && input.value) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(input.value)) {
-            showError(input, 'כתובת אימייל לא תקינה');
-            return false;
-        }
-    }
-    
-    hideError(input);
-    return true;
+    extractUniqueCategories(jobs);
+    updateCategoryFilters();
+    updateCategoryCards();
+    displayJobsInHomepage(jobs);
 }
-// פונקציה להצגת משרות
-function displayJobs(jobsToShow) {
+
+// פונקציה להצגת משרות בדף הבית
+function displayJobsInHomepage(jobs) {
     const jobsContainer = document.getElementById('jobsContainer');
     if (!jobsContainer) return;
     
     jobsContainer.innerHTML = '';
     
-    if (!jobsToShow || jobsToShow.length === 0) {
-        jobsContainer.innerHTML = '<div>אין משרות זמינות</div>';
+    if (!jobs || jobs.length === 0) {
+        jobsContainer.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #ccc;">
+                <h3>אין משרות פעילות כרגע</h3>
+                <p>ייבא משרות דרך <a href="job-management.html" style="color: #F69898;">עמוד הניהול</a></p>
+            </div>
+        `;
         return;
     }
     
-    const activeJobs = jobsToShow.filter(job => job.status === 'פעיל');
+    const categoryColorMap = {};
+    const colorClasses = [
+        'category-food', 'category-education', 'category-tech', 
+        'category-computers', 'category-automotive', 'category-marketing', 
+        'category-health', 'category-hr', 'category-security', 
+        'category-tourism', 'category-construction', 'category-admin', 
+        'category-logistics', 'category-other'
+    ];
     
-    activeJobs.forEach((job, index) => {
+    uniqueCategories.forEach((category, index) => {
+        categoryColorMap[category] = colorClasses[index % colorClasses.length];
+    });
+    
+    const jobsToShow = jobs.slice(0, 9);
+    
+    jobsToShow.forEach((job, index) => {
         const jobCard = document.createElement('div');
         jobCard.className = 'job-card fade-up';
+        jobCard.style.animationDelay = `${index * 0.1}s`;
         
-        const categoryClass = categoryColors[job.category] || 'category-other';
+        const location = job.city ? `${job.city}, ${job.region || 'מרכז'}` : job.region || 'מרכז';
+        let shortDescription = job.description ? 
+            job.description.substring(0, 100) + (job.description.length > 100 ? '...' : '') : 
+            'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
+        
+        const categoryClass = categoryColorMap[job.category] || 'category-other';
+        const messageText = `שלום, אני מעוניין/ת במשרה: ${job.title || 'משרה'} (${job.jobNumber || index + 1})`;
+        
+        const whatsappText = encodeURIComponent(messageText);
+        const whatsappLink = `https://wa.me/972555504633?text=${whatsappText}`;
+        const smsLink = `sms:+972555504633?body=${encodeURIComponent(messageText)}`;
         
         jobCard.innerHTML = `
             <div class="job-number">${job.jobNumber || (index + 1)}</div>
-            <h3 class="job-title">${job.title}</h3>
-            <div class="job-company">${job.company}</div>
-            <div class="job-location">${job.location}</div>
-            <div class="job-description">${job.description.substring(0, 100)}...</div>
-            <div class="job-badge ${categoryClass}">${job.category}</div>
+            <h3 class="job-title">${job.title || 'משרה ללא כותרת'}</h3>
+            <div class="job-company">${job.company || 'חברה לא ידועה'}</div>
+            <div class="job-location">${location}</div>
+            <div class="job-description">${shortDescription}</div>
+            <div class="job-badge ${categoryClass}">${job.category || 'אחר'}</div>
+            
+            <div class="job-card-gnome">
+                <img src="images/gnome.png" alt="גמדה פרטים">
+                <div class="job-card-gnome-text">לפרטים נוספים</div>
+                <div class="gnome-tooltip">לחץ לפרטים נוספים!</div>
+            </div>
+            
+            <div class="contact-buttons">
+                <a href="${whatsappLink}" class="contact-button whatsapp-button" target="_blank" title="פנייה בוואטסאפ" onclick="event.stopPropagation();">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="${smsLink}" class="contact-button sms-button" title="פנייה ב-SMS" onclick="event.stopPropagation();">
+                    <i class="fas fa-sms"></i>
+                </a>
+            </div>
         `;
         
         jobCard.addEventListener('click', function() {
-            openJobModal(job);
+            const currentJobs = filteredJobs.length > 0 ? filteredJobs : jobs;
+            openJobModal(index, currentJobs);
         });
         
         jobsContainer.appendChild(jobCard);
     });
 }
 
-// פונקציה לטעינת משרות מגיטהאב - המתוקנת והמלאה
 // פונקציה לטעינת משרות מ-GitHub
 function loadJobsFromGitHub() {
-    const gitHubRawUrl = 'data/jobs.json';
+    const gitHubRawUrl = 'https://raw.githubusercontent.com/kerenraf/ma-yesh-po-jobs/main/jobs.json';
     
     fetch(gitHubRawUrl)
         .then(response => {
@@ -901,29 +1085,154 @@ function loadJobsFromGitHub() {
             loadJobsFromStorage();
         });
 }
-// פונקציה לפתיחת מודל משרה
-function openJobModal(job) {
-    // כאן תוסיפי את הקוד לפתיחת המודל
-    alert(`פרטי המשרה: ${job.title}\nחברה: ${job.company}\nתיאור: ${job.description}`);
-}
 
-// פונקציה לחיפוש משרות
-function searchJobs() {
-    const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
-    const categoryFilter = document.getElementById('categoryFilter')?.value || '';
+// פונקציה לפתיחת מודל פרטי משרה
+function openJobModal(index, jobs) {
+    if (!jobs || !jobs[index]) {
+        alert('אירעה שגיאה בטעינת פרטי המשרה');
+        return;
+    }
     
-    let filteredJobs = jobs.filter(job => {
-        const matchesSearch = !searchTerm || 
-            job.title.toLowerCase().includes(searchTerm) ||
-            job.company.toLowerCase().includes(searchTerm) ||
-            job.description.toLowerCase().includes(searchTerm);
-        
-        const matchesCategory = !categoryFilter || job.category === categoryFilter;
-        
-        return matchesSearch && matchesCategory;
+    const job = jobs[index];
+    
+    document.getElementById('modal-job-title').textContent = job.title || 'משרה ללא כותרת';
+    document.getElementById('modal-job-company').textContent = job.company || 'חברה לא ידועה';
+    document.getElementById('modal-job-location').textContent = job.city ? `${job.city}, ${job.region || 'מרכז'}` : job.region || 'מרכז';
+    document.getElementById('modal-job-type').textContent = job.type || 'משרה מלאה';
+    document.getElementById('modal-job-category').textContent = job.category || 'אחר';
+    document.getElementById('modal-job-description').textContent = job.description || 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
+    document.getElementById('modal-job-requirements').textContent = job.requirements || 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
+    
+    // איפוס טופס
+    document.getElementById('mini-name').value = '';
+    document.getElementById('mini-phone').value = '';
+    document.getElementById('mini-name-error').style.display = 'none';
+    document.getElementById('mini-phone-error').style.display = 'none';
+    
+    // יצירת כפתורים
+    let buttonsContainer = document.querySelector('.modal-buttons-container');
+    if (!buttonsContainer) {
+        buttonsContainer = document.createElement('div');
+        buttonsContainer.className = 'modal-buttons-container';
+        const miniForm = document.querySelector('.modal-mini-form');
+        miniForm.parentNode.insertBefore(buttonsContainer, miniForm.nextSibling);
+    } else {
+        buttonsContainer.innerHTML = '';
+    }
+    
+    const whatsappButton = document.createElement('button');
+    whatsappButton.className = 'modal-contact-button modal-whatsapp-button';
+    whatsappButton.innerHTML = '<i class="fab fa-whatsapp"></i> פנייה בוואטסאפ';
+    whatsappButton.addEventListener('click', function() {
+        sendContactWithDetails('whatsapp', job, index);
     });
     
-    displayJobs(filteredJobs);
+    const smsButton = document.createElement('button');
+    smsButton.className = 'modal-contact-button modal-sms-button';
+    smsButton.innerHTML = '<i class="fas fa-sms"></i> פנייה ב-SMS';
+    smsButton.addEventListener('click', function() {
+        sendContactWithDetails('sms', job, index);
+    });
+    
+    const searchButton = document.createElement('button');
+    searchButton.className = 'modal-contact-button modal-search-button';
+    searchButton.innerHTML = '<i class="fas fa-search"></i> חזרה לחיפוש';
+    searchButton.addEventListener('click', function() {
+        closeJobModal();
+        document.getElementById('search').scrollIntoView({ behavior: 'smooth' });
+    });
+    
+    buttonsContainer.appendChild(whatsappButton);
+    buttonsContainer.appendChild(smsButton);
+    buttonsContainer.appendChild(searchButton);
+    
+    document.getElementById('job-modal').style.display = 'block';
+}
+
+// פונקציה לשליחת הודעה עם פרטי המועמד
+function sendContactWithDetails(method, job, jobIndex) {
+    const name = document.getElementById('mini-name').value.trim();
+    const phone = document.getElementById('mini-phone').value.trim();
+    
+    let isValid = true;
+    
+    if (!name) {
+        document.getElementById('mini-name-error').style.display = 'block';
+        isValid = false;
+    } else {
+        document.getElementById('mini-name-error').style.display = 'none';
+    }
+    
+    if (!phone || !isValidPhone(phone)) {
+        document.getElementById('mini-phone-error').style.display = 'block';
+        isValid = false;
+    } else {
+        document.getElementById('mini-phone-error').style.display = 'none';
+    }
+    
+    if (!isValid) return;
+    
+    const jobTitle = job.title || 'משרה';
+    const jobNumber = job.jobNumber || (jobIndex + 1);
+    
+    const messageText = `שלום, אני מעוניין/ת במשרה: ${jobTitle} (${jobNumber})
+שם מלא: ${name}
+טלפון: ${phone}`;
+    
+    if (method === 'whatsapp') {
+        const whatsappText = encodeURIComponent(messageText);
+        const whatsappLink = `https://wa.me/972555504633?text=${whatsappText}`;
+        window.open(whatsappLink, '_blank');
+    } else if (method === 'sms') {
+        const smsLink = `sms:+972555504633?body=${encodeURIComponent(messageText)}`;
+        window.location.href = smsLink;
+    }
+}
+
+// פונקציה לבדיקת תקינות מספר טלפון
+function isValidPhone(phone) {
+    const phoneRegex = /^(0[23489]|05[0-9])-?[0-9]{7,8}$/;
+    return phoneRegex.test(phone);
+}
+
+// פונקציה לסינון משרות
+function filterJobs() {
+    const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+    const category = document.getElementById('categoryFilter').value;
+    const region = document.getElementById('regionFilter').value;
+    
+    const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
+    
+    filteredJobs = activeJobs.filter(job => {
+        if (searchText && !jobMatchesSearch(job, searchText)) {
+            return false;
+        }
+        
+        if (category && job.category !== category) {
+            return false;
+        }
+        
+        if (region && job.region !== region) {
+            return false;
+        }
+        
+        return true;
+    });
+    
+    displayJobsInHomepage(filteredJobs);
+}
+
+// פונקציה לבדיקה אם משרה מתאימה לחיפוש
+function jobMatchesSearch(job, searchText) {
+    return (
+        (job.title && job.title.toLowerCase().includes(searchText)) ||
+        (job.company && job.company.toLowerCase().includes(searchText)) ||
+        (job.description && job.description.toLowerCase().includes(searchText)) ||
+        (job.requirements && job.requirements.toLowerCase().includes(searchText)) ||
+        (job.city && job.city.toLowerCase().includes(searchText)) ||
+        (job.region && job.region.toLowerCase().includes(searchText)) ||
+        (job.category && job.category.toLowerCase().includes(searchText))
+    );
 }
 
 // פונקציה לניקוי מסננים
@@ -934,38 +1243,62 @@ function clearFilters() {
     if (document.getElementById('categoryFilter')) {
         document.getElementById('categoryFilter').value = '';
     }
-    displayJobs(jobs);
-}
-
-// פונקציה לטעינה מאחסון מקומי
-function loadJobsFromStorage() {
-    // אם יש נתונים מקומיים, השתמש בהם
-    // אחרת טען מגיטהאב
-    loadJobsFromGitHub();
-}
-
-// הצגת שגיאה ליד שדה
-function showError(input, message) {
-    let errorElement = input.nextElementSibling;
-    
-    if (!errorElement || !errorElement.classList.contains('validation-error')) {
-        errorElement = document.createElement('div');
-        errorElement.className = 'validation-error';
-        input.parentNode.insertBefore(errorElement, input.nextElementSibling);
+    if (document.getElementById('regionFilter')) {
+        document.getElementById('regionFilter').value = '';
     }
     
-    errorElement.textContent = message;
-    errorElement.style.display = 'block';
-    input.classList.add('error-input');
+    const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
+    filteredJobs = [];
+    displayJobsInHomepage(activeJobs);
 }
 
-// הסתרת שגיאה
-function hideError(input) {
-    const errorElement = input.nextElementSibling;
+// פונקציה ליצירת קשר - עם שיפור המראה
+function submitContactForm(event) {
+    event.preventDefault();
     
-    if (errorElement && errorElement.classList.contains('validation-error')) {
-        errorElement.style.display = 'none';
+    // בדיקת תקינות הטופס
+    const name = document.getElementById('contact-name').value.trim();
+    const email = document.getElementById('contact-email').value.trim();
+    const subject = document.getElementById('contact-subject').value.trim();
+    const message = document.getElementById('contact-message').value.trim();
+    
+    if (!name || !email || !subject || !message) {
+        alert('נא למלא את כל השדות בטופס');
+        return false;
     }
     
-    input.classList.remove('error-input');
+    // שליחת הטופס - במקרה אמיתי כאן יש לשלוח את הנתונים לשרת
+    console.log('שליחת טופס:', { name, email, subject, message });
+    
+    // איפוס הטופס והצגת הודעת הצלחה
+    document.getElementById('contact-form').reset();
+    document.getElementById('contact-success').style.display = 'block';
+    
+    // הסתרת הודעת ההצלחה אחרי 5 שניות
+    setTimeout(function() {
+        document.getElementById('contact-success').style.display = 'none';
+    }, 5000);
+    
+    return false;
 }
+
+// פונקציה לטיפול בכפתור הנגישות
+function toggleAccessibility() {
+    alert('כפתור הנגישות נלחץ! כאן תוכל להוסיף פונקציות נגישות.');
+    
+    const btn = document.getElementById('fallback-accessibility');
+    if (btn) {
+        btn.classList.add('pulse');
+        
+        setTimeout(() => {
+            btn.classList.remove('pulse');
+        }, 2000);
+    }
+}
+
+// בדיקה אם ספריית הנגישות נטענת
+window.addEventListener('load', function() {
+    if (typeof enable !== 'undefined') {
+        document.body.classList.add('enable-loaded');
+    }
+});
