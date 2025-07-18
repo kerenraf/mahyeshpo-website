@@ -947,6 +947,7 @@ function loadJobsFromStorage() {
             extractUniqueCategories(allJobs);
             updateCategoryFilters();
             updateCategoryCards();
+            enhanceCategoriesDisplay(); // הוספת קריאה לפונקציה שמטפלת בצבעי הקטגוריות
             
             const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
             displayJobsInHomepage(activeJobs);
@@ -968,6 +969,7 @@ function createSampleJobs() {
     extractUniqueCategories(jobs);
     updateCategoryFilters();
     updateCategoryCards();
+    enhanceCategoriesDisplay(); // הוספת קריאה לפונקציה שמטפלת בצבעי הקטגוריות
     displayJobsInHomepage(jobs);
 }
 
@@ -1074,6 +1076,7 @@ function loadJobsFromGitHub() {
                 extractUniqueCategories(allJobs);
                 updateCategoryFilters();
                 updateCategoryCards();
+                enhanceCategoriesDisplay(); // הוספת קריאה לפונקציה שמטפלת בצבעי הקטגוריות
                 
                 const activeJobs = allJobs.filter(job => job.status !== 'לא פעיל');
                 displayJobsInHomepage(activeJobs);
