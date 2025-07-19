@@ -1690,6 +1690,14 @@
                 if (event.key === 'Escape') {
                     closeJobModal();
                     closeAboutModal();
+                    closeAdminModal();
+                }
+            });
+
+            // Enter במודל ניהול
+            document.getElementById('admin-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkAdminPassword();
                 }
             });
             
@@ -1803,6 +1811,9 @@
         window.closeJobModal = closeJobModal;
         window.openAboutModal = openAboutModal;
         window.closeAboutModal = closeAboutModal;
+        window.openAdminModal = openAdminModal;
+        window.closeAdminModal = closeAdminModal;
+        window.checkAdminPassword = checkAdminPassword;
         window.selectCategory = selectCategory;
         window.filterJobs = filterJobs;
         window.clearFilters = clearFilters;
