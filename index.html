@@ -1525,7 +1525,7 @@
                     '<i class="fas fa-map-marker-alt"></i> ' + location +
                     '</div>' +
                     '<div class="job-description">' + shortDescription + '</div>' +
-                    '<div class="job-badge">' + job.category + '</div>' +
+                    '<div class="job-badge ' + getCategoryClass(job.category) + '">' + job.category + '</div>' +
                     '<div class="job-card-bottom">' +
                     '<div class="job-card-gnome" onclick="event.stopPropagation(); openJobModal(' + index + ', ' + (filteredJobs.length > 0 ? 'filteredJobs' : 'allJobs.filter(j => j.status === \'פעיל\')') + ')">' +
                     '<img src="./images/gnome.png" alt="גמדה פרטים" onerror="this.src=\'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XnNeT15TXkjwvdGV4dD48L3N2Zz4=\'">' +
