@@ -1677,12 +1677,16 @@
             window.addEventListener('click', function(event) {
                 const jobModal = document.getElementById('job-modal');
                 const aboutModal = document.getElementById('about-modal');
+                const adminModal = document.getElementById('admin-modal');
                 
                 if (event.target === jobModal) {
                     closeJobModal();
                 }
                 if (event.target === aboutModal) {
                     closeAboutModal();
+                }
+                if (event.target === adminModal) {
+                    closeAdminModal();
                 }
             });
             
@@ -1695,11 +1699,14 @@
             });
 
             // Enter במודל ניהול
-            document.getElementById('admin-password').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    checkAdminPassword();
-                }
-            });
+            const adminPasswordInput = document.getElementById('admin-password');
+            if (adminPasswordInput) {
+                adminPasswordInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkAdminPassword();
+                    }
+                });
+            }
             
             document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
                 anchor.addEventListener('click', function (e) {
