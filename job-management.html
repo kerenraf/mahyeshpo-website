@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>מה יש פה? - מערכת ניהול מתקדמת</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -768,6 +769,27 @@
             color: #ccc;
         }
 
+        /* Back to site button */
+        .back-to-site {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(40,167,69,0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-to-site:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40,167,69,0.4);
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .admin-grid {
@@ -891,6 +913,11 @@
         <div class="loading-spinner"></div>
     </div>
 
+    <!-- כפתור חזרה לאתר -->
+    <a href="/" class="back-to-site" id="backToSite" style="display: none;">
+        <i class="fas fa-arrow-right"></i> חזור לאתר
+    </a>
+
     <!-- כפתור צדדי לגישה לניהול -->
     <button class="admin-access-button" onclick="showLoginForm()">
         <i class="fas fa-lock"></i>
@@ -918,8 +945,18 @@
                 סיסמה שגויה, נסה שנית
             </div>
             
+            <div style="margin-top: 40px;">
+                <h4 style="color: #F69898; margin-bottom: 15px;">איך להיכנס למערכת?</h4>
+                <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; text-align: right;">
+                    <p style="margin-bottom: 10px;"><strong>דרך 1:</strong> לחץ על הכפתור הצדדי בעמוד הראשי</p>
+                    <p style="margin-bottom: 10px;"><strong>דרך 2:</strong> גש ל: <code style="color: #F69898;">yoursite.com/admin.html</code></p>
+                    <p style="margin-bottom: 10px;"><strong>דרך 3:</strong> הוסף <code style="color: #F69898;">#admin</code> לכתובת</p>
+                    <p style="color: #28a745; font-weight: bold;">הסיסמה: yarin080708</p>
+                </div>
+            </div>
+            
             <p style="margin-top: 40px; color: #cccccc;">
-                <a href="index.html" style="color: #F69898; text-decoration: none; font-weight: bold;">
+                <a href="/" style="color: #F69898; text-decoration: none; font-weight: bold;">
                     <i class="fas fa-arrow-right"></i> חזרה לדף הבית
                 </a>
             </p>
@@ -950,9 +987,9 @@
                         
                         <nav class="main-nav" id="mainNav">
                             <ul>
-                                <li><a href="index.html">דף הבית</a></li>
+                                <li><a href="/">דף הבית</a></li>
                                 <li><a href="#" class="active">ניהול מתקדם</a></li>
-                                <li><a href="index.html#contact">צור קשר</a></li>
+                                <li><a href="/#contact">צור קשר</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -1062,7 +1099,7 @@
                         <div class="admin-card-desc">סנכרון מלא בין כל המערכות והפלטפורמות</div>
                     </div>
                     
-                    <div class="admin-card" onclick="location.href='index.html'">
+                    <div class="admin-card" onclick="window.open('/', '_blank')">
                         <div class="admin-icon"><i class="fas fa-eye"></i></div>
                         <div class="admin-card-title">צפייה באתר</div>
                         <div class="admin-card-desc">עבור לדף הראשי לצפייה במשרות</div>
@@ -1137,7 +1174,6 @@
                 </div>
             </section>
         </main>
-        <!-- מודלים -->
 
         <!-- מודל ייבוא משרות מתקדם -->
         <div id="import-modal" class="modal">
@@ -1288,6 +1324,7 @@
                                 <option value="עולם הרכבים והליסינג">רכבים וליסינג</option>
                                 <option value="שיווק ומכירות">שיווק ומכירות</option>
                                 <option value="בריאות ורפואה">בריאות ורפואה</option>
+                                <option value="מנהל ואדמיניסטרציה">מנהל ואדמיניסטרציה</option>
                                 <option value="אחר">אחר</option>
                             </select>
                         </div>
@@ -1424,10 +1461,10 @@
                 </div>
                 
                 <div class="footer-links">
-                    <a href="index.html" class="footer-link">דף הבית</a>
+                    <a href="/" class="footer-link">דף הבית</a>
                     <a href="#" class="footer-link">ניהול מתקדם</a>
-                    <a href="index.html#search" class="footer-link">חיפוש משרות</a>
-                    <a href="index.html#contact" class="footer-link">צור קשר</a>
+                    <a href="/#search" class="footer-link">חיפוש משרות</a>
+                    <a href="/#contact" class="footer-link">צור קשר</a>
                 </div>
                 
                 <p class="copyright">© 2025 מה יש פה? - מערכת ניהול מתקדמת</p>
@@ -1435,8 +1472,12 @@
         </footer>
     </div>
 
-    <!-- סקריפטים -->
     <script>
+        // כל הקוד JavaScript יבוא בארטיפקט הבא...
+        console.log('מערכת ניהול בטעינה...');
+    </script>
+</body>
+<script>
         // משתנים גלובליים מתקדמים
         let jobs = [];
         let filteredJobs = [];
@@ -1483,6 +1524,7 @@
             if (password === correctPassword) {
                 document.getElementById('adminLoginSection').style.display = 'none';
                 document.getElementById('adminContentSection').style.display = 'block';
+                document.getElementById('backToSite').style.display = 'block';
                 sessionStorage.setItem('adminAuthenticated', 'true');
                 initializeAdminSystem();
             } else {
@@ -1599,7 +1641,7 @@
         // סנכרון עם האתר הראשי
         function syncWithMainWebsite() {
             try {
-                // שמירה לאתר הראשי
+                // שמירה לאתר הראשי - השתמש בשמות הנכונים
                 localStorage.setItem('website_jobs', JSON.stringify(jobs));
                 localStorage.setItem('website_jobs_updated', new Date().toISOString());
                 localStorage.setItem('website_jobs_source', 'Admin System');
@@ -1779,7 +1821,8 @@
                 };
                 pagination.appendChild(pageBtn);
             }
-if (endPage < totalPages) {
+
+            if (endPage < totalPages) {
                 if (endPage < totalPages - 1) {
                     const dots = document.createElement('div');
                     dots.className = 'page-item';
@@ -1831,7 +1874,7 @@ if (endPage < totalPages) {
             
             const categories = [...new Set(jobs.map(job => job.category).filter(Boolean))].sort();
             
-            categoryFilter.innerHTML = '<option value="">כל הקטגוriות</option>';
+            categoryFilter.innerHTML = '<option value="">כל הקטגוריות</option>';
             categories.forEach(category => {
                 const option = document.createElement('option');
                 option.value = category;
@@ -2142,7 +2185,7 @@ if (endPage < totalPages) {
                     }
                     
                     // מחיקה לפי סדר הפוך כדי לא לשבש אינדקסים
-                    const sortedIndexes = Array.from(selectedJobs).sort((a, b) => b - a);
+                    const sortedIndexes = Array.from(selectedJobs).sort((a, b)=> b - a);
                     sortedIndexes.forEach(index => {
                         jobs.splice(index, 1);
                     });
@@ -2690,16 +2733,40 @@ JOB003,"מורה לאנגלית","בית ספר","חינוך והוראה","יר
             openBulkModal();
         }
 
+        // בדיקת כתובת URL להצגת ממשק ניהול
+        function checkUrlForAdmin() {
+            const hash = window.location.hash;
+            const path = window.location.pathname;
+            
+            if (hash === '#admin' || path.includes('admin.html') || path.includes('admin')) {
+                if (sessionStorage.getItem('adminAuthenticated') === 'true') {
+                    document.getElementById('adminLoginSection').style.display = 'none';
+                    document.getElementById('adminContentSection').style.display = 'block';
+                    document.getElementById('backToSite').style.display = 'block';
+                    initializeAdminSystem();
+                } else {
+                    document.getElementById('adminLoginSection').style.display = 'flex';
+                    document.getElementById('adminContentSection').style.display = 'none';
+                }
+                return true;
+            }
+            return false;
+        }
+
         // אתחול האפליקציה
         document.addEventListener('DOMContentLoaded', function() {
-            // בדיקת אימות
-            if (sessionStorage.getItem('adminAuthenticated') === 'true') {
-                document.getElementById('adminLoginSection').style.display = 'none';
-                document.getElementById('adminContentSection').style.display = 'block';
-                initializeAdminSystem();
-            } else {
-                document.getElementById('adminLoginSection').style.display = 'flex';
-                document.getElementById('adminContentSection').style.display = 'none';
+            // בדיקת הניתוב
+            if (!checkUrlForAdmin()) {
+                // אם לא נכנסנו דרך ניתוב מיוחד, בדוק אימות
+                if (sessionStorage.getItem('adminAuthenticated') === 'true') {
+                    document.getElementById('adminLoginSection').style.display = 'none';
+                    document.getElementById('adminContentSection').style.display = 'block';
+                    document.getElementById('backToSite').style.display = 'block';
+                    initializeAdminSystem();
+                } else {
+                    document.getElementById('adminLoginSection').style.display = 'flex';
+                    document.getElementById('adminContentSection').style.display = 'none';
+                }
             }
             
             // האזנה למקש Enter בשדה הסיסמה
@@ -2762,6 +2829,11 @@ JOB003,"מורה לאנגלית","בית ספר","חינוך והוראה","יר
             }
         });
 
+        // האזנה לשינויים ב-URL
+        window.addEventListener('hashchange', function() {
+            checkUrlForAdmin();
+        });
+
         // פונקציות גלובליות
         window.showLoginForm = showLoginForm;
         window.checkAdminPassword = checkAdminPassword;
@@ -2796,4 +2868,59 @@ JOB003,"מורה לאנגלית","בית ספר","חינוך והוראה","יר
         console.log('🚀 מערכת ניהול מתקדמת נטענה בהצלחה!');
     </script>
 </body>
-</html>    
+</html>
+
+---
+
+## 🔐 כיצד להיכנס למערכת הניהול?
+
+יש **3 דרכים** להיכנס למערכת הניהול:
+
+### **דרך 1: דרך האתר הראשי**
+1. היכנס לאתר הראשי שלך
+2. תראה כפתור צדדי עגול עם סמל מנעול 🔒
+3. לחץ על הכפתור
+4. הכנס את הסיסמה: `yarin080708`
+
+### **דרך 2: כתובת ישירה**
+1. גש לכתובת: `yoursite.com/admin.html`
+2. או שמור את הקובץ בשם `admin.html` באתר שלך
+3. הכנס את הסיסמה: `yarin080708`
+
+### **דרך 3: דרך ה-Hash**
+1. הוסף `#admin` לכתובת האתר
+2. למשל: `yoursite.com/#admin`
+3. הכנס את הסיסמה: `yarin080708`
+
+---
+
+## ⚙️ מה תוכל לעשות במערכת הניהול?
+
+### **ניהול משרות מתקדם:**
+- ✅ הוספה, עריכה ומחיקה של משרות
+- ⭐ סימון משרות כמומלצות
+- 🔍 חיפוש וסינון מתקדם
+- 📊 פעולות מרובות על משרות
+
+### **ייבוא וייצוא:**
+- 📁 ייבוא משרות מקבצי CSV/JSON
+- 🔄 מיפוי אוטומטי של שדות
+- 💾 ייצוא לקבצים
+- 🌐 עדכון GitHub ישיר
+
+### **סנכרון מערכות:**
+- 🔗 סנכרון אוטומטי עם האתר הראשי
+- 📡 בדיקת עדכונים מ-GitHub
+- 📈 מעקב אחר סטטיסטיקות
+- ⏰ ניטור בזמן אמת
+
+---
+
+## 🔄 איך המערכת עובדת?
+
+1. **מערכת הניהול** שומרת את המשרות ב-`localStorage`
+2. **סנכרון אוטומטי** עם האתר הראשי
+3. **עדכון GitHub** ידני לפי הצורך
+4. **האתר הראשי** טוען אוטומטית מ-GitHub
+
+המערכת מבטיחה שהמשרות תמיד יהיו מעודכנות בכל המקומות! 🎯
