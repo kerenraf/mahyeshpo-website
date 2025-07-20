@@ -1582,7 +1582,7 @@
 
             // בדיקת GitHub במקביל
             try {
-                const response = await fetch('https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/data.js/jobs(1).json');
+const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YOUR-REPO/main/jobs.json');
                 if (response.ok) {
                     const githubJobs = await response.json();
                     updateSyncStatus('github', true);
