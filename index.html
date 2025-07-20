@@ -335,6 +335,33 @@
             50% { transform: translateY(-10px); }
         }
 
+        /* כפתור ניהול צף */
+        .admin-access-button {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #F69898, #ff9e9e);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 20px rgba(246,152,152,0.4);
+            cursor: pointer;
+            z-index: 999;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .admin-access-button:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 12px 30px rgba(246,152,152,0.6);
+        }
+
         .search-section {
             background: linear-gradient(145deg, #333333 0%, #2a2a2a 100%);
             padding: 30px;
@@ -838,6 +865,25 @@
             transform: translateY(-3px);
         }
 
+        /* קישור ניהול מתקדם בפוטר */
+        .admin-link {
+            color: #F69898 !important;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            font-weight: bold;
+        }
+
+        .admin-link:hover {
+            color: #ff9e9e !important;
+            text-shadow: 0 0 10px rgba(246, 152, 152, 0.5);
+        }
+
+        .admin-link i {
+            margin-left: 8px;
+            font-size: 1.1rem;
+        }
+
         .loading {
             text-align: center;
             padding: 60px;
@@ -956,8 +1002,7 @@
                 gap: 15px;
             }
             
-            .contact-method-btn {
-                width: 100%;
+            .contact-method-btn {width: 100%;
                 max-width: 280px;
                 justify-content: center;
             }
@@ -1022,6 +1067,12 @@
             .sms-btn {
                 display: flex !important;
             }
+
+            .admin-access-button {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1083,6 +1134,11 @@
             </ul>
         </div>
     </header>
+
+    <!-- כפתור גישה למערכת ניהול צף -->
+    <button class="admin-access-button" onclick="openAdminLogin()" title="כניסה למערכת ניהול">
+        <i class="fas fa-cog"></i>
+    </button>
 
     <section class="hero-section">
         <div class="hero-bg"></div>
@@ -1298,6 +1354,50 @@
         </div>
     </div>
 
+    <!-- מודל כניסה למערכת ניהול -->
+    <div id="admin-login-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-cog"></i>
+                    כניסה למערכת ניהול
+                </h3>
+                <span class="close" onclick="closeAdminLogin()">&times;</span>
+            </div>
+            
+            <div style="padding: 30px;">
+                <div class="form-group">
+                    <label class="form-label">סיסמה</label>
+                    <input type="password" id="adminPasswordInput" class="form-control" placeholder="הכנס סיסמה...">
+                </div>
+                
+                <button class="btn" onclick="checkAdminAccess()" style="width: 100%; margin-bottom: 20px;">
+                    <i class="fas fa-sign-in-alt"></i>
+                    כניסה למערכת
+                </button>
+                
+                <div id="adminLoginError" style="color: #ff6b6b; text-align: center; display: none; margin-top: 15px;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    סיסמה שגויה, נסה שנית
+                </div>
+                
+                <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <h4 style="color: #F69898; margin-bottom: 15px;">
+                        <i class="fas fa-info-circle"></i>
+                        למה מערכת ניהול?
+                    </h4>
+                    <ul style="margin-right: 20px; line-height: 1.6;">
+                        <li>הוספה ועריכה של משרות</li>
+                        <li>ייבוא משרות מקבצים</li>
+                        <li>סימון משרות מומלצות</li>
+                        <li>סטטיסטיקות מתקדמות</li>
+                        <li>סנכרון עם GitHub</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <div class="container">
             <h2 class="text-logo" style="font-size: 2rem; margin-bottom: 10px;">מה יש פה?</h2>
@@ -1306,6 +1406,10 @@
             <div style="display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap;">
                 <a href="#search" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">חיפוש משרות</a>
                 <a href="#contact" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">צור קשר</a>
+                <!-- קישור למערכת ניהול -->
+                <a href="#" onclick="openAdminLogin()" class="admin-link" style="font-size: 1rem;">
+                    <i class="fas fa-cog"></i>מערכת ניהול
+                </a>
             </div>
             
             <div class="footer-social">
@@ -1372,7 +1476,80 @@
             }
         ];
 
-        // פונקציות בסיסיות
+        // פונקציות למערכת ניהול
+        function openAdminLogin() {
+            document.getElementById('admin-login-modal').style.display = 'block';
+            document.getElementById('adminPasswordInput').focus();
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('admin-login-modal').style.display = 'none';
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('adminLoginError').style.display = 'none';
+        }
+
+        function checkAdminAccess() {
+            const password = document.getElementById('adminPasswordInput').value;
+            const correctPassword = "yarin080708";
+            
+            if (password === correctPassword) {
+                // שמירת מצב התחברות
+                sessionStorage.setItem('adminAuthenticated', 'true');
+                
+                // פתיחת מערכת הניהול בחלון/טאב חדש
+                const adminUrl = window.location.origin + '/admin.html';
+                window.open(adminUrl, '_blank');
+                
+                closeAdminLogin();
+                showNotification('מערכת הניהול נפתחת בחלון חדש...', 'success');
+            } else {
+                document.getElementById('adminLoginError').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('adminLoginError').style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // הודעות מערכת
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                background: ${type === 'success' ? 'linear-gradient(135deg, #28a745, #20c997)' : 'linear-gradient(135deg, #dc3545, #e74c3c)'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                z-index: 10000;
+                font-weight: bold;
+                animation: slideIn 0.5s ease-out;
+            `;
+            notification.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i> ${message}`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.5s ease-in';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 3000);
+        }
+
+        // האזנה למקש Enter בשדה הסיסמה
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('adminPasswordInput');
+            if (passwordInput) {
+                passwordInput.addEventListener('keyup', function(event) {
+                    if (event.key === 'Enter') {
+                        checkAdminAccess();
+                    }
+                });
+            }
+        });
+
+        // שאר הפונקציות של האתר (זהה לקוד המקורי)
         function toggleMobileMenu() {
             const mobileMenu = document.getElementById('mobileMenu');
             mobileMenu.classList.toggle('active');
@@ -1394,10 +1571,10 @@
             initializeApp();
         });
 
-        // פונקציה ראשית לאתחול - מתוקנת בהתבסס על הקוד הפועל
+        // פונקציה ראשית לאתחול
         function initializeApp() {
             createGnome();
-            loadJobsFromFile(); // שינוי לפונקציה הפשוטה הפועלת
+            loadJobsFromFile();
             attachEventListeners();
         }
 
@@ -1408,17 +1585,32 @@
                 gnome.innerHTML = `
                     <img src="https://mayeshpo.co.il/images/gnome.png" 
                          alt="גמדה עוזרת" 
-                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XkNee15XXmDwvdGV4dD48L3N2Zz4='">
-                    <div class="gnome-tooltip">אני אעזור לך למצוא משרה!</div>
+                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpc<div class="gnome-tooltip">אני אעזור לך למצוא משרה!</div>
                 `;
             }
         }
 
-        // טעינת משרות - פונקציה מתוקנת בהתבסס על הקוד הפועל
+        // טעינת משרות
         function loadJobsFromFile() {
             console.log('📋 מנסה לטעון משרות...');
             
-            // נתיבים לניסיון טעינה - מותאמים לעבוד
+            // בדיקה אם יש משרות שמורות במערכת הניהול
+            const adminJobs = localStorage.getItem('jobs');
+            if (adminJobs) {
+                try {
+                    const parsedJobs = JSON.parse(adminJobs);
+                    if (parsedJobs && Array.isArray(parsedJobs) && parsedJobs.length > 0) {
+                        console.log('✅ נטענו משרות ממערכת הניהול:', parsedJobs.length);
+                        allJobs = parsedJobs;
+                        processJobs();
+                        return;
+                    }
+                } catch (error) {
+                    console.warn('⚠️ שגיאה בטעינת משרות ממערכת הניהול:', error);
+                }
+            }
+            
+            // נתיבים לניסיון טעינה
             const urlsToTry = [
                 'https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/data.js/jobs(1).json',
                 './data/jobs.json',
@@ -1752,7 +1944,7 @@
             
             // סגירת מודלים בלחיצה על הרקע או ESC
             window.addEventListener('click', function(event) {
-                const modals = ['job-modal', 'about-modal'];
+                const modals = ['job-modal', 'about-modal', 'admin-login-modal'];
                 modals.forEach(modalId => {
                     const modal = document.getElementById(modalId);
                     if (event.target === modal) {
@@ -1764,7 +1956,7 @@
             
             document.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape') {
-                    const modals = ['job-modal', 'about-modal'];
+                    const modals = ['job-modal', 'about-modal', 'admin-login-modal'];
                     modals.forEach(modalId => {
                         const modal = document.getElementById(modalId);
                         if (modal.style.display === 'block') {
@@ -1804,8 +1996,38 @@
         window.filterJobs = filterJobs;
         window.clearFilters = clearFilters;
         window.toggleMobileMenu = toggleMobileMenu;
+        window.openAdminLogin = openAdminLogin;
+        window.closeAdminLogin = closeAdminLogin;
+        window.checkAdminAccess = checkAdminAccess;
 
         console.log('✅ הסקריפט נטען בהצלחה!');
+
+        // CSS אנימציות נוספות
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
     
     <!-- סקריפט למובייל SMS -->
