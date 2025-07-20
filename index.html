@@ -98,48 +98,6 @@
             font-size: 1.2rem;
         }
 
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            top: 70px;
-            left: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 999;
-            padding: 20px;
-        }
-
-        .mobile-menu.active {
-            display: block;
-        }
-
-        .mobile-menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .mobile-menu li {
-            margin-bottom: 10px;
-        }
-
-        .mobile-menu a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            text-align: center;
-            font-size: 1.1rem;
-        }
-
-        .mobile-menu a:hover, .mobile-menu a.active {
-            background: rgba(246, 152, 152, 0.2);
-            color: #F69898;
-        }
-
         .hero-section {
             position: relative;
             width: 100%;
@@ -429,35 +387,10 @@
             padding-bottom: 90px;
         }
 
-        .job-card.featured {
-            border: 2px solid #F69898;
-            box-shadow: 0 8px 25px rgba(246, 152, 152, 0.3);
-            background: linear-gradient(145deg, #3a3a3a, #333333);
-        }
-
-        .job-card.featured::before {
-            content: "⭐ מומלצת";
-            position: absolute;
-            top: -10px;
-            right: 20px;
-            background: linear-gradient(45deg, #F69898, #ff9e9e);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            z-index: 10;
-        }
-
         .job-card:hover {
             background: linear-gradient(145deg, #444444, #383838);
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-
-        .job-card.featured:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(246, 152, 152, 0.4);
         }
 
         .job-number {
@@ -596,7 +529,6 @@
 
         .sms-button {
             background: linear-gradient(135deg, #3B5998, #2d4373);
-            display: none; /* מוסתר בברירת מחדל */
         }
 
         .categories {
@@ -699,7 +631,6 @@
 
         .sms-btn {
             background: linear-gradient(135deg, #3B5998, #2d4373);
-            display: none; /* מוסתר בברירת מחדל */
         }
 
         .contact-method-btn:hover {
@@ -1012,15 +943,6 @@
                 height: 40px;
                 font-size: 1rem;
             }
-
-            /* הצגת כפתור SMS במובייל */
-            .sms-button {
-                display: flex !important;
-            }
-
-            .sms-btn {
-                display: flex !important;
-            }
         }
 
         @media (max-width: 480px) {
@@ -1031,6 +953,7 @@
             .hero-content h1 {
                 font-size: 2rem;
             }
+            
             .main-title {
                 font-size: 1.6rem !important;
             }
@@ -1067,19 +990,9 @@
                     <li><a href="#" onclick="openAboutModal()">עוד עלינו</a></li>
                 </ul>
             </nav>
-            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+            <button class="mobile-menu-toggle">
                 <i class="fas fa-bars"></i>
             </button>
-        </div>
-        
-        <!-- תפריט מובייל -->
-        <div class="mobile-menu" id="mobileMenu">
-            <ul>
-                <li><a href="#" class="active">דף הבית</a></li>
-                <li><a href="#search">חיפוש משרות</a></li>
-                <li><a href="#contact">צור קשר</a></li>
-                <li><a href="#" onclick="openAboutModal(); toggleMobileMenu();">עוד עלינו</a></li>
-            </ul>
         </div>
     </header>
 
@@ -1184,10 +1097,10 @@
                             <i class="fab fa-whatsapp"></i>
                             <span>שלח וואטסאפ</span>
                         </a>
-                        <a href="sms:972555504633" class="contact-method-btn sms-btn sms-dynamic">
-                            <i class="fas fa-sms"></i>
-                            <span>שלח SMS</span>
-                        </a>
+<a href="sms:972555504633" class="contact-method-btn sms-btn" id="sms-link">
+    <i class="fas fa-sms"></i>
+    <span>שלח SMS</span>
+</a>
                     </div>
                     <div class="footer-social">
                         <a href="https://www.facebook.com/ma.yesh.po.akko" class="social-icon"><i class="fab fa-facebook-f"></i></a>
@@ -1239,11 +1152,11 @@
             
             <div style="text-align: center; padding: 20px;">
                 <div class="contact-buttons-group">
-                    <a href="https://wa.me/972555504633" id="modal-whatsapp-btn" class="contact-method-btn whatsapp-btn" target="_blank">
-                        <i class="fab fa-whatsapp"></i>
-                        <span>פנייה בוואטסאפ</span>
-                    </a>
-                    <a href="sms:972555504633" id="modal-sms-btn" class="contact-method-btn sms-btn sms-dynamic">
+<a href="https://wa.me/972555504633" id="modal-whatsapp-btn" class="contact-method-btn whatsapp-btn" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+    <span>פנייה בוואטסאפ</span>
+</a>
+<a href="sms:972555504633" id="modal-sms-btn" class="contact-method-btn sms-btn sms-dynamic">
                         <i class="fas fa-sms"></i>
                         <span>פנייה ב-SMS</span>
                     </a>
@@ -1297,14 +1210,137 @@
         </div>
     </div>
 
+    <!-- מודל תקנון -->
+    <div id="terms-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">תקנון האתר</h3>
+                <span class="close" onclick="closeTermsModal()">&times;</span>
+            </div>
+            
+            <div style="padding: 30px; line-height: 1.7; color: white; max-height: 60vh; overflow-y: auto;">
+                <h3 style="color: #F69898; margin-bottom: 15px;">1. כללי</h3>
+                <p style="margin-bottom: 15px;">
+                    ברוכים הבאים לאתר "מה יש פה?" - לוח משרות מתקדם. השימוש באתר כפוף לתנאים המפורטים להלן. 
+                    המשך השימוש באתר מהווה הסכמה מלאה לתנאי השימוש.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">2. שירותי האתר</h3>
+                <p style="margin-bottom: 15px;">
+                    האתר מספק שירותי לוח משרות הכוללים:
+                </p>
+                <ul style="margin-right: 20px; margin-bottom: 15px;">
+                    <li style="margin-bottom: 8px;">פרסום מודעות דרושים למעסיקים</li>
+                    <li style="margin-bottom: 8px;">חיפוש והצגת משרות למחפשי עבודה</li>
+                    <li style="margin-bottom: 8px;">מערכת סינון ותיוג משרות</li>
+                    <li style="margin-bottom: 8px;">יצירת קשר בין מעסיקים למועמדים</li>
+                </ul>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">3. התחייבויות המעסיק</h3>
+                <p style="margin-bottom: 15px;">
+                    מעסיק המפרסם משרות באתר מתחייב:
+                </p>
+                <ul style="margin-right: 20px; margin-bottom: 15px;">
+                    <li style="margin-bottom: 8px;">לפרסם מידע אמיתי ומדויק בלבד</li>
+                    <li style="margin-bottom: 8px;">שלא לפרסם תוכן פוגעני או בלתי חוקי</li>
+                    <li style="margin-bottom: 8px;">לעדכן או להסיר מודעות שאינן רלוונטיות</li>
+                    <li style="margin-bottom: 8px;">לכבד את פרטיות המועמדים</li>
+                </ul>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">4. התחייבויות מחפש העבודה</h3>
+                <p style="margin-bottom: 15px;">
+                    מחפש עבודה המשתמש באתר מתחייב:
+                </p>
+                <ul style="margin-right: 20px; margin-bottom: 15px;">
+                    <li style="margin-bottom: 8px;">להגיש מידע אמיתי ומדויק</li>
+                    <li style="margin-bottom: 8px;">לא לבצע פעולות שיפגעו בתפקוד האתר</li>
+                    <li style="margin-bottom: 8px;">לכבד את זכויות יוצרים של תכנים באתר</li>
+                    <li style="margin-bottom: 8px;">להתנהג בכבוד כלפי מעסיקים ומשתמשים אחרים</li>
+                </ul>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">5. פרטיות ומידע אישי</h3>
+                <p style="margin-bottom: 15px;">
+                    האתר מתחייב לשמור על פרטיות המשתמשים ולא למסור מידע אישי לצדדים שלישיים ללא הסכמה מפורשת.
+                    המידע נאסף לצורך שיפור השירות וחיבור בין מעסיקים למועמדים.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">6. זכויות יוצרים</h3>
+                <p style="margin-bottom: 15px;">
+                    כל התכנים באתר, לרבות עיצוב, טקסטים וקוד, מוגנים בזכויות יוצרים. 
+                    אסור להעתיק, לשכפל או להפיץ תכנים מהאתר ללא אישור מפורש.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">7. הגבלת אחריות</h3>
+                <p style="margin-bottom: 15px;">
+                    האתר אינו נושא באחריות לתוכן המודעות, לאמיתות המידע המפורסם או לתוצאות הנובעות משימוש באתר.
+                    השימוש באתר הוא על אחריות המשתמש בלבד.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">8. שינויים בתקנון</h3>
+                <p style="margin-bottom: 15px;">
+                    ההנהלה שומרת לעצמה את הזכות לעדכן ולשנות את התקנון מעת לעת. 
+                    שינויים יפורסמו באתר ויכנסו לתוקף מיד עם פרסומם.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">9. יצירת קשר</h3>
+                <p style="margin-bottom: 15px;">
+                    לשאלות, הערות או תלונות ניתן ליצור קשר דרך:
+                </p>
+                <ul style="margin-right: 20px; margin-bottom: 15px;">
+                    <li style="margin-bottom: 8px;">WhatsApp: 055-550-4633</li>
+                    <li style="margin-bottom: 8px;">SMS: 055-550-4633</li>
+                    <li style="margin-bottom: 8px;">אתר: mayeshpo.co.il</li>
+                </ul>
+
+                <p style="margin-top: 25px; text-align: center; color: #F69898; font-weight: bold;">
+                    תקנון זה נכנס לתוקף ביום עדכון האתר האחרון
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- מודל מדיניות פרטיות -->
+    <div id="privacy-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">מדיניות פרטיות</h3>
+                <span class="close" onclick="closePrivacyModal()">&times;</span>
+            </div>
+            
+            <div style="padding: 30px; line-height: 1.7; color: white; max-height: 60vh; overflow-y: auto;">
+                <h3 style="color: #F69898; margin-bottom: 15px;">איסוף מידע</h3>
+                <p style="margin-bottom: 15px;">
+                    אנו אוספים מידע רק במידה הדרושה לצורך מתן השירות - פרטי קשר בסיסיים ומידע מקצועי רלוונטי.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">שימוש במידע</h3>
+                <p style="margin-bottom: 15px;">
+                    המידע משמש אך ורק לחיבור בין מעסיקים למועמדים ולשיפור איכות השירות.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">הגנה על הפרטיות</h3>
+                <p style="margin-bottom: 15px;">
+                    אנו מתחייבים לא למסור מידע אישי לצדדים שלישיים ללא הסכמתכם המפורשת.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">זכויות המשתמש</h3>
+                <p style="margin-bottom: 15px;">
+                    בכל עת תוכלו לבקש עדכון, מחיקה או תיקון של המידע האישי שלכם.
+                </p>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <div class="container">
             <h2 class="text-logo" style="font-size: 2rem; margin-bottom: 10px;">מה יש פה?</h2>
             <p style="font-size: 1rem; margin-bottom: 25px; opacity: 0.9;">לוח משרות חזק למקום עבודה מדוייק!</p>
             
             <div style="display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap;">
-                <a href="#search" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">חיפוש משרות</a>
+                <a href="#" onclick="openTermsModal()" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">תקנון אתר</a>
+                <a href="#" onclick="openPrivacyModal()" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">מדיניות פרטיות</a>
                 <a href="#contact" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">צור קשר</a>
+                <a href="#search" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">חיפוש משרות</a>
             </div>
             
             <div class="footer-social">
@@ -1338,8 +1374,7 @@
                 jobType: "משרה מלאה",
                 description: "אנו מחפשים מפתח/ת Full Stack עם ניסיון בטכנולוגיות React, Node.js ו-MongoDB. התפקיד כולל פיתוח מערכות מורכבות ועבודה בצוות מקצועי.",
                 requirements: "ניסיון של 3+ שנים בפיתוח Full Stack\nידע מעמיק ב-JavaScript\nניסיון עם React ו-Node.js\nיכולת עבודה בצוות\nאנגלית ברמה טובה",
-                status: "פעיל",
-                featured: true
+                status: "פעיל"
             },
             {
                 id: 2,
@@ -1352,8 +1387,7 @@
                 jobType: "משרה חלקית",
                 description: "דרושים מלצרים/ות למסעדה יוקרתית בחיפה. ניסיון קודם - יתרון. העבודה במשמרות גמישות ואווירה נעימה.",
                 requirements: "ניסיון קודם בהגשה - יתרון\nיחסי אנוש מעולים\nזמינות לעבודה בערבים וסופי שבוע\nיכולת עבודה בצוות",
-                status: "פעיל",
-                featured: false
+                status: "פעיל"
             },
             {
                 id: 3,
@@ -1366,26 +1400,48 @@
                 jobType: "משרה מלאה",
                 description: "דרוש/ה מורה לאנגלית לבית ספר יסודי בירושלים. המשרה כוללת הוראת אנגלית לכיתות א'-ו'.",
                 requirements: "תואר ראשון בהוראת אנגלית\nתעודת הוראה\nניסיון בהוראה - יתרון\nיחסי אנוש מעולים",
-                status: "פעיל",
-                featured: true
+                status: "פעיל"
+            },
+            {
+                id: 4,
+                jobNumber: "MK004",
+                title: "מנהל/ת שיווק דיגיטלי",
+                company: "חברת היי-טק מובילה",
+                category: "שיווק ומכירות",
+                city: "תל אביב",
+                region: "מרכז",
+                jobType: "משרה מלאה",
+                description: "דרוש/ה מנהל/ת שיווק דיגיטלי לחברת היי-טק מובילה. התפקיד כולל ניהול קמפיינים ועבודה עם פלטפורמות פרסום.",
+                requirements: "ניסיון של 3+ שנים בשיווק דיגיטלי\nהיכרות עם Google Ads, Facebook Ads\nיכולת ניתוח נתונים\nחשיבה אסטרטגית",
+                status: "פעיל"
+            },
+            {
+                id: 5,
+                jobNumber: "HC005",
+                title: "אח/ות מוסמך/ת",
+                company: "בית חולים פרטי",
+                category: "בריאות ורפואה",
+                city: "חיפה",
+                region: "חיפה קריות והצפון",
+                jobType: "משרה מלאה",
+                description: "לבית חולים פרטי בחיפה דרוש/ה אח/ות מוסמך/ת. העבודה במחלקה פנימית במשמרות.",
+                requirements: "תעודת אח/ות מוסמך/ת\nניסיון של שנה לפחות\nיחסי אנוש מעולים\nנכונות לעבודה במשמרות",
+                status: "פעיל"
+            },
+            {
+                id: 6,
+                jobNumber: "AD006",
+                title: "עוזר/ת אדמיניסטרטיבי/ת",
+                company: "משרד עורכי דין",
+                category: "מנהל ואדמיניסטרציה",
+                city: "תל אביב",
+                region: "מרכז",
+                jobType: "משרה מלאה",
+                description: "למשרד עורכי דין מוביל דרוש/ה עוזר/ת אדמיניסטרטיבי/ת. התפקיד כולל עבודה משרדית וטיפול בלקוחות.",
+requirements: "ניסיון באדמיניסטרציה - יתרון\nיכולת עבודה עם מערכות מחשב\nאנגלית ברמה טובה\nיחסי אנוש מעולים",
+                status: "פעיל"
             }
         ];
-
-        // פונקציות בסיסיות
-        function toggleMobileMenu() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            mobileMenu.classList.toggle('active');
-        }
-
-        // סגירת תפריט מובייל בלחיצה על קישור
-        document.addEventListener('click', function(event) {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const toggleButton = document.querySelector('.mobile-menu-toggle');
-            
-            if (!mobileMenu.contains(event.target) && !toggleButton.contains(event.target)) {
-                mobileMenu.classList.remove('active');
-            }
-        });
 
         // אתחול כשהדף נטען
         document.addEventListener('DOMContentLoaded', function() {
@@ -1396,7 +1452,7 @@
         // פונקציה ראשית לאתחול
         function initializeApp() {
             createGnome();
-            loadJobsFromSources();
+            loadJobsFromFile();
             attachEventListeners();
         }
 
@@ -1413,119 +1469,50 @@
             }
         }
 
-        // טעינת משרות ממקורות מרובים עם סנכרון
-        function loadJobsFromSources() {
-            console.log('📋 מנסה לטעון משרות ממקורות מרובים...');
+        // טעינת משרות
+        function loadJobsFromFile() {
+            console.log('📋 מנסה לטעון משרות...');
             
-            // טעינה מ-localStorage תחילה
-            const localJobs = localStorage.getItem('website_jobs');
-            const localDate = localStorage.getItem('website_jobs_updated');
+            const urlsToTry = [
+                './data/jobs.json',
+                './jobs.json',
+                'https://mayeshpo.co.il/data/jobs.json'
+            ];
             
-            if (localJobs) {
-                try {
-                    const parsedJobs = JSON.parse(localJobs);
-                    if (Array.isArray(parsedJobs) && parsedJobs.length > 0) {
-                        console.log('✅ נטענו', parsedJobs.length, 'משרות מהאחסון המקומי');
-                        allJobs = parsedJobs;
-                        processJobs();
-                        
-                        // בדיקה אם העדכון האחרון היה לפני יותר מ-5 דקות
-                        if (localDate) {
-                            const lastUpdate = new Date(localDate);
-                            const now = new Date();
-                            const diffMinutes = (now - lastUpdate) / (1000 * 60);
-                            
-                            if (diffMinutes > 5) {
-                                console.log('⏰ עדכון אחרון היה לפני', Math.round(diffMinutes), 'דקות - בודק עדכונים...');
-                                checkForUpdates();
-                            }
-                        }
-                        
-                        return;
-                    }
-                } catch (error) {
-                    console.error('❌ שגיאה בטעינה מהאחסון המקומי:', error);
-                }
+            tryLoadFromUrls(urlsToTry, 0);
+        }
+
+        function tryLoadFromUrls(urls, index) {
+            if (index >= urls.length) {
+                console.log('⚠️ משתמש במשרות דוגמה');
+                allJobs = sampleJobs;
+                processJobs();
+                return;
             }
             
-            // אם אין נתונים מקומיים, ננסה לטעון מ-GitHub
-            tryLoadFromGitHub();
-        }
-
-        // בדיקת עדכונים מ-GitHub
-        function checkForUpdates() {
-            const gitHubUrl = 'https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/data.js/jobs(1).json';
+            const currentUrl = urls[index];
+            console.log(`🔄 מנסה לטעון מ: ${currentUrl}`);
             
-            fetch(gitHubUrl)
+            fetch(currentUrl)
                 .then(response => {
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    return response.json();
-                })
-                .then(data => {
-                    if (Array.isArray(data) && data.length > 0) {
-                        console.log('📊 נמצאו', data.length, 'משרות ב-GitHub');
-                        
-                        // השוואת כמות המשרות
-                        if (data.length !== allJobs.length) {
-                            console.log('🔄 מספר המשרות השתנה - מעדכן...');
-                            updateJobsFromSource(data, 'GitHub');
-                        } else {
-                            console.log('✅ המשרות עדכניות');
-                            updateLastChecked();
-                        }
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
                     }
-                })
-                .catch(error => {
-                    console.warn('⚠️ לא ניתן לבדוק עדכונים מ-GitHub:', error.message);
-                });
-        }
-
-        // ניסיון טעינה מ-GitHub
-        function tryLoadFromGitHub() {
-            console.log('🔄 מנסה לטעון מ-GitHub...');
-            
-            const gitHubUrl = 'https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/data.js/jobs(1).json';
-            
-            fetch(gitHubUrl)
-                .then(response => {
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     return response.json();
                 })
                 .then(data => {
-                    if (Array.isArray(data) && data.length > 0) {
-                        console.log('✅ נטענו', data.length, 'משרות מ-GitHub');
-                        updateJobsFromSource(data, 'GitHub');
+                    if (data && Array.isArray(data) && data.length > 0) {
+                        console.log(`✅ משרות נטענו: ${data.length} משרות`);
+                        allJobs = data;
+                        processJobs();
                     } else {
                         throw new Error('נתונים לא תקינים');
                     }
                 })
                 .catch(error => {
-                    console.warn('❌ נכשל בטעינה מ-GitHub:', error.message);
-                    console.log('🔄 משתמש במשרות דוגמה...');
-                    updateJobsFromSource(sampleJobs, 'Sample');
+                    console.warn(`❌ נכשל לטעון מ ${currentUrl}:`, error.message);
+                    tryLoadFromUrls(urls, index + 1);
                 });
-        }
-
-        // עדכון משרות ממקור
-        function updateJobsFromSource(data, source) {
-            allJobs = data.map(job => ({
-                ...job,
-                featured: job.featured || false
-            }));
-            
-            // שמירה באחסון המקומי
-            localStorage.setItem('website_jobs', JSON.stringify(allJobs));
-            localStorage.setItem('website_jobs_updated', new Date().toISOString());
-            localStorage.setItem('website_jobs_source', source);
-            
-            console.log(`💾 ${allJobs.length} משרות נשמרו באחסון המקומי ממקור: ${source}`);
-            
-            processJobs();
-        }
-
-        // עדכון זמן בדיקה אחרון
-        function updateLastChecked() {
-            localStorage.setItem('website_jobs_updated', new Date().toISOString());
         }
 
         // עיבוד משרות
@@ -1573,7 +1560,7 @@
             uniqueCategories.forEach(category => {
                 const option = document.createElement('option');
                 option.value = category;
-Content = category;
+                option.textContent = category;
                 categoryFilter.appendChild(option);
             });
         }
@@ -1604,7 +1591,7 @@ Content = category;
             });
         }
 
-        // הצגת משרות עם תמיכה במשרות מומלצות
+        // הצגת משרות
         function displayJobs(jobs) {
             const jobsContainer = document.getElementById('jobsContainer');
             if (!jobsContainer) return;
@@ -1621,18 +1608,11 @@ Content = category;
                 return;
             }
             
-            // מיון משרות: מומלצות קודם, ואז שאר המשרות
-            const sortedJobs = jobs.sort((a, b) => {
-                if (a.featured && !b.featured) return -1;
-                if (!a.featured && b.featured) return 1;
-                return 0;
-            });
-            
-            const jobsToShow = sortedJobs.slice(0, 12);
+            const jobsToShow = jobs.slice(0, 12);
             
             jobsToShow.forEach(function(job, index) {
                 const jobCard = document.createElement('div');
-                jobCard.className = `job-card ${job.featured ? 'featured' : ''}`;
+                jobCard.className = 'job-card';
                 
                 const location = job.city ? `${job.city}, ${job.region || 'ישראל'}` : (job.region || 'ישראל');
                 const shortDescription = job.description ? 
@@ -1683,19 +1663,12 @@ Content = category;
         function openJobModal(index) {
             const currentJobs = filteredJobs.length > 0 ? filteredJobs : allJobs.filter(j => j.status === 'פעיל');
             
-            // מיון המשרות הנוכחיות לפי מומלצות
-            const sortedCurrentJobs = currentJobs.sort((a, b) => {
-                if (a.featured && !b.featured) return -1;
-                if (!a.featured && b.featured) return 1;
-                return 0;
-            });
-            
-            if (!sortedCurrentJobs || !sortedCurrentJobs[index]) {
+            if (!currentJobs || !currentJobs[index]) {
                 alert('אירעה שגיאה בטעינת פרטי המשרה');
                 return;
             }
             
-            const job = sortedCurrentJobs[index];
+            const job = currentJobs[index];
             
             document.getElementById('modal-job-title').textContent = job.title || 'משרה ללא כותרת';
             document.getElementById('modal-job-location').textContent = job.city ? `${job.city}, ${job.region || 'ישראל'}` : (job.region || 'ישראל');
@@ -1728,6 +1701,26 @@ Content = category;
 
         function closeAboutModal() {
             document.getElementById('about-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function openTermsModal() {
+            document.getElementById('terms-modal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTermsModal() {
+            document.getElementById('terms-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function openPrivacyModal() {
+            document.getElementById('privacy-modal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePrivacyModal() {
+            document.getElementById('privacy-modal').style.display = 'none';
             document.body.style.overflow = 'auto';
         }
 
@@ -1792,42 +1785,6 @@ Content = category;
             console.log('🧹 מסננים נוקו');
         }
 
-        // פונקציה לסנכרון עם מערכת הניהול - פשוטה וישירה
-        function syncWithAdminSystem() {
-            // בדיקת נתונים ממערכת הניהול
-            const adminJobs = localStorage.getItem('jobs'); // נתוני מערכת הניהול
-            const adminDate = localStorage.getItem('jobs_last_updated');
-            
-            if (adminJobs && adminDate) {
-                try {
-                    const parsedAdminJobs = JSON.parse(adminJobs);
-                    const adminUpdateTime = new Date(adminDate);
-                    
-                    // בדיקה אם יש עדכון חדש במערכת הניהול
-                    const websiteDate = localStorage.getItem('website_jobs_updated');
-                    const websiteUpdateTime = websiteDate ? new Date(websiteDate) : new Date(0);
-                    
-                    if (adminUpdateTime > websiteUpdateTime) {
-                        console.log('🔄 נמצא עדכון חדש במערכת הניהול - מסנכרן...');
-                        
-                        // עדכון משרות האתר עם נתוני מערכת הניהול
-                        updateJobsFromSource(parsedAdminJobs, 'Admin System');
-                        
-                        // הודעה על הסנכרון
-                        console.log('✅ הסנכרון עם מערכת הניהול הושלם');
-                    }
-                } catch (error) {
-                    console.error('❌ שגיאה בסנכרון עם מערכת הניהול:', error);
-                }
-            }
-        }
-
-        // סנכרון תקופתי - חזרה למקור פשוט
-        setInterval(function() {
-            syncWithAdminSystem();
-            checkForUpdates();
-        }, 60000); // בדיקה כל דקה
-
         // מאזיני אירועים
         function attachEventListeners() {
             const searchButton = document.getElementById('searchButton');
@@ -1851,7 +1808,7 @@ Content = category;
             
             // סגירת מודלים בלחיצה על הרקע או ESC
             window.addEventListener('click', function(event) {
-                const modals = ['job-modal', 'about-modal'];
+                const modals = ['job-modal', 'about-modal', 'terms-modal', 'privacy-modal'];
                 modals.forEach(modalId => {
                     const modal = document.getElementById(modalId);
                     if (event.target === modal) {
@@ -1863,7 +1820,7 @@ Content = category;
             
             document.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape') {
-                    const modals = ['job-modal', 'about-modal'];
+                    const modals = ['job-modal', 'about-modal', 'terms-modal', 'privacy-modal'];
                     modals.forEach(modalId => {
                         const modal = document.getElementById(modalId);
                         if (modal.style.display === 'block') {
@@ -1894,40 +1851,35 @@ Content = category;
             console.log('✅ מאזיני אירועים הוספו');
         }
 
-        // סנכרון תקופתי עם מערכת הניהול
-        setInterval(function() {
-            syncWithAdminSystem();
-            checkForUpdates();
-        }, 60000); // בדיקה כל דקה
-
         // הפיכת הפונקציות לגלובליות
         window.openJobModal = openJobModal;
         window.closeJobModal = closeJobModal;
         window.openAboutModal = openAboutModal;
         window.closeAboutModal = closeAboutModal;
+        window.openTermsModal = openTermsModal;
+        window.closeTermsModal = closeTermsModal;
+        window.openPrivacyModal = openPrivacyModal;
+        window.closePrivacyModal = closePrivacyModal;
         window.selectCategory = selectCategory;
         window.filterJobs = filterJobs;
         window.clearFilters = clearFilters;
-        window.toggleMobileMenu = toggleMobileMenu;
 
         console.log('✅ הסקריפט נטען בהצלחה!');
     </script>
-    
-    <!-- סקריפט למובייל SMS -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const phone = "972555504633";
-            const message = "שלום, אני מעוניין/ת במשרה...";
-            const encoded = encodeURIComponent(message);
-            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-            const smsHref = isIOS
-                ? `sms:${phone}&body=${encoded}`
-                : `sms:${phone}?body=${encoded}`;
+document.addEventListener('DOMContentLoaded', function () {
+  const phone = "972555504633";
+  const message = "שלום, אני מעוניין/ת במשרה...";
+  const encoded = encodeURIComponent(message);
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const smsHref = isIOS
+    ? `sms:${phone}&body=${encoded}`
+    : `sms:${phone}?body=${encoded}`;
 
-            document.querySelectorAll('.sms-dynamic').forEach(btn => {
-                btn.setAttribute("href", smsHref);
-            });
-        });
-    </script>
+  document.querySelectorAll('.sms-dynamic').forEach(btn => {
+    btn.setAttribute("href", smsHref);
+  });
+});
+</script>
 </body>
 </html>
