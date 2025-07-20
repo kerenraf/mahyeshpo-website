@@ -1306,6 +1306,7 @@
             <div style="display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap;">
                 <a href="#search" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">חיפוש משרות</a>
                 <a href="#contact" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">צור קשר</a>
+                    <a href="#" onclick="openAdminLogin()" style="color: #F69898 !important; text-decoration: none; transition: color 0.3s; font-size: 1rem; font-weight: bold;"><i class="fas fa-cog" style="margin-left: 8px;"></i>מערכת ניהול</a>
             </div>
             
             <div class="footer-social">
@@ -1752,7 +1753,7 @@
             
             // סגירת מודלים בלחיצה על הרקע או ESC
             window.addEventListener('click', function(event) {
-                const modals = ['job-modal', 'about-modal'];
+const modals = ['job-modal', 'about-modal', 'admin-login-modal'];
                 modals.forEach(modalId => {
                     const modal = document.getElementById(modalId);
                     if (event.target === modal) {
@@ -1764,7 +1765,7 @@
             
             document.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape') {
-                    const modals = ['job-modal', 'about-modal'];
+const modals = ['job-modal', 'about-modal', 'admin-login-modal'];
                     modals.forEach(modalId => {
                         const modal = document.getElementById(modalId);
                         if (modal.style.display === 'block') {
@@ -1805,9 +1806,42 @@
         window.clearFilters = clearFilters;
         window.toggleMobileMenu = toggleMobileMenu;
 
+        // פונקציות למערכת ניהול
+        function openAdminLogin() {
+            document.getElementById('admin-login-modal').style.display = 'block';
+            document.getElementById('adminPasswordInput').focus();
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('admin-login-modal').style.display = 'none';
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('adminLoginError').style.display = 'none';
+        }
+
+        function checkAdminAccess() {
+            const password = document.getElementById('adminPasswordInput').value;
+            if (password === "yarin080708") {
+                sessionStorage.setItem('adminAuthenticated', 'true');
+                window.open('./admin.html', '_blank');
+                closeAdminLogin();
+            } else {
+                document.getElementById('adminLoginError').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('adminLoginError').style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // הוספה למאזיני אירועים
+        document.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter' && document.getElementById('admin-login-modal').style.display === 'block') {
+                checkAdminAccess();
+            }
+        });
+
         console.log('✅ הסקריפט נטען בהצלחה!');
     </script>
-    
+
     <!-- סקריפט למובייל SMS -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -1823,6 +1857,23 @@
                 btn.setAttribute("href", smsHref);
             });
         });
-    </script>
+</script>
+    <!-- מודל כניסה למערכת ניהול -->
+    <div id="admin-login-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-cog"></i> כניסה למערכת ניהול</h3>
+                <span class="close" onclick="closeAdminLogin()">&times;</span>
+            </div>
+            <div style="padding: 30px;">
+                <div class="form-group">
+                    <label class="form-label">סיסמה</label>
+                    <input type="password" id="adminPasswordInput" class="form-control" placeholder="הכנס סיסמה...">
+                </div>
+                <button class="btn" onclick="checkAdminAccess()" style="width: 100%;">כניסה למערכת</button>
+                <div id="adminLoginError" style="color: #ff6b6b; text-align: center; display: none; margin-top: 15px;">סיסמה שגויה</div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
