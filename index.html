@@ -1573,7 +1573,7 @@
             uniqueCategories.forEach(category => {
                 const option = document.createElement('option');
                 option.value = category;
-                option.textContent = category;
+Content = category;
                 categoryFilter.appendChild(option);
             });
         }
@@ -1792,10 +1792,10 @@
             console.log('🧹 מסננים נוקו');
         }
 
-        // פונקציה לסנכרון עם מערכת הניהול - משופרת
+        // פונקציה לסנכרון עם מערכת הניהול - פשוטה וישירה
         function syncWithAdminSystem() {
             // בדיקת נתונים ממערכת הניהול
-            const adminJobs = localStorage.getItem('jobs');
+            const adminJobs = localStorage.getItem('jobs'); // נתוני מערכת הניהול
             const adminDate = localStorage.getItem('jobs_last_updated');
             
             if (adminJobs && adminDate) {
@@ -1807,44 +1807,26 @@
                     const websiteDate = localStorage.getItem('website_jobs_updated');
                     const websiteUpdateTime = websiteDate ? new Date(websiteDate) : new Date(0);
                     
-                    if (adminUpdateTime > websiteUpdateTime && Array.isArray(parsedAdminJobs) && parsedAdminJobs.length > 0) {
+                    if (adminUpdateTime > websiteUpdateTime) {
                         console.log('🔄 נמצא עדכון חדש במערכת הניהול - מסנכרן...');
                         
                         // עדכון משרות האתר עם נתוני מערכת הניהול
                         updateJobsFromSource(parsedAdminJobs, 'Admin System');
                         
+                        // הודעה על הסנכרון
                         console.log('✅ הסנכרון עם מערכת הניהול הושלם');
-                        return true;
                     }
                 } catch (error) {
                     console.error('❌ שגיאה בסנכרון עם מערכת הניהול:', error);
                 }
             }
-            return false;
         }
 
-        // סנכרון תקופתי משופר
-        function startPeriodicSync() {
-            // סנכרון מיידי
+        // סנכרון תקופתי - חזרה למקור פשוט
+        setInterval(function() {
             syncWithAdminSystem();
-            
-            // סנכרון כל 30 שניות
-            setInterval(function() {
-                // בדיקת סנכרון עם מערכת הניהול
-                if (syncWithAdminSystem()) {
-                    console.log('🔄 סונכרן אוטומטית עם מערכת הניהול');
-                }
-                
-                // בדיקת עדכונים מ-GitHub כל דקה
-                const lastGitHubCheck = localStorage.getItem('last_github_check');
-                const now = new Date();
-                
-                if (!lastGitHubCheck || (now - new Date(lastGitHubCheck)) > 60000) {
-                    checkForUpdatesFromGitHub();
-                    localStorage.setItem('last_github_check', now.toISOString());
-                }
-            }, 30000);
-        }
+            checkForUpdates();
+        }, 60000); // בדיקה כל דקה
 
         // מאזיני אירועים
         function attachEventListeners() {
@@ -1912,8 +1894,11 @@
             console.log('✅ מאזיני אירועים הוספו');
         }
 
-        // סנכרון תקופתי עם מערכת הניהול - מוחלף במטה
-        startPeriodicSync();
+        // סנכרון תקופתי עם מערכת הניהול
+        setInterval(function() {
+            syncWithAdminSystem();
+            checkForUpdates();
+        }, 60000); // בדיקה כל דקה
 
         // הפיכת הפונקציות לגלובליות
         window.openJobModal = openJobModal;
