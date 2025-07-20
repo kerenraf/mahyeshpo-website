@@ -1806,7 +1806,7 @@ const modals = ['job-modal', 'about-modal', 'admin-login-modal'];
         window.clearFilters = clearFilters;
         window.toggleMobileMenu = toggleMobileMenu;
 
-        // פונקציות למערכת ניהול
+// פונקציות למערכת ניהול
         function openAdminLogin() {
             document.getElementById('admin-login-modal').style.display = 'block';
             document.getElementById('adminPasswordInput').focus();
@@ -1818,20 +1818,20 @@ const modals = ['job-modal', 'about-modal', 'admin-login-modal'];
             document.getElementById('adminLoginError').style.display = 'none';
         }
 
-function checkAdminAccess() {
-    const password = document.getElementById('adminPasswordInput').value;
-    if (password === "yarin080708") {
-        sessionStorage.setItem('adminAuthenticated', 'true');
-        // במקום ./admin.html שני לזה:
-        window.location.href = window.location.origin + '/#admin';
-        closeAdminLogin();
-    } else {
-        document.getElementById('adminLoginError').style.display = 'block';
-        setTimeout(() => {
-            document.getElementById('adminLoginError').style.display = 'none';
-        }, 3000);
-    }
-}
+        function checkAdminAccess() {
+            const password = document.getElementById('adminPasswordInput').value;
+            if (password === "yarin080708") {
+                sessionStorage.setItem('adminAuthenticated', 'true');
+                window.open('./job-management.html', '_blank');
+                closeAdminLogin();
+            } else {
+                document.getElementById('adminLoginError').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('adminLoginError').style.display = 'none';
+                }, 3000);
+            }
+        }
+
         // הוספה למאזיני אירועים
         document.addEventListener('keyup', function(event) {
             if (event.key === 'Enter' && document.getElementById('admin-login-modal').style.display === 'block') {
@@ -1839,6 +1839,8 @@ function checkAdminAccess() {
             }
         });
 
+        console.log('✅ הסקריפט נטען בהצלחה!');
+    </script>
         console.log('✅ הסקריפט נטען בהצלחה!');
     </script>
 
