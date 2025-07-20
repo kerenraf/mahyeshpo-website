@@ -1021,7 +1021,7 @@
                 display: flex !important;
             }
 
-.sms-btn {
+            .sms-btn {
                 display: flex !important;
             }
         }
@@ -2088,7 +2088,18 @@
         document.addEventListener('DOMContentLoaded', function () {
             const phone = "972555504633";
             const message = "שלום, אני מעוניין/ת במשרה...";
-            const encoded = encodeURIComponent(message);
+            const encoded = encodeURIComponent(message.job-card:hover {
+            background: linear-gradient(145deg, #444444, #383838);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        /* כרטיסי משרות רגילות - ללא אפקטים מיוחדים */
+        .job-card:not(.featured):hover {
+            background: linear-gradient(145deg, #444444, #383838);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        });
             const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
             const smsHref = isIOS
                 ? `sms:${phone}&body=${encoded}`
@@ -2510,18 +2521,18 @@
         // כל הקוד JavaScript נשאר זהה לחלק הקודם
         // רק נוסיף את הפונקציונליות של עדכון מסנן האזורים לפי המיפוי החדש
         
-        // משתנים גלובליים
-        let allJobs = [];
-        let filteredJobs = [];
-        let uniqueCategories = [];
-        let uniqueCities = []; // הוספת משתנה לערים
-        let categoryColors = {};
-        let currentDisplayedJobs = [];
-        let isQuickEditMode = false; // מצב עריכה מהירה
-        let quickEditPassword = "yarin080708"; // סיסמה לעריכה מהירה
+        // משתנים גלובליים - הגדרה ראשונית
+        var allJobs = [];
+        var filteredJobs = [];
+        var uniqueCategories = [];
+        var uniqueCities = []; // הוספת משתנה לערים
+        var categoryColors = {};
+        var currentDisplayedJobs = [];
+        var isQuickEditMode = false; // מצב עריכה מהירה
+        var quickEditPassword = "yarin080708"; // סיסמה לעריכה מהירה
 
         // משרות דוגמה
-        const sampleJobs = [
+        var sampleJobs = [
             {
                 id: 1,
                 jobNumber: "JS001",
