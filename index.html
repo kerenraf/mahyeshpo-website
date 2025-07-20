@@ -2112,6 +2112,73 @@
             transform: scale(1.15) !important;
         }
         
+        .feature-toggle-button {
+            transition: all 0.3s ease !important;
+        }
+        
+        .feature-toggle-button.featured-active {
+            background: linear-gradient(135deg, #8B5CF6, #A855F7) !important;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.4) !important;
+        }
+        
+        .feature-toggle-button:hover {
+            transform: scale(1.15) !important;
+        }
+        
+        .quick-edit-indicator {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #8B5CF6, #A855F7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-weight: bold;
+            z-index: 1001;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            animation: pulseGlow 2s infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
+            50% { box-shadow: 0 4px 25px rgba(139, 92, 246, 0.6); }
+        }
+        
+        .quick-edit-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px 25px;
+            border-radius: 25px;
+            display: flex;
+            gap: 15px;
+            z-index: 1001;
+            backdrop-filter: blur(10px);
+            border: 2px solid #8B5CF6;
+        }
+        
+        .quick-edit-btn {
+            background: linear-gradient(135deg, #8B5CF6, #A855F7);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .quick-edit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+        }
+        
+        .quick-edit-btn.secondary {
+            background: linear-gradient(135deg, #6c757d, #545b62);
+        }
+        
         .job-modal-actions {
             display: flex;
             justify-content: center;
@@ -2236,15 +2303,9 @@
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">אזור</label>
+                    <label class="form-label">עיר</label>
                     <select class="form-control" id="regionFilter">
-                        <option value="">כל האזורים</option>
-                        <option value="מרכז">מרכז</option>
-                        <option value="שרון">שרון</option>
-                        <option value="שפלה">שפלה</option>
-                        <option value="חיפה קריות והצפון">חיפה קריות והצפון</option>
-                        <option value="ירושלים והסביבה">ירושלים והסביבה</option>
-                        <option value="דרום">דרום</option>
+                        <option value="">כל הערים</option>
                     </select>
                 </div>
             </div>
@@ -2453,8 +2514,11 @@
         let allJobs = [];
         let filteredJobs = [];
         let uniqueCategories = [];
+        let uniqueCities = []; // הוספת משתנה לערים
         let categoryColors = {};
         let currentDisplayedJobs = [];
+        let isQuickEditMode = false; // מצב עריכה מהירה
+        let quickEditPassword = "yarin080708"; // סיסמה לעריכה מהירה
 
         // משרות דוגמה
         const sampleJobs = [
@@ -2503,16 +2567,30 @@
             {
                 id: 4,
                 jobNumber: "SH004",
-                title: "מנהל/ת חנות בשפלה",
+                title: "מנהל/ת חנות",
                 company: "רשת אופנה",
                 category: "מכירות ושיווק",
                 city: "רחובות",
                 region: "שפלה",
                 jobType: "משרה מלאה",
-                description: "דרוש/ה מנהל/ת חנות לרשת אופנה בשפלה. התפקיד כולל ניהול צוות, מכירות ושירות לקוחות.",
+                description: "דרוש/ה מנהל/ת חנות לרשת אופנה. התפקיד כולל ניהול צוות, מכירות ושירות לקוחות.",
                 requirements: "ניסיון בניהול\nכישורי מכירה\nיחסי אנוש מעולים\nזמינות לעבודה בסופי שבוע",
                 status: "פעיל",
                 featured: false
+            },
+            {
+                id: 5,
+                jobNumber: "NT005",
+                title: "מפתח/ת אפליקציות",
+                company: "חברת סטארטאפ",
+                category: "פיתוח ותוכנה", 
+                city: "נתניה",
+                region: "שרון",
+                jobType: "משרה מלאה",
+                description: "דרוש/ה מפתח/ת אפליקציות מובייל עם ניסיון ב-React Native.",
+                requirements: "ניסיון בפיתוח מובייל\nידע ב-React Native\nיכולת עבודה בצוות",
+                status: "פעיל",
+                featured: true
             }
         ];
 
