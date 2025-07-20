@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מה יש פה? - מערכת ניהול מתקדמת</title>
+    <title>מה יש פה? - מערכת ניהול GitHub</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -138,7 +138,7 @@
             padding: 50px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
             text-align: center;
             border: 2px solid #F69898;
             position: relative;
@@ -170,6 +170,45 @@
             text-shadow: 0 2px 10px rgba(246,152,152,0.3);
         }
 
+        /* GitHub Config Box */
+        .github-config {
+            background: rgba(0,0,0,0.3);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 2px solid #F69898;
+        }
+
+        .github-config h4 {
+            color: #F69898;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .github-url-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #555;
+            border-radius: 8px;
+            background: #2a2a2a;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .github-url-input:focus {
+            border-color: #F69898;
+            outline: none;
+            box-shadow: 0 0 15px rgba(246,152,152,0.3);
+        }
+
+        .github-help {
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            text-align: right;
+        }
+
         #adminContentSection {
             display: none;
             padding: 2rem 0;
@@ -181,33 +220,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .admin-access-button {
-            position: fixed;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: linear-gradient(135deg, #F69898, #ff9e9e);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            box-shadow: 0 8px 20px rgba(246,152,152,0.4);
-            cursor: pointer;
-            z-index: 999;
-            transition: all 0.3s ease;
-            border: none;
-        }
-
-        .admin-access-button:hover {
-            transform: translateY(-50%) scale(1.1);
-            box-shadow: 0 12px 30px rgba(246,152,152,0.6);
-        }
-
-        /* Form Styles */
+        /* שאר כל הסטיילים */
         .form-group {
             margin-bottom: 1.5rem;
             position: relative;
@@ -239,7 +252,6 @@
             transform: translateY(-2px);
         }
 
-        /* Button Styles */
         .btn {
             padding: 1rem 2rem;
             background: linear-gradient(135deg, #F69898, #ff9e9e);
@@ -293,7 +305,6 @@
             background: linear-gradient(135deg, #8B5CF6, #A855F7);
         }
 
-        /* Page Title */
         .page-title {
             text-align: center;
             color: #F69898;
@@ -315,7 +326,26 @@
             border-radius: 2px;
         }
 
-        /* Admin Section */
+        /* GitHub Alert */
+        .github-alert {
+            background: linear-gradient(135deg, rgba(255,193,7,0.1), rgba(255,205,57,0.1));
+            border: 2px solid #ffc107;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .github-alert h4 {
+            color: #ffc107;
+            margin-bottom: 15px;
+        }
+
+        .github-alert p {
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
         .admin-section {
             margin-bottom: 4rem;
         }
@@ -387,7 +417,6 @@
             line-height: 1.6;
         }
 
-        /* Statistics Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -423,7 +452,6 @@
             font-size: 1.1rem;
         }
 
-        /* Table Styles */
         .table-container {
             overflow-x: auto;
             background: linear-gradient(135deg, #333 0%, #444 100%);
@@ -495,7 +523,6 @@
             text-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
-        /* Search and Filter Styles */
         .search-filters {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -510,7 +537,6 @@
             justify-content: center;
         }
 
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -576,7 +602,6 @@
             transform: scale(1.1);
         }
 
-        /* Form Grid */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -644,7 +669,6 @@
             left: 33px;
         }
 
-        /* Import/Export Section */
         .import-section {
             padding: 2rem;
         }
@@ -672,7 +696,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Notifications */
         .notification {
             position: fixed;
             bottom: 30px;
@@ -710,7 +733,6 @@
             }
         }
 
-        /* Pagination */
         .pagination {
             display: flex;
             justify-content: center;
@@ -735,7 +757,6 @@
             box-shadow: 0 5px 15px rgba(246,152,152,0.3);
         }
 
-        /* Sync Panel */
         .sync-panel {
             background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
             border-radius: 15px;
@@ -769,7 +790,6 @@
             color: #ccc;
         }
 
-        /* Back to site button */
         .back-to-site {
             position: fixed;
             top: 20px;
@@ -790,7 +810,6 @@
             box-shadow: 0 8px 20px rgba(40,167,69,0.4);
         }
 
-        /* Mobile Responsive */
         @media (max-width: 768px) {
             .admin-grid {
                 grid-template-columns: 1fr;
@@ -835,7 +854,6 @@
             }
         }
 
-        /* Error Message */
         .error-message {
             color: #ff6b6b;
             margin-top: 15px;
@@ -846,7 +864,6 @@
             border: 1px solid #ff6b6b;
         }
 
-        /* Loading Spinner */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -869,7 +886,6 @@
             animation: spin 1s linear infinite;
         }
 
-        /* Footer */
         .footer {
             background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
             padding: 3rem 0;
@@ -918,17 +934,12 @@
         <i class="fas fa-arrow-right"></i> חזור לאתר
     </a>
 
-    <!-- כפתור צדדי לגישה לניהול -->
-    <button class="admin-access-button" onclick="showLoginForm()">
-        <i class="fas fa-lock"></i>
-    </button>
-
     <!-- מסך כניסה למערכת הניהול -->
     <div id="adminLoginSection">
         <div class="admin-login-box">
             <div class="text-logo-container" style="margin: 0 0 40px 0; padding: 0;">
                 <h2 class="text-logo" style="font-size: 2.5rem;">מה יש פה?</h2>
-                <p style="font-size: 1.2rem; margin-bottom: 20px; color: #cccccc;">מערכת ניהול מתקדמת</p>
+                <p style="font-size: 1.2rem; margin-bottom: 20px; color: #cccccc;">מערכת ניהול מסונכרנת עם GitHub</p>
             </div>
             
             <h2 class="admin-login-title">כניסה למערכת</h2>
@@ -938,21 +949,25 @@
                 <input type="password" id="adminPassword" class="form-control" placeholder="הכנס סיסמה...">
             </div>
             
+            <!-- הגדרת GitHub URL -->
+            <div class="github-config">
+                <h4><i class="fab fa-github"></i> הגדרת GitHub</h4>
+                <input type="text" id="githubUrl" class="github-url-input" 
+                       placeholder="https://raw.githubusercontent.com/USERNAME/REPO/main/jobs.json"
+                       value="https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/data.js/jobs(1).json">
+                <div class="github-help">
+                    <p><strong>כיצד למצוא את הכתובת הנכונה:</strong></p>
+                    <p>1. היכנס ל-GitHub.com לקובץ המשרות שלך</p>
+                    <p>2. לחץ על "Raw"</p>
+                    <p>3. העתק את הכתובת והדבק כאן</p>
+                </div>
+            </div>
+            
             <button class="btn" onclick="checkAdminPassword()">כניסה למערכת</button>
             
             <div id="adminErrorMessage" class="error-message">
                 <i class="fas fa-exclamation-triangle"></i>
-                סיסמה שגויה, נסה שנית
-            </div>
-            
-            <div style="margin-top: 40px;">
-                <h4 style="color: #F69898; margin-bottom: 15px;">איך להיכנס למערכת?</h4>
-                <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; text-align: right;">
-                    <p style="margin-bottom: 10px;"><strong>דרך 1:</strong> לחץ על הכפתור הצדדי בעמוד הראשי</p>
-                    <p style="margin-bottom: 10px;"><strong>דרך 2:</strong> גש ל: <code style="color: #F69898;">yoursite.com/admin.html</code></p>
-                    <p style="margin-bottom: 10px;"><strong>דרך 3:</strong> הוסף <code style="color: #F69898;">#admin</code> לכתובת</p>
-                    <p style="color: #28a745; font-weight: bold;">הסיסמה: yarin080708</p>
-                </div>
+                סיסמה שגויה או שגיאה בטעינה מ-GitHub
             </div>
             
             <p style="margin-top: 40px; color: #cccccc;">
@@ -988,7 +1003,7 @@
                         <nav class="main-nav" id="mainNav">
                             <ul>
                                 <li><a href="/">דף הבית</a></li>
-                                <li><a href="#" class="active">ניהול מתקדם</a></li>
+                                <li><a href="#" class="active">ניהול GitHub</a></li>
                                 <li><a href="/#contact">צור קשר</a></li>
                             </ul>
                         </nav>
@@ -1000,9 +1015,16 @@
         <!-- תוכן ראשי -->
         <main class="container">
             <h1 class="page-title">
-                <i class="fas fa-cogs"></i>
-                מערכת ניהול מתקדמת
+                <i class="fab fa-github"></i>
+                מערכת ניהול מסונכרנת עם GitHub
             </h1>
+
+            <!-- הודעת GitHub -->
+            <div class="github-alert">
+                <h4><i class="fab fa-github"></i> עבודה עם GitHub</h4>
+                <p>המערכת מסונכרנת עם GitHub בלבד - כל שינוי שתעשה כאן ייוצא לקובץ JSON שתוכל להעלות ל-GitHub</p>
+                <p><strong>כתובת GitHub הנוכחית:</strong> <span id="currentGitHubUrl"></span></p>
+            </div>
 
             <!-- סטטיסטיקות -->
             <section class="stats-grid">
@@ -1027,21 +1049,21 @@
             <!-- פאנל סנכרון -->
             <section class="sync-panel">
                 <h3 style="color: #F69898; margin-bottom: 15px;">
-                    <i class="fas fa-sync-alt"></i>
-                    סטטוס סנכרון מערכות
+                    <i class="fab fa-github"></i>
+                    סטטוס סנכרון GitHub
                 </h3>
                 <div class="sync-info">
-                    <div class="sync-item">
-                        <div class="sync-item-title">אתר ראשי</div>
-                        <div class="sync-item-status" id="websiteSync">בודק...</div>
-                    </div>
                     <div class="sync-item">
                         <div class="sync-item-title">GitHub</div>
                         <div class="sync-item-status" id="githubSync">בודק...</div>
                     </div>
                     <div class="sync-item">
-                        <div class="sync-item-title">עדכון אחרון</div>
-                        <div class="sync-item-status" id="lastUpdate">טוען...</div>
+                        <div class="sync-item-title">טעינה אחרונה</div>
+                        <div class="sync-item-status" id="lastLoad">טוען...</div>
+                    </div>
+                    <div class="sync-item">
+                        <div class="sync-item-title">שינויים מקומיים</div>
+                        <div class="sync-item-status" id="localChanges">אין</div>
                     </div>
                     <div class="sync-item">
                         <div class="sync-item-title">בדיקה אחרונה</div>
@@ -1054,13 +1076,13 @@
             <section class="admin-section">
                 <h2 class="admin-title">
                     <i class="fas fa-tools"></i>
-                    כלי ניהול מתקדמים
+                    כלי ניהול GitHub
                 </h2>
                 <div class="admin-grid">
-                    <div class="admin-card" onclick="openImportModal()">
-                        <div class="admin-icon"><i class="fas fa-file-import"></i></div>
-                        <div class="admin-card-title">ייבוא משרות</div>
-                        <div class="admin-card-desc">ייבא משרות מקובץ CSV או JSON עם מיפוי אוטומטי</div>
+                    <div class="admin-card" onclick="syncFromGitHub()">
+                        <div class="admin-icon"><i class="fab fa-github"></i></div>
+                        <div class="admin-card-title">טען מ-GitHub</div>
+                        <div class="admin-card-desc">טען את המשרות העדכניות מ-GitHub</div>
                     </div>
                     
                     <div class="admin-card" onclick="openAddJobModal()">
@@ -1069,34 +1091,22 @@
                         <div class="admin-card-desc">הוסף משרה חדשה עם אפשרות להגדירה כמומלצת</div>
                     </div>
                     
-                    <div class="admin-card" onclick="exportJobs()">
-                        <div class="admin-icon"><i class="fas fa-file-export"></i></div>
-                        <div class="admin-card-title">ייצוא משרות</div>
-                        <div class="admin-card-desc">ייצא משרות לקובץ Excel או CSV</div>
+                    <div class="admin-card" onclick="exportForGitHub()">
+                        <div class="admin-icon"><i class="fas fa-download"></i></div>
+                        <div class="admin-card-title">ייצוא ל-GitHub</div>
+                        <div class="admin-card-desc">הורד קובץ JSON לעדכון ב-GitHub</div>
                     </div>
 
-                    <div class="admin-card" onclick="exportForGitHub()">
-                        <div class="admin-icon"><i class="fab fa-github"></i></div>
-                        <div class="admin-card-title">עדכן GitHub</div>
-                        <div class="admin-card-desc">ייצוא ועדכון מאגר GitHub לסנכרון מלא</div>
-                    </div>
-                    
-                    <div class="admin-card" onclick="manageCategories()">
-                        <div class="admin-icon"><i class="fas fa-tags"></i></div>
-                        <div class="admin-card-title">ניהול קטגוריות</div>
-                        <div class="admin-card-desc">הוסף, ערוך ומחק קטגוריות משרות</div>
+                    <div class="admin-card" onclick="openImportModal()">
+                        <div class="admin-icon"><i class="fas fa-file-import"></i></div>
+                        <div class="admin-card-title">ייבוא משרות</div>
+                        <div class="admin-card-desc">ייבא משרות מקובץ CSV או JSON</div>
                     </div>
                     
                     <div class="admin-card" onclick="bulkActions()">
                         <div class="admin-icon"><i class="fas fa-list-check"></i></div>
                         <div class="admin-card-title">פעולות מרובות</div>
                         <div class="admin-card-desc">ביצוע פעולות על מספר משרות בו זמנית</div>
-                    </div>
-
-                    <div class="admin-card" onclick="syncAllSystems()">
-                        <div class="admin-icon"><i class="fas fa-sync"></i></div>
-                        <div class="admin-card-title">סנכרון מערכות</div>
-                        <div class="admin-card-desc">סנכרון מלא בין כל המערכות והפלטפורמות</div>
                     </div>
                     
                     <div class="admin-card" onclick="window.open('/', '_blank')">
@@ -1111,7 +1121,7 @@
             <section class="jobs-list-section">
                 <h2 class="admin-title">
                     <i class="fas fa-briefcase"></i>
-                    ניהול משרות מתקדם
+                    ניהול משרות
                 </h2>
                 
                 <div class="search-filters">
@@ -1155,7 +1165,6 @@
                                 </th>
                                 <th style="width: 80px;">מס' משרה</th>
                                 <th>כותרת</th>
-                                <th>חברה</th>
                                 <th>קטגוריה</th>
                                 <th>מיקום</th>
                                 <th style="width: 80px;">סטטוס</th>
@@ -1175,115 +1184,7 @@
             </section>
         </main>
 
-        <!-- מודל ייבוא משרות מתקדם -->
-        <div id="import-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">
-                        <i class="fas fa-file-import"></i>
-                        ייבא משרות מתקדם
-                    </h3>
-                    <span class="close" onclick="closeImportModal()">&times;</span>
-                </div>
-                
-                <div class="import-section">
-                    <p style="font-size: 1.1rem; margin-bottom: 20px;">העלה קובץ CSV או JSON עם רשימת המשרות שלך</p>
-                    <p style="color: #F69898; font-weight: bold;">המערכת תזהה אוטומטית את השדות ותציע מיפוי אינטליגנטי</p>
-                    
-                    <div class="file-upload" onclick="document.getElementById('file-input').click()">
-                        <div class="file-upload-icon">📁</div>
-                        <p style="font-size: 1.2rem; font-weight: bold; margin-bottom: 10px;">לחץ כאן להעלאת קובץ</p>
-                        <p>תומך בקבצי CSV, JSON ו-Excel</p>
-                        <p style="color: #F69898; margin-top: 10px;">גרור ושחרר קובץ כאן</p>
-                    </div>
-                    
-                    <input type="file" id="file-input" accept=".csv,.json,.xlsx,.xls" style="display: none;" onchange="handleFileUpload(event)">
-                    
-                    <div style="background: #2a2a2a; padding: 20px; border-radius: 10px; margin-top:20px;">
-                        <h4 style="color: #F69898; margin-bottom: 15px;">
-                            <i class="fas fa-info-circle"></i>
-                            מידע חשוב
-                        </h4>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
-                            <div>
-                                <p><strong>פורמטים נתמכים:</strong></p>
-                                <ul style="margin-right: 20px; color: #ccc;">
-                                    <li>CSV עם כותרות</li>
-                                    <li>JSON מערך אובייקטים</li>
-                                    <li>Excel (.xlsx, .xls)</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <p><strong>שדות נתמכים:</strong></p>
-                                <ul style="margin-right: 20px; color: #ccc;">
-                                    <li>מספר משרה, כותרת, חברה</li>
-                                    <li>קטגוריה, עיר, אזור</li>
-                                    <li>תיאור, דרישות, סטטוס</li>
-                                </ul>
-                            </div>
-                        </div>
-                        
-                        <div style="margin-top: 20px; text-align: center;">
-                            <button class="btn btn-secondary" onclick="downloadAdvancedTemplate()">
-                                <i class="fas fa-download"></i>
-                                הורד תבנית מתקדמת
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- מודל מיפוי כותרות מתקדם -->
-        <div id="mapping-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">
-                        <i class="fas fa-map"></i>
-                        מיפוי שדות אינטליגנטי
-                    </h3>
-                    <span class="close" onclick="closeMappingModal()">&times;</span>
-                </div>
-                
-                <div style="padding: 2rem;">
-                    <div id="mapping-preview" style="background: #2a2a2a; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                        <!-- יתמלא דינמית -->
-                    </div>
-                    
-                    <div id="mapping-container">
-                        <!-- יתמלא באופן דינמי -->
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(168,85,247,0.1)); padding: 20px; border-radius: 10px; margin: 20px 0; border: 2px solid #8B5CF6;">
-                        <h4 style="color: #8B5CF6; margin-bottom: 10px;">
-                            <i class="fas fa-star"></i>
-                            הגדרות מתקדמות
-                        </h4>
-                        <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-                            <label style="display: flex; align-items: center; gap: 8px;">
-                                <input type="checkbox" id="setAllFeatured" style="transform: scale(1.2);">
-                                <span>סמן הכל כמשרות מומלצות</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px;">
-                                <input type="checkbox" id="autoActivate" checked style="transform: scale(1.2);">
-                                <span>הפעל אוטומטית את כל המשרות</span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="form-buttons">
-                        <button class="btn btn-secondary" onclick="closeMappingModal()">
-                            <i class="fas fa-times"></i> ביטול
-                        </button>
-                        <button class="btn" onclick="applyMapping()">
-                            <i class="fas fa-check"></i> ייבא משרות
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- מודל הוספת/עריכת משרה מתקדם -->
+        <!-- מודל הוספת/עריכת משרה -->
         <div id="job-edit-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1301,7 +1202,6 @@
                         <div class="form-group">
                             <label class="form-label">מספר משרה</label>
                             <input type="text" id="edit-job-number" class="form-input" placeholder="יוגדר אוטומטי אם ריק">
-                            <div class="form-help">מספר ייחודי לזיהוי המשרה</div>
                         </div>
                         
                         <div class="form-group">
@@ -1310,18 +1210,12 @@
                         </div>
                         
                         <div class="form-group">
-                            <label class="form-label">חברה <span class="form-required">*</span></label>
-                            <input type="text" id="edit-job-company" class="form-input" required placeholder="שם החברה המגייסת">
-                        </div>
-                        
-                        <div class="form-group">
                             <label class="form-label">קטגוריה</label>
                             <select id="edit-job-category" class="form-input">
                                 <option value="מזון ומסעדנות">מזון ומסעדנות</option>
                                 <option value="חינוך והוראה">חינוך והוראה</option>
                                 <option value="פיתוח ותוכנה">פיתוח ותוכנה</option>
-                                <option value="מחשבים ורשתות תקשורת">מחשבים ורשתות</option>
-                                <option value="עולם הרכבים והליסינג">רכבים וליסינג</option>
+                                <option value="לוגיסטיקה, מחסנים, שילוח ורכש">לוגיסטיקה ומחסנים</option>
                                 <option value="שיווק ומכירות">שיווק ומכירות</option>
                                 <option value="בריאות ורפואה">בריאות ורפואה</option>
                                 <option value="מנהל ואדמיניסטרציה">מנהל ואדמיניסטרציה</option>
@@ -1343,17 +1237,6 @@
                                 <option value="ירושלים והסביבה">ירושלים והסביבה</option>
                                 <option value="דרום">דרום</option>
                                 <option value="שרון">שרון</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">סוג משרה</label>
-                            <select id="edit-job-type" class="form-input">
-                                <option value="משרה מלאה">משרה מלאה</option>
-                                <option value="משרה חלקית">משרה חלקית</option>
-                                <option value="פרילנס">פרילנס</option>
-                                <option value="התמחות">התמחות</option>
-                                <option value="זמני">זמני</option>
                             </select>
                         </div>
                         
@@ -1380,15 +1263,13 @@
                     
                     <div style="padding: 0 2rem;">
                         <div class="form-group">
-                            <label class="form-label">תיאור המשרה <span class="form-required">*</span></label>
-                            <textarea id="edit-job-description" class="form-input" rows="6" required placeholder="תאר את המשרה, התפקיד והאחריות הכלולים..."></textarea>
-                            <div class="form-help">תיאור מפורט יעזור למועמדים להבין את התפקיד</div>
+                            <label class="form-label">תיאור המשרה</label>
+                            <textarea id="edit-job-description" class="form-input" rows="4" placeholder="תאר את המשרה..."></textarea>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label">דרישות התפקיד</label>
-                            <textarea id="edit-job-requirements" class="form-input" rows="5" placeholder="רשום את הדרישות והכישורים הנדרשים..."></textarea>
-                            <div class="form-help">הפרד בין דרישות שונות באמצעות ירידת שורה</div>
+                            <textarea id="edit-job-requirements" class="form-input" rows="4" placeholder="רשום את הדרישות..."></textarea>
                         </div>
                     </div>
                     
@@ -1401,6 +1282,31 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- מודל ייבוא משרות -->
+        <div id="import-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        <i class="fas fa-file-import"></i>
+                        ייבא משרות
+                    </h3>
+                    <span class="close" onclick="closeImportModal()">&times;</span>
+                </div>
+                
+                <div class="import-section">
+                    <p style="font-size: 1.1rem; margin-bottom: 20px;">העלה קובץ CSV או JSON עם רשימת המשרות שלך</p>
+                    
+                    <div class="file-upload" onclick="document.getElementById('file-input').click()">
+                        <div class="file-upload-icon">📁</div>
+                        <p style="font-size: 1.2rem; font-weight: bold; margin-bottom: 10px;">לחץ כאן להעלאת קובץ</p>
+                        <p>תומך בקבצי CSV ו-JSON</p>
+                    </div>
+                    
+                    <input type="file" id="file-input" accept=".csv,.json" style="display: none;" onchange="handleFileUpload(event)">
+                </div>
             </div>
         </div>
 
@@ -1452,205 +1358,131 @@
             </div>
         </div>
 
-        <!-- כותרת תחתונה -->
         <footer class="footer">
             <div class="container">
                 <div style="text-align: center; margin-bottom: 30px;">
                     <h2 class="text-logo" style="font-size: 2.5rem;">מה יש פה?</h2>
-                    <p style="font-size: 1.2rem; margin-bottom: 15px; color: #cccccc;">מערכת ניהול מתקדמת ללוח משרות</p>
+                    <p style="font-size: 1.2rem; margin-bottom: 15px; color: #cccccc;">מערכת ניהול מסונכרנת עם GitHub</p>
                 </div>
                 
                 <div class="footer-links">
                     <a href="/" class="footer-link">דף הבית</a>
-                    <a href="#" class="footer-link">ניהול מתקדם</a>
+                    <a href="#" class="footer-link">ניהול GitHub</a>
                     <a href="/#search" class="footer-link">חיפוש משרות</a>
                     <a href="/#contact" class="footer-link">צור קשר</a>
                 </div>
                 
-                <p class="copyright">© 2025 מה יש פה? - מערכת ניהול מתקדמת</p>
+                <p class="copyright">© 2025 מה יש פה? - מערכת ניהול GitHub</p>
             </div>
         </footer>
     </div>
 
     <script>
-        // כל הקוד JavaScript יבוא בארטיפקט הבא...
-        console.log('מערכת ניהול בטעינה...');
-    </script>
-</body>
-<script>
-        // משתנים גלובליים מתקדמים
+        // משתנים גלובליים
         let jobs = [];
         let filteredJobs = [];
         let currentPage = 1;
         const jobsPerPage = 15;
-        let csvData = null;
-        let csvHeaders = [];
         let isFiltered = false;
         let selectedJobs = new Set();
         let featuredJobId = null;
-        let syncInterval = null;
-
-        // מיפוי שדות המערכת
-        const systemFields = {
-            'jobNumber': 'מספר משרה',
-            'title': 'כותרת',
-            'company': 'חברה', 
-            'category': 'קטגוריה',
-            'city': 'עיר',
-            'region': 'אזור',
-            'jobType': 'סוג משרה',
-            'status': 'סטטוס',
-            'description': 'תיאור',
-            'requirements': 'דרישות',
-            'featured': 'מומלצת'
-        };
-
-        // קטגוריות ברירת מחדל
-        const defaultCategories = [
-            'מזון ומסעדנות', 'חינוך והוראה', 'פיתוח ותוכנה',
-            'מחשבים ורשתות תקשורת', 'עולם הרכבים והליסינג',
-            'שיווק ומכירות', 'בריאות ורפואה', 'מנהל ואדמיניסטרציה', 'אחר'
-        ];
+        let githubUrl = '';
+        let hasLocalChanges = false;
 
         // פונקציות אתחול
-        function showLoginForm() {
-            document.getElementById('adminLoginSection').style.display = 'flex';
-        }
-
         function checkAdminPassword() {
             const password = document.getElementById('adminPassword').value;
             const correctPassword = "yarin080708";
+            const gitUrl = document.getElementById('githubUrl').value.trim();
             
-            if (password === correctPassword) {
-                document.getElementById('adminLoginSection').style.display = 'none';
-                document.getElementById('adminContentSection').style.display = 'block';
-                document.getElementById('backToSite').style.display = 'block';
-                sessionStorage.setItem('adminAuthenticated', 'true');
-                initializeAdminSystem();
-            } else {
-                document.getElementById('adminErrorMessage').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('adminErrorMessage').style.display = 'none';
-                }, 3000);
+            if (password !== correctPassword) {
+                showError('סיסמה שגויה');
+                return;
             }
+            
+            if (!gitUrl) {
+                showError('יש להזין כתובת GitHub');
+                return;
+            }
+            
+            githubUrl = gitUrl;
+            localStorage.setItem('github_url', githubUrl);
+            
+            document.getElementById('adminLoginSection').style.display = 'none';
+            document.getElementById('adminContentSection').style.display = 'block';
+            document.getElementById('backToSite').style.display = 'block';
+            
+            initializeAdminSystem();
         }
 
-        // אתחול מערכת הניהול המתקדמת
+        function showError(message) {
+            const errorDiv = document.getElementById('adminErrorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // אתחול מערכת הניהול
         function initializeAdminSystem() {
-            showNotification('מערכת הניהול נטענת...', 'warning');
+            document.getElementById('currentGitHubUrl').textContent = githubUrl;
+            showNotification('טוען מ-GitHub...', 'warning');
             showLoading();
             
-            loadJobsAdvanced()
+            syncFromGitHub()
                 .then(() => {
                     updateStatistics();
-                    startSyncMonitoring();
-                    showNotification('מערכת הניהול מוכנה לשימוש!', 'success');
+                    showNotification('המערכת מוכנה לשימוש!', 'success');
                 })
                 .catch(error => {
                     console.error('שגיאה באתחול:', error);
-                    showNotification('שגיאה באתחול המערכת', 'error');
+                    showNotification('שגיאה בטעינה מ-GitHub', 'error');
                 })
                 .finally(() => {
                     hideLoading();
                 });
         }
 
-        // טעינת משרות מתקדמת עם סנכרון
-        async function loadJobsAdvanced() {
-            console.log('🚀 מתחיל טעינה מתקדמת של משרות...');
-            
-            // בדיקת נתונים מקומיים
-            const localJobs = localStorage.getItem('jobs');
-            const localDate = localStorage.getItem('jobs_last_updated');
-            
-            if (localJobs) {
-                try {
-                    jobs = JSON.parse(localJobs);
-                    jobs = jobs.map(job => ({
-                        ...job,
-                        featured: job.featured || false,
-                        jobType: job.jobType || 'משרה מלאה'
-                    }));
-                    
-                    console.log('✅ נטענו', jobs.length, 'משרות מהאחסון המקומי');
-                    updateAllDisplays();
-                    updateSyncStatus('localStorage', true, localDate);
-                } catch (error) {
-                    console.error('❌ שגיאה בטעינה מהאחסון המקומי:', error);
-                }
-            }
-
-            // בדיקת GitHub במקביל
+        // סנכרון עם GitHub
+        async function syncFromGitHub() {
             try {
-const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YOUR-REPO/main/jobs.json');
-                if (response.ok) {
-                    const githubJobs = await response.json();
-                    updateSyncStatus('github', true);
-                    
-                    // השוואה ועדכון במידת הצורך
-                    if (!localJobs || githubJobs.length !== jobs.length) {
-                        console.log('🔄 מעדכן מ-GitHub...');
-                        jobs = githubJobs.map(job => ({
-                            ...job,
-                            featured: job.featured || false,
-                            jobType: job.jobType || 'משרה מלאה'
-                        }));
-                        
-                        saveJobsToLocal();
-                        updateAllDisplays();
-                        showNotification('משרות עודכנו מ-GitHub', 'success');
-                    }
-                } else {
-                    throw new Error('שגיאה בטעינה מ-GitHub');
+                showSyncStatus('syncing');
+                const response = await fetch(githubUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
                 }
-            } catch (error) {
-                console.warn('⚠️ לא ניתן לטעון מ-GitHub:', error.message);
-                updateSyncStatus('github', false);
-            }
-
-            // עדכון זמן בדיקה אחרון
-            localStorage.setItem('last_sync_check', new Date().toISOString());
-        }
-
-        // שמירת משרות מתקדמת
-        function saveJobsAdvanced() {
-            try {
-                // שמירה מקומית
-                saveJobsToLocal();
                 
-                // סנכרון עם האתר הראשי
-                syncWithMainWebsite();
+                const data = await response.json();
                 
-                // עדכון תצוגה
+                if (!Array.isArray(data)) {
+                    throw new Error('הקובץ מ-GitHub אינו מערך תקין');
+                }
+                
+                jobs = data.map(job => ({
+                    jobNumber: job.jobNumber || generateJobNumber(),
+                    title: job.title || '',
+                    category: job.category || 'אחר',
+                    city: job.city || '',
+                    region: job.region || 'מרכז',
+                    description: job.description || '',
+                    requirements: job.requirements || '',
+                    status: job.status || 'פעיל',
+                    featured: job.featured || false
+                }));
+                
                 updateAllDisplays();
+                updateSyncStatus('github', true);
+                hasLocalChanges = false;
+                updateLocalChangesStatus();
                 
-                showNotification('המשרות נשמרו ומסונכרנות בהצלחה!', 'success');
+                console.log('✅ נטענו', jobs.length, 'משרות מ-GitHub');
                 
             } catch (error) {
-                console.error('❌ שגיאה בשמירה:', error);
-                showNotification('שגיאה בשמירת המשרות', 'error');
-            }
-        }
-
-        function saveJobsToLocal() {
-            localStorage.setItem('jobs', JSON.stringify(jobs));
-            localStorage.setItem('jobs_last_updated', new Date().toISOString());
-            updateSyncStatus('localStorage', true);
-        }
-
-        // סנכרון עם האתר הראשי
-        function syncWithMainWebsite() {
-            try {
-                // שמירה לאתר הראשי - השתמש בשמות הנכונים
-                localStorage.setItem('website_jobs', JSON.stringify(jobs));
-                localStorage.setItem('website_jobs_updated', new Date().toISOString());
-                localStorage.setItem('website_jobs_source', 'Admin System');
-                
-                updateSyncStatus('website', true);
-                console.log('✅ סונכרן עם האתר הראשי');
-            } catch (error) {
-                console.error('❌ שגיאה בסנכרון עם האתר:', error);
-                updateSyncStatus('website', false);
+                console.error('❌ שגיאה בטעינה מ-GitHub:', error);
+                updateSyncStatus('github', false);
+                throw error;
             }
         }
 
@@ -1667,7 +1499,7 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
             updateStatistics();
         }
 
-        // הצגת משרות מתקדמת
+        // הצגת משרות
         function displayJobsAdvanced() {
             const tableBody = document.getElementById('jobsTableBody');
             tableBody.innerHTML = '';
@@ -1676,10 +1508,10 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
             
             if (jobsToDisplay.length === 0) {
                 const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="9" style="text-align: center; padding: 3rem; color: #aaa;">
+                row.innerHTML = `<td colspan="8" style="text-align: center; padding: 3rem; color: #aaa;">
                     ${isFiltered ? 
                         'לא נמצאו משרות התואמות את הסינון<br><button class="btn btn-secondary" onclick="clearJobsFilters()">נקה סינון</button>' : 
-                        'אין משרות להצגה<br><button class="btn" onclick="openAddJobModal()">הוסף משרה ראשונה</button>'
+                        'אין משרות להצגה<br><button class="btn" onclick="syncFromGitHub()">טען מ-GitHub</button>'
                     }
                 </td>`;
                 tableBody.appendChild(row);
@@ -1695,27 +1527,10 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
             const endIndex = Math.min(startIndex + jobsPerPage, jobsToDisplay.length);
             const pageJobs = jobsToDisplay.slice(startIndex, endIndex);
             
-            // הוספת שורת מידע על הסינון
-            if (isFiltered) {
-                const infoRow = document.createElement('tr');
-                infoRow.innerHTML = `
-                    <td colspan="9" style="text-align: center; padding: 15px; background: rgba(246, 152, 152, 0.1); border: 2px solid #F69898;">
-                        <i class="fas fa-filter"></i>
-                        מציג ${jobsToDisplay.length} מתוך ${jobs.length} משרות
-                        <button class="btn btn-sm btn-secondary" style="margin-right: 15px;" onclick="clearJobsFilters()">
-                            <i class="fas fa-times"></i> נקה סינון
-                        </button>
-                    </td>
-                `;
-                tableBody.appendChild(infoRow);
-            }
-            
             pageJobs.forEach((job, index) => {
                 const actualIndex = startIndex + index;
                 const originalIndex = jobs.findIndex(j => 
-                    j.jobNumber === job.jobNumber && 
-                    j.title === job.title && 
-                    j.company === job.company
+                    j.jobNumber === job.jobNumber && j.title === job.title
                 );
                 
                 const row = document.createElement('tr');
@@ -1735,9 +1550,8 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
                         ${job.featured ? '<span class="featured-badge">⭐ מומלצת</span>' : ''}
                         ${job.title || '-'}
                     </td>
-                    <td>${job.company || '-'}</td>
                     <td>${job.category || 'אחר'}</td>
-                    <td>${job.city ? job.city + ', ' + (job.region || 'מרכז') : job.region || 'מרכז'}</td>
+                    <td>${job.city ? job.city + ', ' + job.region : job.region}</td>
                     <td class="${job.status === 'לא פעיל' ? 'status-inactive' : 'status-active'}">
                         ${job.status || 'פעיל'}
                     </td>
@@ -1769,49 +1583,14 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
             updatePaginationAdvanced(totalPages);
         }
 
-        // עדכון מניית דפים מתקדם
+        // עדכון מניית דפים
         function updatePaginationAdvanced(totalPages) {
             const pagination = document.getElementById('jobsPagination');
             pagination.innerHTML = '';
             
             if (totalPages <= 1) return;
             
-            // כפתור עמוד קודם
-            if (currentPage > 1) {
-                const prevBtn = document.createElement('div');
-                prevBtn.className = 'page-item';
-                prevBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
-                prevBtn.onclick = () => {
-                    currentPage--;
-                    displayJobsAdvanced();
-                };
-                pagination.appendChild(prevBtn);
-            }
-            
-            // מספרי עמודים
-            const startPage = Math.max(1, currentPage - 2);
-            const endPage = Math.min(totalPages, currentPage + 2);
-            
-            if (startPage > 1) {
-                const firstBtn = document.createElement('div');
-                firstBtn.className = 'page-item';
-                firstBtn.textContent = '1';
-                firstBtn.onclick = () => {
-                    currentPage = 1;
-                    displayJobsAdvanced();
-                };
-                pagination.appendChild(firstBtn);
-                
-                if (startPage > 2) {
-                    const dots = document.createElement('div');
-                    dots.className = 'page-item';
-                    dots.textContent = '...';
-                    dots.style.cursor = 'default';
-                    pagination.appendChild(dots);
-                }
-            }
-            
-            for (let i = startPage; i <= endPage; i++) {
+            for (let i = 1; i <= totalPages; i++) {
                 const pageBtn = document.createElement('div');
                 pageBtn.className = 'page-item' + (i === currentPage ? ' active' : '');
                 pageBtn.textContent = i;
@@ -1820,37 +1599,6 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
                     displayJobsAdvanced();
                 };
                 pagination.appendChild(pageBtn);
-            }
-
-            if (endPage < totalPages) {
-                if (endPage < totalPages - 1) {
-                    const dots = document.createElement('div');
-                    dots.className = 'page-item';
-                    dots.textContent = '...';
-                    dots.style.cursor = 'default';
-                    pagination.appendChild(dots);
-                }
-                
-                const lastBtn = document.createElement('div');
-                lastBtn.className = 'page-item';
-                lastBtn.textContent = totalPages;
-                lastBtn.onclick = () => {
-                    currentPage = totalPages;
-                    displayJobsAdvanced();
-                };
-                pagination.appendChild(lastBtn);
-            }
-            
-            // כפתור עמוד הבא
-            if (currentPage < totalPages) {
-                const nextBtn = document.createElement('div');
-                nextBtn.className = 'page-item';
-                nextBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
-                nextBtn.onclick = () => {
-                    currentPage++;
-                    displayJobsAdvanced();
-                };
-                pagination.appendChild(nextBtn);
             }
         }
 
@@ -1885,26 +1633,21 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
             categoryFilter.value = currentValue;
         }
 
-        // ניהול בחירות משרות
+        // פונקציות ניהול משרות
         function toggleJobSelection(index) {
             if (selectedJobs.has(index)) {
                 selectedJobs.delete(index);
             } else {
                 selectedJobs.add(index);
             }
-            updateSelectAllCheckbox();
         }
 
         function toggleSelectAll() {
             const selectAllCheckbox = document.getElementById('selectAllJobs');
-            const currentJobs = filteredJobs;
-            
             if (selectAllCheckbox.checked) {
-                currentJobs.forEach((job, index) => {
+                filteredJobs.forEach((job, index) => {
                     const originalIndex = jobs.findIndex(j => 
-                        j.jobNumber === job.jobNumber && 
-                        j.title === job.title && 
-                        j.company === job.company
+                        j.jobNumber === job.jobNumber && j.title === job.title
                     );
                     if (originalIndex !== -1) {
                         selectedJobs.add(originalIndex);
@@ -1913,30 +1656,13 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
             } else {
                 selectedJobs.clear();
             }
-            
             displayJobsAdvanced();
         }
 
-        function updateSelectAllCheckbox() {
-            const selectAllCheckbox = document.getElementById('selectAllJobs');
-            const currentJobsCount = filteredJobs.length;
-            const selectedCurrentJobs = filteredJobs.filter((job, index) => {
-                const originalIndex = jobs.findIndex(j => 
-                    j.jobNumber === job.jobNumber && 
-                    j.title === job.title && 
-                    j.company === job.company
-                );
-                return selectedJobs.has(originalIndex);
-            }).length;
-            
-            selectAllCheckbox.checked = currentJobsCount > 0 && selectedCurrentJobs === currentJobsCount;
-            selectAllCheckbox.indeterminate = selectedCurrentJobs > 0 && selectedCurrentJobs < currentJobsCount;
-        }
-
-        // פונקציות מתקדמות למשרות
         function toggleJobFeatured(index) {
             jobs[index].featured = !jobs[index].featured;
-            saveJobsAdvanced();
+            markLocalChanges();
+            updateAllDisplays();
             showNotification(
                 jobs[index].featured ? 'המשרה סומנה כמומלצת' : 'ההמלצה בוטלה',
                 'success'
@@ -1950,16 +1676,13 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
             document.getElementById('edit-job-id').value = index;
             document.getElementById('edit-job-number').value = job.jobNumber || '';
             document.getElementById('edit-job-title').value = job.title || '';
-            document.getElementById('edit-job-company').value = job.company || '';
             document.getElementById('edit-job-category').value = job.category || 'אחר';
             document.getElementById('edit-job-city').value = job.city || '';
             document.getElementById('edit-job-region').value = job.region || 'מרכז';
-            document.getElementById('edit-job-type').value = job.jobType || 'משרה מלאה';
             document.getElementById('edit-job-status').value = job.status || 'פעיל';
             document.getElementById('edit-job-description').value = job.description || '';
             document.getElementById('edit-job-requirements').value = job.requirements || '';
             
-            // הגדרת מצב המשרה המומלצת
             featuredJobId = job.featured;
             updateFeaturedToggle();
             
@@ -1970,12 +1693,10 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
             const job = jobs[index];
             let details = '';
             
-            details += `🏢 חברה: ${job.company || 'לא הוגדר'}\n`;
-            details += `📋 כותרת: ${job.title || 'לא הוגדר'}\n`;
             details += `🔢 מספר משרה: ${job.jobNumber || 'אוטומטי'}\n`;
+            details += `📋 כותרת: ${job.title || 'לא הוגדר'}\n`;
             details += `📂 קטגוריה: ${job.category || 'אחר'}\n`;
-            details += `📍 מיקום: ${job.city ? job.city + ', ' + (job.region || 'מרכז') : job.region || 'מרכז'}\n`;
-            details += `⏰ סוג משרה: ${job.jobType || 'משרה מלאה'}\n`;
+            details += `📍 מיקום: ${job.city ? job.city + ', ' + job.region : job.region}\n`;
             details += `📊 סטטוס: ${job.status || 'פעיל'}\n`;
             details += `⭐ מומלצת: ${job.featured ? 'כן' : 'לא'}\n\n`;
             details += `📝 תיאור המשרה:\n${job.description || '(אין תיאור)'}\n\n`;
@@ -1986,23 +1707,12 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
 
         function deleteJobAdvanced(index) {
             const job = jobs[index];
-            if (confirm(`האם אתה בטוח שברצונך למחוק את המשרה:\n"${job.title}" ב-${job.company}?`)) {
+            if (confirm(`האם אתה בטוח שברצונך למחוק את המשרה:\n"${job.title}"?`)) {
                 jobs.splice(index, 1);
                 selectedJobs.delete(index);
-                
-                // עדכון אינדקסים של משרות נבחרות
-                const newSelectedJobs = new Set();
-                selectedJobs.forEach(selectedIndex => {
-                    if (selectedIndex > index) {
-                        newSelectedJobs.add(selectedIndex - 1);
-                    } else if (selectedIndex < index) {
-                        newSelectedJobs.add(selectedIndex);
-                    }
-                });
-                selectedJobs = newSelectedJobs;
-                
-                saveJobsAdvanced();
-                showNotification('המשרה נמחקה בהצלחה', 'success');
+                markLocalChanges();
+                updateAllDisplays();
+                showNotification('המשרה נמחקה', 'success');
             }
         }
 
@@ -2012,7 +1722,6 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
             document.getElementById('job-edit-form').reset();
             document.getElementById('edit-job-id').value = '';
             
-            // איפוס מצב המשרה המומלצת
             featuredJobId = false;
             updateFeaturedToggle();
             
@@ -2030,11 +1739,9 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
             const job = {
                 jobNumber: document.getElementById('edit-job-number').value || generateJobNumber(),
                 title: document.getElementById('edit-job-title').value,
-                company: document.getElementById('edit-job-company').value,
                 category: document.getElementById('edit-job-category').value,
                 city: document.getElementById('edit-job-city').value,
                 region: document.getElementById('edit-job-region').value,
-                jobType: document.getElementById('edit-job-type').value,
                 status: document.getElementById('edit-job-status').value,
                 description: document.getElementById('edit-job-description').value,
                 requirements: document.getElementById('edit-job-requirements').value,
@@ -2042,26 +1749,27 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
             };
             
             if (id === '') {
-                // הוספת משרה חדשה
                 jobs.push(job);
-                showNotification('משרה חדשה נוספה בהצלחה!', 'success');
+                showNotification('משרה חדשה נוספה!', 'success');
             } else {
-                // עדכון משרה קיימת
                 jobs[parseInt(id)] = job;
-                showNotification('המשרה עודכנה בהצלחה!', 'success');
+                showNotification('המשרה עודכנה!', 'success');
             }
             
-            saveJobsAdvanced();
+            markLocalChanges();
+            updateAllDisplays();
             closeEditModal();
             return false;
         }
 
-        // יצירת מספר משרה אוטומטי
         function generateJobNumber() {
             const existing = jobs.map(job => job.jobNumber).filter(Boolean);
-            const numbers = existing.map(num => parseInt(num.replace(/\D/g, ''))).filter(num => !isNaN(num));
+            const numbers = existing.map(num => {
+                const match = num.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 0;
+            });
             const maxNumber = numbers.length > 0 ? Math.max(...numbers) : 0;
-            return `JOB${(maxNumber + 1).toString().padStart(3, '0')}`;
+            return `A-${(maxNumber + 1).toString().padStart(5, '0')}`;
         }
 
         // טוגל למשרה מומלצת
@@ -2079,7 +1787,7 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
             }
         }
 
-        // סינון מתקדם
+        // סינון
         function filterJobsList() {
             applyFilters();
             currentPage = 1;
@@ -2097,9 +1805,7 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
             filteredJobs = jobs.filter(job => {
                 const matchesSearch = !searchText || 
                     (job.title && job.title.toLowerCase().includes(searchText)) ||
-                    (job.company && job.company.toLowerCase().includes(searchText)) ||
-                    (job.description && job.description.toLowerCase().includes(searchText)) ||
-                    (job.jobNumber && job.jobNumber.toString().includes(searchText)) ||
+                    (job.jobNumber && job.jobNumber.toLowerCase().includes(searchText)) ||
                     (job.city && job.city.toLowerCase().includes(searchText));
                 
                 const matchesCategory = !categoryFilter || job.category === categoryFilter;
@@ -2141,13 +1847,9 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
         }
 
         function bulkAction(action) {
-            if (selectedJobs.size === 0) {
-                showNotification('לא נבחרו משרות', 'warning');
-                return;
-            }
+            if (selectedJobs.size === 0) return;
             
             let message = '';
-            let confirmMessage = '';
             
             switch (action) {
                 case 'activate':
@@ -2179,13 +1881,11 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
                     break;
                     
                 case 'delete':
-                    confirmMessage = `האם אתה בטוח שברצונך למחוק ${selectedJobs.size} משרות?`;
-                    if (!confirm(confirmMessage)) {
+                    if (!confirm(`האם אתה בטוח שברצונך למחוק ${selectedJobs.size} משרות?`)) {
                         return;
                     }
                     
-                    // מחיקה לפי סדר הפוך כדי לא לשבש אינדקסים
-                    const sortedIndexes = Array.from(selectedJobs).sort((a, b)=> b - a);
+                    const sortedIndexes = Array.from(selectedJobs).sort((a, b) => b - a);
                     sortedIndexes.forEach(index => {
                         jobs.splice(index, 1);
                     });
@@ -2195,12 +1895,21 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
                     break;
             }
             
-            saveJobsAdvanced();
+            markLocalChanges();
+            updateAllDisplays();
             closeBulkModal();
             showNotification(message, 'success');
         }
 
-        // ייבוא וייצוא מתקדם
+        function bulkActions() {
+            if (selectedJobs.size === 0) {
+                showNotification('בחר משרות קודם', 'warning');
+                return;
+            }
+            openBulkModal();
+        }
+
+        // ייבוא וייצוא
         function openImportModal() {
             document.getElementById('import-modal').style.display = 'block';
         }
@@ -2214,285 +1923,75 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
             const file = event.target.files[0];
             if (!file) return;
             
-            showLoading();
-            console.log('📁 קובץ נבחר:', file.name, file.type);
-            
             const reader = new FileReader();
-            
             reader.onload = function(e) {
                 try {
-                    if (file.name.endsWith('.csv')) {
-                        parseCSVAdvanced(e.target.result);
-                    } else if (file.name.endsWith('.json')) {
-                        parseJSONAdvanced(e.target.result);
-                    } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
-                        parseExcelAdvanced(e.target.result);
+                    let data;
+                    if (file.name.endsWith('.json')) {
+                        data = JSON.parse(e.target.result);
+                    } else if (file.name.endsWith('.csv')) {
+                        data = parseCSV(e.target.result);
                     } else {
                         throw new Error('פורמט קובץ לא נתמך');
                     }
+                    
+                    if (!Array.isArray(data)) {
+                        throw new Error('הקובץ אינו מכיל מערך תקין');
+                    }
+                    
+                    const shouldReplace = confirm(`נמצאו ${data.length} משרות.\nהאם להחליף את כל המשרות הקיימות?`);
+                    
+                    if (shouldReplace) {
+                        jobs = data;
+                    } else {
+                        jobs = [...jobs, ...data];
+                    }
+                    
+                    markLocalChanges();
+                    updateAllDisplays();
+                    closeImportModal();
+                    showNotification(`${data.length} משרות יובאו בהצלחה!`, 'success');
+                    
                 } catch (error) {
-                    console.error('❌ שגיאה בעיבוד הקובץ:', error);
                     showNotification('שגיאה בעיבוד הקובץ: ' + error.message, 'error');
-                } finally {
-                    hideLoading();
                 }
             };
-            
-            if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
-                reader.readAsArrayBuffer(file);
-            } else {
-                reader.readAsText(file, 'UTF-8');
-            }
+            reader.readAsText(file, 'UTF-8');
         }
 
-        function parseCSVAdvanced(csvText) {
+        function parseCSV(csvText) {
             const lines = csvText.split('\n').filter(line => line.trim());
             if (lines.length < 2) {
-                throw new Error('הקובץ חייב להכיל לפחות שורת כותרות ושורה אחת של נתונים');
+                throw new Error('הקובץ חייב להכיל כותרות ונתונים');
             }
             
-            const headers = parseCSVLine(lines[0]);
-            const dataLines = lines.slice(1);
-            const data = dataLines.map(line => {
-                const values = parseCSVLine(line);
-                const row = {};
-                headers.forEach((header, index) => {
-                    row[header] = values[index] || '';
-                });
-                return row;
-            }).filter(row => Object.values(row).some(val => val.trim()));
+            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+            const data = [];
             
-            openMappingModalAdvanced(headers, data);
-        }
-
-        function parseJSONAdvanced(jsonData) {
-            const parsedData = JSON.parse(jsonData);
-            let dataArray = Array.isArray(parsedData) ? parsedData : [parsedData];
-            
-            if (dataArray.length === 0) {
-                throw new Error('הקובץ JSON ריק או לא מכיל נתונים');
-            }
-            
-            const allKeys = new Set();
-            dataArray.forEach(item => {
-                if (typeof item === 'object' && item !== null) {
-                    Object.keys(item).forEach(key => allKeys.add(key));
-                }
-            });
-            
-            const headers = Array.from(allKeys);
-            const data = dataArray.map(item => {
-                const row = {};
-                headers.forEach(header => {
-                    row[header] = item[header] || '';
-                });
-                return row;
-            });
-            
-            openMappingModalAdvanced(headers, data);
-        }
-
-        function parseExcelAdvanced(arrayBuffer) {
-            // Note: This would require the SheetJS library to be loaded
-            showNotification('תמיכה בקבצי Excel תתווסף בגרסה הבאה', 'warning');
-        }
-
-        function parseCSVLine(line) {
-            const result = [];
-            let current = '';
-            let inQuotes = false;
-            
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                
-                if (char === '"') {
-                    inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    result.push(current.trim());
-                    current = '';
-                } else {
-                    current += char;
-                }
-            }
-            
-            result.push(current.trim());
-            return result;
-        }
-
-        // מודל מיפוי מתקדם
-        function openMappingModalAdvanced(headers, data) {
-            csvHeaders = headers;
-            csvData = data;
-            
-            const container = document.getElementById('mapping-container');
-            const preview = document.getElementById('mapping-preview');
-            
-            // הצגת תצוגה מקדימה
-            preview.innerHTML = `
-                <h4 style="color: #F69898; margin-bottom: 10px;">
-                    <i class="fas fa-eye"></i>
-                    תצוגה מקדימה
-                </h4>
-                <p><strong>נמצאו ${headers.length} עמודות ו-${data.length} שורות נתונים</strong></p>
-                <p style="color: #ccc;">עמודות: ${headers.join(', ')}</p>
-            `;
-            
-            container.innerHTML = '';
-            
-            const mappingGrid = document.createElement('div');
-            mappingGrid.style.display = 'grid';
-            mappingGrid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(300px, 1fr))';
-            mappingGrid.style.gap = '15px';
-            
-            Object.keys(systemFields).forEach(fieldKey => {
-                const mappingItem = document.createElement('div');
-                mappingItem.style.background = '#2a2a2a';
-                mappingItem.style.padding = '15px';
-                mappingItem.style.borderRadius = '10px';
-                mappingItem.style.border = '1px solid #444';
-                
-                // זיהוי אוטומטי של התאמה
-                const suggestedHeader = autoDetectMapping(fieldKey, headers);
-                
-                mappingItem.innerHTML = `
-                    <label class="form-label" style="color: #F69898; margin-bottom: 8px;">
-                        ${systemFields[fieldKey]}
-                        ${['title', 'company', 'city', 'region'].includes(fieldKey) ? ' <span style="color: #F69898;">*</span>' : ''}
-                    </label>
-                    <select class="form-input" data-field="${fieldKey}">
-                        <option value="">-- בחר עמודה מהקובץ --</option>
-                        ${headers.map(header => 
-                            `<option value="${header}" ${header === suggestedHeader ? 'selected' : ''}>${header}</option>`
-                        ).join('')}
-                    </select>
-                    ${suggestedHeader ? `<div style="color: #28a745; font-size: 0.8rem; margin-top: 4px;">
-                        <i class="fas fa-check"></i> זוהה אוטומטית
-                    </div>` : ''}
-                `;
-                
-                mappingGrid.appendChild(mappingItem);
-            });
-            
-            container.appendChild(mappingGrid);
-            
-            closeImportModal();
-            document.getElementById('mapping-modal').style.display = 'block';
-        }
-
-        // זיהוי אוטומטי של מיפוי
-        function autoDetectMapping(fieldKey, headers) {
-            const mappings = {
-                'jobNumber': ['מספר משרה', 'job number', 'id', 'מספר', 'number'],
-                'title': ['כותרת', 'title', 'תפקיד', 'position', 'job title'],
-                'company': ['חברה', 'company', 'employer', 'מעסיק'],
-                'category': ['קטגוריה', 'category', 'תחום', 'field'],
-                'city': ['עיר', 'city', 'מיקום', 'location'],
-                'region': ['אזור', 'region', 'area', 'מחוז'],
-                'jobType': ['סוג משרה', 'job type', 'type', 'סוג'],
-                'status': ['סטטוס', 'status', 'מצב', 'state'],
-                'description': ['תיאור', 'description', 'desc', 'פירוט'],
-                'requirements': ['דרישות', 'requirements', 'req', 'כישורים'],
-                'featured': ['מומלצת', 'featured', 'highlighted', 'מוצגת']
-            };
-            
-            const keywords = mappings[fieldKey] || [];
-            
-            return headers.find(header => 
-                keywords.some(keyword => 
-                    header.toLowerCase().includes(keyword.toLowerCase())
-                )
-            );
-        }
-
-        function closeMappingModal() {
-            document.getElementById('mapping-modal').style.display = 'none';
-            csvData = null;
-            csvHeaders = [];
-        }
-
-        function applyMapping() {
-            const selects = document.querySelectorAll('#mapping-container select');
-            const mapping = {};
-            
-            selects.forEach(select => {
-                const field = select.getAttribute('data-field');
-                const column = select.value;
-                if (column) {
-                    mapping[field] = column;
-                }
-            });
-            
-            if (!mapping.title && !mapping.company) {
-                showNotification('יש למפות לפחות את שדה הכותרת או החברה', 'warning');
-                return;
-            }
-            
-            const setAllFeatured = document.getElementById('setAllFeatured').checked;
-            const autoActivate = document.getElementById('autoActivate').checked;
-            
-            const jobsData = csvData.map(row => {
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
                 const job = {};
-                Object.keys(mapping).forEach(field => {
-                    const column = mapping[field];
-                    job[field] = row[column] ? row[column].trim() : '';
+                headers.forEach((header, index) => {
+                    job[header] = values[index] || '';
                 });
                 
-                // הגדרות ברירת מחדל
-                if (!job.status) job.status = autoActivate ? 'פעיל' : 'לא פעיל';
-                if (!job.category) job.category = 'אחר';
-                if (!job.region) job.region = 'מרכז';
-                if (!job.jobType) job.jobType = 'משרה מלאה';
-                if (!job.jobNumber) job.jobNumber = generateJobNumber();
-                job.featured = setAllFeatured;
+                // המרה לפורמט הנכון
+                const normalizedJob = {
+                    jobNumber: job['מספר משרה'] || job.jobNumber || generateJobNumber(),
+                    title: job['כותרת'] || job.title || '',
+                    category: job['קטגוריה'] || job.category || 'אחר',
+                    city: job['עיר'] || job.city || '',
+                    region: job['אזור'] || job.region || 'מרכז',
+                    description: job['תיאור'] || job.description || '',
+                    requirements: job['דרישות'] || job.requirements || '',
+                    status: job['סטטוס'] || job.status || 'פעיל',
+                    featured: (job['מומלצת'] || job.featured) === 'כן' || (job['מומלצת'] || job.featured) === true
+                };
                 
-                return job;
-            });
-            
-            const validJobs = jobsData.filter(job => 
-                (job.title && job.title.trim()) || 
-                (job.company && job.company.trim())
-            );
-            
-            if (validJobs.length === 0) {
-                showNotification('לא נמצאו משרות תקינות לייבוא', 'error');
-                return;
+                data.push(normalizedJob);
             }
             
-            const shouldReplace = validJobs.length > 10 ? 
-                confirm(`נמצאו ${validJobs.length} משרות לייבוא.\nהאם להחליף את כל המשרות הקיימות?`) :
-                !confirm(`נמצאו ${validJobs.length} משרות לייבוא.\nהאם להוסיף אותן למשרות הקיימות?`);
-            
-            if (shouldReplace) {
-                jobs = [...validJobs];
-            } else {
-                jobs = [...jobs, ...validJobs];
-            }
-            
-            saveJobsAdvanced();
-            closeMappingModal();
-            
-            showNotification(
-                `${validJobs.length} משרות יובאו בהצלחה!${setAllFeatured ? ' (כולן מומלצות)' : ''}`,
-                'success'
-            );
-        }
-
-        // ייצוא מתקדם
-        function exportJobs() {
-            if (jobs.length === 0) {
-                showNotification('אין משרות לייצוא', 'warning');
-                return;
-            }
-            
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(jobs, null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", `jobs_export_${new Date().toISOString().split('T')[0]}.json`);
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-            
-            showNotification('קובץ המשרות יוצא בהצלחה', 'success');
+            return data;
         }
 
         function exportForGitHub() {
@@ -2514,182 +2013,75 @@ const response = await fetch('https://raw.githubusercontent.com/YOUR-USERNAME/YO
             
             URL.revokeObjectURL(url);
             
-            showNotification('קובץ ל-GitHub יוצא - עקוב אחר ההוראות', 'success');
+            showNotification('קובץ ל-GitHub יוצא!', 'success');
             
-            // הצגת הנחיות מפורטות
             setTimeout(() => {
                 alert(`קובץ jobs.json הורד בהצלחה!
 
-הנחיות לעדכון GitHub:
-1. היכנס ל-GitHub.com
-2. נווט לקובץ: data.js/jobs(1).json
+הוראות לעדכון GitHub:
+1. היכנס ל-GitHub לפרויקט שלך
+2. נווט לקובץ המשרות שלך
 3. לחץ על "Edit" (עיפרון)
-4. מחק את כל התוכן הקיים
+4. מחק את התוכן הקיים
 5. העתק והדבק את תוכן הקובץ החדש
 6. לחץ "Commit changes"
-7. המתן 2-3 דקות לסנכרון
 
-✅ לאחר העדכון האתר יתעדכן אוטומטית!`);
+✅ האתר יתעדכן אוטומטית!`);
             }, 1000);
         }
 
-        function downloadAdvancedTemplate() {
-            const csvContent = `מספר משרה,כותרת,חברה,קטגוריה,עיר,אזור,סוג משרה,סטטוס,תיאור,דרישות,מומלצת
-JOB001,"מפתח/ת Full Stack","חברת הייטק בע״מ","פיתוח ותוכנה","תל אביב","מרכז","משרה מלאה","פעיל","פיתוח אפליקציות מתקדמות","React | Node.js | 3+ שנות ניסיון","כן"
-JOB002,"מנהל/ת מכירות","חברת שיווק","שיווק ומכירות","חיפה","צפון","משרה מלאה","פעיל","ניהול צוות מכירות","ניסיון בניהול | יכולות מכירה","לא"
-JOB003,"מורה לאנגלית","בית ספר","חינוך והוראה","ירושלים","ירושלים והסביבה","משרה חלקית","פעיל","הוראת אנגלית לתיכון","תואר בהוראה | אנגלית ברמה גבוהה","לא"`;
-            
-            const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.setAttribute('href', url);
-            link.setAttribute('download', 'template_advanced.csv');
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            
-            showNotification('תבנית מתקדמת הורדה בהצלחה', 'success');
+        // עדכון סטטוס
+        function markLocalChanges() {
+            hasLocalChanges = true;
+            updateLocalChangesStatus();
         }
 
-        // ניטור סנכרון מתקדם
-        function startSyncMonitoring() {
-            updateSyncPanel();
-            
-            // עדכון כל 30 שניות
-            if (syncInterval) clearInterval(syncInterval);
-            syncInterval = setInterval(() => {
-                updateSyncPanel();
-                checkSystemsSync();
-            }, 30000);
+        function updateLocalChangesStatus() {
+            const element = document.getElementById('localChanges');
+            if (hasLocalChanges) {
+                element.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i> יש שינויים';
+            } else {
+                element.innerHTML = '<i class="fas fa-check-circle" style="color: #28a745;"></i> אין';
+            }
         }
 
-        function updateSyncPanel() {
-            const now = new Date();
-            
-            // עדכון זמנים
-            const lastUpdate = localStorage.getItem('jobs_last_updated');
-            const lastCheck = localStorage.getItem('last_sync_check');
-            
-            document.getElementById('lastUpdate').textContent = lastUpdate ? 
-                formatDateTime(lastUpdate) : 'לא ידוע';
-            document.getElementById('lastCheck').textContent = lastCheck ? 
-                formatDateTime(lastCheck) : 'לא ידוע';
-            
-            // בדיקת סטטוס מערכות
-            updateSyncStatus('localStorage', !!localStorage.getItem('jobs'));
-            updateSyncStatus('website', !!localStorage.getItem('website_jobs'));
-        }
-
-        function updateSyncStatus(system, isConnected, lastUpdate = null) {
-            const statusElements = {
-                'localStorage': 'websiteSync',
-                'website': 'websiteSync', 
-                'github': 'githubSync'
-            };
-            
-            const elementId = statusElements[system];
-            if (!elementId) return;
-            
-            const element = document.getElementById(elementId);
-            if (!element) return;
-            
+        function updateSyncStatus(system, isConnected) {
+            const element = document.getElementById('githubSync');
             if (isConnected) {
                 element.innerHTML = '<i class="fas fa-check-circle" style="color: #28a745;"></i> מחובר';
-                if (lastUpdate) {
-                    element.innerHTML += ` <small>(${formatDateTime(lastUpdate)})</small>`;
-                }
             } else {
-                element.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i> לא מחובר';
+                element.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i> שגיאה';
             }
             
-            // עדכון מחוון ראשי
-            updateMainSyncIndicator();
+            document.getElementById('lastLoad').textContent = new Date().toLocaleString('he-IL');
+            document.getElementById('lastCheck').textContent = new Date().toLocaleString('he-IL');
         }
 
-        function updateMainSyncIndicator() {
+        function showSyncStatus(status) {
             const indicator = document.getElementById('syncIndicator');
             const text = document.getElementById('syncText');
             
-            const localOk = !!localStorage.getItem('jobs');
-            const websiteOk = !!localStorage.getItem('website_jobs');
-            
-            if (localOk && websiteOk) {
-                indicator.className = 'sync-indicator';
-                text.textContent = 'מסונכרן';
-            } else {
-                indicator.className = 'sync-indicator error';
-                text.textContent = 'שגיאת סנכרון';
+            switch(status) {
+                case 'syncing':
+                    indicator.className = 'sync-indicator syncing';
+                    text.textContent = 'מסנכרן...';
+                    break;
+                case 'success':
+                    indicator.className = 'sync-indicator';
+                    text.textContent = 'מסונכרן';
+                    break;
+                case 'error':
+                    indicator.className = 'sync-indicator error';
+                    text.textContent = 'שגיאה';
+                    break;
             }
-        }
-
-        function checkSystemsSync() {
-            // בדיקה אם צריך לסנכרן עם GitHub
-            const lastGitHubCheck = localStorage.getItem('last_github_check');
-            const now = new Date();
-            
-            if (!lastGitHubCheck || (now - new Date(lastGitHubCheck)) > 5 * 60 * 1000) {
-                // בדיקה כל 5 דקות
-                fetch('https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/data.js/jobs(1).json')
-                    .then(response => response.ok ? response.json() : Promise.reject())
-                    .then(githubJobs => {
-                        updateSyncStatus('github', true);
-                        localStorage.setItem('last_github_check', now.toISOString());
-                        
-                        // השוואה עם הנתונים המקומיים
-                        if (githubJobs.length !== jobs.length) {
-                            showNotification(`זוהה שינוי ב-GitHub: ${githubJobs.length} משרות`, 'warning');
-                        }
-                    })
-                    .catch(() => {
-                        updateSyncStatus('github', false);
-                        localStorage.setItem('last_github_check', now.toISOString());
-                    });
-            }
-        }
-
-        function syncAllSystems() {
-            showNotification('מתחיל סנכרון מלא...', 'warning');
-            showLoading();
-            
-            Promise.all([
-                syncWithMainWebsite(),
-                loadJobsAdvanced()
-            ]).then(() => {
-                updateSyncPanel();
-                showNotification('סנכרון מלא הושלם בהצלחה!', 'success');
-            }).catch(error => {
-                console.error('שגיאה בסנכרון:', error);
-                showNotification('שגיאה בסנכרון המערכות', 'error');
-            }).finally(() => {
-                hideLoading();
-            });
         }
 
         // פונקציות עזר
-        function formatDateTime(isoString) {
-            try {
-                const date = new Date(isoString);
-                const today = new Date();
-                const isToday = date.toDateString() === today.toDateString();
-                
-                if (isToday) {
-                    return `היום ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-                } else {
-                    return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth()+1).toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-                }
-            } catch (e) {
-                return 'תאריך לא תקין';
-            }
-        }
-
-        // הודעות מתקדמות
         function showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
             const textElement = document.getElementById('notificationText');
             
-            // איקונים לפי סוג הודעה
             const icons = {
                 'success': 'fas fa-check-circle',
                 'error': 'fas fa-exclamation-triangle', 
@@ -2700,7 +2092,6 @@ JOB003,"מורה לאנגלית","בית ספר","חינוך והוראה","יר
             textElement.innerHTML = `<i class="${icons[type]}"></i> ${message}`;
             notification.style.display = 'block';
             
-            // הסתרה אוטומטית
             setTimeout(() => {
                 notification.style.display = 'none';
             }, type === 'error' ? 5000 : 3000);
@@ -2714,100 +2105,37 @@ JOB003,"מורה לאנגלית","בית ספר","חינוך והוראה","יר
             document.getElementById('loadingOverlay').style.display = 'none';
         }
 
-        // פונקציות מתקדמות נוספות
-        function manageCategories() {
-            const categories = [...new Set(jobs.map(job => job.category).filter(Boolean))].sort();
-            const newCategory = prompt(`קטגוריות קיימות:\n${categories.join(', ')}\n\nהוסף קטגוריה חדשה:`);
-            
-            if (newCategory && newCategory.trim()) {
-                showNotification(`קטגוריה "${newCategory.trim()}" נוספה`, 'success');
-                // בפיתוח מלא ניתן להוסיף ניהול מתקדם יותר
-            }
-        }
-
-        function bulkActions() {
-            if (selectedJobs.size === 0) {
-                showNotification('בחר משרות קודם', 'warning');
-                return;
-            }
-            openBulkModal();
-        }
-
-        // בדיקת כתובת URL להצגת ממשק ניהול
-        function checkUrlForAdmin() {
-            const hash = window.location.hash;
-            const path = window.location.pathname;
-            
-            if (hash === '#admin' || path.includes('admin.html') || path.includes('admin')) {
-                if (sessionStorage.getItem('adminAuthenticated') === 'true') {
-                    document.getElementById('adminLoginSection').style.display = 'none';
-                    document.getElementById('adminContentSection').style.display = 'block';
-                    document.getElementById('backToSite').style.display = 'block';
-                    initializeAdminSystem();
-                } else {
-                    document.getElementById('adminLoginSection').style.display = 'flex';
-                    document.getElementById('adminContentSection').style.display = 'none';
-                }
-                return true;
-            }
-            return false;
-        }
-
-        // אתחול האפליקציה
+        // אתחול
         document.addEventListener('DOMContentLoaded', function() {
-            // בדיקת הניתוב
-            if (!checkUrlForAdmin()) {
-                // אם לא נכנסנו דרך ניתוב מיוחד, בדוק אימות
-                if (sessionStorage.getItem('adminAuthenticated') === 'true') {
+            // טעינת URL מהאחסון המקומי
+            const savedUrl = localStorage.getItem('github_url');
+            if (savedUrl) {
+                document.getElementById('githubUrl').value = savedUrl;
+            }
+            
+            // בדיקת אימות
+            if (sessionStorage.getItem('adminAuthenticated') === 'true') {
+                const gitUrl = document.getElementById('githubUrl').value;
+                if (gitUrl) {
+                    githubUrl = gitUrl;
                     document.getElementById('adminLoginSection').style.display = 'none';
                     document.getElementById('adminContentSection').style.display = 'block';
                     document.getElementById('backToSite').style.display = 'block';
                     initializeAdminSystem();
-                } else {
-                    document.getElementById('adminLoginSection').style.display = 'flex';
-                    document.getElementById('adminContentSection').style.display = 'none';
                 }
             }
             
-            // האזנה למקש Enter בשדה הסיסמה
+            // מאזיני אירועים
             document.getElementById('adminPassword').addEventListener('keyup', function(event) {
                 if (event.key === 'Enter') {
                     checkAdminPassword();
                 }
             });
-            
-            // תמיכה ב-Drag & Drop לייבוא
-            const fileUpload = document.querySelector('.file-upload');
-            if (fileUpload) {
-                fileUpload.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                    this.style.borderColor = '#ff9e9e';
-                    this.style.background = 'linear-gradient(135deg, rgba(246,152,152,0.2), rgba(246,152,152,0.3))';
-                });
-                
-                fileUpload.addEventListener('dragleave', function(e) {
-                    e.preventDefault();
-                    this.style.borderColor = '#F69898';
-                    this.style.background = 'linear-gradient(135deg, rgba(246,152,152,0.05), rgba(246,152,152,0.1))';
-                });
-                
-                fileUpload.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    this.style.borderColor = '#F69898';
-                    this.style.background = 'linear-gradient(135deg, rgba(246,152,152,0.05), rgba(246,152,152,0.1))';
-                    
-                    const files = e.dataTransfer.files;
-                    if (files.length > 0) {
-                        document.getElementById('file-input').files = files;
-                        handleFileUpload({ target: { files: files } });
-                    }
-                });
-            }
         });
 
-        // סגירת מודלים בלחיצה מחוץ לתוכן
+        // סגירת מודלים
         window.addEventListener('click', function(event) {
-            const modals = ['import-modal', 'mapping-modal', 'job-edit-modal', 'bulk-modal'];
+            const modals = ['import-modal', 'job-edit-modal', 'bulk-modal'];
             modals.forEach(modalId => {
                 const modal = document.getElementById(modalId);
                 if (event.target === modal) {
@@ -2816,10 +2144,9 @@ JOB003,"מורה לאנגלית","בית ספר","חינוך והוראה","יר
             });
         });
 
-        // האזנה למקש ESC
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
-                const modals = ['import-modal', 'mapping-modal', 'job-edit-modal', 'bulk-modal'];
+                const modals = ['import-modal', 'job-edit-modal', 'bulk-modal'];
                 modals.forEach(modalId => {
                     const modal = document.getElementById(modalId);
                     if (modal.style.display === 'block') {
@@ -2829,20 +2156,12 @@ JOB003,"מורה לאנגלית","בית ספר","חינוך והוראה","יר
             }
         });
 
-        // האזנה לשינויים ב-URL
-        window.addEventListener('hashchange', function() {
-            checkUrlForAdmin();
-        });
-
         // פונקציות גלובליות
-        window.showLoginForm = showLoginForm;
         window.checkAdminPassword = checkAdminPassword;
+        window.syncFromGitHub = syncFromGitHub;
         window.openImportModal = openImportModal;
         window.closeImportModal = closeImportModal;
         window.handleFileUpload = handleFileUpload;
-        window.openMappingModalAdvanced = openMappingModalAdvanced;
-        window.closeMappingModal = closeMappingModal;
-        window.applyMapping = applyMapping;
         window.openAddJobModal = openAddJobModal;
         window.closeEditModal = closeEditModal;
         window.saveJob = saveJob;
@@ -2858,69 +2177,10 @@ JOB003,"מורה לאנגלית","בית ספר","חינוך והוראה","יר
         window.openBulkModal = openBulkModal;
         window.closeBulkModal = closeBulkModal;
         window.bulkAction = bulkAction;
-        window.exportJobs = exportJobs;
         window.exportForGitHub = exportForGitHub;
-        window.downloadAdvancedTemplate = downloadAdvancedTemplate;
-        window.manageCategories = manageCategories;
         window.bulkActions = bulkActions;
-        window.syncAllSystems = syncAllSystems;
 
-        console.log('🚀 מערכת ניהול מתקדמת נטענה בהצלחה!');
+        console.log('🚀 מערכת ניהול GitHub נטענה בהצלחה!');
     </script>
 </body>
 </html>
-
----
-
-## 🔐 כיצד להיכנס למערכת הניהול?
-
-יש **3 דרכים** להיכנס למערכת הניהול:
-
-### **דרך 1: דרך האתר הראשי**
-1. היכנס לאתר הראשי שלך
-2. תראה כפתור צדדי עגול עם סמל מנעול 🔒
-3. לחץ על הכפתור
-4. הכנס את הסיסמה: `yarin080708`
-
-### **דרך 2: כתובת ישירה**
-1. גש לכתובת: `yoursite.com/admin.html`
-2. או שמור את הקובץ בשם `admin.html` באתר שלך
-3. הכנס את הסיסמה: `yarin080708`
-
-### **דרך 3: דרך ה-Hash**
-1. הוסף `#admin` לכתובת האתר
-2. למשל: `yoursite.com/#admin`
-3. הכנס את הסיסמה: `yarin080708`
-
----
-
-## ⚙️ מה תוכל לעשות במערכת הניהול?
-
-### **ניהול משרות מתקדם:**
-- ✅ הוספה, עריכה ומחיקה של משרות
-- ⭐ סימון משרות כמומלצות
-- 🔍 חיפוש וסינון מתקדם
-- 📊 פעולות מרובות על משרות
-
-### **ייבוא וייצוא:**
-- 📁 ייבוא משרות מקבצי CSV/JSON
-- 🔄 מיפוי אוטומטי של שדות
-- 💾 ייצוא לקבצים
-- 🌐 עדכון GitHub ישיר
-
-### **סנכרון מערכות:**
-- 🔗 סנכרון אוטומטי עם האתר הראשי
-- 📡 בדיקת עדכונים מ-GitHub
-- 📈 מעקב אחר סטטיסטיקות
-- ⏰ ניטור בזמן אמת
-
----
-
-## 🔄 איך המערכת עובדת?
-
-1. **מערכת הניהול** שומרת את המשרות ב-`localStorage`
-2. **סנכרון אוטומטי** עם האתר הראשי
-3. **עדכון GitHub** ידני לפי הצורך
-4. **האתר הראשי** טוען אוטומטית מ-GitHub
-
-המערכת מבטיחה שהמשרות תמיד יהיו מעודכנות בכל המקומות! 🎯
