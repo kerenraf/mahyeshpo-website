@@ -1818,20 +1818,20 @@ const modals = ['job-modal', 'about-modal', 'admin-login-modal'];
             document.getElementById('adminLoginError').style.display = 'none';
         }
 
-        function checkAdminAccess() {
-            const password = document.getElementById('adminPasswordInput').value;
-            if (password === "yarin080708") {
-                sessionStorage.setItem('adminAuthenticated', 'true');
-                window.open('./admin.html', '_blank');
-                closeAdminLogin();
-            } else {
-                document.getElementById('adminLoginError').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('adminLoginError').style.display = 'none';
-                }, 3000);
-            }
-        }
-
+function checkAdminAccess() {
+    const password = document.getElementById('adminPasswordInput').value;
+    if (password === "yarin080708") {
+        sessionStorage.setItem('adminAuthenticated', 'true');
+        // במקום ./admin.html שני לזה:
+        window.location.href = window.location.origin + '/#admin';
+        closeAdminLogin();
+    } else {
+        document.getElementById('adminLoginError').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('adminLoginError').style.display = 'none';
+        }, 3000);
+    }
+}
         // הוספה למאזיני אירועים
         document.addEventListener('keyup', function(event) {
             if (event.key === 'Enter' && document.getElementById('admin-login-modal').style.display === 'block') {
