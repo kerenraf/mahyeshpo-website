@@ -11,15 +11,9 @@
             --primary-hover: #e58080;
             --dark-bg: #333333;
             --darker-bg: #222222;
-            --light-bg: #f8f8f8;
             --text-light: #ffffff;
-            --text-dark: #222222;
             --text-muted: #cccccc;
-            --success-color: #28a745;
-            --error-color: #ff6b6b;
             --border-radius: 12px;
-            --input-radius: 8px;
-            --box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
             --transition: all 0.3s ease;
         }
 
@@ -84,19 +78,9 @@
             font-weight: 500;
         }
 
-        .main-nav a:hover, 
-        .main-nav a.active {
+        .main-nav a:hover, .main-nav a.active {
             background: rgba(246, 152, 152, 0.2);
             color: #F69898;
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
         }
 
         .hero-section {
@@ -107,7 +91,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow: visible;
             background-color: #000;
             padding-top: 70px;
         }
@@ -163,20 +147,15 @@
             font-size: 3.5rem;
             font-weight: bold;
             color: #F69898;
-            text-align: center;
-            margin: 0;
-            line-height: 1.2;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
             margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
         }
 
         .hero-content .main-title {
             font-size: 2.8rem;
             color: white;
-            text-align: center;
             font-weight: bold;
             margin-bottom: 20px;
-            line-height: 1.2;
         }
 
         .highlight {
@@ -186,10 +165,8 @@
         .hero-description {
             font-size: 1.2rem;
             color: white;
-            text-align: center;
-            margin: 0 auto;
             max-width: 800px;
-            margin-bottom: 40px;
+            margin: 0 auto 40px;
             opacity: 0.9;
         }
 
@@ -232,29 +209,28 @@
 
         .btn-secondary:hover {
             background: rgba(255,255,255,0.1);
-            color: white;
-            box-shadow: 0 6px 15px rgba(255,255,255,0.2);
         }
 
+        /* גמדה ראשית */
         .gnome-character {
-            position: absolute;
-            bottom: 20px;
-            right: 10%;
-            width: 120px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            z-index: 10;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .gnome-character:hover {
-            transform: scale(1.1);
+            position: absolute !important;
+            bottom: 20px !important;
+            right: 10% !important;
+            width: 120px !important;
+            cursor: pointer !important;
+            transition: transform 0.3s ease !important;
+            z-index: 100 !important;
+            animation: gnomeFloat 3s ease-in-out infinite !important;
         }
 
         .gnome-character img {
             width: 100%;
             height: auto;
             filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+        }
+
+        .gnome-character:hover {
+            transform: scale(1.1) !important;
         }
 
         .gnome-tooltip {
@@ -271,7 +247,7 @@
             visibility: hidden;
             transition: all 0.3s ease;
             white-space: nowrap;
-            z-index: 20;
+            z-index: 120;
             border: 2px solid #F69898;
         }
 
@@ -291,7 +267,7 @@
             border-top: 8px solid #2D2D2D;
         }
 
-        @keyframes float {
+        @keyframes gnomeFloat {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
         }
@@ -305,7 +281,7 @@
             border: 1px solid #444;
         }
 
-        .search-title {
+        .search-title, .section-title {
             color: #F69898;
             font-size: 1.8rem;
             text-align: center;
@@ -314,7 +290,7 @@
             padding-bottom: 15px;
         }
 
-        .search-title::after {
+        .search-title::after, .section-title::after {
             content: '';
             position: absolute;
             bottom: 0;
@@ -371,27 +347,6 @@
             padding: 60px 0;
         }
 
-        .section-title {
-            color: #F69898;
-            font-size: 1.8rem;
-            text-align: center;
-            margin-bottom: 25px;
-            position: relative;
-            padding-bottom: 15px;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: #F69898;
-            border-radius: 3px;
-        }
-
         .jobs-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -408,7 +363,6 @@
             cursor: pointer;
             position: relative;
             min-height: 320px;
-            overflow: visible;
             border: 1px solid #444444;
             padding-bottom: 80px;
         }
@@ -434,7 +388,6 @@
             font-size: 0.75rem;
             font-weight: bold;
             padding: 2px 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             z-index: 2;
         }
 
@@ -443,7 +396,6 @@
             font-size: 1.3rem;
             font-weight: bold;
             margin-bottom: 12px;
-            transition: all 0.3s ease;
             margin-top: 35px;
         }
 
@@ -472,7 +424,6 @@
         }
 
         .job-badge {
-            background: #7c3aed;
             color: white;
             padding: 8px 16px;
             border-radius: 20px;
@@ -482,14 +433,6 @@
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-
-        .job-badge.dev { background: #3B82F6; }
-        .job-badge.food { background: #10B981; }
-        .job-badge.education { background: #F59E0B; }
-        .job-badge.marketing { background: #EF4444; }
-        .job-badge.hr { background: #8B5CF6; }
-        .job-badge.health { background: #06B6D4; }
-        .job-badge.design { background: #EC4899; }
 
         .job-card-bottom {
             position: absolute;
@@ -527,7 +470,6 @@
             background: rgba(0, 0, 0, 0.7);
             border-radius: 10px;
             padding: 3px 6px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .contact-buttons {
@@ -552,7 +494,6 @@
 
         .contact-button:hover {
             transform: scale(1.15);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
         .whatsapp-button {
@@ -582,8 +523,6 @@
             transition: all 0.3s ease;
             border: 1px solid #444444;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
         }
 
         .category-card:hover {
@@ -612,7 +551,6 @@
         .category-desc {
             font-size: 0.9rem;
             color: #cccccc;
-            line-height: 1.4;
         }
 
         .contact-section {
@@ -670,7 +608,6 @@
 
         .contact-method-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
         .modal {
@@ -695,8 +632,6 @@
             max-height: 90vh;
             overflow-y: auto;
             border: 2px solid #F69898;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-            position: relative;
         }
 
         .modal-header {
@@ -737,7 +672,6 @@
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 25px;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         .job-detail-row {
@@ -747,15 +681,10 @@
             margin-bottom: 15px;
         }
 
-        .job-detail-item {
-            padding-bottom: 8px;
-        }
-
         .job-detail-label {
             color: #F69898;
             font-size: 0.9rem;
             margin-bottom: 5px;
-            display: block;
         }
 
         .job-detail-value {
@@ -767,10 +696,6 @@
             color: #F69898;
             margin: 20px 0 10px 0;
             font-size: 1.2rem;
-            position: relative;
-            padding-right: 15px;
-            display: flex;
-            align-items: center;
         }
 
         .job-description-modal, .job-requirements {
@@ -779,7 +704,6 @@
             border-radius: 12px;
             margin-bottom: 20px;
             white-space: pre-line;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
             color: white;
         }
 
@@ -788,25 +712,6 @@
             color: white;
             padding: 50px 0;
             text-align: center;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 25px 0;
-            flex-wrap: wrap;
-        }
-
-        .footer-link {
-            color: #cccccc;
-            text-decoration: none;
-            transition: color 0.3s;
-            font-size: 1rem;
-        }
-
-        .footer-link:hover {
-            color: #F69898;
         }
 
         .footer-social {
@@ -833,33 +738,6 @@
         .social-icon:hover {
             background: #F69898;
             transform: translateY(-3px);
-        }
-
-        .copyright {
-            margin-top: 25px;
-            opacity: 0.8;
-            font-size: 0.9rem;
-        }
-
-        .import-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: linear-gradient(135deg, #28a745, #34ce57);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            z-index: 999;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .import-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
         .loading {
@@ -890,133 +768,25 @@
             color: white;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            margin: 20px 0;
         }
-
-        .no-jobs-message h3 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-        }
-
-        .no-jobs-message p {
-            opacity: 0.8;
-            font-size: 1.1rem;
-        }
-
-        .fade-up {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.8s ease forwards;
-        }
-
-        @keyframes fadeUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-        .delay-4 { animation-delay: 0.4s; }
 
         @media (max-width: 768px) {
-            .mobile-menu-toggle {
-                display: block;
-            }
-
-            .main-nav {
-                display: none;
-            }
-
-            .hero-content h1 {
-                font-size: 2.2rem;
-            }
-
-            .main-title {
-                font-size: 2rem !important;
-            }
-
-            .search-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .jobs-grid {
-                grid-template-columns: 1fr;
-                gap: 25px;
-            }
-
-            .job-card {
-                min-height: 300px;
-                padding: 20px;
-                padding-bottom: 70px;
-            }
-
-            .job-card-bottom {
-                bottom: 15px;
-                left: 15px;
-                right: 15px;
-            }
-
-            .contact-buttons-group {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .gnome-character {
-                width: 90px;
-                right: 5%;
-            }
-
-            .job-detail-row {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .modal-content {
-                margin: 5% auto;
-                width: 95%;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .search-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .categories-grid {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-                gap: 20px;
-            }
-
-            .import-button {
-                padding: 10px 15px;
-                font-size: 0.9rem;
-            }
+            .hero-content h1 { font-size: 2.2rem; }
+            .main-title { font-size: 2rem !important; }
+            .search-grid { grid-template-columns: 1fr; }
+            .jobs-grid { grid-template-columns: 1fr; }
+            .gnome-character { width: 90px !important; right: 5% !important; }
+            .job-detail-row { grid-template-columns: 1fr; }
+            .contact-buttons-group { flex-direction: column; align-items: center; }
         }
     </style>
 </head>
 <body>
-    <button class="import-button" onclick="importJobsFromJSON()">
-        <i class="fas fa-download"></i> ייבא משרות
-    </button>
-
     <header class="header">
         <div class="container">
             <div class="header-inner">
-                <div class="text-logo-container">
-                    <h2 class="text-logo">מה יש פה?</h2>
-                </div>
-                <button class="mobile-menu-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-                
-                <nav class="main-nav" id="mainNav">
+                <h2 class="text-logo">מה יש פה?</h2>
+                <nav class="main-nav">
                     <ul>
                         <li><a href="#" class="active">דף הבית</a></li>
                         <li><a href="#contact">צור קשר</a></li>
@@ -1036,7 +806,7 @@
         
         <div class="container">
             <div class="hero-content">
-                <h1 class="text-logo">מה יש פה?</h1>
+                <h1>מה יש פה?</h1>
                 <h2 class="main-title">
                     מצא את <span class="highlight">המשרה</span><br>
                     <span class="highlight">המושלמת</span><br>
@@ -1052,8 +822,10 @@
             </div>
         </div>
         
-        <div class="gnome-character">
-            <img src="https://cdn.pixabay.com/photo/2017/01/31/16/49/dwarf-2023281_960_720.png" alt="גמדה עוזרת" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XnNeT15TXkjwvdGV4dD48L3N2Zz4='">
+        <div class="gnome-character" id="mainGnome">
+            <img src="https://cdn.pixabay.com/photo/2017/01/31/16/49/dwarf-2023281_960_720.png" 
+                 alt="גמדה עוזרת" 
+                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XnNeT15TXkjwvdGV4dD48L3N2Zz4='">
             <div class="gnome-tooltip">אני אעזור לך למצוא משרה!</div>
         </div>
     </section>
@@ -1080,9 +852,8 @@
                     <select class="form-control" id="regionFilter">
                         <option value="">כל האזורים</option>
                         <option value="מרכז">מרכז</option>
-                        <option value="צפון">צפון</option>
-                        <option value="חיפה">חיפה וקריות</option>
-                        <option value="ירושלים">ירושלים והסביבה</option>
+                        <option value="חיפה קריות והצפון">חיפה קריות והצפון</option>
+                        <option value="ירושלים והסביבה">ירושלים והסביבה</option>
                         <option value="דרום">דרום</option>
                         <option value="שרון">שרון</option>
                     </select>
@@ -1111,8 +882,7 @@
     <section class="categories">
         <div class="container">
             <h3 class="section-title">קטגוריות מובילות</h3>
-            <div class="categories-grid" id="categoriesContainer">
-            </div>
+            <div class="categories-grid" id="categoriesContainer"></div>
         </div>
     </section>
 
@@ -1124,7 +894,7 @@
                     <h4>דברו איתנו</h4>
                     <p>יש לכם שאלות או הצעות? אנחנו כאן כדי לעזור!</p>
                     <div class="contact-buttons-group">
-                        <a href="https://wa.me/972555504633" class="contact-method-btn whatsapp-btn" target="_blank">
+<a href="https://wa.me/972555504633" class="contact-method-btn whatsapp-btn" target="_blank">
                             <i class="fab fa-whatsapp"></i>
                             <span>שלח וואטסאפ</span>
                         </a>
@@ -1144,6 +914,7 @@
         </div>
     </section>
 
+    <!-- מודלים -->
     <div id="job-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1216,70 +987,14 @@
                     לא משנה אם אתה חייל משוחרר, אמא שמחפשת משרת אם, סטודנטית, איש הייטק או מחליף קריירה – 
                     כאן תמצא משרות מסוננות, אמיתיות, ועם ממשק שלא עושה כאב ראש.
                 </p>
-
-                <div style="background: linear-gradient(145deg, #3a3a3a, #333); border-radius: 10px; padding: 20px; margin: 20px 0; border-right: 4px solid #F69898;">
-                    <h4 style="color: #F69898; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-question-circle"></i>
-                        למה אנחנו פה?
-                    </h4>
-                    <p style="color: #ccc; margin-bottom: 15px;">
-                        כי חיפושי עבודה לא צריכים להיות סיוט. במקום להציף אותך במודעות לא רלוונטיות, אנחנו מציגים רק מה שחשוב:
-                    </p>
-                    
-                    <ul style="list-style: none; padding: 0; margin: 15px 0;">
-                        <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding: 8px; background: rgba(246, 152, 152, 0.1); border-radius: 6px; color: white;">
-                            <i class="fas fa-sync-alt" style="color: #F69898; width: 18px;"></i>
-                            <span>משרות עדכניות</span>
-                        </li>
-                        <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding: 8px; background: rgba(246, 152, 152, 0.1); border-radius: 6px; color: white;">
-                            <i class="fas fa-filter" style="color: #F69898; width: 18px;"></i>
-                            <span>סינון קל לפי אזור, תחום, היקף משרה</span>
-                        </li>
-                        <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding: 8px; background: rgba(246, 152, 152, 0.1); border-radius: 6px; color: white;">
-                            <i class="fas fa-handshake" style="color: #F69898; width: 18px;"></i>
-                            <span>מעסיקים שבאמת מחפשים</span>
-                        </li>
-                        <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding: 8px; background: rgba(246, 152, 152, 0.1); border-radius: 6px; color: white;">
-                            <i class="fas fa-paper-plane" style="color: #F69898; width: 18px;"></i>
-                            <span>שליחת קורות חיים פשוטה ונוחה</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div style="background: linear-gradient(145deg, #3a3a3a, #333); border-radius: 10px; padding: 20px; margin: 20px 0; border-right: 4px solid #F69898;">
-                    <h4 style="color: #F69898; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-heart"></i>
-                        ואנחנו לא רק טכנולוגיה
-                    </h4>
-                    <p style="color: #ccc; margin-bottom: 15px;">
-                        מאחורי הקלעים יש צוות אמיתי שזמין, מגיב ועוזר. אם נתקעת – שלחי לנו הודעה. אם יש לך הצעה לשיפור – אנחנו מקשיבים.
-                    </p>
-                    
-                    <div style="text-align: center; background: #444; padding: 15px; border-radius: 8px; margin-top: 15px; box-shadow: 0 2px 8px rgba(246, 152, 152, 0.1);">
-                        <strong style="color: #F69898; font-size: 1.1rem;">
-                            <i class="fas fa-star"></i>
-                            המטרה שלנו? שתמצאי את העבודה שלך – בלי להתייאש באמצע.
-                        </strong>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 
     <footer class="footer">
         <div class="container">
-            <div class="text-logo-container" style="margin-bottom: 25px;">
-                <h2 class="text-logo" style="font-size: 2rem;">מה יש פה?</h2>
-                <p style="font-size: 1rem; margin-top: 10px; opacity: 0.9;">לוח משרות חזק למקום עבודה מדוייק!</p>
-            </div>
-            
-            <div class="footer-links">
-                <a href="#" class="footer-link">דף הבית</a>
-                <a href="#search" class="footer-link">חיפוש משרות</a>
-                <a href="#contact" class="footer-link">צור קשר</a>
-                <a href="#" class="footer-link">תקנון אתר</a>
-                <a href="#" class="footer-link">מדיניות פרטיות</a>
-            </div>
+            <h2 class="text-logo" style="font-size: 2rem; margin-bottom: 10px;">מה יש פה?</h2>
+            <p style="font-size: 1rem; margin-bottom: 25px; opacity: 0.9;">לוח משרות חזק למקום עבודה מדוייק!</p>
             
             <div class="footer-social">
                 <a href="https://www.facebook.com/ma.yesh.po.akko" class="social-icon"><i class="fab fa-facebook-f"></i></a>
@@ -1288,15 +1003,18 @@
                 <a href="https://wa.me/972555504633" class="social-icon"><i class="fab fa-whatsapp"></i></a>
             </div>
             
-            <p class="copyright">© 2025 מה יש פה? - כל הזכויות שמורות</p>
+            <p style="margin-top: 25px; opacity: 0.8; font-size: 0.9rem;">© 2025 מה יש פה? - כל הזכויות שמורות</p>
         </div>
     </footer>
 
     <script>
+        // משתנים גלובליים
         let allJobs = [];
         let filteredJobs = [];
         let uniqueCategories = [];
+        let categoryColors = {};
 
+        // משרות דוגמה לטעינה במקרה שהקובץ לא זמין
         const sampleJobs = [
             {
                 id: 1,
@@ -1306,10 +1024,9 @@
                 category: "פיתוח ותוכנה",
                 city: "תל אביב",
                 region: "מרכז",
-                location: "תל אביב - מרכז",
                 jobType: "משרה מלאה",
-                description: "אנו מחפשים מפתח/ת Full Stack עם ניסיון בטכנולוגיות React, Node.js ו-MongoDB. התפקיד כולל פיתוח מערכות מורכבות, עבודה בצוות מקצועי ומתן פתרונות טכנולוגיים מתקדמים.",
-                requirements: "ניסיון של 3+ שנים בפיתוח Full Stack\\nידע מעמיק ב-JavaScript\\nניסיון עם React ו-Node.js\\nיכולת עבודה בצוות\\nאנגלית ברמה טובה",
+                description: "אנו מחפשים מפתח/ת Full Stack עם ניסיון בטכנולוגיות React, Node.js ו-MongoDB.",
+                requirements: "ניסיון של 3+ שנים בפיתוח Full Stack\nידע מעמיק ב-JavaScript\nניסיון עם React ו-Node.js",
                 status: "פעיל"
             },
             {
@@ -1319,11 +1036,10 @@
                 company: "מסעדת השף",
                 category: "מזון ומסעדנות",
                 city: "חיפה",
-                region: "חיפה",
-                location: "חיפה - צפון",
+                region: "חיפה קריות והצפון",
                 jobType: "משרה חלקית",
-                description: "דרושים מלצרים/ות למסעדה יוקרתית בחיפה. ניסיון קודם - יתרון. העבודה במשמרות גמישות, אווירה משפחתית ותנאים מעולים!",
-                requirements: "ניסיון קודם בהגשה - יתרון\\nיחסי אנוש מעולים\\nזמינות לעבודה בערבים וסופי שבוע\\nיכולת עבודה בצוות",
+                description: "דרושים מלצרים/ות למסעדה יוקרתית בחיפה. ניסיון קודם - יתרון.",
+                requirements: "ניסיון קודם בהגשה - יתרון\nיחסי אנוש מעולים\nזמינות לעבודה בערבים",
                 status: "פעיל"
             },
             {
@@ -1333,11 +1049,10 @@
                 company: "בית ספר יסודי",
                 category: "חינוך והוראה",
                 city: "ירושלים",
-                region: "ירושלים",
-                location: "ירושלים",
+                region: "ירושלים והסביבה",
                 jobType: "משרה מלאה",
-                description: "דרוש/ה מורה לאנגלית לבית ספר יסודי בירושלים. המשרה כוללת הוראת אנגלית לכיתות א'-ו', הכנת מערכי שיעור ובדיקת מבחנים.",
-                requirements: "תואר ראשון בהוראת אנגלית או תחום רלוונטי\\nתעודת הוראה\\nניסיון בהוראה - יתרון\\nיחסי אנוש מעולים\\nיכולת עבודה בסביבה דינמית",
+                description: "דרוש/ה מורה לאנגלית לבית ספר יסודי בירושלים.",
+                requirements: "תואר ראשון בהוראת אנגלית\nתעודת הוראה\nניסיון בהוראה - יתרון",
                 status: "פעיל"
             },
             {
@@ -1348,152 +1063,167 @@
                 category: "שיווק ומכירות",
                 city: "תל אביב",
                 region: "מרכז",
-                location: "תל אביב - מרכז",
                 jobType: "משרה מלאה",
-                description: "דרוש/ה מנהל/ת שיווק דיגיטלי לחברת היי-טק מובילה. התפקיד כולל ניהול קמפיינים, עבודה עם פלטפורמות פרסום, ניתוח נתונים והובלת אסטרטגיה שיווקית.",
-                requirements: "ניסיון של 3+ שנים בשיווק דיגיטלי\\nהיכרות עם פלטפורמות פרסום כגון Google Ads, Facebook Ads\\nיכולת ניתוח נתונים\\nחשיבה אסטרטגית\\nיתרון - ניסיון בשיווק B2B",
+                description: "דרוש/ה מנהל/ת שיווק דיגיטלי לחברת היי-טק מובילה.",
+                requirements: "ניסיון של 3+ שנים בשיווק דיגיטלי\nהיכרות עם Google Ads, Facebook Ads",
                 status: "פעיל"
             },
             {
                 id: 5,
-                jobNumber: "HR005",
-                title: "מגייס/ת בכיר/ה",
-                company: "חברת משאבי אנוש",
-                category: "משאבי אנוש",
-                city: "רמת גן",
-                region: "מרכז",
-                location: "רמת גן - מרכז",
-                jobType: "משרה מלאה",
-                description: "לחברת משאבי אנוש מובילה דרוש/ה מגייס/ת בכיר/ה. התפקיד כולל איתור מועמדים, ראיונות, ליווי תהליכי גיוס ועבודה מול מנהלים ולקוחות.",
-                requirements: "ניסיון של 2+ שנים בגיוס\\nיחסי אנוש מעולים\\nיכולת עבודה בסביבה דינמית\\nהיכרות עם מערכות גיוס\\nאנגלית ברמה גבוהה",
-                status: "פעיל"
-            },
-            {
-                id: 6,
                 jobNumber: "HC006",
                 title: "אח/ות מוסמך/ת",
                 company: "בית חולים פרטי",
                 category: "בריאות ורפואה",
                 city: "חיפה",
-                region: "חיפה",
-                location: "חיפה - צפון",
+                region: "חיפה קריות והצפון",
                 jobType: "משרה מלאה",
-                description: "לבית חולים פרטי בחיפה דרוש/ה אח/ות מוסמך/ת. העבודה במחלקה פנימית, משמרות בוקר/ערב/לילה.",
-                requirements: "תעודת אח/ות מוסמך/ת\\nניסיון של שנה לפחות\\nיחסי אנוש מעולים\\nיכולת עבודה בצוות\\nנכונות לעבודה במשמרות",
+                description: "לבית חולים פרטי בחיפה דרוש/ה אח/ות מוסמך/ת.",
+                requirements: "תעודת אח/ות מוסמך/ת\nניסיון של שנה לפחות\nיחסי אנוש מעולים",
+                status: "פעיל"
+            },
+            {
+                id: 6,
+                jobNumber: "AD007",
+                title: "עוזר/ת אדמיניסטרטיבי/ת",
+                company: "משרד עורכי דין",
+                category: "מנהל ואדמיניסטרציה",
+                city: "תל אביב",
+                region: "מרכז",
+                jobType: "משרה מלאה",
+                description: "למשרד עורכי דין דרוש/ה עוזר/ת אדמיניסטרטיבי/ת.",
+                requirements: "ניסיון באדמיניסטרציה\nיכולת עבודה עם מערכות מחשב\nאנגלית ברמה טובה",
                 status: "פעיל"
             }
         ];
 
-        // פונקציות חסרות שנוספו
-        function getCategoryClass(category) {
-            const categoryMap = {
-                'פיתוח ותוכנה': 'dev',
-                'מזון ומסעדנות': 'food',
-                'חינוך והוראה': 'education',
-                'שיווק ומכירות': 'marketing',
-                'משאבי אנוש': 'hr',
-                'בריאות ורפואה': 'health',
-                'עיצוב ויצירה': 'design'
-            };
-            return categoryMap[category] || 'default';
-        }
-
-        function openAdminModal() {
-            console.log('Admin modal - not implemented');
-        }
-
-        function closeAdminModal() {
-            console.log('Close admin modal - not implemented');
-        }
-
-        function checkAdminPassword() {
-            console.log('Check admin password - not implemented');
-        }
-
-        // פונקציה מעודכנת לטעינה מ-GitHub
-        function importJobsFromJSON() {
-            console.log('מנסה לייבא משרות...');
-            
-            // **שנה את הכתובת הזו לכתובת הרפוזיטורי שלך!**
-            const githubUrl = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO_NAME/main/data/jobs.json';
-            
-            // רשימת URLs לנסות
-            const urlsToTry = [
-                githubUrl, // GitHub ראשון
-                './data/jobs.json', // קובץ מקומי שני
-            ];
-            
-            // פונקציה רקורסיבית לנסות כל URL
-            function tryLoadFromUrl(urls, index = 0) {
-                if (index >= urls.length) {
-                    // אם כל ה-URLs נכשלו, השתמש במשרות דוגמה
-                    console.log('כל הנסיונות נכשלו, משתמש במשרות דוגמה...');
-                    allJobs = sampleJobs;
-                    processJobs();
-                    showMessage('נטענו משרות דוגמה. העלה קובץ jobs.json לGitHub או שים קובץ מקומי.', 'info');
-                    return;
-                }
-                
-                const currentUrl = urls[index];
-                const isGitHub = currentUrl.includes('githubusercontent.com');
-                
-                console.log(`מנסה לטעון מ-${isGitHub ? 'GitHub' : 'קובץ מקומי'}: ${currentUrl}`);
-                
-                fetch(currentUrl)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data && Array.isArray(data) && data.length > 0) {
-                            console.log(`משרות נטענו בהצלחה מ-${isGitHub ? 'GitHub' : 'קובץ מקומי'}:`, data.length);
-                            allJobs = data;
-                            processJobs();
-                            showMessage(`נטענו ${data.length} משרות מ-${isGitHub ? 'GitHub' : 'קובץ מקומי'} בהצלחה! 🎉`, 'success');
-                        } else {
-                            throw new Error('Invalid data structure');
-                        }
-                    })
-                    .catch(error => {
-                        console.warn(`נכשל לטעון מ-${isGitHub ? 'GitHub' : 'קובץ מקומי'}:`, error.message);
-                        // נסה את ה-URL הבא
-                        tryLoadFromUrl(urls, index + 1);
-                    });
-            }
-            
-            // התחל את התהליך
-            tryLoadFromUrl(urlsToTry);
-        }
-
+        // אתחול כשהדף נטען
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('הדף נטען - מאתחל...');
-            attachEventListeners();
-            loadJobs();
+            console.log('🚀 הדף נטען - מאתחל...');
+            initializeApp();
         });
 
-        function loadJobs() {
-            importJobsFromJSON();
+        // פונקציה ראשית לאתחול
+        function initializeApp() {
+            ensureGnomeExists();
+            loadJobsFromFile();
+            attachEventListeners();
+            
+            setTimeout(function() {
+                showMessage('ברוכים הבאים למה יש פה! 🎉', 'success');
+            }, 1000);
         }
 
+        // טעינת משרות מקובץ חיצוני
+        function loadJobsFromFile() {
+            console.log('📋 מנסה לטעון משרות מקובץ...');
+            
+            // רשימת URLs לנסות לטעון מהם
+            const urlsToTry = [
+                './data/jobs.json',
+                './jobs.json',
+                'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/data/jobs.json'
+            ];
+            
+            tryLoadFromUrls(urlsToTry, 0);
+        }
+
+        // פונקציה רקורסיבית לנסות טעינה מכמה URLs
+        function tryLoadFromUrls(urls, index) {
+            if (index >= urls.length) {
+                console.log('⚠️ כל הנסיונות לטעינה נכשלו - משתמש במשרות דוגמה');
+                allJobs = sampleJobs;
+                processJobs();
+                showMessage('נטענו משרות דוגמה. לטעינת משרות מקובץ, הנח קובץ jobs.json בתיקייה', 'info');
+                return;
+            }
+            
+            const currentUrl = urls[index];
+            console.log(`🔄 מנסה לטעון מ: ${currentUrl}`);
+            
+            fetch(currentUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && Array.isArray(data) && data.length > 0) {
+                        console.log(`✅ משרות נטענו בהצלחה: ${data.length} משרות`);
+                        allJobs = data;
+                        processJobs();
+                        showMessage(`נטענו ${data.length} משרות מהקובץ בהצלחה! 🎉`, 'success');
+                    } else {
+                        throw new Error('נתונים לא תקינים');
+                    }
+                })
+                .catch(error => {
+                    console.warn(`❌ נכשל לטעון מ ${currentUrl}:`, error.message);
+                    tryLoadFromUrls(urls, index + 1);
+                });
+        }
+
+        // עיבוד משרות אחרי טעינה
         function processJobs() {
             extractUniqueCategories();
+            generateCategoryColors();
             updateCategoryFilters();
             updateCategoryCards();
             displayJobs(allJobs.filter(job => job.status === 'פעיל'));
+            addVisualEffects();
         }
 
-function extractUniqueCategories() {
+        // חילוץ קטגוריות ייחודיות
+        function extractUniqueCategories() {
             const categories = allJobs
                 .filter(job => job.category)
                 .map(job => job.category.trim())
                 .filter((category, index, self) => self.indexOf(category) === index);
             
             uniqueCategories = categories.sort();
-            console.log('קטגוריות ייחודיות:', uniqueCategories);
+            console.log('🏷️ קטגוריות נמצאו:', uniqueCategories);
         }
 
+        // יצירת צבעים דינמיים לקטגוריות
+        function generateCategoryColors() {
+            const predefinedColors = [
+                '#3B82F6', // כחול
+                '#10B981', // ירוק
+                '#F59E0B', // כתום
+                '#EF4444', // אדום
+                '#8B5CF6', // סגול
+                '#06B6D4', // ציאן
+                '#EC4899', // ורוד
+                '#6B7280', // אפור
+                '#84CC16', // ירוק בהיר
+                '#F97316', // כתום כהה
+                '#14B8A6', // טורקיז
+                '#A855F7', // סגול בהיר
+                '#DC2626', // אדום כהה
+                '#059669', // ירוק כהה
+                '#7C2D12', // חום
+                '#1E40AF', // כחול כהה
+                '#BE185D', // ורוד כהה
+                '#365314', // ירוק זית
+                '#92400E', // חום בהיר
+                '#1F2937'  // שחור כחלחל
+            ];
+
+            categoryColors = {};
+            uniqueCategories.forEach((category, index) => {
+                const colorIndex = index % predefinedColors.length;
+                categoryColors[category] = predefinedColors[colorIndex];
+            });
+
+            console.log('🎨 צבעי קטגוריות נוצרו:', categoryColors);
+        }
+
+        // קבלת צבע לקטגוריה
+        function getCategoryColor(category) {
+            return categoryColors[category] || '#7c3aed';
+        }
+
+        // עדכון פילטר קטגוריות
         function updateCategoryFilters() {
             const categoryFilter = document.getElementById('categoryFilter');
             if (!categoryFilter) return;
@@ -1508,49 +1238,35 @@ function extractUniqueCategories() {
             });
         }
 
+        // עדכון כרטיסי קטגוריות
         function updateCategoryCards() {
             const categoriesContainer = document.getElementById('categoriesContainer');
             if (!categoriesContainer) return;
             
             categoriesContainer.innerHTML = '';
             
-            const categoryIcons = {
-                'פיתוח ותוכנה': '💻',
-                'מזון ומסעדנות': '🍽️',
-                'חינוך והוראה': '📚',
-                'שיווק ומכירות': '📈',
-                'משאבי אנוש': '👥',
-                'בריאות ורפואה': '🏥',
-                'עיצוב ויצירה': '🎨'
-            };
+            // אייקונים ברירת מחדל
+            const defaultIcons = ['💼', '🛠️', '📊', '🎯', '✨', '⚡', '🚀', '💡', '🔧', '📈'];
             
-            const categoryDescs = {
-                'פיתוח ותוכנה': 'מפתחים, מתכנתים, QA',
-                'מזון ומסעדנות': 'מלצרים, טבחים, ברמנים',
-                'חינוך והוראה': 'מורים, מדריכים, מחנכים',
-                'שיווק ומכירות': 'מנהלי מכירות, שיווק דיגיטלי',
-                'משאבי אנוש': 'מגייסים, מנהלי HR',
-                'בריאות ורפואה': 'אחיות, רופאים, פיזיותרפיסטים',
-                'עיצוב ויצירה': 'גרפיקאים, מעצבים, אמנים'
-            };
-            
-            uniqueCategories.slice(0, 6).forEach((category, index) => {
+            uniqueCategories.slice(0, 8).forEach((category, index) => {
                 const card = document.createElement('div');
-                card.className = 'category-card fade-up delay-' + ((index % 4) + 1);
+                card.className = 'category-card';
                 card.onclick = function() { selectCategory(category); };
                 
-                const icon = categoryIcons[category] || '📦';
-                const desc = categoryDescs[category] || 'משרות מגוונות';
+                const icon = defaultIcons[index % defaultIcons.length];
+                const jobCount = allJobs.filter(job => job.category === category && job.status === 'פעיל').length;
                 
-                card.innerHTML = 
-                    '<div class="category-icon">' + icon + '</div>' +
-                    '<div class="category-title">' + category + '</div>' +
-                    '<div class="category-desc">' + desc + '</div>';
+                card.innerHTML = `
+                    <div class="category-icon">${icon}</div>
+                    <div class="category-title">${category}</div>
+                    <div class="category-desc">${jobCount} משרות זמינות</div>
+                `;
                 
                 categoriesContainer.appendChild(card);
             });
         }
 
+        // הצגת משרות
         function displayJobs(jobs) {
             const jobsContainer = document.getElementById('jobsContainer');
             if (!jobsContainer) return;
@@ -1558,81 +1274,118 @@ function extractUniqueCategories() {
             jobsContainer.innerHTML = '';
             
             if (!jobs || jobs.length === 0) {
-                jobsContainer.innerHTML = 
-                    '<div class="no-jobs-message">' +
-                    '<h3>אין משרות פעילות כרגע</h3>' +
-                    '<p>נסה לחפש שוב מאוחר יותר או לשנות את המסננים</p>' +
-                    '</div>';
+                jobsContainer.innerHTML = `
+                    <div class="no-jobs-message">
+                        <h3>אין משרות פעילות כרגע</h3>
+                        <p>נסה לחפש שוב מאוחר יותר או לשנות את המסננים</p>
+                    </div>
+                `;
                 return;
             }
             
-            const jobsToShow = jobs.slice(0, 9);
+            const jobsToShow = jobs.slice(0, 12);
             
             jobsToShow.forEach(function(job, index) {
                 const jobCard = document.createElement('div');
-                jobCard.className = 'job-card fade-up delay-' + ((index % 4) + 1);
+                jobCard.className = 'job-card';
                 
-                const location = job.city ? (job.city + ', ' + (job.region || 'מרכז')) : (job.region || 'מרכז');
+                const location = job.city ? `${job.city}, ${job.region || 'ישראל'}` : (job.region || 'ישראל');
                 const shortDescription = job.description ? 
                     (job.description.substring(0, 120) + (job.description.length > 120 ? '...' : '')) : 
-                    'לחץ על הגמדה או כפתורי יצירת הקשר לפרטים נוספים';
+                    'לחץ על הגמדה לפרטים נוספים';
                 
-                const messageText = 'שלום, אני מעוניין/ת במשרה: ' + job.title + ' (' + job.jobNumber + ')';
-                const whatsappLink = 'https://wa.me/972555504633?text=' + encodeURIComponent(messageText);
-                const smsLink = 'sms:+972555504633?body=' + encodeURIComponent(messageText);
+                const messageText = `שלום, אני מעוניין/ת במשרה: ${job.title} (${job.jobNumber})`;
+                const whatsappLink = `https://wa.me/972555504633?text=${encodeURIComponent(messageText)}`;
+                const smsLink = `sms:+972555504633?body=${encodeURIComponent(messageText)}`;
                 
-                jobCard.innerHTML = 
-                    '<div class="job-number">' + job.jobNumber + '</div>' +
-                    '<h3 class="job-title">' + job.title + '</h3>' +
-                    '<div class="job-company">' + job.company + '</div>' +
-                    '<div class="job-location">' +
-                    '<i class="fas fa-map-marker-alt"></i> ' + location +
-                    '</div>' +
-                    '<div class="job-description">' + shortDescription + '</div>' +
-                    '<div class="job-badge ' + getCategoryClass(job.category) + '">' + job.category + '</div>' +
-                    '<div class="job-card-bottom">' +
-                    '<div class="job-card-gnome" onclick="event.stopPropagation(); openJobModal(' + index + ', ' + (filteredJobs.length > 0 ? 'filteredJobs' : 'allJobs.filter(j => j.status === \'פעיל\')') + ')">' +
-                    '<img src="./images/gnome.png" alt="גמדה פרטים" onerror="this.src=\'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XnNeT15TXkjwvdGV4dD48L3N2Zz4=\'">' +
-                    '<div class="job-card-gnome-text">פרטים נוספים</div>' +
-                    '</div>' +
-                    '<div class="contact-buttons">' +
-                    '<a href="' + whatsappLink + '" class="contact-button whatsapp-button" target="_blank" title="פנייה בוואטסאפ" onclick="event.stopPropagation();">' +
-                    '<i class="fab fa-whatsapp"></i>' +
-                    '</a>' +
-                    '<a href="' + smsLink + '" class="contact-button sms-button" title="פנייה ב-SMS" onclick="event.stopPropagation();">' +
-                    '<i class="fas fa-sms"></i>' +
-                    '</a>' +
-                    '</div>' +
-                    '</div>';
+                // קבלת צבע דינמי לקטגוריה
+                const categoryColor = getCategoryColor(job.category);
+                
+                jobCard.innerHTML = `
+                    <div class="job-number">${job.jobNumber}</div>
+                    <h3 class="job-title">${job.title}</h3>
+                    <div class="job-company">${job.company}</div>
+                    <div class="job-location">
+                        <i class="fas fa-map-marker-alt"></i> ${location}
+                    </div>
+                    <div class="job-description">${shortDescription}</div>
+                    <div class="job-badge" style="background: ${categoryColor};">${job.category}</div>
+                    <div class="job-card-bottom">
+                        <div class="job-card-gnome" onclick="event.stopPropagation(); openJobModal(${index})">
+                            <img src="https://cdn.pixabay.com/photo/2017/01/31/16/49/dwarf-2023281_960_720.png" 
+                                 alt="גמדה פרטים" 
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XnNeT15TXkjwvdGV4dD48L3N2Zz4='">
+                            <div class="job-card-gnome-text">פרטים נוספים</div>
+                        </div>
+                        <div class="contact-buttons">
+                            <a href="${whatsappLink}" class="contact-button whatsapp-button" target="_blank" title="פנייה בוואטסאפ" onclick="event.stopPropagation();">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                            <a href="${smsLink}" class="contact-button sms-button" title="פנייה ב-SMS" onclick="event.stopPropagation();">
+                                <i class="fas fa-sms"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
                 
                 jobCard.addEventListener('click', function() {
-                    const currentJobs = filteredJobs.length > 0 ? filteredJobs : allJobs.filter(function(j) { return j.status === 'פעיל'; });
-                    openJobModal(index, currentJobs);
+                    openJobModal(index);
                 });
                 
                 jobsContainer.appendChild(jobCard);
             });
         }
 
-        function openJobModal(index, jobs) {
-            if (!jobs || !jobs[index]) {
+        // וידוא שהגמדה קיימת
+        function ensureGnomeExists() {
+            let gnome = document.querySelector('#mainGnome');
+            if (!gnome) {
+                console.log('🧙‍♀️ יוצר גמדה...');
+                const heroSection = document.querySelector('.hero-section');
+                if (heroSection) {
+                    const gnomeHTML = `
+                        <div class="gnome-character" id="mainGnome">
+                            <img src="https://cdn.pixabay.com/photo/2017/01/31/16/49/dwarf-2023281_960_720.png" 
+                                 alt="גמדה עוזרת" 
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XnNeT15TXkjwvdGV4dD48L3N2Zz4='">
+                            <div class="gnome-tooltip">אני אעזור לך למצוא משרה!</div>
+                        </div>
+                    `;
+                    heroSection.insertAdjacentHTML('beforeend', gnomeHTML);
+                    gnome = document.querySelector('#mainGnome');
+                }
+            }
+            
+            // הוספת קליק לגמדה
+            if (gnome) {
+                gnome.addEventListener('click', function() {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+        }
+
+        // פתיחת מודל משרה
+        function openJobModal(index) {
+            const currentJobs = filteredJobs.length > 0 ? filteredJobs : allJobs.filter(j => j.status === 'פעיל');
+            
+            if (!currentJobs || !currentJobs[index]) {
                 alert('אירעה שגיאה בטעינת פרטי המשרה');
                 return;
             }
             
-            const job = jobs[index];
+            const job = currentJobs[index];
             
             document.getElementById('modal-job-title').textContent = job.title || 'משרה ללא כותרת';
             document.getElementById('modal-job-company').textContent = job.company || 'חברה לא ידועה';
-            document.getElementById('modal-job-location').textContent = job.city ? (job.city + ', ' + (job.region || 'מרכז')) : (job.region || 'מרכז');
+            document.getElementById('modal-job-location').textContent = job.city ? `${job.city}, ${job.region || 'ישראל'}` : (job.region || 'ישראל');
             document.getElementById('modal-job-type').textContent = job.jobType || 'משרה מלאה';
             document.getElementById('modal-job-category').textContent = job.category || 'אחר';
             document.getElementById('modal-job-description').textContent = job.description || 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
             document.getElementById('modal-job-requirements').textContent = job.requirements ? job.requirements.replace(/\\n/g, '\n') : 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
             
-            const messageText = 'שלום, אני מעוניין/ת במשרה: ' + job.title + ' (' + job.jobNumber + ')';
-            const whatsappLink = 'https://wa.me/972555504633?text=' + encodeURIComponent(messageText);
-            const smsLink = 'sms:+972555504633?body=' + encodeURIComponent(messageText);
+            const messageText = `שלום, אני מעוניין/ת במשרה: ${job.title} (${job.jobNumber})`;
+            const whatsappLink = `https://wa.me/972555504633?text=${encodeURIComponent(messageText)}`;
+            const smsLink = `sms:+972555504633?body=${encodeURIComponent(messageText)}`;
             
             document.getElementById('modal-whatsapp-btn').href = whatsappLink;
             document.getElementById('modal-sms-btn').href = smsLink;
@@ -1641,21 +1394,25 @@ function extractUniqueCategories() {
             document.body.style.overflow = 'hidden';
         }
 
+        // סגירת מודל משרה
         function closeJobModal() {
             document.getElementById('job-modal').style.display = 'none';
             document.body.style.overflow = 'auto';
         }
 
+        // פתיחת מודל "עוד עלינו"
         function openAboutModal() {
             document.getElementById('about-modal').style.display = 'block';
             document.body.style.overflow = 'hidden';
         }
 
+        // סגירת מודל "עוד עלינו"
         function closeAboutModal() {
             document.getElementById('about-modal').style.display = 'none';
             document.body.style.overflow = 'auto';
         }
 
+        // בחירת קטגוריה
         function selectCategory(category) {
             const categoryFilter = document.getElementById('categoryFilter');
             if (categoryFilter) {
@@ -1665,12 +1422,13 @@ function extractUniqueCategories() {
             }
         }
 
+// סינון משרות
         function filterJobs() {
             const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
             const category = document.getElementById('categoryFilter').value;
             const region = document.getElementById('regionFilter').value;
             
-            const activeJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; });
+            const activeJobs = allJobs.filter(job => job.status === 'פעיל');
             
             filteredJobs = activeJobs.filter(function(job) {
                 if (searchText && !jobMatchesSearch(job, searchText)) {
@@ -1689,11 +1447,10 @@ function extractUniqueCategories() {
             });
             
             displayJobs(filteredJobs);
-            
-            const resultsCount = filteredJobs.length;
-            console.log('נמצאו ' + resultsCount + ' תוצאות');
+            console.log(`🔍 נמצאו ${filteredJobs.length} תוצאות`);
         }
 
+        // בדיקה אם משרה מתאימה לחיפוש
         function jobMatchesSearch(job, searchText) {
             return (
                 (job.title && job.title.toLowerCase().includes(searchText)) ||
@@ -1706,18 +1463,20 @@ function extractUniqueCategories() {
             );
         }
 
+        // ניקוי מסננים
         function clearFilters() {
             document.getElementById('searchInput').value = '';
             document.getElementById('categoryFilter').value = '';
             document.getElementById('regionFilter').value = '';
             
-            const activeJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; });
+            const activeJobs = allJobs.filter(job => job.status === 'פעיל');
             filteredJobs = [];
             displayJobs(activeJobs);
             
-            console.log('מסננים נוקו');
+            console.log('🧹 מסננים נוקו');
         }
 
+        // הוספת מאזיני אירועים
         function attachEventListeners() {
             const searchButton = document.getElementById('searchButton');
             if (searchButton) {
@@ -1738,6 +1497,7 @@ function extractUniqueCategories() {
                 });
             }
             
+            // מאזיני אירועים למודלים
             window.addEventListener('click', function(event) {
                 const jobModal = document.getElementById('job-modal');
                 const aboutModal = document.getElementById('about-modal');
@@ -1757,6 +1517,7 @@ function extractUniqueCategories() {
                 }
             });
             
+            // מאזין לקישורי גלילה חלקה
             document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -1770,17 +1531,13 @@ function extractUniqueCategories() {
                 });
             });
             
-            console.log('מאזיני אירועים הוספו');
+            console.log('✅ מאזיני אירועים הוספו');
         }
 
-        function scrollToTop() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        }
-
+        // הוספת אפקטים ויזואליים
         function addVisualEffects() {
+            if (!('IntersectionObserver' in window)) return;
+            
             const observerOptions = {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
@@ -1795,15 +1552,15 @@ function extractUniqueCategories() {
                 });
             }, observerOptions);
             
-            document.querySelectorAll('.job-card, .category-card').forEach(function(card) {
-                observer.observe(card);
-            });
+            // המתן קצת לפני צירוף האלמנטים
+            setTimeout(function() {
+                document.querySelectorAll('.job-card, .category-card').forEach(function(card) {
+                    observer.observe(card);
+                });
+            }, 500);
         }
 
-        window.addEventListener('error', function(e) {
-            console.error('שגיאה בדף:', e.error);
-        });
-
+        // הצגת הודעות למשתמש
         function showMessage(message, type) {
             type = type || 'info';
             const messageDiv = document.createElement('div');
@@ -1811,24 +1568,27 @@ function extractUniqueCategories() {
             let bgColor = '#5352ed';
             if (type === 'error') bgColor = '#ff4757';
             if (type === 'success') bgColor = '#2ed573';
+            if (type === 'info') bgColor = '#3742fa';
             
-            messageDiv.style.cssText = 
-                'position: fixed;' +
-                'top: 20px;' +
-                'right: 20px;' +
-                'background: ' + bgColor + ';' +
-                'color: white;' +
-                'padding: 15px 20px;' +
-                'border-radius: 10px;' +
-                'box-shadow: 0 5px 15px rgba(0,0,0,0.2);' +
-                'z-index: 9999;' +
-                'font-weight: bold;' +
-                'max-width: 300px;' +
-                'word-wrap: break-word;' +
-                'transition: all 0.3s ease;';
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${bgColor};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 9999;
+                font-weight: bold;
+                max-width: 350px;
+                word-wrap: break-word;
+                transition: all 0.3s ease;
+                font-size: 14px;
+                direction: rtl;
+            `;
             
             messageDiv.textContent = message;
-            
             document.body.appendChild(messageDiv);
             
             setTimeout(function() {
@@ -1839,41 +1599,205 @@ function extractUniqueCategories() {
                         messageDiv.parentNode.removeChild(messageDiv);
                     }
                 }, 300);
-            }, 3000);
+            }, 4000);
         }
 
-        function updateStats() {
-            const totalJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; }).length;
-            const totalCategories = uniqueCategories.length;
-            
-            console.log('סטטיסטיקות:');
-            console.log('- סהכ משרות פעילות: ' + totalJobs);
-            console.log('- סהכ קטגוריות: ' + totalCategories);
-            console.log('- משרות מוצגות: ' + Math.min(totalJobs, 9));
+        // פונקציה ליצירת קובץ JSON לדוגמה
+        function createSampleJobsFile() {
+            const sampleJobsWithMoreCategories = [
+                {
+                    "id": 1,
+                    "jobNumber": "JS001",
+                    "title": "מפתח/ת Full Stack",
+                    "company": "טכנולוגיות מתקדמות בע\"מ",
+                    "category": "פיתוח ותוכנה",
+                    "city": "תל אביב",
+                    "region": "מרכז",
+                    "jobType": "משרה מלאה",
+                    "description": "אנו מחפשים מפתח/ת Full Stack עם ניסיון בטכנולוגיות React, Node.js ו-MongoDB. התפקיד כולל פיתוח מערכות מורכבות, עבודה בצוות מקצועי ומתן פתרונות טכנולוגיים מתקדמים.",
+                    "requirements": "ניסיון של 3+ שנים בפיתוח Full Stack\\nידע מעמיק ב-JavaScript\\nניסיון עם React ו-Node.js\\nיכולת עבודה בצוות\\nאנגלית ברמה טובה",
+                    "status": "פעיל"
+                },
+                {
+                    "id": 2,
+                    "jobNumber": "WS002",
+                    "title": "מלצר/ית למסעדה יוקרתית",
+                    "company": "מסעדת השף",
+                    "category": "מזון ומסעדנות",
+                    "city": "חיפה",
+                    "region": "חיפה קריות והצפון",
+                    "jobType": "משרה חלקית",
+                    "description": "דרושים מלצרים/ות למסעדה יוקרתית בחיפה. ניסיון קודם - יתרון. העבודה במשמרות גמישות, אווירה משפחתית ותנאים מעולים!",
+                    "requirements": "ניסיון קודם בהגשה - יתרון\\nיחסי אנוש מעולים\\nזמינות לעבודה בערבים וסופי שבוע\\nיכולת עבודה בצוות",
+                    "status": "פעיל"
+                },
+                {
+                    "id": 3,
+                    "jobNumber": "TE003",
+                    "title": "מורה לאנגלית",
+                    "company": "בית ספר יסודי",
+                    "category": "חינוך והוראה",
+                    "city": "ירושלים",
+                    "region": "ירושלים והסביבה",
+                    "jobType": "משרה מלאה",
+                    "description": "דרוש/ה מורה לאנגלית לבית ספר יסודי בירושלים. המשרה כוללת הוראת אנגלית לכיתות א'-ו', הכנת מערכי שיעור ובדיקת מבחנים.",
+                    "requirements": "תואר ראשון בהוראת אנגלית או תחום רלוונטי\\nתעודת הוראה\\nניסיון בהוראה - יתרון\\nיחסי אנוש מעולים\\nיכולת עבודה בסביבה דינמית",
+                    "status": "פעיל"
+                },
+                {
+                    "id": 4,
+                    "jobNumber": "MK004",
+                    "title": "מנהל/ת שיווק דיגיטלי",
+                    "company": "חברת היי-טק מובילה",
+                    "category": "שיווק ומכירות",
+                    "city": "תל אביב",
+                    "region": "מרכז",
+                    "jobType": "משרה מלאה",
+                    "description": "דרוש/ה מנהל/ת שיווק דיגיטלי לחברת היי-טק מובילה. התפקיד כולל ניהול קמפיינים, עבודה עם פלטפורמות פרסום, ניתוח נתונים והובלת אסטרטגיה שיווקית.",
+                    "requirements": "ניסיון של 3+ שנים בשיווק דיגיטלי\\nהיכרות עם פלטפורמות פרסום כגון Google Ads, Facebook Ads\\nיכולת ניתוח נתונים\\nחשיבה אסטרטגית\\nיתרון - ניסיון בשיווק B2B",
+                    "status": "פעיל"
+                },
+                {
+                    "id": 5,
+                    "jobNumber": "HC005",
+                    "title": "אח/ות מוסמך/ת",
+                    "company": "בית חולים פרטי",
+                    "category": "בריאות ורפואה",
+                    "city": "חיפה",
+                    "region": "חיפה קריות והצפון",
+                    "jobType": "משרה מלאה",
+                    "description": "לבית חולים פרטי בחיפה דרוש/ה אח/ות מוסמך/ת. העבודה במחלקה פנימית, משמרות בוקר/ערב/לילה.",
+                    "requirements": "תעודת אח/ות מוסמך/ת\\nניסיון של שנה לפחות\\nיחסי אנוש מעולים\\nיכולת עבודה בצוות\\nנכונות לעבודה במשמרות",
+                    "status": "פעיל"
+                },
+                {
+                    "id": 6,
+                    "jobNumber": "AD006",
+                    "title": "עוזר/ת אדמיניסטרטיבי/ת",
+                    "company": "משרד עורכי דין",
+                    "category": "מנהל ואדמיניסטרציה",
+                    "city": "תל אביב",
+                    "region": "מרכז",
+                    "jobType": "משרה מלאה",
+                    "description": "למשרד עורכי דין מוביל דרוש/ה עוזר/ת אדמיניסטרטיבי/ת. התפקיד כולל עבודה משרדית, ניהול יומנים, טיפול בלקוחות וסיוע כללי.",
+                    "requirements": "ניסיון באדמיניסטרציה - יתרון\\nיכולת עבודה עם מערכות מחשב\\nאנגלית ברמה טובה\\nיחסי אנוש מעולים\\nדיוק וסדר",
+                    "status": "פעיל"
+                },
+                {
+                    "id": 7,
+                    "jobNumber": "DR007",
+                    "title": "נהג/ת משלוחים",
+                    "company": "חברת שילוח מהירה",
+                    "category": "לוגיסטיקה ותחבורה",
+                    "city": "ירושלים",
+                    "region": "ירושלים והסביבה",
+                    "jobType": "משרה חלקית",
+                    "description": "לחברת שילוח מובילה דרוש/ה נהג/ת משלוחים לאזור ירושלים. עבודה בשעות גמישות, רכב צמוד, אווירה נעימה.",
+                    "requirements": "רישיון נהיגה בתוקף לפחות 3 שנים\\nהיכרות עם אזור ירושלים\\nיחסי אנוש טובים\\nנכונות לעבודה בשעות גמישות\\nאמינות וזמינות",
+                    "status": "פעיל"
+                },
+                {
+                    "id": 8,
+                    "jobNumber": "GR008",
+                    "title": "מעצב/ת גרפי/ת",
+                    "company": "סטודיו עיצוב דיגיטלי",
+                    "category": "עיצוב ויצירה",
+                    "city": "תל אביב",
+                    "region": "מרכז",
+                    "jobType": "משרה מלאה",
+                    "description": "לסטודיו עיצוב דיגיטלי מוביל דרוש/ה מעצב/ת גרפי/ת יצירתי/ת. העבודה כוללת עיצוב לוגואים, ברושורים, אתרים ופרסומות.",
+                    "requirements": "תואר בעיצוב גרפי או תחום קרוב\\nניסיון של 2+ שנים בעיצוב\\nשליטה ב-Adobe Creative Suite\\nיצירתיות ועין לפרטים\\nפורטפוליו מרשים",
+                    "status": "פעיל"
+                },
+                {
+                    "id": 9,
+                    "jobNumber": "SE009",
+                    "title": "מהנדס/ת אבטחת מידע",
+                    "company": "חברת סייבר מובילה",
+                    "category": "אבטחה וסייבר",
+                    "city": "הרצליה",
+                    "region": "מרכז",
+                    "jobType": "משרה מלאה",
+                    "description": "לחברת סייבר מובילה דרוש/ה מהנדס/ת אבטחת מידע. התפקיד כולל בניית מערכות אבטחה, ניטור איומים וטיפול בפריצות אבטחה.",
+                    "requirements": "תואר במדעי המחשב או הנדסת תוכנה\\nניסיון של 3+ שנים באבטחת מידע\\nהיכרות עם כלי אבטחה מתקדמים\\nאנגלית ברמה גבוהה\\nהסמכות אבטחה - יתרון",
+                    "status": "פעיל"
+                },
+                {
+                    "id": 10,
+                    "jobNumber": "TO010",
+                    "title": "מדריך/ה תיירות",
+                    "company": "חברת תיירות בוטיק",
+                    "category": "תיירות ונופש",
+                    "city": "ירושלים",
+                    "region": "ירושלים והסביבה",
+                    "jobType": "משרה חלקית",
+                    "description": "לחברת תיירות בוטיק מובילה דרוש/ה מדריך/ה תיירות מנוסה. העבודה כוללת הדרכת קבוצות תיירים ישראלים וזרים באתרים היסטוריים.",
+                    "requirements": "רישיון הדרכה מאושר\\nשליטה באנגלית וחוב\\nידע נרחב בהיסטוריה של ישראל\\nכישורי הנחיה מצוינים\\nזמינות לעבודה בסופי שבוע",
+                    "status": "פעיל"
+                }
+            ];
+
+            console.log('📄 דוגמה לקובץ jobs.json:');
+            console.log(JSON.stringify(sampleJobsWithMoreCategories, null, 2));
         }
 
-        window.addEventListener('load', function() {
-            addVisualEffects();
-            updateStats();
-            
-            setTimeout(function() {
-                showMessage('ברוכים הבאים למה יש פה! 🎉', 'success');
-            }, 1000);
-            
-            console.log('האתר נטען בהצלחה!');
-        });
+        // פונקציה להדפסת הוראות שימוש
+        function printUsageInstructions() {
+            console.log(`
+🚀 הוראות שימוש בלוח המשרות:
 
-        // הפניית פונקציות ל-window object למניעת שגיאות
+📁 טעינת משרות מקובץ:
+   צור קובץ בשם jobs.json באותה תיקייה של הקובץ HTML
+   הקובץ צריך להכיל מערך JSON של משרות
+
+📋 מבנה משרה בקובץ JSON:
+   {
+     "id": מספר ייחודי,
+     "jobNumber": "מספר משרה",
+     "title": "כותרת המשרה",
+     "company": "שם החברה",
+     "category": "קטגוריה",
+     "city": "עיר",
+     "region": "אזור",
+     "jobType": "סוג משרה",
+     "description": "תיאור המשרה",
+     "requirements": "דרישות התפקיד",
+     "status": "פעיל"
+   }
+
+🎨 צבעי קטגוריות:
+   המערכת מייצרת אוטומטית צבע ייחודי לכל קטגוריה
+
+✨ פיצ'רים:
+   • טעינה אוטומטית מקובץ
+   • צבעים דינמיים לקטגוריות
+   • חיפוש וסינון מתקדם
+   • רספונסיבי למובייל
+   • אנימציות חלקות
+            `);
+        }
+
+        // הוספת הפונקציות ל-window object למניעת שגיאות
         window.openJobModal = openJobModal;
         window.closeJobModal = closeJobModal;
         window.openAboutModal = openAboutModal;
         window.closeAboutModal = closeAboutModal;
-        window.getCategoryClass = getCategoryClass;
         window.selectCategory = selectCategory;
         window.filterJobs = filterJobs;
         window.clearFilters = clearFilters;
-        window.importJobsFromJSON = importJobsFromJSON;
-        window.scrollToTop = scrollToTop;
+
+        // בדיקת שגיאות
+        window.addEventListener('error', function(e) {
+            console.error('❌ שגיאה בדף:', e.error);
+        });
+
+        // הדפסת הוראות שימוש ודוגמה בקונסול
+        setTimeout(() => {
+            printUsageInstructions();
+            createSampleJobsFile();
+        }, 2000);
+
+        console.log('✅ הסקריפט נטען בהצלחה!');
     </script>
 </body>
 </html>
