@@ -362,9 +362,9 @@
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
-            min-height: 320px;
+            min-height: 340px;
             border: 1px solid #444444;
-            padding-bottom: 80px;
+            padding-bottom: 85px;
         }
 
         .job-card:hover {
@@ -429,30 +429,34 @@
             border-radius: 20px;
             font-size: 0.85rem;
             display: inline-block;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 5;
         }
 
         .job-card-bottom {
             position: absolute;
-            bottom: 20px;
+            bottom: 15px;
             left: 20px;
             right: 20px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-end;
+            z-index: 20;
         }
 
         .job-card-gnome {
-            width: 50px;
+            width: 45px;
             cursor: pointer;
             transition: transform 0.3s ease;
-            z-index: 10;
+            z-index: 25;
+            position: relative;
         }
 
         .job-card-gnome:hover {
-            transform: scale(1.15);
+            transform: scale(1.1);
         }
 
         .job-card-gnome img {
@@ -463,13 +467,15 @@
 
         .job-card-gnome-text {
             text-align: center;
-            font-size: 10px;
+            font-size: 9px;
             color: white;
             font-weight: bold;
-            margin-top: 5px;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            padding: 3px 6px;
+            margin-top: 3px;
+            background: rgba(246, 152, 152, 0.9);
+            border-radius: 8px;
+            padding: 2px 4px;
+            white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
         .contact-buttons {
@@ -966,7 +972,126 @@
         </div>
     </div>
 
-    <div id="about-modal" class="modal">
+    <!-- מודל תקנון -->
+    <div id="terms-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">תקנון האתר</h3>
+                <span class="close" onclick="closeTermsModal()">&times;</span>
+            </div>
+            
+            <div style="padding: 30px; line-height: 1.7; color: white; max-height: 60vh; overflow-y: auto;">
+                <h3 style="color: #F69898; margin-bottom: 15px;">1. כללי</h3>
+                <p style="margin-bottom: 15px;">
+                    ברוכים הבאים לאתר "מה יש פה?" - לוח משרות מתקדם. השימוש באתר כפוף לתנאים המפורטים להלן. 
+                    המשך השימוש באתר מהווה הסכמה מלאה לתנאי השימוש.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">2. שירותי האתר</h3>
+                <p style="margin-bottom: 15px;">
+                    האתר מספק שירותי לוח משרות הכוללים:
+                </p>
+                <ul style="margin-right: 20px; margin-bottom: 15px;">
+                    <li style="margin-bottom: 8px;">פרסום מודעות דרושים למעסיקים</li>
+                    <li style="margin-bottom: 8px;">חיפוש והצגת משרות למחפשי עבודה</li>
+                    <li style="margin-bottom: 8px;">מערכת סינון ותיוג משרות</li>
+                    <li style="margin-bottom: 8px;">יצירת קשר בין מעסיקים למועמדים</li>
+                </ul>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">3. התחייבויות המעסיק</h3>
+                <p style="margin-bottom: 15px;">
+                    מעסיק המפרסם משרות באתר מתחייב:
+                </p>
+                <ul style="margin-right: 20px; margin-bottom: 15px;">
+                    <li style="margin-bottom: 8px;">לפרסם מידע אמיתי ומדויק בלבד</li>
+                    <li style="margin-bottom: 8px;">שלא לפרסם תוכן פוגעני או בלתי חוקי</li>
+                    <li style="margin-bottom: 8px;">לעדכן או להסיר מודעות שאינן רלוונטיות</li>
+                    <li style="margin-bottom: 8px;">לכבד את פרטיות המועמדים</li>
+                </ul>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">4. התחייבויות מחפש העבודה</h3>
+                <p style="margin-bottom: 15px;">
+                    מחפש עבודה המשתמש באתר מתחייב:
+                </p>
+                <ul style="margin-right: 20px; margin-bottom: 15px;">
+                    <li style="margin-bottom: 8px;">להגיש מידע אמיתי ומדויק</li>
+                    <li style="margin-bottom: 8px;">לא לבצע פעולות שיפגעו בתפקוד האתר</li>
+                    <li style="margin-bottom: 8px;">לכבד את זכויות יוצרים של תכנים באתר</li>
+                    <li style="margin-bottom: 8px;">להתנהג בכבוד כלפי מעסיקים ומשתמשים אחרים</li>
+                </ul>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">5. פרטיות ומידע אישי</h3>
+                <p style="margin-bottom: 15px;">
+                    האתר מתחייב לשמור על פרטיות המשתמשים ולא למסור מידע אישי לצדדים שלישיים ללא הסכמה מפורשת.
+                    המידע נאסף לצורך שיפור השירות וחיבור בין מעסיקים למועמדים.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">6. זכויות יוצרים</h3>
+                <p style="margin-bottom: 15px;">
+                    כל התכנים באתר, לרבות עיצוב, טקסטים וקוד, מוגנים בזכויות יוצרים. 
+                    אסור להעתיק, לשכפל או להפיץ תכנים מהאתר ללא אישור מפורש.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">7. הגבלת אחריות</h3>
+                <p style="margin-bottom: 15px;">
+                    האתר אינו נושא באחריות לתוכן המודעות, לאמיתות המידע המפורסם או לתוצאות הנובעות משימוש באתר.
+                    השימוש באתר הוא על אחריות המשתמש בלבד.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">8. שינויים בתקנון</h3>
+                <p style="margin-bottom: 15px;">
+                    ההנהלה שומרת לעצמה את הזכות לעדכן ולשנות את התקנון מעת לעת. 
+                    שינויים יפורסמו באתר ויכנסו לתוקף מיד עם פרסומם.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">9. יצירת קשר</h3>
+                <p style="margin-bottom: 15px;">
+                    לשאלות, הערות או תלונות ניתן ליצור קשר דרך:
+                </p>
+                <ul style="margin-right: 20px; margin-bottom: 15px;">
+                    <li style="margin-bottom: 8px;">WhatsApp: 055-550-4633</li>
+                    <li style="margin-bottom: 8px;">SMS: 055-550-4633</li>
+                    <li style="margin-bottom: 8px;">אתר: mayeshpo.co.il</li>
+                </ul>
+
+                <p style="margin-top: 25px; text-align: center; color: #F69898; font-weight: bold;">
+                    תקנון זה נכנס לתוקף ביום עדכון האתר האחרון
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- מודל מדיניות פרטיות -->
+    <div id="privacy-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">מדיניות פרטיות</h3>
+                <span class="close" onclick="closePrivacyModal()">&times;</span>
+            </div>
+            
+            <div style="padding: 30px; line-height: 1.7; color: white; max-height: 60vh; overflow-y: auto;">
+                <h3 style="color: #F69898; margin-bottom: 15px;">איסוף מידע</h3>
+                <p style="margin-bottom: 15px;">
+                    אנו אוספים מידע רק במידה הדרושה לצורך מתן השירות - פרטי קשר בסיסיים ומידע מקצועי רלוונטי.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">שימוש במידע</h3>
+                <p style="margin-bottom: 15px;">
+                    המידע משמש אך ורק לחיבור בין מעסיקים למועמדים ולשיפור איכות השירות.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">הגנה על הפרטיות</h3>
+                <p style="margin-bottom: 15px;">
+                    אנו מתחייבים לא למסור מידע אישי לצדדים שלישיים ללא הסכמתכם המפורשת.
+                </p>
+
+                <h3 style="color: #F69898; margin: 25px 0 15px 0;">זכויות המשתמש</h3>
+                <p style="margin-bottom: 15px;">
+                    בכל עת תוכלו לבקש עדכון, מחיקה או תיקון של המידע האישי שלכם.
+                </p>
+            </div>
+        </div>
+    </div>
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">מי אנחנו?</h3>
@@ -995,6 +1120,13 @@
         <div class="container">
             <h2 class="text-logo" style="font-size: 2rem; margin-bottom: 10px;">מה יש פה?</h2>
             <p style="font-size: 1rem; margin-bottom: 25px; opacity: 0.9;">לוח משרות חזק למקום עבודה מדוייק!</p>
+            
+            <div style="display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap;">
+                <a href="#" onclick="openTermsModal()" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">תקנון אתר</a>
+                <a href="#" onclick="openPrivacyModal()" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">מדיניות פרטיות</a>
+                <a href="#contact" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">צור קשר</a>
+                <a href="#search" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">חיפוש משרות</a>
+            </div>
             
             <div class="footer-social">
                 <a href="https://www.facebook.com/ma.yesh.po.akko" class="social-icon"><i class="fab fa-facebook-f"></i></a>
@@ -1312,9 +1444,9 @@
                     <div class="job-badge" style="background: ${categoryColor};">${job.category}</div>
                     <div class="job-card-bottom">
                         <div class="job-card-gnome" onclick="event.stopPropagation(); openJobModal(${index})">
-                            <img src="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO_NAME/main/images/gnome.png" 
+                            <img src="https://mayeshpo.co.il/images/gnome.png" 
                                  alt="גמדה פרטים" 
-                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XnNeT15TXkjwvdGV4dD48L3N2Zz4='">
+                                 onerror="this.src='./images/gnome.png'">
                             <div class="job-card-gnome-text">פרטים נוספים</div>
                         </div>
                         <div class="contact-buttons">
@@ -1345,9 +1477,10 @@
                 if (heroSection) {
                     const gnomeHTML = `
                         <div class="gnome-character" id="mainGnome">
-                            <img src="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO_NAME/main/images/gnome.png" 
+                            <img src="https://mayeshpo.co.il/images/gnome.png" 
                                  alt="גמדה עוזרת" 
-                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XnNeT15TXkjwvdGV4dD48L3N2Zz4='">
+                                 onerror="this.src='./images/gnome.png'"
+                                 onload="console.log('גמדה נטענה בהצלחה')">
                             <div class="gnome-tooltip">אני אעזור לך למצוא משרה!</div>
                         </div>
                     `;
@@ -1501,6 +1634,8 @@
             window.addEventListener('click', function(event) {
                 const jobModal = document.getElementById('job-modal');
                 const aboutModal = document.getElementById('about-modal');
+                const termsModal = document.getElementById('terms-modal');
+                const privacyModal = document.getElementById('privacy-modal');
                 
                 if (event.target === jobModal) {
                     closeJobModal();
@@ -1508,12 +1643,20 @@
                 if (event.target === aboutModal) {
                     closeAboutModal();
                 }
+                if (event.target === termsModal) {
+                    closeTermsModal();
+                }
+                if (event.target === privacyModal) {
+                    closePrivacyModal();
+                }
             });
             
             document.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape') {
                     closeJobModal();
                     closeAboutModal();
+                    closeTermsModal();
+                    closePrivacyModal();
                 }
             });
             
@@ -1782,6 +1925,10 @@
         window.closeJobModal = closeJobModal;
         window.openAboutModal = openAboutModal;
         window.closeAboutModal = closeAboutModal;
+        window.openTermsModal = openTermsModal;
+        window.closeTermsModal = closeTermsModal;
+        window.openPrivacyModal = openPrivacyModal;
+        window.closePrivacyModal = closePrivacyModal;
         window.selectCategory = selectCategory;
         window.filterJobs = filterJobs;
         window.clearFilters = clearFilters;
