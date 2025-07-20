@@ -815,10 +815,30 @@
                 display: none !important;
             }
             
+            /* תיקון מיקום כפתורי יצירת קשר בכרטיסי משרה */
+            .job-card-bottom {
+                position: absolute;
+                bottom: 50px !important; /* העלאה כדי לא לחפוף לכפתור "פרטים נוספים" */
+                left: 20px;
+                right: 20px;
+                display: flex;
+                justify-content: center !important;
+                align-items: center;
+                z-index: 15;
+            }
+            
+            .contact-buttons {
+                display: flex;
+                gap: 12px;
+                z-index: 20;
+                justify-content: center;
+            }
+            
             /* כפתור פרטים נוספים לכרטיסי משרה */
             .job-card {
-                padding-bottom: 60px !important;
+                padding-bottom: 80px !important; /* מרווח גדול יותר */
                 position: relative;
+                min-height: 280px;
             }
             
             .job-card::after {
@@ -844,12 +864,6 @@
             .job-card:active::after {
                 transform: translateX(-50%) scale(0.95);
                 box-shadow: 0 2px 5px rgba(246, 152, 152, 0.3);
-            }
-            
-            /* תיקון כפתורי קשר */
-            .contact-buttons {
-                justify-content: center;
-                width: 100%;
             }
             
             /* תיקון נווט מובייל */
@@ -880,7 +894,7 @@
                     <ul>
                         <li><a href="#" class="active">דף הבית</a></li>
                         <li><a href="#contact">צור קשר</a></li>
-                        <li><a href="javascript:void(0);" onclick="openAboutModal()">עוד עלינו</a></li>
+                        <li><a href="#" id="nav-about-btn">עוד עלינו</a></li>
                     </ul>
                 </nav>
             </div>
@@ -907,7 +921,7 @@
                 
                 <div class="hero-buttons">
                     <a href="#search" class="btn">חיפוש משרות</a>
-                    <a href="javascript:void(0);" class="btn btn-secondary" onclick="openAboutModal()">עוד עלינו</a>
+                    <a href="#" class="btn btn-secondary" id="hero-about-btn">עוד עלינו</a>
                 </div>
             </div>
         </div>
@@ -1206,8 +1220,8 @@
             <p style="font-size: 1rem; margin-bottom: 25px; opacity: 0.9;">לוח משרות חזק למקום עבודה מדוייק!</p>
             
             <div style="display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap;">
-                <a href="javascript:void(0);" onclick="openTermsModal()" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">תקנון אתר</a>
-                <a href="javascript:void(0);" onclick="openPrivacyModal()" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">מדיניות פרטיות</a>
+                <a href="#" id="footer-terms-btn" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">תקנון אתר</a>
+                <a href="#" id="footer-privacy-btn" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">מדיניות פרטיות</a>
                 <a href="#contact" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">צור קשר</a>
                 <a href="#search" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">חיפוש משרות</a>
             </div>
