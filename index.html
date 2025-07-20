@@ -2016,6 +2016,188 @@
                 
                 var messageText = 'שלום, אני מעוניין/ת במשרה: ' + job.title + ' (' + job.jobNumber + ')';
                 var whatsappLink = 'https://wa.me/972555504633?text=' + encodeURIComponent(messageText);
+                var smsLink = 'sms:+972555504633?body=' + encodeURIComponent(messageText);
+                
+                var categoryColor = getCategoryColor(job.category);
+                
+                var quickEditButton = isQuickEditMode ? 
+                    '<button class="contact-button feature-toggle-button ' + (job.featured ? 'featured-active' : '') + '" ' +
+                    'title="' + (job.featured ? 'בטל המלצה' : 'סמן כמומלצת') + '" ' +
+                    'onclick="event.stopPropagation(); toggleQuickFeature(' + index + ')" ' +
+                    'style="background: linear-gradient(135deg, ' + (job.featured ? '#8B5CF6' : '#6c757d') + ', ' + (job.featured ? '#A855F7' : '#545b62') + ');">' +
+                    '<i class="fas ' + (job.featured ? 'fa-star' : 'fa-star-o') + '"></i>' +
+                    '</button>' : '';
+                
+                jobCard.innerHTML = 
+                    '<div class="job-number">' + job.jobNumber + '</div>' +
+                    '<h3 class="job-title">' + job.title + '</h3>' +
+                    '<div class="job-location">' +
+                        '<i class="fas fa-map-marker-alt"></i> ' + location +
+                    '</div>' +
+                    '<div class="job-description">' + shortDescription + '</div>' +
+                    '<div class="job-badge" style="background: ' + categoryColor + ';">' + job.category + '</div>' +
+                    '<div class="job-card-bottom">' +
+                        '<div class="job-card-gnome" onclick="event.stopPropagation(); openJobModal(' + index + ')">' +
+                            '<img src="https://mayeshpo.co.il/images/gnome.png" ' +
+                                'alt="גמדה פרטים" ' +
+                                'onerror="this.src=\'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XkNee15XXmDwvdGV4dD48L3N2Zz4i\'>">' +
+                            '<div class="job-card-gnome-text">פרטים נוספים</div>' +
+                        '</div>' +
+                        '<div class="contact-buttons">' +
+                            '<a href="' + whatsappLink + '" class="contact-button whatsapp-button" target="_blank" title="פנייה בוואטסאפ" onclick="event.stopPropagation();">' +
+                                '<i class="fab fa-whatsapp"></i>' +
+                            '</a>' +
+                            '<a href="' + smsLink + '" class="contact-button sms-button" title="פנייה ב-SMS" onclick="event.stopPropagation();">' +
+                                '<i class="fas fa-sms"></i>' +
+                            '</a>' +
+                            '<button class="contact-button share-button" title="שתף משרה" onclick="event.stopPropagation(); shareJob(' + index + ')" style="background: linear-gradient(135deg, #FF6B6B, #EE5A52);">' +
+                                '<i class="fas fa-share-alt"></i>' +
+                            '</button>' +
+                            quickEditButton +
+                        '</div>' +
+                    '</div>';
+                
+                jobCard.addEventListener('click', function() {
+                    openJobModal(index);
+                });
+                
+                jobsContainer.appendChild(jobCard);
+            });
+        }
+
+        // פונקציית שיתוף משרה
+        function shareJob(index) {
+            var job = currentDisplayedJobs[index];
+            if (!job) return;
+            
+            var baseUrl = window.location.origin + window.location.pathname;
+            var jobUrl = baseUrl + '?job=' + encodeURIComponent(job.jobNumber);
+            var shareText = '🎯 משרה מעניינת: ' + job.title + '\n📍 ' + (job.city ? job.city + ', ' + (job.region || '') : job.region || 'ישראל') + '\n💼 ' + job.category + '\n\n' + jobUrl;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'משרה: ' + job.title,
+                    text: job.title + ' ב' + (job.city ? job.city : job.region),
+                    url: jobUrl
+                }).catch(function(err) { 
+                    console.log('שגיאה בשיתוף:', err); 
+                });
+            } else {
+                copyToClipboard(shareText);
+                showShareOptions(job, shareText, jobUrl);
+            }
+        }
+
+        // פונקציה להצגת אפשרויות שיתוף
+        function showShareOptions(job, shareText, jobUrl) {
+            var whatsappShare = 'https://wa.me/?text=' + encodeURIComponent(shareText);
+            var facebookShare = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(jobUrl);
+            
+            var shareModal = document.createElement('div');
+            shareModal.className = 'modal';
+            shareModal.style.display = 'block';
+            shareModal.innerHTML = 
+                '<div class="modal-content" style="max-width: 400px;">' +
+                    '<div class="modal-header">' +
+                        '<h3 class="modal-title"><i class="fas fa-share-alt"></i> שתף משרה</h3>' +
+                        '<span class="close" onclick="this.closest(\'.modal\').remove()">&times;</span>' +
+                    '</div>' +
+                    '<div style="padding: 20px;">' +
+                        '<h4 style="color: #F69898; margin-bottom: 15px;">' + job.title + '</h4>' +
+                        '<p style="background: #333; padding: 10px; border-radius: 5px; font-size: 0.9rem; margin-bottom: 15px;">' +
+                            'קישור: ' + jobUrl +
+                        '</p>' +
+                        '<div style="display: grid; gap: 15px;">' +
+                            '<a href="' + whatsappShare + '" target="_blank" class="contact-method-btn whatsapp-btn" style="text-decoration: none;">' +
+                                '<i class="fab fa-whatsapp"></i>' +
+                                '<span>שתף בוואטסאפ</span>' +
+                            '</a>' +
+                            '<a href="' + facebookShare + '" target="_blank" class="contact-method-btn" style="background: linear-gradient(135deg, #3b5998, #2d4373); text-decoration: none;">' +
+                                '<i class="fab fa-facebook-f"></i>' +
+                                '<span>שתף בפייסבוק</span>' +
+                            '</a>' +
+                            '<button onclick="copyToClipboard(\'' + shareText.replace(/'/g, "\\'") + '\'); showNotification(\'הקישור הועתק!\')" class="contact-method-btn" style="background: linear-gradient(135deg, #6c757d, #545b62); border: none; cursor: pointer;">' +
+                                '<i class="fas fa-copy"></i>' +
+                                '<span>העתק קישור</span>' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+            
+            document.body.appendChild(shareModal);
+            
+            shareModal.addEventListener('click', function(e) {
+                if (e.target === shareModal) {
+                    shareModal.remove();
+                }
+            });
+        }
+
+        // פונקציה להעתקה ללוח
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(function() {
+                    showNotification('הועתק ללוח!');
+                }).catch(function() {
+                    fallbackCopyTextToClipboard(text);
+                });
+            } else {
+                fallbackCopyTextToClipboard(text);
+            }
+        }
+        
+        function fallbackCopyTextToClipboard(text) {
+            var textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.top = '-9999px';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                var successful = document.execCommand('copy');
+                if (successful) {
+                    showNotification('הועתק ללוח!');
+                } else {
+                    showNotification('לא ניתן להעתיק', 'error');
+                }
+            } catch (err) {
+                showNotification('לא ניתן להעתיק', 'error');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        // פונקציות מודל
+        function openJobModal(index) {
+            if (!currentDisplayedJobs || !currentDisplayedJobs[index]) {
+                alert('אירעה שגיאה בטעינת פרטי המשרה');
+                return;
+            }
+            
+            var job = currentDisplayedJobs[index];
+            
+            var location = '';
+            if (job.city && job.region) {
+                location = job.city + ', ' + job.region;
+            } else if (job.city) {
+                location = job.city;
+            } else {
+                location = job.region || 'ישראל';
+            }
+            
+            document.getElementById('modal-job-title').textContent = job.title || 'משרה ללא כותרת';
+            document.getElementById('modal-job-location').textContent = location;
+            document.getElementById('modal-job-type').textContent = job.jobType || 'משרה מלאה';
+            document.getElementById('modal-job-category').textContent = job.category || 'אחר';
+            document.getElementById('modal-job-number').textContent = job.jobNumber || 'לא צוין';
+            document.getElementById('modal-job-description').textContent = job.description || 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
+            document.getElementById('modal-job-requirements').textContent = job.requirements ? job.requirements.replace(/\\n/g, '\n') : 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
+            
+            var messageText = 'שלום, אני מעוניין/ת במשרה: ' + job.title + ' (' + job.jobNumber + ')';
+            var whatsappLink = 'https://wa.me/972555504633?text='+ encodeURIComponent(messageText);
             var smsLink = 'sms:+972555504633?body=' + encodeURIComponent(messageText);
             
             document.getElementById('modal-whatsapp-btn').href = whatsappLink;
@@ -2171,48 +2353,13 @@
             controls.id = 'quickEditControls';
             controls.className = 'quick-edit-controls';
             controls.innerHTML = 
-                '<button class="quick-edit-btn" onclick="exportQuickChanges()" style="background: linear-gradient(135deg, #28a745, #20c997);">' +
-                    '<i class="fas fa-download"></i> שמור ל-GitHub' +
-                '</button>' +
-                '<button class="quick-edit-btn" onclick="showCurrentChanges()" style="background: linear-gradient(135deg, #17a2b8, #138496);">' +
-                    '<i class="fas fa-list"></i> רשימת שינויים' +
+                '<button class="quick-edit-btn" onclick="exportQuickChanges()">' +
+                    '<i class="fas fa-download"></i> ייצא שינויים' +
                 '</button>' +
                 '<button class="quick-edit-btn secondary" onclick="disableQuickEditMode()">' +
                     '<i class="fas fa-times"></i> סיום עריכה' +
                 '</button>';
             document.body.appendChild(controls);
-        }
-
-        function showCurrentChanges() {
-            var featuredJobs = allJobs.filter(function(job) { return job.featured; });
-            var regularJobs = allJobs.filter(function(job) { return !job.featured; });
-            
-            var message = '📊 סטטוס נוכחי:\n\n';
-            message += '⭐ משרות מומלצות (' + featuredJobs.length + '):\n';
-            
-            if (featuredJobs.length === 0) {
-                message += '   (אין משרות מומלצות)\n';
-            } else {
-                featuredJobs.forEach(function(job, index) {
-                    message += '   ' + (index + 1) + '. ' + job.title + ' (' + job.jobNumber + ')\n';
-                });
-            }
-            
-            message += '\n📝 משרות רגילות (' + regularJobs.length + '):\n';
-            if (regularJobs.length === 0) {
-                message += '   (כל המשרות מומלצות)\n';
-            } else {
-                regularJobs.slice(0, 5).forEach(function(job, index) {
-                    message += '   ' + (index + 1) + '. ' + job.title + ' (' + job.jobNumber + ')\n';
-                });
-                if (regularJobs.length > 5) {
-                    message += '   ... ועוד ' + (regularJobs.length - 5) + ' משרות\n';
-                }
-            }
-            
-            message += '\n💡 זכור: לחץ "שמור ל-GitHub" כדי לשמור את השינויים לצמיתות!';
-            
-            alert(message);
         }
 
         function hideQuickEditControls() {
@@ -2237,20 +2384,15 @@
             showNotification('📁 שינויים יוצאו בהצלחה! העלי ל-GitHub', 'success');
             
             setTimeout(function() {
-                var featuredCount = allJobs.filter(function(job) { return job.featured; }).length;
-                alert('✅ השינויים נשמרו לקובץ jobs-updated.json!\n\n' +
-                      '🌟 ' + featuredCount + ' משרות מומלצות נשמרו\n\n' +
-                      '⚠️ חשוב: כדי שהשינויים יישמרו לצמיתות:\n\n' +
-                      '1. 📁 פתח את קובץ jobs-updated.json שהורד\n' +
-                      '2. 📋 העתק את כל התוכן (Ctrl+A → Ctrl+C)\n' +
-                      '3. 🌐 היכנס ל-GitHub לפרויקט שלך\n' +
-                      '4. 📝 נווט לקובץ המשרות שלך (jobs.json)\n' +
-                      '5. ✏️ לחץ על "Edit" (עיפרון)\n' +
-                      '6. 🗑️ מחק את כל התוכן הקיים\n' +
-                      '7. 📋 הדבק את התוכן החדש (Ctrl+V)\n' +
-                      '8. 💾 לחץ "Commit changes"\n\n' +
-                      '🚀 האתר יתעדכן תוך 1-2 דקות!\n' +
-                      '🔄 רענן את האתר לאחר מכן לראיית השינויים');
+                alert('השינויים נשמרו לקובץ jobs-updated.json!\n\n' +
+                      'הוראות לעדכון GitHub:\n' +
+                      '1. היכנס ל-GitHub לפרויקט שלך\n' +
+                      '2. נווט לקובץ המשרות שלך\n' +
+                      '3. לחץ על "Edit" (עיפרון)\n' +
+                      '4. מחק את התוכן הקיים\n' +
+                      '5. העתק והדבק את תוכן הקובץ החדש\n' +
+                      '6. לחץ "Commit changes"\n\n' +
+                      '✅ האתר יתעדכן תוך כמה דקות!');
             }, 1000);
         }
 
@@ -2444,7 +2586,6 @@
         window.disableQuickEditMode = disableQuickEditMode;
         window.toggleQuickFeature = toggleQuickFeature;
         window.exportQuickChanges = exportQuickChanges;
-        window.showCurrentChanges = showCurrentChanges;
 
         console.log('✅ הסקריפט נטען בהצלחה!');
     </script>
