@@ -1303,11 +1303,13 @@
             <h2 class="text-logo" style="font-size: 2rem; margin-bottom: 10px;">מה יש פה?</h2>
             <p style="font-size: 1rem; margin-bottom: 25px; opacity: 0.9;">לוח משרות חזק למקום עבודה מדוייק!</p>
             
-            <div style="display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap;">
-                <a href="#search" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">חיפוש משרות</a>
-                <a href="#contact" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">צור קשר</a>
-            </div>
-            
+<div style="display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap;">
+    <a href="#search" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">חיפוש משרות</a>
+    <a href="#contact" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">צור קשר</a>
+    <a href="#" onclick="showAdminLogin()" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">
+        <i class="fas fa-cog"></i> כניסה לניהול
+    </a>
+</div>            
             <div class="footer-social">
                 <a href="https://www.facebook.com/ma.yesh.po.akko" class="social-icon"><i class="fab fa-facebook-f"></i></a>
                 <a href="https://www.instagram.com/kerenraf1/" class="social-icon"><i class="fab fa-instagram"></i></a>
@@ -1795,6 +1797,32 @@
             console.log('✅ מאזיני אירועים הוספו');
         }
 
+                function showAdminLogin() {
+            const password = prompt('הכנס סיסמה למערכת הניהול:');
+            if (password === 'yarin080708') {
+                // יצירת דף ניהול חדש
+                const adminWindow = window.open('', '_blank');
+                adminWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>מערכת ניהול - מה יש פה?</title>
+                        <script>
+                            // העברה לדף הניהול
+                            window.location.href = 'admin.html';
+                        </script>
+                    </head>
+                    <body style="background: #000; color: #fff; text-align: center; padding: 50px;">
+                        <h2>מעביר למערכת ניהול...</h2>
+                        <p>אם לא הועברת אוטומטית, <a href="admin.html" style="color: #F69898;">לחץ כאן</a></p>
+                    </body>
+                    </html>
+                `);
+            } else if (password !== null) {
+                alert('סיסמה שגויה');
+            }
+        }
+
         // הפיכת הפונקציות לגלובליות
         window.openJobModal = openJobModal;
         window.closeJobModal = closeJobModal;
@@ -1804,6 +1832,9 @@
         window.filterJobs = filterJobs;
         window.clearFilters = clearFilters;
         window.toggleMobileMenu = toggleMobileMenu;
+                window.showAdminLogin = showAdminLogin;
+
+
 
         console.log('✅ הסקריפט נטען בהצלחה!');
     </script>
