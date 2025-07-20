@@ -2099,17 +2099,19 @@
             background: linear-gradient(145deg, #444444, #383838);
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        });
-            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        }            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
             const smsHref = isIOS
                 ? `sms:${phone}&body=${encoded}`
                 : `sms:${phone}?body=${encoded}`;
 
-            document.querySelectorAll('.sms-dynamic').forEach(btn => {
+            document.querySelectorAll('.sms-dynamic').forEach(function(btn) {
                 btn.setAttribute("href", smsHref);
             });
         });
     </script>
+
+    <!-- כל הסקריפט הראשי -->
+    <script>
 
     <!-- עדכון המודל כדי לכלול כפתור שיתוף -->
     <style>
