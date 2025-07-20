@@ -1570,7 +1570,7 @@
                 jobCard.className = `job-card ${job.featured ? 'featured' : ''}`;
                 
                 const location = job.city ? `${job.city}, ${job.region || 'ישראל'}` : (job.region || 'ישראל');
-                const shortDescription = ? 
+                const shortDescription = job.description
                     (job.description.substring(0, 120) + (job.description.length > 120 ? '...' : '')) : 
                     'לחץ על הגמדה לפרטים נוספים';
                 
