@@ -434,6 +434,7 @@
             border: 2px solid #F69898;
             box-shadow: 0 8px 25px rgba(246, 152, 152, 0.3);
             background: linear-gradient(145deg, #3a3a3a, #333333);
+            position: relative;
         }
 
         .job-card.featured::before {
@@ -448,6 +449,7 @@
             font-size: 0.8rem;
             font-weight: bold;
             z-index: 10;
+            box-shadow: 0 3px 10px rgba(246, 152, 152, 0.4);
         }
 
         .job-card:hover {
@@ -1019,7 +1021,7 @@
                 display: flex !important;
             }
 
-            .sms-btn {
+.sms-btn {
                 display: flex !important;
             }
         }
@@ -1112,7 +1114,7 @@
         <div class="gnome-character" id="mainGnome" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
             <img src="https://mayeshpo.co.il/images/gnome.png" 
                  alt="גמדה עוזרת" 
-                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XnDeT15TXkjwvdGV4dD48L3N2Zz4='">
+                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XnNeT15TXkjwvdGV4dD48L3N2Zz4='">
             <div class="gnome-tooltip">אני אעזור לך למצוא משרה!</div>
         </div>
     </section>
@@ -1298,6 +1300,24 @@
         </div>
     </div>
 
+    <!-- מודל כניסה למערכת ניהול -->
+    <div id="admin-login-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-cog"></i> כניסה למערכת ניהול</h3>
+                <span class="close" onclick="closeAdminLogin()">&times;</span>
+            </div>
+            <div style="padding: 30px;">
+                <div class="form-group">
+                    <label class="form-label">סיסמה</label>
+                    <input type="password" id="adminPasswordInput" class="form-control" placeholder="הכנס סיסמה...">
+                </div>
+                <button class="btn" onclick="checkAdminAccess()" style="width: 100%;">כניסה למערכת</button>
+                <div id="adminLoginError" style="color: #ff6b6b; text-align: center; display: none; margin-top: 15px;">סיסמה שגויה</div>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <div class="container">
             <h2 class="text-logo" style="font-size: 2rem; margin-bottom: 10px;">מה יש פה?</h2>
@@ -1306,7 +1326,7 @@
             <div style="display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap;">
                 <a href="#search" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">חיפוש משרות</a>
                 <a href="#contact" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">צור קשר</a>
-                    <a href="#" onclick="openAdminLogin()" style="color: #F69898 !important; text-decoration: none; transition: color 0.3s; font-size: 1rem; font-weight: bold;"><i class="fas fa-cog" style="margin-left: 8px;"></i>מערכת ניהול</a>
+                <a href="#" onclick="openAdminLogin()" style="color: #F69898 !important; text-decoration: none; transition: color 0.3s; font-size: 1rem; font-weight: bold;"><i class="fas fa-cog" style="margin-left: 8px;"></i>מערכת ניהול</a>
             </div>
             
             <div class="footer-social">
@@ -1326,6 +1346,7 @@
         let filteredJobs = [];
         let uniqueCategories = [];
         let categoryColors = {};
+        let currentDisplayedJobs = []; // משתנה חדש לעקוב אחר המשרות שמוצגות כרגע
 
         // משרות דוגמה
         const sampleJobs = [
@@ -1395,10 +1416,10 @@
             initializeApp();
         });
 
-        // פונקציה ראשית לאתחול - מתוקנת בהתבסס על הקוד הפועל
+        // פונקציה ראשית לאתחול
         function initializeApp() {
             createGnome();
-            loadJobsFromFile(); // שינוי לפונקציה הפשוטה הפועלת
+            loadJobsFromGitHub(); // שינוי לפונקציה שמטענת מגיטהאב תחילה
             attachEventListeners();
         }
 
@@ -1415,23 +1436,23 @@
             }
         }
 
-        // טעינת משרות - פונקציה מתוקנת בהתבסס על הקוד הפועל
-        function loadJobsFromFile() {
-            console.log('📋 מנסה לטעון משרות...');
+        // טעינת משרות מגיטהאב - פונקציה מתוקנת
+        function loadJobsFromGitHub() {
+            console.log('📋 מנסה לטעון משרות מגיטהאב...');
             
             // נתיבים לניסיון טעינה - מותאמים לעבוד
-            const urlsToTry = [
-                'https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/data.js/jobs(1).json',
-                './data/jobs.json',
-                './jobs.json'
+            const githubUrls = [
+                'https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/data/jobs.json',
+                'https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/jobs.json',
+                'https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/data.js/jobs(1).json'
             ];
             
-            tryLoadFromUrls(urlsToTry, 0);
+            tryLoadFromGitHubUrls(githubUrls, 0);
         }
 
-        function tryLoadFromUrls(urls, index) {
+        function tryLoadFromGitHubUrls(urls, index) {
             if (index >= urls.length) {
-                console.log('⚠️ משתמש במשרות דוגמה');
+                console.log('⚠️ לא הצלחתי לטעון מגיטהאב, משתמש במשרות דוגמה');
                 allJobs = sampleJobs;
                 processJobs();
                 return;
@@ -1449,10 +1470,10 @@
                 })
                 .then(data => {
                     if (data && Array.isArray(data) && data.length > 0) {
-                        console.log(`✅ משרות נטענו: ${data.length} משרות מ-${currentUrl}`);
+                        console.log(`✅ משרות נטענו מגיטהאב: ${data.length} משרות מ-${currentUrl}`);
                         allJobs = data.map(job => ({
                             ...job,
-                            featured: job.featured || false
+                            featured: Boolean(job.featured) // וידוא שהשדה featured הוא boolean
                         }));
                         processJobs();
                     } else {
@@ -1461,12 +1482,21 @@
                 })
                 .catch(error => {
                     console.warn(`❌ נכשל לטעון מ ${currentUrl}:`, error.message);
-                    tryLoadFromUrls(urls, index + 1);
+                    tryLoadFromGitHubUrls(urls, index + 1);
                 });
         }
 
         // עיבוד משרות
         function processJobs() {
+            console.log('🔄 מעבד משרות...', allJobs.length, 'משרות');
+            
+            // הדפסת מידע על משרות מומלצות לדיבוג
+            const featuredJobs = allJobs.filter(job => job.featured === true);
+            console.log('⭐ משרות מומלצות נמצאו:', featuredJobs.length);
+            featuredJobs.forEach(job => {
+                console.log(`- ${job.title} (featured: ${job.featured})`);
+            });
+            
             extractUniqueCategories();
             generateCategoryColors();
             updateCategoryFilters();
@@ -1541,7 +1571,67 @@
             });
         }
 
-        // הצגת משרות עם תמיכה במשרות מומלצות
+        // מיפוי ישובים לאזורים לפי קואורדינטות ומיקום גאוגרפי
+        const cityToRegionMap = {
+            // מרכז
+            'תל אביב': 'מרכז', 'יפו': 'מרכז', 'רמת גן': 'מרכז', 'גבעתיים': 'מרכז', 
+            'בני ברק': 'מרכז', 'פתח תקווה': 'מרכז', 'ראשון לציון': 'מרכז', 'חולון': 'מרכז',
+            'בת ים': 'מרכז', 'אזור': 'מרכז', 'ריקותי': 'מרכז', 'רמת השרון': 'מרכז',
+            'הרצליה': 'מרכז', 'רעננה': 'מרכז', 'כפר סבא': 'מרכז', 'לוד': 'מרכז', 'רמלה': 'מרכז',
+            
+            // שרון 
+            'נתניה': 'שרון', 'רעננה': 'שרון', 'כפר סבא': 'שרון', 'הרצליה': 'שרון',
+            'רמת השרון': 'שרון', 'הוד השרון': 'שרון', 'כפר יונה': 'שרון', 'אבן יהודה': 'שרון',
+            'פרדס חנה כרכור': 'שרון', 'חדרה': 'שרון', 'קיסריה': 'שרון', 'זכרון יעקב': 'שרון',
+            
+            // שפלה
+            'רחובות': 'שפלה', 'נס ציונה': 'שפלה', 'יבנה': 'שפלה', 'גדרה': 'שפלה',
+            'קריית עקרון': 'שפלה', 'קריית מלאכי': 'שפלה', 'בית שמש': 'שפלה', 'אשקלון': 'שפלה',
+            'אשדוד': 'שפלה', 'קרית גת': 'שפלה', 'מודיעין': 'שפלה', 'מודיעין עילית': 'שפלה',
+            'שוהם': 'שפלה', 'מזכרת בתיה': 'שפלה', 'באר יעקב': 'שפלה', 'נחל שורק': 'שפלה',
+            
+            // ירושלים והסביבה
+            'ירושלים': 'ירושלים והסביבה', 'מעלה אדומים': 'ירושלים והסביבה', 'גבעת זאב': 'ירושלים והסביבה',
+            'מבשרת ציון': 'ירושלים והסביבה', 'אבו גוש': 'ירושלים והסביבה', 'בית נקופה': 'ירושלים והסביבה',
+            'מודיעין': 'ירושלים והסביבה', 'מודיעין עילית': 'ירושלים והסביבה', 'בית שמש': 'ירושלים והסביבה',
+            
+            // חיפה קריות והצפון
+            'חיפה': 'חיפה קריות והצפון', 'קריית אתא': 'חיפה קריות והצפון', 'קריית ביאליק': 'חיפה קריות והצפון',
+            'קריית ים': 'חיפה קריות והצפון', 'קריית מוצקין': 'חיפה קריות והצפון', 'נשר': 'חיפה קריות והצפון',
+            'טירת כרמל': 'חיפה קריות והצפון', 'עכו': 'חיפה קריות והצפון', 'נהריה': 'חיפה קריות והצפון',
+            'עפולה': 'חיפה קריות והצפון', 'נצרת': 'חיפה קריות והצפון', 'כרמיאל': 'חיפה קריות והצפון',
+            'טבריה': 'חיפה קריות והצפון', 'צפת': 'חיפה קריות והצפון', 'קצרין': 'חיפה קריות והצפון',
+            'מעלות תרשיחא': 'חיפה קריות והצפון', 'שלומי': 'חיפה קריות והצפון', 'מטולה': 'חיפה קריות והצפון',
+            
+            // דרום
+            'באר שבע': 'דרום', 'אילת': 'דרום', 'דימונה': 'דרום', 'ערד': 'דרום', 'מצפה רמון': 'דרום',
+            'נתיבות': 'דרום', 'אופקים': 'דרום', 'שדרות': 'דרום', 'קריית גת': 'דרום', 'אשקלון': 'דרום',
+            'אשדוד': 'דרום', 'קריית מלאכי': 'דרום', 'יקנעם': 'דרום', 'תל שבע': 'דרום',
+            'לקיה': 'דרום', 'רהט': 'דרום', 'חורה': 'דרום'
+        };
+
+        // פונקציה לקביעת אזור לפי עיר
+        function determineRegionByCity(city) {
+            if (!city) return null;
+            
+            const normalizedCity = city.trim();
+            
+            // חיפוש ישיר במיפוי
+            if (cityToRegionMap[normalizedCity]) {
+                return cityToRegionMap[normalizedCity];
+            }
+            
+            // חיפוש חלקי (במקרה של שם חלקי)
+            for (const [mappedCity, region] of Object.entries(cityToRegionMap)) {
+                if (normalizedCity.includes(mappedCity) || mappedCity.includes(normalizedCity)) {
+                    return region;
+                }
+            }
+            
+            return null;
+        }
+
+        // הצגת משרות עם תמיכה במשרות מומלצות וכפתורי שיתוף
         function displayJobs(jobs) {
             const jobsContainer = document.getElementById('jobsContainer');
             if (!jobsContainer) return;
@@ -1565,13 +1655,24 @@
                 return 0;
             });
             
-            const jobsToShow = sortedJobs.slice(0, 12);
+            // שמירת המשרות הנוכחיות שמוצגות
+            currentDisplayedJobs = sortedJobs.slice(0, 12);
             
-            jobsToShow.forEach(function(job, index) {
+            currentDisplayedJobs.forEach(function(job, index) {
                 const jobCard = document.createElement('div');
                 jobCard.className = `job-card ${job.featured ? 'featured' : ''}`;
                 
-                const location = job.city ? `${job.city}, ${job.region || 'ישראל'}` : (job.region || 'ישראל');
+                // קביעת מיקום עם תמיכה במיפוי אזורים
+                let location = '';
+                if (job.city && job.region) {
+                    location = `${job.city}, ${job.region}`;
+                } else if (job.city) {
+                    const determinedRegion = determineRegionByCity(job.city);
+                    location = determinedRegion ? `${job.city}, ${determinedRegion}` : job.city;
+                } else {
+                    location = job.region || 'ישראל';
+                }
+                
                 const shortDescription = job.description
                 ? 
                     (job.description.substring(0, 120) + (job.description.length > 120 ? '...' : '')) : 
@@ -1605,6 +1706,9 @@
                             <a href="${smsLink}" class="contact-button sms-button" title="פנייה ב-SMS" onclick="event.stopPropagation();">
                                 <i class="fas fa-sms"></i>
                             </a>
+                            <button class="contact-button share-button" title="שתף משרה" onclick="event.stopPropagation(); shareJob(${index})" style="background: linear-gradient(135deg, #FF6B6B, #EE5A52);">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -1617,26 +1721,148 @@
             });
         }
 
-        // פונקציות מודל
-        function openJobModal(index) {
-            const currentJobs = filteredJobs.length > 0 ? filteredJobs : allJobs.filter(j => j.status === 'פעיל');
+        // פונקציית שיתוף משרה
+        function shareJob(index) {
+            const job = currentDisplayedJobs[index];
+            if (!job) return;
             
-            // מיון המשרות הנוכחיות לפי מומלצות
-            const sortedCurrentJobs = currentJobs.sort((a, b) => {
-                if (a.featured && !b.featured) return -1;
-                if (!a.featured && b.featured) return 1;
-                return 0;
+            const jobUrl = window.location.href;
+            const shareText = `🎯 משרה מעניינת: ${job.title}\n📍 ${job.city ? job.city + ', ' + (job.region || '') : job.region || 'ישראל'}\n💼 ${job.category}\n\n${jobUrl}`;
+            
+            // בדיקה אם יש תמיכה ב-Web Share API
+            if (navigator.share) {
+                navigator.share({
+                    title: `משרה: ${job.title}`,
+                    text: `${job.title} ב${job.city ? job.city : job.region}`,
+                    url: jobUrl
+                }).catch(err => console.log('שגיאה בשיתוף:', err));
+            } else {
+                // Fallback - העתקה ללוח
+                copyToClipboard(shareText);
+                showShareOptions(job, shareText);
+            }
+        }
+
+        // פונקציה להצגת אפשרויות שיתוף
+        function showShareOptions(job, shareText) {
+            const whatsappShare = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+            const facebookShare = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
+            const twitterShare = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
+            
+            const shareModal = document.createElement('div');
+            shareModal.className = 'modal';
+            shareModal.style.display = 'block';
+            shareModal.innerHTML = `
+                <div class="modal-content" style="max-width: 400px;">
+                    <div class="modal-header">
+                        <h3 class="modal-title"><i class="fas fa-share-alt"></i> שתף משרה</h3>
+                        <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+                    </div>
+                    <div style="padding: 20px;">
+                        <h4 style="color: #F69898; margin-bottom: 15px;">${job.title}</h4>
+                        <div style="display: grid; gap: 15px;">
+                            <a href="${whatsappShare}" target="_blank" class="contact-method-btn whatsapp-btn" style="text-decoration: none;">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>שתף בוואטסאפ</span>
+                            </a>
+                            <a href="${facebookShare}" target="_blank" class="contact-method-btn" style="background: linear-gradient(135deg, #3b5998, #2d4373); text-decoration: none;">
+                                <i class="fab fa-facebook-f"></i>
+                                <span>שתף בפייסבוק</span>
+                            </a>
+                            <button onclick="copyToClipboard('${shareText.replace(/'/g, "\\'")}'); showNotification('הקישור הועתק!')" class="contact-method-btn" style="background: linear-gradient(135deg, #6c757d, #545b62); border: none; cursor: pointer;">
+                                <i class="fas fa-copy"></i>
+                                <span>העתק קישור</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(shareModal);
+            
+            // סגירה בלחיצה על הרקע
+            shareModal.addEventListener('click', function(e) {
+                if (e.target === shareModal) {
+                    shareModal.remove();
+                }
             });
+        }
+
+        // פונקציה להעתקה ללוח
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showNotification('הועתק ללוח!');
+                });
+            } else {
+                // Fallback לדפדפנים ישנים
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('הועתק ללוח!');
+            }
+        }
+
+        // פונקציה להצגת הודעות
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'linear-gradient(135deg, #28a745, #20c997)' : 'linear-gradient(135deg, #dc3545, #e74c3c)'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 10000;
+                font-weight: bold;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                animation: slideInNotification 0.3s ease-out;
+            `;
+            notification.textContent = message;
             
-            if (!sortedCurrentJobs || !sortedCurrentJobs[index]) {
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInNotification {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+                style.remove();
+            }, 3000);
+        }
+
+        // פונקציות מודל - מתוקנות לכלול כפתור שיתוף
+        function openJobModal(index) {
+            if (!currentDisplayedJobs || !currentDisplayedJobs[index]) {
                 alert('אירעה שגיאה בטעינת פרטי המשרה');
                 return;
             }
             
-            const job = sortedCurrentJobs[index];
+            const job = currentDisplayedJobs[index];
+            
+            // קביעת מיקום עם תמיכה במיפוי אזורים
+            let location = '';
+            if (job.city && job.region) {
+                location = `${job.city}, ${job.region}`;
+            } else if (job.city) {
+                const determinedRegion = determineRegionByCity(job.city);
+                location = determinedRegion ? `${job.city}, ${determinedRegion}` : job.city;
+            } else {
+                location = job.region || 'ישראל';
+            }
             
             document.getElementById('modal-job-title').textContent = job.title || 'משרה ללא כותרת';
-            document.getElementById('modal-job-location').textContent = job.city ? `${job.city}, ${job.region || 'ישראל'}` : (job.region || 'ישראל');
+            document.getElementById('modal-job-location').textContent = location;
             document.getElementById('modal-job-type').textContent = job.jobType || 'משרה מלאה';
             document.getElementById('modal-job-category').textContent = job.category || 'אחר';
             document.getElementById('modal-job-number').textContent = job.jobNumber || 'לא צוין';
@@ -1649,6 +1875,12 @@
             
             document.getElementById('modal-whatsapp-btn').href = whatsappLink;
             document.getElementById('modal-sms-btn').href = smsLink;
+            
+            // הוספת כפתור שיתוף למודל
+            const modalShareBtn = document.getElementById('modal-share-btn');
+            if (modalShareBtn) {
+                modalShareBtn.onclick = () => shareJob(index);
+            }
             
             document.getElementById('job-modal').style.display = 'block';
             document.body.style.overflow = 'hidden';
@@ -1669,7 +1901,7 @@
             document.body.style.overflow = 'auto';
         }
 
-        // חיפוש וסינון
+        // חיפוש וסינון - מתוקן לעבוד עם מיפוי אזורים
         function selectCategory(category) {
             const categoryFilter = document.getElementById('categoryFilter');
             if (categoryFilter) {
@@ -1695,8 +1927,12 @@
                     return false;
                 }
                 
-                if (region && job.region !== region) {
-                    return false;
+                if (region) {
+                    // בדיקה אם האזור שנבחר תואם לאזור של המשרה או לאזור שנקבע לפי העיר
+                    const jobRegion = job.region || determineRegionByCity(job.city);
+                    if (jobRegion !== region) {
+                        return false;
+                    }
                 }
                 
                 return true;
@@ -1730,6 +1966,32 @@
             console.log('🧹 מסננים נוקו');
         }
 
+        // פונקציות למערכת ניהול
+        function openAdminLogin() {
+            document.getElementById('admin-login-modal').style.display = 'block';
+            document.getElementById('adminPasswordInput').focus();
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('admin-login-modal').style.display = 'none';
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('adminLoginError').style.display = 'none';
+        }
+
+        function checkAdminAccess() {
+            const password = document.getElementById('adminPasswordInput').value;
+            if (password === "yarin080708") {
+                sessionStorage.setItem('adminAuthenticated', 'true');
+                window.open('./job-management.html', '_blank');
+                closeAdminLogin();
+            } else {
+                document.getElementById('adminLoginError').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('adminLoginError').style.display = 'none';
+                }, 3000);
+            }
+        }
+
         // מאזיני אירועים
         function attachEventListeners() {
             const searchButton = document.getElementById('searchButton');
@@ -1751,9 +2013,16 @@
                 });
             }
             
+            // הוספת מאזין למקש Enter במודל ניהול
+            document.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter' && document.getElementById('admin-login-modal').style.display === 'block') {
+                    checkAdminAccess();
+                }
+            });
+            
             // סגירת מודלים בלחיצה על הרקע או ESC
             window.addEventListener('click', function(event) {
-const modals = ['job-modal', 'about-modal', 'admin-login-modal'];
+                const modals = ['job-modal', 'about-modal', 'admin-login-modal'];
                 modals.forEach(modalId => {
                     const modal = document.getElementById(modalId);
                     if (event.target === modal) {
@@ -1765,7 +2034,7 @@ const modals = ['job-modal', 'about-modal', 'admin-login-modal'];
             
             document.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape') {
-const modals = ['job-modal', 'about-modal', 'admin-login-modal'];
+                    const modals = ['job-modal', 'about-modal', 'admin-login-modal'];
                     modals.forEach(modalId => {
                         const modal = document.getElementById(modalId);
                         if (modal.style.display === 'block') {
@@ -1805,42 +2074,12 @@ const modals = ['job-modal', 'about-modal', 'admin-login-modal'];
         window.filterJobs = filterJobs;
         window.clearFilters = clearFilters;
         window.toggleMobileMenu = toggleMobileMenu;
+        window.openAdminLogin = openAdminLogin;
+        window.closeAdminLogin = closeAdminLogin;
+        window.checkAdminAccess = checkAdminAccess;
+        window.shareJob = shareJob;
+        window.copyToClipboard = copyToClipboard;
 
-// פונקציות למערכת ניהול
-        function openAdminLogin() {
-            document.getElementById('admin-login-modal').style.display = 'block';
-            document.getElementById('adminPasswordInput').focus();
-        }
-
-        function closeAdminLogin() {
-            document.getElementById('admin-login-modal').style.display = 'none';
-            document.getElementById('adminPasswordInput').value = '';
-            document.getElementById('adminLoginError').style.display = 'none';
-        }
-
-        function checkAdminAccess() {
-            const password = document.getElementById('adminPasswordInput').value;
-            if (password === "yarin080708") {
-                sessionStorage.setItem('adminAuthenticated', 'true');
-                window.open('./job-management.html', '_blank');
-                closeAdminLogin();
-            } else {
-                document.getElementById('adminLoginError').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('adminLoginError').style.display = 'none';
-                }, 3000);
-            }
-        }
-
-        // הוספה למאזיני אירועים
-        document.addEventListener('keyup', function(event) {
-            if (event.key === 'Enter' && document.getElementById('admin-login-modal').style.display === 'block') {
-                checkAdminAccess();
-            }
-        });
-
-        console.log('✅ הסקריפט נטען בהצלחה!');
-    </script>
         console.log('✅ הסקריפט נטען בהצלחה!');
     </script>
 
@@ -1859,7 +2098,312 @@ const modals = ['job-modal', 'about-modal', 'admin-login-modal'];
                 btn.setAttribute("href", smsHref);
             });
         });
-</script>
+    </script>
+
+    <!-- עדכון המודל כדי לכלול כפתור שיתוף -->
+    <style>
+        /* סטיילים נוספים לכפתור שיתוף */
+        .share-button {
+            background: linear-gradient(135deg, #FF6B6B, #EE5A52) !important;
+        }
+        
+        .share-button:hover {
+            background: linear-gradient(135deg, #EE5A52, #DC4A3D) !important;
+            transform: scale(1.15) !important;
+        }
+        
+        .job-modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        /* עדכון מסנן האזורים */
+        .form-control option {
+            background: #444;
+            color: white;
+        }
+        
+        /* שיפור תצוגת כפתורי השיתוף */
+        .contact-buttons {
+            display: flex;
+            gap: 8px;
+            z-index: 15;
+            flex-wrap: wrap;
+        }
+        
+        @media (max-width: 480px) {
+            .contact-buttons {
+                gap: 6px;
+            }
+            
+            .contact-button {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 12px !important;
+            }
+            
+            .job-modal-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .contact-method-btn {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- התוכן זהה לחלק הקודם עד למודל פרטי המשרה -->
+    <header class="header">
+        <div class="header-inner">
+            <h2 class="text-logo">מה יש פה?</h2>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" class="active">דף הבית</a></li>
+                    <li><a href="#contact">צור קשר</a></li>
+                    <li><a href="#" onclick="openAboutModal()">עוד עלינו</a></li>
+                </ul>
+            </nav>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- תפריט מובייל -->
+        <div class="mobile-menu" id="mobileMenu">
+            <ul>
+                <li><a href="#" class="active">דף הבית</a></li>
+                <li><a href="#search">חיפוש משרות</a></li>
+                <li><a href="#contact">צור קשר</a></li>
+                <li><a href="#" onclick="openAboutModal(); toggleMobileMenu();">עוד עלינו</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-bg"></div>
+        <div class="hero-circles">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+        </div>
+        
+        <div class="container">
+            <div class="hero-content">
+                <h1>מה יש פה?</h1>
+                <h2 class="main-title">
+                    מצא את <span class="highlight">המשרה</span><br>
+                    <span class="highlight">המושלמת</span><br>
+                    בשבילך
+                </h2>
+                
+                <p class="hero-description">אלפי משרות מעודכנות באזורים שונים ברחבי הארץ, מותאמות בדיוק לצרכים שלך</p>
+                
+                <div class="hero-buttons">
+                    <a href="#search" class="btn">חיפוש משרות</a>
+                    <a href="#" class="btn btn-secondary" onclick="openAboutModal()">עוד עלינו</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="gnome-character" id="mainGnome" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+            <img src="https://mayeshpo.co.il/images/gnome.png" 
+                 alt="גמדה עוזרת" 
+                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XkNee15XXmDwvdGV4dD48L3N2Zz4='">
+            <div class="gnome-tooltip">אני אעזור לך למצוא משרה!</div>
+        </div>
+    </section>
+
+    <section id="search" class="search-section">
+        <div class="container">
+            <h3 class="search-title">חיפוש משרות</h3>
+            
+            <div class="search-grid">
+                <div class="form-group">
+                    <label class="form-label">חיפוש חופשי</label>
+                    <input type="text" class="form-control" id="searchInput" placeholder="הקלד מילות חיפוש...">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">קטגוריה</label>
+                    <select class="form-control" id="categoryFilter">
+                        <option value="">כל הקטגוריות</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">אזור</label>
+                    <select class="form-control" id="regionFilter">
+                        <option value="">כל האזורים</option>
+                        <option value="מרכז">מרכז</option>
+                        <option value="שרון">שרון</option>
+                        <option value="שפלה">שפלה</option>
+                        <option value="חיפה קריות והצפון">חיפה קריות והצפון</option>
+                        <option value="ירושלים והסביבה">ירושלים והסביבה</option>
+                        <option value="דרום">דרום</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="search-buttons">
+                <button class="btn" id="searchButton">חיפוש</button>
+                <button class="btn btn-secondary" id="clearButton">נקה</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="jobs">
+        <div class="container">
+            <h3 class="section-title">משרות מומלצות</h3>
+            <div class="jobs-grid" id="jobsContainer">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>טוען משרות...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="categories">
+        <div class="container">
+            <h3 class="section-title">קטגוריות מובילות</h3>
+            <div class="categories-grid" id="categoriesContainer"></div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h3 class="section-title">צור קשר</h3>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h4>דברו איתנו</h4>
+                    <p>יש לכם שאלות או הצעות? אנחנו כאן כדי לעזור!</p>
+                    <div class="contact-buttons-group">
+                        <a href="https://wa.me/972555504633" class="contact-method-btn whatsapp-btn" target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>שלח וואטסאפ</span>
+                        </a>
+                        <a href="sms:972555504633" class="contact-method-btn sms-btn sms-dynamic">
+                            <i class="fas fa-sms"></i>
+                            <span>שלח SMS</span>
+                        </a>
+                    </div>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/ma.yesh.po.akko" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/kerenraf1/" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/company/12620436/" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://wa.me/972555504633" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- מודל פרטי משרה - מעודכן עם כפתור שיתוף -->
+    <div id="job-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-job-title" class="modal-title">כותרת המשרה</h3>
+                <span class="close" onclick="closeJobModal()">&times;</span>
+            </div>
+            
+            <div class="job-details">
+                <div class="job-detail-row">
+                    <div class="job-detail-item">
+                        <span class="job-detail-label">מיקום:</span>
+                        <span id="modal-job-location" class="job-detail-value"></span>
+                    </div>
+                    <div class="job-detail-item">
+                        <span class="job-detail-label">סוג משרה:</span>
+                        <span id="modal-job-type" class="job-detail-value"></span>
+                    </div>
+                </div>
+                <div class="job-detail-row">
+                    <div class="job-detail-item">
+                        <span class="job-detail-label">קטגוריה:</span>
+                        <span id="modal-job-category" class="job-detail-value"></span>
+                    </div>
+                    <div class="job-detail-item">
+                        <span class="job-detail-label">מספר משרה:</span>
+                        <span id="modal-job-number" class="job-detail-value"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <h4 class="job-section-title">תיאור המשרה</h4>
+            <div id="modal-job-description" class="job-description-modal"></div>
+            
+            <h4 class="job-section-title">דרישות התפקיד</h4>
+            <div id="modal-job-requirements" class="job-requirements"></div>
+            
+            <div style="text-align: center; padding: 20px;">
+                <div class="job-modal-actions">
+                    <a href="https://wa.me/972555504633" id="modal-whatsapp-btn" class="contact-method-btn whatsapp-btn" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>פנייה בוואטסאפ</span>
+                    </a>
+                    <a href="sms:972555504633" id="modal-sms-btn" class="contact-method-btn sms-btn sms-dynamic">
+                        <i class="fas fa-sms"></i>
+                        <span>פנייה ב-SMS</span>
+                    </a>
+                    <button id="modal-share-btn" class="contact-method-btn" style="background: linear-gradient(135deg, #FF6B6B, #EE5A52); border: none; cursor: pointer;">
+                        <i class="fas fa-share-alt"></i>
+                        <span>שתף משרה</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- מודל עוד עלינו -->
+    <div id="about-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">מי אנחנו?</h3>
+                <span class="close" onclick="closeAboutModal()">&times;</span>
+            </div>
+            
+            <div style="padding: 30px; line-height: 1.7; color: white;">
+                <p style="font-size: 1.1rem; margin-bottom: 20px; color: #ccc;">
+                    ברוכים הבאים למקום שבו חיפוש עבודה הופך לחוויה נעימה ויעילה
+                </p>
+                
+                <p style="margin-bottom: 20px;">
+                    <strong>מה יש פה?</strong> הוא לוח משרות חכם, פשוט ואנושי – שנועד לעזור לך למצוא את 
+                    <em style="color: #F69898; font-weight: 600;">העבודה שמתאימה לך באמת</em>.
+                </p>
+                
+                <p style="margin-bottom: 20px;">
+                    לא משנה אם אתה חייל משוחרר, אמא שמחפשת משרת אם, סטודנטית, איש הייטק או מחליף קריירה – 
+                    כאן תמצא משרות מסוננות, אמיתיות, ועם ממשק שלא עושה כאב ראש.
+                </p>
+                
+                <h4 style="color: #F69898; margin: 25px 0 15px 0;">המשימה שלנו</h4>
+                <p style="margin-bottom: 20px;">
+                    להפוך את התהליך של חיפוש עבודה למשהו פשוט, מהיר ויעיל. אנחנו מאמינים שכל אחד 
+                    ראוי למקום עבודה שמתאים לו, ואנחנו כאן כדי לעזור לכם למצוא אותו.
+                </p>
+                
+                <h4 style="color: #F69898; margin: 25px 0 15px 0;">מה אנחנו מציעים?</h4>
+                <ul style="margin-right: 20px; margin-bottom: 20px;">
+                    <li style="margin-bottom: 10px;">💼 משרות מגוונות מכל התחומים</li>
+                    <li style="margin-bottom: 10px;">🎯 סינון חכם לפי מיקום, תחום ורמת ניסיון</li>
+                    <li style="margin-bottom: 10px;">📱 ממשק ידידותי למובייל ולמחשב</li>
+                    <li style="margin-bottom: 10px;">⚡ עדכונים שוטפים של משרות חדשות</li>
+                    <li style="margin-bottom: 10px;">🤝 שירות אישי וחם</li>
+                </ul>
+                
+                <p style="margin-bottom: 20px; text-align: center; color: #F69898; font-weight: 600;">
+                    בואו נמצא ביחד את העבודה הבאה שלכם! 🚀
+                </p>
+            </div>
+        </div>
+    </div>
+
     <!-- מודל כניסה למערכת ניהול -->
     <div id="admin-login-modal" class="modal">
         <div class="modal-content" style="max-width: 400px;">
@@ -1877,5 +2421,103 @@ const modals = ['job-modal', 'about-modal', 'admin-login-modal'];
             </div>
         </div>
     </div>
+
+    <footer class="footer">
+        <div class="container">
+            <h2 class="text-logo" style="font-size: 2rem; margin-bottom: 10px;">מה יש פה?</h2>
+            <p style="font-size: 1rem; margin-bottom: 25px; opacity: 0.9;">לוח משרות חזק למקום עבודה מדוייק!</p>
+            
+            <div style="display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap;">
+                <a href="#search" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">חיפוש משרות</a>
+                <a href="#contact" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">צור קשר</a>
+                <a href="#" onclick="openAdminLogin()" style="color: #F69898 !important; text-decoration: none; transition: color 0.3s; font-size: 1rem; font-weight: bold;"><i class="fas fa-cog" style="margin-left: 8px;"></i>מערכת ניהול</a>
+            </div>
+            
+            <div class="footer-social">
+                <a href="https://www.facebook.com/ma.yesh.po.akko" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/kerenraf1/" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/company/12620436/" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://wa.me/972555504633" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            
+            <p style="margin-top: 25px; opacity: 0.8; font-size: 0.9rem;">© 2025 מה יש פה? - כל הזכויות שמורות</p>
+        </div>
+    </footer>
+
+    <!-- הסקריפט נשאר זהה לחלק הקודם -->
+    <script>
+        // כל הקוד JavaScript נשאר זהה לחלק הקודם
+        // רק נוסיף את הפונקציונליות של עדכון מסנן האזורים לפי המיפוי החדש
+        
+        // משתנים גלובליים
+        let allJobs = [];
+        let filteredJobs = [];
+        let uniqueCategories = [];
+        let categoryColors = {};
+        let currentDisplayedJobs = [];
+
+        // משרות דוגמה
+        const sampleJobs = [
+            {
+                id: 1,
+                jobNumber: "JS001",
+                title: "מפתח/ת Full Stack",
+                company: "טכנולוגיות מתקדמות בע\"מ",
+                category: "פיתוח ותוכנה",
+                city: "תל אביב",
+                region: "מרכז",
+                jobType: "משרה מלאה",
+                description: "אנו מחפשים מפתח/ת Full Stack עם ניסיון בטכנולוגיות React, Node.js ו-MongoDB. התפקיד כולל פיתוח מערכות מורכבות ועבודה בצוות מקצועי.",
+                requirements: "ניסיון של 3+ שנים בפיתוח Full Stack\nידע מעמיק ב-JavaScript\nניסיון עם React ו-Node.js\nיכולת עבודה בצוות\nאנגלית ברמה טובה",
+                status: "פעיל",
+                featured: true
+            },
+            {
+                id: 2,
+                jobNumber: "WS002",
+                title: "מלצר/ית למסעדה יוקרתית",
+                company: "מסעדת השף",
+                category: "מזון ומסעדנות",
+                city: "חיפה",
+                region: "חיפה קריות והצפון",
+                jobType: "משרה חלקית",
+                description: "דרושים מלצרים/ות למסעדה יוקרתית בחיפה. ניסיון קודם - יתרון. העבודה במשמרות גמישות ואווירה נעימה.",
+                requirements: "ניסיון קודם בהגשה - יתרון\nיחסי אנוש מעולים\nזמינות לעבודה בערבים וסופי שבוע\nיכולת עבודה בצוות",
+                status: "פעיל",
+                featured: false
+            },
+            {
+                id: 3,
+                jobNumber: "TE003",
+                title: "מורה לאנגלית",
+                company: "בית ספר יסודי",
+                category: "חינוך והוראה",
+                city: "ירושלים",
+                region: "ירושלים והסביבה",
+                jobType: "משרה מלאה",
+                description: "דרוש/ה מורה לאנגלית לבית ספר יסודי בירושלים. המשרה כוללת הוראת אנגלית לכיתות א'-ו'.",
+                requirements: "תואר ראשון בהוראת אנגלית\nתעודת הוראה\nניסיון בהוראה - יתרון\nיחסי אנוש מעולים",
+                status: "פעיל",
+                featured: true
+            },
+            {
+                id: 4,
+                jobNumber: "SH004",
+                title: "מנהל/ת חנות בשפלה",
+                company: "רשת אופנה",
+                category: "מכירות ושיווק",
+                city: "רחובות",
+                region: "שפלה",
+                jobType: "משרה מלאה",
+                description: "דרוש/ה מנהל/ת חנות לרשת אופנה בשפלה. התפקיד כולל ניהול צוות, מכירות ושירות לקוחות.",
+                requirements: "ניסיון בניהול\nכישורי מכירה\nיחסי אנוש מעולים\nזמינות לעבודה בסופי שבוע",
+                status: "פעיל",
+                featured: false
+            }
+        ];
+
+        // הפונקציות נשארות זהות לחלק הקודם...
+        console.log('✅ אתר מעודכן עם כפתורי שיתוף ומיפוי אזורים מתקדם!');
+    </script>
 </body>
 </html>
