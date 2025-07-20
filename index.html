@@ -211,22 +211,28 @@
             background: rgba(255,255,255,0.1);
         }
 
-        /* גמדה ראשית */
+        /* גמדה ראשית - מוחזק וגלוי */
         .gnome-character {
             position: absolute !important;
             bottom: 20px !important;
             right: 10% !important;
             width: 120px !important;
+            height: auto !important;
             cursor: pointer !important;
             transition: transform 0.3s ease !important;
-            z-index: 100 !important;
+            z-index: 150 !important;
             animation: gnomeFloat 3s ease-in-out infinite !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
         }
 
         .gnome-character img {
-            width: 100%;
-            height: auto;
-            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+            width: 100% !important;
+            height: auto !important;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3)) !important;
+            display: block !important;
         }
 
         .gnome-character:hover {
@@ -1236,13 +1242,78 @@
 
         // פונקציה ראשית לאתחול
         function initializeApp() {
-            ensureGnomeExists();
+            forceCreateGnome(); // יצירת גמדה בכוח
             loadJobsFromFile();
             attachEventListeners();
             
-            setTimeout(function() {
-                showMessage('ברוכים הבאים למה יש פה! 🎉', 'success');
-            }, 1000);
+            // הסרת ההודעה הירוקה - לא מציגים הודעת הצלחה
+            // setTimeout(function() {
+            //     showMessage('ברוכים הבאים למה יש פה! 🎉', 'success');
+            // }, 1000);
+        }
+
+        // פונקציה חדשה ליצירת גמדה בכוח
+        function forceCreateGnome() {
+            console.log('🧙‍♀️ יוצר גמדה ראשית בכוח...');
+            
+            // מוחק גמדות קיימות
+            const existingGnomes = document.querySelectorAll('.hero-section .gnome-character');
+            existingGnomes.forEach(gnome => gnome.remove());
+            
+            // מוצא את ה-hero section
+            const heroSection = document.querySelector('.hero-section');
+            if (!heroSection) {
+                console.error('❌ לא נמצא hero-section');
+                return;
+            }
+            
+            // יוצר את הגמדה החדשה
+            const gnomeElement = document.createElement('div');
+            gnomeElement.className = 'gnome-character main-gnome';
+            gnomeElement.id = 'mainHeroGnome';
+            
+            gnomeElement.innerHTML = `
+                <img src="https://mayeshpo.co.il/images/gnome.png" 
+                     alt="גמדה עוזרת" 
+                     style="width: 100%; height: auto; display: block;"
+                     onerror="this.src='./images/gnome.png'">
+                <div class="gnome-tooltip">אני אעזור לך למצוא משרה!</div>
+            `;
+            
+            // הוספת סגנון CSS ישירות
+            gnomeElement.style.cssText = `
+                position: absolute !important;
+                bottom: 20px !important;
+                right: 10% !important;
+                width: 120px !important;
+                height: auto !important;
+                cursor: pointer !important;
+                transition: transform 0.3s ease !important;
+                z-index: 150 !important;
+                animation: gnomeFloat 3s ease-in-out infinite !important;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+            `;
+            
+            // הוספת אירועים
+            gnomeElement.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            
+            gnomeElement.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1)';
+            });
+            
+            gnomeElement.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+            
+            // הוספת הגמדה ל-hero section
+            heroSection.appendChild(gnomeElement);
+            
+            console.log('✅ גמדה ראשית נוצרה בהצלחה!');
         }
 
         // טעינת משרות מקובץ חיצוני
@@ -1253,7 +1324,7 @@
             const urlsToTry = [
                 './data/jobs.json',
                 './jobs.json',
-                'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/data/jobs.json'
+                'https://mayeshpo.co.il/data/jobs.json'
             ];
             
             tryLoadFromUrls(urlsToTry, 0);
@@ -1265,7 +1336,8 @@
                 console.log('⚠️ כל הנסיונות לטעינה נכשלו - משתמש במשרות דוגמה');
                 allJobs = sampleJobs;
                 processJobs();
-                showMessage('נטענו משרות דוגמה. לטעינת משרות מקובץ, הנח קובץ jobs.json בתיקייה', 'info');
+                // הסרת ההודעה הירוקה
+                // showMessage('נטענו משרות דוגמה. לטעינת משרות מקובץ, הנח קובץ jobs.json בתיקייה', 'info');
                 return;
             }
             
@@ -1284,7 +1356,8 @@
                         console.log(`✅ משרות נטענו בהצלחה: ${data.length} משרות`);
                         allJobs = data;
                         processJobs();
-                        showMessage(`נטענו ${data.length} משרות מהקובץ בהצלחה! 🎉`, 'success');
+                        // הסרת ההודעה הירוקה
+                        // showMessage(`נטענו ${data.length} משרות מהקובץ בהצלחה! 🎉`, 'success');
                     } else {
                         throw new Error('נתונים לא תקינים');
                     }
