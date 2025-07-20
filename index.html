@@ -483,6 +483,14 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
+        .job-badge.dev { background: #3B82F6; }
+        .job-badge.food { background: #10B981; }
+        .job-badge.education { background: #F59E0B; }
+        .job-badge.marketing { background: #EF4444; }
+        .job-badge.hr { background: #8B5CF6; }
+        .job-badge.health { background: #06B6D4; }
+        .job-badge.design { background: #EC4899; }
+
         .job-card-bottom {
             position: absolute;
             bottom: 20px;
@@ -1004,7 +1012,6 @@
                 <div class="text-logo-container">
                     <h2 class="text-logo">מה יש פה?</h2>
                 </div>
-                
                 <button class="mobile-menu-toggle">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -1016,7 +1023,8 @@
                         <li><a href="#about" onclick="openAboutModal()">עוד עלינו</a></li>
                     </ul>
                 </nav>
-</div>
+            </div>
+        </div>
     </header>
 
     <section class="hero-section">
@@ -1376,6 +1384,89 @@
             }
         ];
 
+        // פונקציות חסרות שנוספו
+        function getCategoryClass(category) {
+            const categoryMap = {
+                'פיתוח ותוכנה': 'dev',
+                'מזון ומסעדנות': 'food',
+                'חינוך והוראה': 'education',
+                'שיווק ומכירות': 'marketing',
+                'משאבי אנוש': 'hr',
+                'בריאות ורפואה': 'health',
+                'עיצוב ויצירה': 'design'
+            };
+            return categoryMap[category] || 'default';
+        }
+
+        function openAdminModal() {
+            console.log('Admin modal - not implemented');
+        }
+
+        function closeAdminModal() {
+            console.log('Close admin modal - not implemented');
+        }
+
+        function checkAdminPassword() {
+            console.log('Check admin password - not implemented');
+        }
+
+        // פונקציה מעודכנת לטעינה מ-GitHub
+        function importJobsFromJSON() {
+            console.log('מנסה לייבא משרות...');
+            
+            // **שנה את הכתובת הזו לכתובת הרפוזיטורי שלך!**
+            const githubUrl = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO_NAME/main/data/jobs.json';
+            
+            // רשימת URLs לנסות
+            const urlsToTry = [
+                githubUrl, // GitHub ראשון
+                './data/jobs.json', // קובץ מקומי שני
+            ];
+            
+            // פונקציה רקורסיבית לנסות כל URL
+            function tryLoadFromUrl(urls, index = 0) {
+                if (index >= urls.length) {
+                    // אם כל ה-URLs נכשלו, השתמש במשרות דוגמה
+                    console.log('כל הנסיונות נכשלו, משתמש במשרות דוגמה...');
+                    allJobs = sampleJobs;
+                    processJobs();
+                    showMessage('נטענו משרות דוגמה. העלה קובץ jobs.json לGitHub או שים קובץ מקומי.', 'info');
+                    return;
+                }
+                
+                const currentUrl = urls[index];
+                const isGitHub = currentUrl.includes('githubusercontent.com');
+                
+                console.log(`מנסה לטעון מ-${isGitHub ? 'GitHub' : 'קובץ מקומי'}: ${currentUrl}`);
+                
+                fetch(currentUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data && Array.isArray(data) && data.length > 0) {
+                            console.log(`משרות נטענו בהצלחה מ-${isGitHub ? 'GitHub' : 'קובץ מקומי'}:`, data.length);
+                            allJobs = data;
+                            processJobs();
+                            showMessage(`נטענו ${data.length} משרות מ-${isGitHub ? 'GitHub' : 'קובץ מקומי'} בהצלחה! 🎉`, 'success');
+                        } else {
+                            throw new Error('Invalid data structure');
+                        }
+                    })
+                    .catch(error => {
+                        console.warn(`נכשל לטעון מ-${isGitHub ? 'GitHub' : 'קובץ מקומי'}:`, error.message);
+                        // נסה את ה-URL הבא
+                        tryLoadFromUrl(urls, index + 1);
+                    });
+            }
+            
+            // התחל את התהליך
+            tryLoadFromUrl(urlsToTry);
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             console.log('הדף נטען - מאתחל...');
             attachEventListeners();
@@ -1386,35 +1477,6 @@
             importJobsFromJSON();
         }
 
-        function importJobsFromJSON() {
-            console.log('מנסה לייבא משרות מקובץ JSON...');
-            
-            fetch('./data/jobs.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('HTTP error! status: ' + response.status);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data && Array.isArray(data) && data.length > 0) {
-                        console.log('משרות נטענו מהקובץ בהצלחה:', data.length);
-                        allJobs = data;
-                        processJobs();
-                        showMessage('משרות נטענו בהצלחה מהקובץ!', 'success');
-                    } else {
-                        throw new Error('No valid jobs data found');
-                    }
-                })
-                .catch(error => {
-                    console.warn('לא ניתן לטעון מקובץ JSON:', error.message);
-                    console.log('משתמש במשרות דוגמה...');
-                    allJobs = sampleJobs;
-                    processJobs();
-                    showMessage('נטענו משרות דוגמה. צור קובץ data/jobs.json לייבוא משרות חיצוניות.', 'info');
-                });
-        }
-
         function processJobs() {
             extractUniqueCategories();
             updateCategoryFilters();
@@ -1422,7 +1484,7 @@
             displayJobs(allJobs.filter(job => job.status === 'פעיל'));
         }
 
-        function extractUniqueCategories() {
+function extractUniqueCategories() {
             const categories = allJobs
                 .filter(job => job.category)
                 .map(job => job.category.trim())
@@ -1458,7 +1520,8 @@
                 'חינוך והוראה': '📚',
                 'שיווק ומכירות': '📈',
                 'משאבי אנוש': '👥',
-                'בריאות ורפואה': '🏥'
+                'בריאות ורפואה': '🏥',
+                'עיצוב ויצירה': '🎨'
             };
             
             const categoryDescs = {
@@ -1467,7 +1530,8 @@
                 'חינוך והוראה': 'מורים, מדריכים, מחנכים',
                 'שיווק ומכירות': 'מנהלי מכירות, שיווק דיגיטלי',
                 'משאבי אנוש': 'מגייסים, מנהלי HR',
-                'בריאות ורפואה': 'אחיות, רופאים, פיזיותרפיסטים'
+                'בריאות ורפואה': 'אחיות, רופאים, פיזיותרפיסטים',
+                'עיצוב ויצירה': 'גרפיקאים, מעצבים, אמנים'
             };
             
             uniqueCategories.slice(0, 6).forEach((category, index) => {
@@ -1677,7 +1741,6 @@
             window.addEventListener('click', function(event) {
                 const jobModal = document.getElementById('job-modal');
                 const aboutModal = document.getElementById('about-modal');
-                const adminModal = document.getElementById('admin-modal');
                 
                 if (event.target === jobModal) {
                     closeJobModal();
@@ -1685,28 +1748,14 @@
                 if (event.target === aboutModal) {
                     closeAboutModal();
                 }
-                if (event.target === adminModal) {
-                    closeAdminModal();
-                }
             });
             
             document.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape') {
                     closeJobModal();
                     closeAboutModal();
-                    closeAdminModal();
                 }
             });
-
-            // Enter במודל ניהול
-            const adminPasswordInput = document.getElementById('admin-password');
-            if (adminPasswordInput) {
-                adminPasswordInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        checkAdminPassword();
-                    }
-                });
-            }
             
             document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
                 anchor.addEventListener('click', function (e) {
@@ -1814,13 +1863,11 @@
             console.log('האתר נטען בהצלחה!');
         });
 
+        // הפניית פונקציות ל-window object למניעת שגיאות
         window.openJobModal = openJobModal;
         window.closeJobModal = closeJobModal;
         window.openAboutModal = openAboutModal;
         window.closeAboutModal = closeAboutModal;
-        window.openAdminModal = openAdminModal;
-        window.closeAdminModal = closeAdminModal;
-        window.checkAdminPassword = checkAdminPassword;
         window.getCategoryClass = getCategoryClass;
         window.selectCategory = selectCategory;
         window.filterJobs = filterJobs;
