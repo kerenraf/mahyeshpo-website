@@ -1097,10 +1097,10 @@
                             <i class="fab fa-whatsapp"></i>
                             <span>שלח וואטסאפ</span>
                         </a>
-                        <a href="sms:+972555504633" class="contact-method-btn sms-btn">
-                            <i class="fas fa-sms"></i>
-                            <span>שלח SMS</span>
-                        </a>
+<a href="sms:972555504633" class="contact-method-btn sms-btn" id="sms-link">
+    <i class="fas fa-sms"></i>
+    <span>שלח SMS</span>
+</a>
                     </div>
                     <div class="footer-social">
                         <a href="https://www.facebook.com/ma.yesh.po.akko" class="social-icon"><i class="fab fa-facebook-f"></i></a>
@@ -1866,5 +1866,20 @@ requirements: "ניסיון באדמיניסטרציה - יתרון\nיכולת 
 
         console.log('✅ הסקריפט נטען בהצלחה!');
     </script>
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+  const phone = "972555504633";
+  const message = "שלום, אני מעוניין/ת במשרה...";
+  const encoded = encodeURIComponent(message);
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const smsHref = isIOS
+    ? `sms:${phone}&body=${encoded}`
+    : `sms:${phone}?body=${encoded}`;
+
+  document.querySelectorAll('.sms-dynamic').forEach(btn => {
+    btn.setAttribute("href", smsHref);
+  });
+});
+</script>
 </body>
 </html>
