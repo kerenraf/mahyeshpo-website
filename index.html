@@ -937,22 +937,22 @@
             <div class="job-details">
                 <div class="job-detail-row">
                     <div class="job-detail-item">
-                        <span class="job-detail-label">חברה:</span>
-                        <span id="modal-job-company" class="job-detail-value"></span>
-                    </div>
-                    <div class="job-detail-item">
                         <span class="job-detail-label">מיקום:</span>
                         <span id="modal-job-location" class="job-detail-value"></span>
                     </div>
-                </div>
-                <div class="job-detail-row">
                     <div class="job-detail-item">
                         <span class="job-detail-label">סוג משרה:</span>
                         <span id="modal-job-type" class="job-detail-value"></span>
                     </div>
+                </div>
+                <div class="job-detail-row">
                     <div class="job-detail-item">
                         <span class="job-detail-label">קטגוריה:</span>
                         <span id="modal-job-category" class="job-detail-value"></span>
+                    </div>
+                    <div class="job-detail-item">
+                        <span class="job-detail-label">מספר משרה:</span>
+                        <span id="modal-job-number" class="job-detail-value"></span>
                     </div>
                 </div>
             </div>
@@ -1509,7 +1509,6 @@
                 jobCard.innerHTML = `
                     <div class="job-number">${job.jobNumber}</div>
                     <h3 class="job-title">${job.title}</h3>
-                    <div class="job-company">${job.company}</div>
                     <div class="job-location">
                         <i class="fas fa-map-marker-alt"></i> ${location}
                     </div>
@@ -1582,10 +1581,10 @@
             const job = currentJobs[index];
             
             document.getElementById('modal-job-title').textContent = job.title || 'משרה ללא כותרת';
-            document.getElementById('modal-job-company').textContent = job.company || 'חברה לא ידועה';
             document.getElementById('modal-job-location').textContent = job.city ? `${job.city}, ${job.region || 'ישראל'}` : (job.region || 'ישראל');
             document.getElementById('modal-job-type').textContent = job.jobType || 'משרה מלאה';
             document.getElementById('modal-job-category').textContent = job.category || 'אחר';
+            document.getElementById('modal-job-number').textContent = job.jobNumber || 'לא צוין';
             document.getElementById('modal-job-description').textContent = job.description || 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
             document.getElementById('modal-job-requirements').textContent = job.requirements ? job.requirements.replace(/\\n/g, '\n') : 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
             
@@ -1628,6 +1627,7 @@
             }
         }
 
+        // סינון משרות
 // סינון משרות
         function filterJobs() {
             const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -2001,7 +2001,7 @@
             `);
         }
 
-        // הוספת הפונקציות ל-window object למניעת שגיאות
+        // הוספת הפונקציות ל-window object למניעת שגיאות - חייב להיות כאן!
         window.openJobModal = openJobModal;
         window.closeJobModal = closeJobModal;
         window.openAboutModal = openAboutModal;
@@ -2013,6 +2013,19 @@
         window.selectCategory = selectCategory;
         window.filterJobs = filterJobs;
         window.clearFilters = clearFilters;
+
+        // קריאה מיידית לוידוא שהפונקציות זמינות
+        document.addEventListener('DOMContentLoaded', function() {
+            // וידוא שהפונקציות זמינות גלובלית
+            window.openAboutModal = openAboutModal;
+            window.closeAboutModal = closeAboutModal;
+            window.openTermsModal = openTermsModal;
+            window.closeTermsModal = closeTermsModal;
+            window.openPrivacyModal = openPrivacyModal;
+            window.closePrivacyModal = closePrivacyModal;
+            
+            console.log('✅ פונקציות מודל זמינות גלובלית');
+        });
 
         // בדיקת שגיאות
         window.addEventListener('error', function(e) {
