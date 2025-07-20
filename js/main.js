@@ -86,6 +86,167 @@ const hardcodedJobs = [
     }
 ];
 
+// הוסף את הקוד הזה בתחילת הפונקציה initializeApp() שלך
+
+function forceCreateMainGnome() {
+    console.log('🧙‍♀️ יוצר גמדה ראשית בכוח...');
+    
+    // מוחק גמדות קיימות אם יש
+    const existingGnomes = document.querySelectorAll('.hero-section .gnome-character');
+    existingGnomes.forEach(gnome => gnome.remove());
+    
+    // מוצא את ה-hero section
+    const heroSection = document.querySelector('.hero-section');
+    if (!heroSection) {
+        console.error('❌ לא נמצא hero-section');
+        return;
+    }
+    
+    // יוצר את הגמדה החדשה
+    const gnomeElement = document.createElement('div');
+    gnomeElement.className = 'gnome-character main-gnome';
+    gnomeElement.id = 'mainHeroGnome';
+    
+    // הוספת HTML של הגמדה
+    gnomeElement.innerHTML = `
+        <img src="https://cdn.pixabay.com/photo/2017/01/31/16/49/dwarf-2023281_960_720.png" 
+             alt="גמדה עוזרת" 
+             style="width: 100%; height: auto; display: block;"
+             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XnNeT15TXkjwvdGV4dD48L3N2Zz4='">
+        <div class="gnome-tooltip">אני אעזור לך למצוא משרה!</div>
+    `;
+    
+    // הוספת סגנון CSS ישירות לאלמנט
+    gnomeElement.style.cssText = `
+        position: absolute !important;
+        bottom: 20px !important;
+        right: 10% !important;
+        width: 120px !important;
+        height: auto !important;
+        cursor: pointer !important;
+        transition: transform 0.3s ease !important;
+        z-index: 100 !important;
+        animation: gnomeFloat 3s ease-in-out infinite !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    `;
+    
+    // הוספת אירוע קליק לגלילה למעלה
+    gnomeElement.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+    
+    // הוספת אירוע hover
+    gnomeElement.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.1)';
+    });
+    
+    gnomeElement.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1)';
+    });
+    
+    // הוספת הגמדה ל-hero section
+    heroSection.appendChild(gnomeElement);
+    
+    console.log('✅ גמדה ראשית נוצרה בהצלחה!');
+    
+    // וידוא שהגמדה נראית
+    setTimeout(() => {
+        const createdGnome = document.getElementById('mainHeroGnome');
+        if (createdGnome) {
+            const rect = createdGnome.getBoundingClientRect();
+            console.log('📏 מיקום הגמדה:', { 
+                visible: rect.width > 0 && rect.height > 0,
+                position: { top: rect.top, left: rect.left, right: rect.right, bottom: rect.bottom }
+            });
+        }
+    }, 100);
+}
+
+// הוספת CSS לאנימציה
+function addGnomeAnimation() {
+    const style = document.createElement('style');
+    style.id = 'gnome-animation-styles';
+    style.textContent = `
+        @keyframes gnomeFloat {
+            0%, 100% { 
+                transform: translateY(0px); 
+            }
+            50% { 
+                transform: translateY(-10px); 
+            }
+        }
+        
+        .gnome-tooltip {
+            position: absolute !important;
+            background: #2D2D2D !important;
+            color: white !important;
+            padding: 8px 12px !important;
+            border-radius: 6px !important;
+            font-size: 12px !important;
+            top: -50px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            transition: all 0.3s ease !important;
+            white-space: nowrap !important;
+            z-index: 20 !important;
+            border: 2px solid #F69898 !important;
+        }
+        
+        .gnome-character:hover .gnome-tooltip {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        .gnome-tooltip::after {
+            content: '' !important;
+            position: absolute !important;
+            bottom: -8px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            border-left: 8px solid transparent !important;
+            border-right: 8px solid transparent !important;
+            border-top: 8px solid #2D2D2D !important;
+        }
+        
+        @media (max-width: 768px) {
+            .gnome-character.main-gnome {
+                width: 90px !important;
+                right: 5% !important;
+            }
+        }
+    `;
+    
+    // הסרת סגנון קודם אם קיים
+    const existingStyle = document.getElementById('gnome-animation-styles');
+    if (existingStyle) {
+        existingStyle.remove();
+    }
+    
+    document.head.appendChild(style);
+    console.log('✅ אנימציות גמדה נוספו');
+}
+
+// עדכן את הפונקציה initializeApp שלך להיות כך:
+function initializeApp() {
+    addGnomeAnimation(); // הוספת אנימציות
+    forceCreateMainGnome(); // יצירת הגמדה בכוח
+    loadJobs();
+    attachEventListeners();
+    addVisualEffects();
+    
+    setTimeout(function() {
+        showMessage('ברוכים הבאים למה יש פה! 🎉', 'success');
+    }, 1000);
+}
+
 // משתנים גלובליים
 let allJobs = [];
 let filteredJobs = [];
