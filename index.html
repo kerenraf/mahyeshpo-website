@@ -1303,11 +1303,13 @@
             <h2 class="text-logo" style="font-size: 2rem; margin-bottom: 10px;">מה יש פה?</h2>
             <p style="font-size: 1rem; margin-bottom: 25px; opacity: 0.9;">לוח משרות חזק למקום עבודה מדוייק!</p>
             
-            <div style="display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap;">
-                <a href="#search" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">חיפוש משרות</a>
-                <a href="#contact" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">צור קשר</a>
-            </div>
-            
+<div style="display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap;">
+    <a href="#search" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">חיפוש משרות</a>
+    <a href="#contact" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">צור קשר</a>
+    <a href="#" onclick="showAdminLogin()" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">
+        <i class="fas fa-cog"></i> כניסה לניהול
+    </a>
+</div>            
             <div class="footer-social">
                 <a href="https://www.facebook.com/ma.yesh.po.akko" class="social-icon"><i class="fab fa-facebook-f"></i></a>
                 <a href="https://www.instagram.com/kerenraf1/" class="social-icon"><i class="fab fa-instagram"></i></a>
@@ -1774,6 +1776,8 @@
                     });
                 }
             });
+
+            function showAdminLogin() {
             
             // גלילה חלקה לקישורים
             document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
