@@ -2211,15 +2211,16 @@
             textArea.focus();
             textArea.select();
             
-            try var successful = document.execCommand('copy');
-                if (successful) {
-                    showNotification('הועתק ללוח!');
-                } else {
-                    showNotification('לא ניתן להעתיק', 'error');
-                }
-            } catch (err) {
-                showNotification('לא ניתן להעתיק', 'error');
-            }
+try {
+    var successful = document.execCommand('copy');
+    if (successful) {
+        showNotification('הועתק ללוח!');
+    } else {
+        showNotification('לא ניתן להעתיק', 'error');
+    }
+} catch (err) {
+    showNotification('לא ניתן להעתיק', 'error');
+}
             
             document.body.removeChild(textArea);
         }
