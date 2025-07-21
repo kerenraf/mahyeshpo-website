@@ -1863,6 +1863,69 @@
             }
         ];
 
+        // בדיקה אוטומטית לקישורי משרות
+(function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var jobParam = urlParams.get('job');
+    
+    if (jobParam) {
+        console.log('🔗 זוהה קישור למשרה:', jobParam);
+        
+        // הסתר הודעות שגיאה קיימות
+        setTimeout(function() {
+            var existingNotifications = document.querySelectorAll('[style*="position: fixed"]');
+            existingNotifications.forEach(function(notif) {
+                if (notif.textContent && (
+                    notif.textContent.includes('לא נמצאה') || 
+                    notif.textContent.includes('שגיאה')
+                )) {
+                    notif.style.display = 'none';
+                }
+            });
+        }, 100);
+        
+        // התחל בדיקה מחזורית
+        var attempts = 0;
+        var checkInterval = setInterval(function() {
+            attempts++;
+            
+            if (window.allJobs && window.allJobs.length > 0) {
+                clearInterval(checkInterval);
+                console.log('🚀 משרות זמינות, מפתח משרה:', jobParam);
+                
+                // חפש את המשרה
+                var job = window.allJobs.find(function(j) {
+                    return (j.jobNumber === jobParam || 
+                           j.jobNumber === decodeURIComponent(jobParam)) && 
+                           j.status === 'פעיל';
+                });
+                
+                if (job) {
+                    console.log('✅ משרה נמצאה:', job.title);
+                    
+                    // הוסף למערך המוצג אם לא קיים
+                    if (!window.currentDisplayedJobs.some(function(j) { return j.jobNumber === job.jobNumber; })) {
+                        window.currentDisplayedJobs.unshift(job);
+                    }
+                    
+                    // פתח את המודל
+                    setTimeout(function() {
+                        window.openJobModal(job.jobNumber);
+                    }, 500);
+                    
+                } else {
+                    console.log('❌ משרה לא נמצאה');
+                    window.showNotification('המשרה שחיפשת לא נמצאה או אינה פעילה', 'error');
+                }
+            } else if (attempts > 40) { // 20 שניות
+                clearInterval(checkInterval);
+                console.log('❌ timeout - משרות לא נטענו');
+                window.showNotification('שגיאה בטעינת המשרות', 'error');
+            }
+        }, 500);
+    }
+})();
+
         // פונקציות בסיסיות
         function toggleMobileMenu() {
             var mobileMenu = document.getElementById('mobileMenu');
@@ -1986,27 +2049,49 @@
         }
 
         // פונקציה לפתיחת משרה ספציפית
-        function openSpecificJob(jobNumber) {
-            setTimeout(function() {
-                var jobIndex = currentDisplayedJobs.findIndex(function(job) {
-                    return job.jobNumber === decodeURIComponent(jobNumber);
-                });
-                
-                if (jobIndex !== -1) {
-                    console.log('🎯 פותח משרה ספציפית: ' + jobNumber);
-                    openJobModal(jobIndex);
-                    
-                    document.getElementById('search').scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'start' 
-                    });
-                } else {
-                    console.log('❌ לא נמצאה משרה עם מספר: ' + jobNumber);
-                    showNotification('המשרה שחיפשת לא נמצאה', 'error');
-                }
-            }, 500);
+function openSpecificJob(jobNumber) {
+    console.log('🎯 openSpecificJob נקרא עם:', jobNumber);
+    
+    // חפש את המשרה בכל הדרכים
+    var job = allJobs.find(function(j) {
+        return (
+            (j.jobNumber === jobNumber) ||
+            (j.jobNumber === decodeURIComponent(jobNumber)) ||
+            (j.jobNumber && j.jobNumber.trim() === jobNumber.trim())
+        ) && j.status === 'פעיל';
+    });
+    
+    if (job) {
+        console.log('✅ משרה נמצאה:', job.title);
+        
+        // וודא שהמשרה במערך המוצג
+        if (!currentDisplayedJobs.some(function(j) { return j.jobNumber === job.jobNumber; })) {
+            currentDisplayedJobs.unshift(job);
+            console.log('📝 הוסף משרה ל-currentDisplayedJobs');
         }
-
+        
+        // פתח את המודל
+        setTimeout(function() {
+            openJobModal(job.jobNumber);
+        }, 300);
+        
+        // גלול לאזור החיפוש
+        setTimeout(function() {
+            var searchSection = document.getElementById('search');
+            if (searchSection) {
+                searchSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }, 600);
+        
+    } else {
+        console.log('❌ לא נמצאה משרה עם מספר: ' + jobNumber);
+        showNotification('המשרה שחיפשת לא נמצאה או אינה פעילה', 'error');
+    }
+}
+        
         // פונקציה חדשה לחילוץ ערים ייחודיות
         function extractUniqueCities() {
             var cities = allJobs
@@ -2311,12 +2396,32 @@ function shareJob(jobNumber) {
 
         // פונקציות מודל
 function openJobModal(jobNumber) {
+    console.log('🎯 openJobModal נקרא עם:', jobNumber);
+    
+    // חפש במערך הראשי אם לא נמצא ב-currentDisplayedJobs
     var job = currentDisplayedJobs.find(function(j) { return j.jobNumber === jobNumber; });
+    
     if (!job) {
-        console.error('לא נמצאה משרה עם מספר: ' + jobNumber);
+        console.log('🔍 לא נמצא ב-currentDisplayedJobs, מחפש ב-allJobs');
+        // אם לא נמצא ב-currentDisplayedJobs, חפש במערך הראשי
+        job = allJobs.find(function(j) { 
+            return j.jobNumber === jobNumber && j.status === 'פעיל'; 
+        });
+        
+        if (job && currentDisplayedJobs.indexOf(job) === -1) {
+            console.log('✅ הוסף משרה ל-currentDisplayedJobs');
+            // הוסף למערך המוצג
+            currentDisplayedJobs.unshift(job);
+        }
+    }
+    
+    if (!job) {
+        console.error('❌ לא נמצאה משרה עם מספר: ' + jobNumber);
         alert('אירעה שגיאה בטעינת פרטי המשרה');
         return;
     }
+    
+    console.log('📋 פותח משרה:', job.title);
     
             var location = '';
             if (job.city && job.region) {
@@ -2451,16 +2556,16 @@ if (modalShareBtn) {
             console.log('📝 מצב עריכה מהירה הושבת');
         }
 
-        function toggleQuickFeature(index) {
-            if (!isQuickEditMode) return;
-            
-            var job = currentDisplayedJobs[index];
-            if (!job) re    var job = currentDisplayedJobs.find(function(j) { return j.jobNumber === jobNumber; });
+function toggleQuickFeature(jobNumber) {
+    if (!isQuickEditMode) return;
+    
+    var job = currentDisplayedJobs.find(function(j) { return j.jobNumber === jobNumber; });
     if (!job) {
         console.error('לא נמצאה משרה עם מספר: ' + jobNumber);
         return;
-    }            
-            job.featured = !job.featured;
+    }
+
+    job.featured = !job.featured;
             
             var mainJobIndex = allJobs.findIndex(function(j) { return j.jobNumber === job.jobNumber; });
             if (mainJobIndex !== -1) {
