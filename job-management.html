@@ -913,7 +913,43 @@
         .footer-link:hover {
             color: #F69898;
             background: rgba(246,152,152,0.1);
-            }
+        }
+        .field-mapping {
+    margin-bottom: 15px;
+}
+
+.field-mapping label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ccc;
+    font-weight: bold;
+}
+
+.mapping-grid {
+    margin-bottom: 20px;
+}
+
+.system-fields {
+    background: rgba(0,0,0,0.2);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.preview-table {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 15px;
+}
+
+.mapping-highlight {
+    background: rgba(246,152,152,0.1);
+    border: 1px solid #F69898;
+}
+
+.auto-mapped {
+    background: rgba(40,167,69,0.1);
+    border: 1px solid #28a745;
+}
 
         .copyright {
             text-align: center;
@@ -1285,34 +1321,42 @@
             </div>
         </div>
 
-        <!-- מודל ייבוא משרות -->
-        <div id="import-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">
-                        <i class="fas fa-file-import"></i>
-                        ייבוא משרות
-                    </h3>
-                    <span class="close" onclick="closeImportModal()">&times;</span>
-                </div>
-                
-                <div class="import-section">
-                    <div class="file-upload" onclick="document.getElementById('file-input').click()">
-                        <div class="file-upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                        <h4>גרור קובץ או לחץ להעלאה</h4>
-                        <p>תומך ב-CSV ו-JSON</p>
-                        <input type="file" id="file-input" accept=".csv,.json" style="display: none;" onchange="handleFileUpload(event)">
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 20px;">
-                        <button class="btn btn-secondary" onclick="closeImportModal()">
-                            <i class="fas fa-times"></i> סגור
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- מודל ייבוא משרות -->
+<div id="import-modal" class="modal">...</div>
 
+<!-- 🆕 מודל מיפוי נתונים -->
+<div id="mapping-modal" class="modal">
+    <div class="modal-content" style="max-width: 1200px;">
+        <div class="modal-header">
+            <h3>מיפוי נתונים לייבוא</h3>
+        </div>
+        
+        <div style="padding: 20px;">
+            <!-- 🆕 תצוגת דוגמאות -->
+            <table id="sample-data-table" class="jobs-table">
+                <thead id="sample-headers"></thead>
+                <tbody id="sample-data"></tbody>
+            </table>
+            
+            <!-- 🆕 מיפוי שדות -->
+            <div class="mapping-grid">
+                <select id="map-title">בחר שדה כותרת...</select>
+                <select id="map-category">בחר שדה קטגוריה...</select>
+                <!-- ... עוד שדות -->
+            </div>
+            
+            <!-- 🆕 אפשרויות ייבוא -->
+            <div>
+                <input type="checkbox" id="auto-generate-numbers">
+                <input type="radio" name="import-mode" value="replace">
+            </div>
+            
+            <!-- 🆕 כפתורי פעולה -->
+            <button onclick="previewMapping()">תצוגה מקדימה</button>
+            <button onclick="processMappedData()">ייבא נתונים</button>
+        </div>
+    </div>
+</div>
         <!-- מודל פעולות מרובות -->
         <div id="bulk-modal" class="modal">
             <div class="modal-content">
@@ -1384,6 +1428,9 @@
         // משתנים גלובליים
         let jobs = [];
         let filteredJobs = [];
+        let rawDataForMapping = [];
+let rawDataForMapping = [];
+let mappingData = {};
         let currentPage = 1;
         const jobsPerPage = 15;
         let isFiltered = false;
@@ -1542,6 +1589,7 @@
                 }
                 
                 const isSelected = selectedJobs.has(originalIndex);
+                
                 row.innerHTML = `
                     <td>
                         <input type="checkbox" ${isSelected ? 'checked' : ''} 
@@ -1921,53 +1969,36 @@
             document.getElementById('file-input').value = '';
         }
 
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            let rawData;
+            if (file.name.endsWith('.json')) {
+                rawData = JSON.parse(e.target.result);
+            } else if (file.name.endsWith('.csv')) {
+                rawData = parseCSVForMapping(e.target.result); // 🆕 פונקציה חדשה
+            }
             
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    let importedJobs;
-                    
-                    if (file.name.endsWith('.json')) {
-                        importedJobs = JSON.parse(e.target.result);
-                    } else if (file.name.endsWith('.csv')) {
-                        importedJobs = parseCSV(e.target.result);
-                    } else {
-                        throw new Error('סוג קובץ לא נתמך');
-                    }
-                    
-                    if (!Array.isArray(importedJobs)) {
-                        throw new Error('הקובץ חייב להכיל מערך של משרות');
-                    }
-                    
-                    // הוספת המשרות החדשות
-                    importedJobs.forEach(job => {
-                        jobs.push({
-                            jobNumber: job.jobNumber || generateJobNumber(),
-                            title: job.title || '',
-                            category: job.category || 'אחר',
-                            city: job.city || '',
-                            region: job.region || 'מרכז',
-                            description: job.description || '',
-                            requirements: job.requirements || '',
-                            status: job.status || 'פעיל',
-                            featured: job.featured || false
-                        });
-                    });
-                    
-                    markLocalChanges();
-                    updateAllDisplays();
-                    closeImportModal();
-                    showNotification(`${importedJobs.length} משרות יובאו בהצלחה!`, 'success');
-                    
-                } catch (error) {
-                    showNotification('שגיאה: ' + error.message, 'error');
-                }
-            };
-            reader.readAsText(file, 'UTF-8');
+            // 🆕 פתיחת מסך מיפוי במקום ייבוא ישיר!
+            openMappingModal(rawData, file.name);
+            closeImportModal();
+            
+        } catch (error) {
+            showNotification('שגיאה: ' + error.message, 'error');
         }
+    };
+    reader.readAsText(file, 'UTF-8');
+}
+
+// 🆕 פונקציות מיפוי חדשות:
+function openMappingModal(rawData, fileName) { ... }
+function autoMapFields(headers) { ... }
+function previewMapping() { ... }
+function processMappedData() { ... }
         
         function parseCSV(csvText) {
             const lines = csvText.split('\n').filter(line => line.trim());
@@ -2123,6 +2154,18 @@
                 document.getElementById('githubUrl').value = savedUrl;
             }
             
+            // בדיקת אימות
+            if (sessionStorage.getItem('adminAuthenticated') === 'true') {
+                const gitUrl = document.getElementById('githubUrl').value;
+                if (gitUrl) {
+                    githubUrl = gitUrl;
+                    document.getElementById('adminLoginSection').style.display = 'none';
+                    document.getElementById('adminContentSection').style.display = 'block';
+                    document.getElementById('backToSite').style.display = 'block';
+                    initializeAdminSystem();
+                }
+            }
+            
             // מאזיני אירועים
             document.getElementById('adminPassword').addEventListener('keyup', function(event) {
                 if (event.key === 'Enter') {
@@ -2138,6 +2181,8 @@
                 const modal = document.getElementById(modalId);
                 if (event.target === modal) {
                     modal.style.display = 'none';
+                    const modals = ['import-modal', 'job-edit-modal', 'bulk-modal', 'mapping-modal']; // הוסף mapping-modal
+
                 }
             });
         });
@@ -2149,6 +2194,8 @@
                     const modal = document.getElementById(modalId);
                     if (modal.style.display === 'block') {
                         modal.style.display = 'none';
+                        const modals = ['import-modal', 'job-edit-modal', 'bulk-modal', 'mapping-modal']; // הוסף mapping-modal
+
                     }
                 });
             }
@@ -2177,6 +2224,10 @@
         window.bulkAction = bulkAction;
         window.exportForGitHub = exportForGitHub;
         window.bulkActions = bulkActions;
+window.openMappingModal = openMappingModal;
+window.closeMappingModal = closeMappingModal;
+window.previewMapping = previewMapping;
+window.processMappedData = processMappedData;
 
         console.log('🚀 מערכת ניהול GitHub נטענה בהצלחה!');
     </script>
