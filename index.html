@@ -1412,6 +1412,71 @@
             .job-card-gnome {
                 width: 35px;
             }
+
+            /* התראה חמה */
+.hot-banner {
+    background: linear-gradient(135deg, #ff6b6b, #feca57);
+    color: white;
+    padding: 12px 0;
+    text-align: center;
+    position: relative;
+    z-index: 100;
+    animation: hotPulse 3s ease-in-out infinite;
+}
+
+@keyframes hotPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+.hot-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.hot-icon {
+    font-size: 1.2rem;
+    animation: flame 1s ease-in-out infinite alternate;
+}
+
+@keyframes flame {
+    0% { transform: scale(1) rotate(-2deg); }
+    100% { transform: scale(1.1) rotate(2deg); }
+}
+
+.hot-text {
+    font-weight: 500;
+}
+
+.hot-cta {
+    background: white;
+    color: #ff6b6b;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.hot-cta:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 768px) {
+    .hot-content {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .hot-text {
+        font-size: 0.9rem;
+    }
+}
         }
     </style>
 </head>
