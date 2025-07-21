@@ -705,12 +705,14 @@
             z-index: 20;
         }
 
-        .job-card-gnome {
-            width: 45px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            z-index: 25;
-            position: relative;
+.job-card-gnome {
+    width: 60px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    z-index: 25;
+    position: relative;
+    transform: scaleX(-1); /* מהפך את הגמדה כדי שתצביע שמאלה */
+}
         }
 
         .job-card-gnome:hover {
@@ -736,8 +738,8 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     min-width: 70px;
     line-height: 1.2;
-}
-        
+    transform: scaleX(-1); /* מחזיר את הטקסט למצב רגיל */
+}        
         .contact-buttons {
             display: flex;
             gap: 12px;
@@ -2122,10 +2124,9 @@ var predefinedColors = [
                     '</div>' +
                     '<div class="job-description">' + shortDescription + '</div>' +
                     '<div class="job-badge" style="background: ' + categoryColor + ';">' + job.category + '</div>' +
-                    '<div class="job-card-bottom">' +
-                        '<div class="job-card-gnome" onclick="event.stopPropagation(); openJobModal(' + index + ')">' +
-                            '<img src="https://mayeshpo.co.il/images/gnome.png" ' +
-                                'alt="גמדה פרטים" ' +
+'<div class="job-card-bottom">' +
+    '<div class="job-card-gnome" onclick="event.stopPropagation(); openJobModal(' + index + ')">' +
+        '<img src="https://mayeshpo.co.il/images/גמדה מצביעה בלי רקע.png" ' +                                'alt="גמדה פרטים" ' +
                                 'onerror="this.src=\'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XkNee15XXmDwvdGV4dD48L3N2Zz4i\'>">' +
                             '<div class="job-card-gnome-text">פרטים נוספים</div>' +
                         '</div>' +
