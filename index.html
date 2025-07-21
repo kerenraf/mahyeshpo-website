@@ -737,6 +737,26 @@
     min-width: 70px;
     line-height: 1.2;
 }
+        .job-card-pointing-gnome {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 70px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    z-index: 30;
+    transform: rotate(10deg);
+}
+
+.job-card-pointing-gnome:hover {
+    transform: rotate(10deg) scale(1.1);
+}
+
+.job-card-pointing-gnome img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 3px 10px rgba(246, 152, 152, 0.4));
+}
         
         .contact-buttons {
             display: flex;
@@ -2114,10 +2134,15 @@ var predefinedColors = [
                     '<i class="fas ' + (job.featured ? 'fa-star' : 'fa-star-o') + '"></i>' +
                     '</button>' : '';
                 
-                jobCard.innerHTML = 
-                    '<div class="job-number">' + job.jobNumber + '</div>' +
-                    '<h3 class="job-title">' + job.title + '</h3>' +
-                    '<div class="job-location">' +
+jobCard.innerHTML = 
+    '<div class="job-number">' + job.jobNumber + '</div>' +
+    '<div class="job-card-pointing-gnome" onclick="event.stopPropagation(); openJobModal(' + index + ')">' +
+        '<img src="https://mayeshpo.co.il/images/גמדה מצביעה בלי רקע.png" ' +
+             'alt="גמדה מצביעה" ' +
+             'onerror="this.src=\'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XkNee15XXmDwvdGV4dD48L3N2Zz4i\'>">' +
+    '</div>' +
+    '<h3 class="job-title">' + job.title + '</h3>' +
+                       '<div class="job-location">' +
                         '<i class="fas fa-map-marker-alt"></i> ' + location +
                     '</div>' +
                     '<div class="job-description">' + shortDescription + '</div>' +
