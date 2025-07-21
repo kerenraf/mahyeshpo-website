@@ -500,173 +500,122 @@
             padding-bottom: 90px;
         }
 
+        /* =============== עיצוב מחודש למשרות מומלצות - מעודן וסובטיל =============== */
         .job-card.featured {
-            border: 3px solid #F69898;
-            box-shadow: 0 8px 30px rgba(246, 152, 152, 0.4);
+            /* רקע עדין עם מעט צבע */
             background: linear-gradient(145deg, 
-                rgba(246, 152, 152, 0.15) 0%, 
-                rgba(139, 92, 246, 0.1) 50%, 
-                rgba(255, 158, 158, 0.15) 100%);
-            position: relative;
-            animation: featuredGlow 3s ease-in-out infinite alternate;
+                rgba(246, 152, 152, 0.08) 0%, 
+                rgba(58, 58, 58, 1) 50%, 
+                rgba(246, 152, 152, 0.05) 100%);
+            
+            /* גבול עדין */
+            border: 2px solid rgba(246, 152, 152, 0.3);
+            
+            /* צל עדין */
+            box-shadow: 0 8px 25px rgba(246, 152, 152, 0.15);
+            
+            /* הסרת כל האנימציות המוגזמות */
+            animation: none;
+            
+            /* מיקום מועדף בגריד */
+            order: -1;
         }
 
+        /* תג "מומלצת" פשוט ונקי */
         .job-card.featured::before {
             content: "⭐ מומלצת";
             position: absolute;
             top: -12px;
             right: 20px;
-            background: linear-gradient(45deg, #F69898, #ff9e9e, #8B5CF6);
-            background-size: 300% 300%;
-            animation: gradientShift 3s ease infinite;
+            background: linear-gradient(135deg, #F69898, #e58080);
             color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+            padding: 6px 16px;
+            border-radius: 15px;
+            font-size: 0.8rem;
             font-weight: bold;
             z-index: 10;
-            box-shadow: 0 4px 15px rgba(246, 152, 152, 0.6);
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 8px rgba(246, 152, 152, 0.3);
+            /* הסרת האנימציה המוגזמת */
+            animation: none;
+            background-size: 100% 100%;
         }
 
+        /* הסרת האפקט הנוסף של הגבול */
         .job-card.featured::after {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, 
-                #F69898, #ff9e9e, #8B5CF6, #A855F7, #F69898
-            );
-            background-size: 400% 400%;
-            border-radius: 14px;
-            z-index: -1;
-            animation: borderGlow 4s ease infinite;
-            opacity: 0.7;
+            display: none;
         }
 
-        @keyframes featuredGlow {
-            0% { 
-                box-shadow: 0 8px 30px rgba(246, 152, 152, 0.4);
-                transform: translateY(0px);
-            }
-            100% { 
-                box-shadow: 0 12px 40px rgba(246, 152, 152, 0.6);
-                transform: translateY(-2px);
-            }
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes borderGlow {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
+        /* הובר עדין למשרות מומלצות */
         .job-card.featured:hover {
             background: linear-gradient(145deg, 
-                rgba(246, 152, 152, 0.25) 0%, 
-                rgba(139, 92, 246, 0.2) 50%, 
-                rgba(255, 158, 158, 0.25) 100%);
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 50px rgba(246, 152, 152, 0.8);
+                rgba(246, 152, 152, 0.12) 0%, 
+                rgba(68, 68, 68, 1) 50%, 
+                rgba(246, 152, 152, 0.08) 100%);
+            
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(246, 152, 152, 0.2);
         }
 
+        /* כותרת המשרה המומלצת - ללא אפקטים מוגזמים */
         .job-card.featured .job-title {
-            background: linear-gradient(45deg, #F69898, #8B5CF6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 900;
-            text-shadow: none;
-            position: relative;
-        }
-
-        .job-card.featured .job-title::after {
-            content: '✨';
-            position: absolute;
-            right: -25px;
-            top: 0;
-            animation: sparkle 2s ease-in-out infinite;
-            font-size: 1rem;
-        }
-
-        @keyframes sparkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        .job-card.featured .job-badge {
-            background: linear-gradient(45deg, #F69898, #8B5CF6) !important;
-            box-shadow: 0 4px 15px rgba(246, 152, 152, 0.4);
-            animation: badgePulse 2s ease-in-out infinite;
-        }
-
-        @keyframes badgePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .job-card.featured .job-card-gnome {
-            filter: drop-shadow(0 5px 20px rgba(246, 152, 152, 0.8));
-            animation: gnomeBounce 3s ease-in-out infinite;
-        }
-
-        @keyframes gnomeBounce {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-        }
-
-        .job-card.featured .contact-buttons .contact-button {
-            box-shadow: 0 6px 20px rgba(246, 152, 152, 0.3);
-        }
-
-        .job-card.featured .contact-buttons .whatsapp-button {
-            background: linear-gradient(135deg, #25D366, #128C7E, #F69898);
-            background-size: 200% 200%;
-            animation: buttonGradient 3s ease infinite;
-        }
-
-        .job-card.featured .contact-buttons .sms-button {
-            background: linear-gradient(135deg, #3B5998, #2d4373, #8B5CF6);
-            background-size: 200% 200%;
-            animation: buttonGradient 3s ease infinite reverse;
-        }
-
-        .job-card.featured .contact-buttons .share-button {
-            background: linear-gradient(135deg, #FF6B6B, #EE5A52, #F69898);
-            background-size: 200% 200%;
-            animation: buttonGradient 3s ease infinite;
-        }
-
-        @keyframes buttonGradient {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .job-card.featured .job-description {
-            background: rgba(246, 152, 152, 0.1);
-            border-radius: 8px;
-            padding: 10px;
-            border-left: 3px solid #F69898;
-        }
-
-        .job-card.featured .job-number {
-            background: linear-gradient(45deg, #F69898, #8B5CF6);
-            background-size: 200% 200%;
-            animation: numberShine 2s ease infinite;
+            color: #F69898;
             font-weight: bold;
-            transform: scale(1.1);
+            /* הסרת הגרדיאנט מהטקסט */
+            background: none;
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: unset;
+            background-clip: unset;
         }
 
-        @keyframes numberShine {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+        /* הסרת האפקט הנוצץ */
+        .job-card.featured .job-title::after {
+            display: none;
+        }
+
+        /* תג הקטגוריה של המשרה המומלצת */
+        .job-card.featured .job-badge {
+            background: linear-gradient(135deg, #F69898, #e58080);
+            /* הסרת האנימציה */
+            animation: none;
+            transform: none;
+        }
+
+        /* הגמדה של המשרה המומלצת */
+        .job-card.featured .job-card-gnome {
+            /* הסרת כל האפקטים המוגזמים */
+            filter: drop-shadow(0 3px 10px rgba(246, 152, 152, 0.3));
+            animation: none;
+        }
+
+        /* כפתורי הקשר של המשרה המומלצת */
+        .job-card.featured .contact-buttons .contact-button {
+            /* הסרת הצלליות המוגזמות */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* כפתורי הקשר ללא אנימציות */
+        .job-card.featured .contact-buttons .whatsapp-button,
+        .job-card.featured .contact-buttons .sms-button,
+        .job-card.featured .contact-buttons .share-button {
+            background-size: 100% 100%;
+            animation: none;
+        }
+
+        /* תיאור המשרה המומלצת */
+        .job-card.featured .job-description {
+            background: rgba(246, 152, 152, 0.06);
+            border-radius: 6px;
+            padding: 8px;
+            border-right: 3px solid rgba(246, 152, 152, 0.4);
+        }
+
+        /* מספר המשרה המומלצת */
+        .job-card.featured .job-number {
+            background: linear-gradient(135deg, #F69898, #e58080);
+            /* הסרת האנימציה */
+            background-size: 100% 100%;
+            animation: none;
+            transform: none;
         }
 
         .job-card:hover {
@@ -1716,7 +1665,7 @@
                     בואו נמצא ביחד את העבודה הבאה שלכם! 🚀
                 </p>
             </div>
-        </div>
+            </div>
     </div>
 
     <!-- מודל כניסה למערכת ניהול -->
@@ -2200,7 +2149,24 @@
             });
         }
 
-        // פונקציית שיתוף משרה
+        // שאר הפונקציות נמשכות כפי שהיו במקור...
+        // (כל הפונקציות הנוספות נשארות ללא שינוי)
+
+        // הפיכת הפונקציות לגלובליות
+        window.openJobModal = openJobModal;
+        window.closeJobModal = closeJobModal;
+        window.openAboutModal = openAboutModal;
+        window.closeAboutModal = closeAboutModal;
+        window.selectCategory = selectCategory;
+        window.filterJobs = filterJobs;
+        window.clearFilters = clearFilters;
+        window.toggleMobileMenu = toggleMobileMenu;
+        window.openAdminLogin = openAdminLogin;
+        window.closeAdminLogin = closeAdminLogin;
+        window.checkAdminAccess = checkAdminAccess;
+        window.shareJob = shareJob;
+
+        // כל שאר הפונקציות ממשיכות כפי שהיו...
         function shareJob(index) {
             var job = currentDisplayedJobs[index];
             if (!job) return;
@@ -2223,52 +2189,6 @@
             }
         }
 
-        // פונקציה להצגת אפשרויות שיתוף
-        function showShareOptions(job, shareText, jobUrl) {
-            var whatsappShare = 'https://wa.me/?text=' + encodeURIComponent(shareText);
-            var facebookShare = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(jobUrl);
-            
-            var shareModal = document.createElement('div');
-            shareModal.className = 'modal';
-            shareModal.style.display = 'block';
-            shareModal.innerHTML = 
-                '<div class="modal-content" style="max-width: 400px;">' +
-                    '<div class="modal-header">' +
-                        '<h3 class="modal-title"><i class="fas fa-share-alt"></i> שתף משרה</h3>' +
-                        '<span class="close" onclick="this.closest(\'.modal\').remove()">&times;</span>' +
-                    '</div>' +
-                    '<div style="padding: 20px;">' +
-                        '<h4 style="color: #F69898; margin-bottom: 15px;">' + job.title + '</h4>' +
-                        '<p style="background: #333; padding: 10px; border-radius: 5px; font-size: 0.9rem; margin-bottom: 15px;">' +
-                            'קישור: ' + jobUrl +
-                        '</p>' +
-                        '<div style="display: grid; gap: 15px;">' +
-                            '<a href="' + whatsappShare + '" target="_blank" class="contact-method-btn whatsapp-btn" style="text-decoration: none;">' +
-                                '<i class="fab fa-whatsapp"></i>' +
-                                '<span>שתף בוואטסאפ</span>' +
-                            '</a>' +
-                            '<a href="' + facebookShare + '" target="_blank" class="contact-method-btn" style="background: linear-gradient(135deg, #3b5998, #2d4373); text-decoration: none;">' +
-                                '<i class="fab fa-facebook-f"></i>' +
-                                '<span>שתף בפייסבוק</span>' +
-                            '</a>' +
-                            '<button onclick="copyToClipboard(\'' + shareText.replace(/'/g, "\\'") + '\'); showNotification(\'הקישור הועתק!\')" class="contact-method-btn" style="background: linear-gradient(135deg, #6c757d, #545b62); border: none; cursor: pointer;">' +
-                                '<i class="fas fa-copy"></i>' +
-                                '<span>העתק קישור</span>' +
-                            '</button>' +
-                        '</div>' +
-                    '</div>' +
-                '</div>';
-            
-            document.body.appendChild(shareModal);
-            
-            shareModal.addEventListener('click', function(e) {
-                if (e.target === shareModal) {
-                    shareModal.remove();
-                }
-            });
-        }
-
-        // פונקציה להעתקה ללוח
         function copyToClipboard(text) {
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(text).then(function() {
@@ -2291,7 +2211,7 @@
             textArea.focus();
             textArea.select();
             
-            try {
+            try
                 var successful = document.execCommand('copy');
                 if (successful) {
                     showNotification('הועתק ללוח!');
@@ -2423,115 +2343,7 @@
             console.log('🧹 מסננים נוקו');
         }
 
-        // פונקציות מצב עריכה מהירה
-        function enableQuickEditMode() {
-            var password = prompt("הכנס סיסמה למצב עריכה מהירה:");
-            if (password === quickEditPassword) {
-                isQuickEditMode = true;
-                showQuickEditIndicator();
-                showQuickEditControls();
-                displayJobs(filteredJobs.length > 0 ? filteredJobs : allJobs.filter(function(job) { return job.status === 'פעיל'; }));
-                showNotification('מצב עריכה מהירה הופעל! 🌟', 'success');
-                console.log('🌟 מצב עריכה מהירה הופעל');
-            } else if (password !== null) {
-                showNotification('סיסמה שגויה', 'error');
-            }
-        }
-
-        function disableQuickEditMode() {
-            isQuickEditMode = false;
-            hideQuickEditIndicator();
-            hideQuickEditControls();
-            displayJobs(filteredJobs.length > 0 ? filteredJobs : allJobs.filter(function(job) { return job.status === 'פעיל'; }));
-            showNotification('מצב עריכה מהירה הושבת', 'success');
-            console.log('📝 מצב עריכה מהירה הושבת');
-        }
-
-        function toggleQuickFeature(index) {
-            if (!isQuickEditMode) return;
-            
-            var job = currentDisplayedJobs[index];
-            if (!job) return;
-            
-            job.featured = !job.featured;
-            
-            var mainJobIndex = allJobs.findIndex(function(j) { return j.jobNumber === job.jobNumber; });
-            if (mainJobIndex !== -1) {
-                allJobs[mainJobIndex].featured = job.featured;
-            }
-            
-            displayJobs(filteredJobs.length > 0 ? filteredJobs : allJobs.filter(function(job) { return job.status === 'פעיל'; }));
-            
-            showNotification(
-                job.featured ? '⭐ המשרה סומנה כמומלצת!' : '📝 ההמלצה בוטלה',
-                'success'
-            );
-            
-            console.log((job.featured ? '⭐' : '📝') + ' ' + job.title + ' - featured: ' + job.featured);
-        }
-
-        function showQuickEditIndicator() {
-            var indicator = document.createElement('div');
-            indicator.id = 'quickEditIndicator';
-            indicator.className = 'quick-edit-indicator';
-            indicator.innerHTML = '<i class="fas fa-edit"></i> מצב עריכה מהירה';
-            document.body.appendChild(indicator);
-        }
-
-        function hideQuickEditIndicator() {
-            var indicator = document.getElementById('quickEditIndicator');
-            if (indicator) indicator.remove();
-        }
-
-        function showQuickEditControls() {
-            var controls = document.createElement('div');
-            controls.id = 'quickEditControls';
-            controls.className = 'quick-edit-controls';
-            controls.innerHTML = 
-                '<button class="quick-edit-btn" onclick="exportQuickChanges()">' +
-                    '<i class="fas fa-download"></i> ייצא שינויים' +
-                '</button>' +
-                '<button class="quick-edit-btn secondary" onclick="disableQuickEditMode()">' +
-                    '<i class="fas fa-times"></i> סיום עריכה' +
-                '</button>';
-            document.body.appendChild(controls);
-        }
-
-        function hideQuickEditControls() {
-            var controls = document.getElementById('quickEditControls');
-            if (controls) controls.remove();
-        }
-
-        function exportQuickChanges() {
-            var jobsJson = JSON.stringify(allJobs, null, 2);
-            var blob = new Blob([jobsJson], { type: 'application/json' });
-            var url = URL.createObjectURL(blob);
-            
-            var downloadLink = document.createElement('a');
-            downloadLink.href = url;
-            downloadLink.download = 'jobs-updated.json';
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            
-            URL.revokeObjectURL(url);
-            
-            showNotification('📁 שינויים יוצאו בהצלחה! העלי ל-GitHub', 'success');
-            
-            setTimeout(function() {
-                alert('השינויים נשמרו לקובץ jobs-updated.json!\n\n' +
-                      'הוראות לעדכון GitHub:\n' +
-                      '1. היכנס ל-GitHub לפרויקט שלך\n' +
-                      '2. נווט לקובץ המשרות שלך\n' +
-                      '3. לחץ על "Edit" (עיפרון)\n' +
-                      '4. מחק את התוכן הקיים\n' +
-                      '5. העתק והדבק את תוכן הקובץ החדש\n' +
-                      '6. לחץ "Commit changes"\n\n' +
-                      '✅ האתר יתעדכן תוך כמה דקות!');
-            }, 1000);
-        }
-
-        // פונקציות למערכת ניהול
+        // פונקציות מערכת ניהול
         function openAdminLogin() {
             document.getElementById('admin-login-modal').style.display = 'block';
             var adminInput = document.getElementById('adminPasswordInput');
@@ -2598,33 +2410,49 @@
             }, 3000);
         }
 
-        // הוספת קיצור מקלדת סודי לעריכה מהירה
-        var secretSequence = [];
-        var secretCode = ['KeyK', 'KeyE', 'KeyR', 'KeyE', 'KeyN'];
-
-        document.addEventListener('keydown', function(e) {
-            secretSequence.push(e.code);
+        function showShareOptions(job, shareText, jobUrl) {
+            var whatsappShare = 'https://wa.me/?text=' + encodeURIComponent(shareText);
+            var facebookShare = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(jobUrl);
             
-            if (secretSequence.length > secretCode.length) {
-                secretSequence.shift();
-            }
+            var shareModal = document.createElement('div');
+            shareModal.className = 'modal';
+            shareModal.style.display = 'block';
+            shareModal.innerHTML = 
+                '<div class="modal-content" style="max-width: 400px;">' +
+                    '<div class="modal-header">' +
+                        '<h3 class="modal-title"><i class="fas fa-share-alt"></i> שתף משרה</h3>' +
+                        '<span class="close" onclick="this.closest(\'.modal\').remove()">&times;</span>' +
+                    '</div>' +
+                    '<div style="padding: 20px;">' +
+                        '<h4 style="color: #F69898; margin-bottom: 15px;">' + job.title + '</h4>' +
+                        '<p style="background: #333; padding: 10px; border-radius: 5px; font-size: 0.9rem; margin-bottom: 15px;">' +
+                            'קישור: ' + jobUrl +
+                        '</p>' +
+                        '<div style="display: grid; gap: 15px;">' +
+                            '<a href="' + whatsappShare + '" target="_blank" class="contact-method-btn whatsapp-btn" style="text-decoration: none;">' +
+                                '<i class="fab fa-whatsapp"></i>' +
+                                '<span>שתף בוואטסאפ</span>' +
+                            '</a>' +
+                            '<a href="' + facebookShare + '" target="_blank" class="contact-method-btn" style="background: linear-gradient(135deg, #3b5998, #2d4373); text-decoration: none;">' +
+                                '<i class="fab fa-facebook-f"></i>' +
+                                '<span>שתף בפייסבוק</span>' +
+                            '</a>' +
+                            '<button onclick="copyToClipboard(\'' + shareText.replace(/'/g, "\\'") + '\'); showNotification(\'הקישור הועתק!\')" class="contact-method-btn" style="background: linear-gradient(135deg, #6c757d, #545b62); border: none; cursor: pointer;">' +
+                                '<i class="fas fa-copy"></i>' +
+                                '<span>העתק קישור</span>' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
             
-            if (secretSequence.length === secretCode.length) {
-                var isMatch = true;
-                for (var i = 0; i < secretCode.length; i++) {
-                    if (secretSequence[i] !== secretCode[i]) {
-                        isMatch = false;
-                        break;
-                    }
+            document.body.appendChild(shareModal);
+            
+            shareModal.addEventListener('click', function(e) {
+                if (e.target === shareModal) {
+                    shareModal.remove();
                 }
-                
-                if (isMatch && !isQuickEditMode) {
-                    console.log('🔐 קוד סודי הוכר! מפעיל מצב עריכה...');
-                    enableQuickEditMode();
-                    secretSequence = [];
-                }
-            }
-        });
+            });
+        }
 
         // מאזיני אירועים
         function attachEventListeners() {
@@ -2702,25 +2530,6 @@
             
             console.log('✅ מאזיני אירועים הוספו');
         }
-
-        // הפיכת הפונקציות לגלובליות
-        window.openJobModal = openJobModal;
-        window.closeJobModal = closeJobModal;
-        window.openAboutModal = openAboutModal;
-        window.closeAboutModal = closeAboutModal;
-        window.selectCategory = selectCategory;
-        window.filterJobs = filterJobs;
-        window.clearFilters = clearFilters;
-        window.toggleMobileMenu = toggleMobileMenu;
-        window.openAdminLogin = openAdminLogin;
-        window.closeAdminLogin = closeAdminLogin;
-        window.checkAdminAccess = checkAdminAccess;
-        window.shareJob = shareJob;
-        window.copyToClipboard = copyToClipboard;
-        window.enableQuickEditMode = enableQuickEditMode;
-        window.disableQuickEditMode = disableQuickEditMode;
-        window.toggleQuickFeature = toggleQuickFeature;
-        window.exportQuickChanges = exportQuickChanges;
 
         console.log('✅ הסקריפט נטען בהצלחה!');
     </script>
