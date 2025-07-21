@@ -1899,6 +1899,47 @@
                            j.jobNumber === decodeURIComponent(jobParam)) && 
                            j.status === 'פעיל';
                 });
+
+                // DEBUG - הוסיפי זמנית
+window.debugJobSearch = function(jobNumber) {
+    console.log('🔍 DEBUG חיפוש משרה:', jobNumber);
+    console.log('📊 סה"כ משרות:', window.allJobs.length);
+    
+    if (window.allJobs.length === 0) {
+        console.log('❌ אין משרות במערך!');
+        return;
+    }
+    
+    // הדפס את כל מספרי המשרות
+    console.log('📋 רשימת כל מספרי המשרות:');
+    window.allJobs.forEach(function(job, index) {
+        console.log(index + ': "' + job.jobNumber + '" (status: ' + job.status + ')');
+        if (job.jobNumber === jobNumber) {
+            console.log('✅ נמצא התאמה!');
+        }
+    });
+    
+    // חיפוש מדויק
+    var exactMatch = window.allJobs.find(function(j) {
+        return j.jobNumber === jobNumber;
+    });
+    
+    if (exactMatch) {
+        console.log('✅ חיפוש מדויק מצא:', exactMatch.title);
+    } else {
+        console.log('❌ חיפוש מדויק לא מצא');
+        
+        // חיפוש דומה
+        var similarJobs = window.allJobs.filter(function(j) {
+            return j.jobNumber && j.jobNumber.includes('226568');
+        });
+        
+        console.log('🔍 משרות דומות עם 226568:', similarJobs.length);
+        similarJobs.forEach(function(job) {
+            console.log('  - "' + job.jobNumber + '": ' + job.title);
+        });
+    }
+};
                 
                 if (job) {
                     console.log('✅ משרה נמצאה:', job.title);
@@ -1925,6 +1966,7 @@
         }, 500);
     }
 })();
+        
 
         // פונקציות בסיסיות
         function toggleMobileMenu() {
