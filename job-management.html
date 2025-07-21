@@ -1768,7 +1768,7 @@
                     showMappingInterface(sourceFields);
                     
                     hideLoading();
-                    showNotification(`זוהו ${importedData.length} משרות עם ${sourceFields.length} שדות. אנא בדוק את המיפוי.`, 'warning');
+                    showNotification(`זוהו ${importedData.length} משרות עם ${sourceFields.length} שדות. המערכת תחליף את כל הנתונים הקיימים!`, 'warning');
                     
                 } catch (error) {
                     hideLoading();
@@ -1882,11 +1882,25 @@
                 return;
             }
             
+            // אישור החלפה
+            if (jobs.length > 0) {
+                const confirmed = confirm(`האם אתה בטוח שברצונך להחליף את כל ${jobs.length} המשרות הקיימות עם ${importedData.length} משרות חדשות?
+
+⚠️ פעולה זו תמחק את כל הנתונים הקיימים!
+
+לחץ OK להמשך או Cancel לביטול.`);
+                
+                if (!confirmed) {
+                    return;
+                }
+            }
+            
             showLoading();
             
             try {
                 let successCount = 0;
                 let errorCount = 0;
+                const newJobs = []; // מערך חדש לנתונים המובאים
                 
                 importedData.forEach((sourceJob, index) => {
                     try {
@@ -1909,10 +1923,13 @@
                                 
                                 mappedJob[systemField] = value;
                             } else {
-                                // ערכי ברירת מחדל
+                                // ערכי ברירת מחדל - רק אם השדה לא ממופה
                                 switch (systemField) {
                                     case 'jobNumber':
-                                        mappedJob[systemField] = generateJobNumber();
+                                        // אם יש מיפוי לשדה jobNumber, נשמור אותו מהמקור
+                                        if (!fieldMapping['jobNumber']) {
+                                            mappedJob[systemField] = generateJobNumberForImport(newJobs, index);
+                                        }
                                         break;
                                     case 'status':
                                         mappedJob[systemField] = 'פעיל';
@@ -1932,6 +1949,11 @@
                             }
                         });
                         
+                        // וידוא שיש מספר משרה (אם לא ממופה או ריק)
+                        if (!mappedJob.jobNumber || mappedJob.jobNumber.trim() === '') {
+                            mappedJob.jobNumber = generateJobNumberForImport(newJobs, index);
+                        }
+
                         // בדיקת שדות חובה
                         const missingRequired = Object.keys(systemFields)
                             .filter(field => systemFields[field].required && !mappedJob[field]);
@@ -1942,7 +1964,7 @@
                             return;
                         }
                         
-                        jobs.push(mappedJob);
+                        newJobs.push(mappedJob);
                         successCount++;
                         
                     } catch (error) {
@@ -1951,21 +1973,39 @@
                     }
                 });
                 
+                // החלפת הנתונים הקיימים עם החדשים
+                if (successCount > 0) {
+                    jobs.length = 0; // מחיקת כל הנתונים הקיימים
+                    jobs.push(...newJobs); // הוספת הנתונים החדשים
+                    selectedJobs.clear(); // ניקוי הבחירות
+                    currentPage = 1; // חזרה לעמוד הראשון
+                }
+                
                 markLocalChanges();
                 updateAllDisplays();
                 closeImportModal();
                 hideLoading();
                 
-                showNotification(
-                    `ייבוא הושלם: ${successCount} משרות יובאו בהצלחה` + 
-                    (errorCount > 0 ? `, ${errorCount} שגיאות` : ''), 
-                    successCount > 0 ? 'success' : 'warning'
-                );
+                if (successCount > 0) {
+                    showNotification(
+                        `הייבוא הושלם! החלפת ${successCount} משרות` + 
+                        (errorCount > 0 ? ` (${errorCount} שגיאות)` : ''), 
+                        'success'
+                    );
+                } else {
+                    showNotification('לא ניתן היה לייבא אף משרה בשל שגיאות', 'error');
+                }
                 
             } catch (error) {
                 hideLoading();
                 showNotification('שגיאה בייבוא: ' + error.message, 'error');
             }
+        }
+
+        // פונקציה מיוחדת ליצירת מספרי משרות בייבוא
+        function generateJobNumberForImport(existingJobs, index) {
+            const baseNumber = index + 1;
+            return `A-${baseNumber.toString().padStart(5, '0')}`;
         }
 
         // עדכון כל התצוגות
