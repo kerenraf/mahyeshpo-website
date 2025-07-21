@@ -914,6 +914,42 @@
             color: #F69898;
             background: rgba(246,152,152,0.1);
         }
+        .field-mapping {
+    margin-bottom: 15px;
+}
+
+.field-mapping label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ccc;
+    font-weight: bold;
+}
+
+.mapping-grid {
+    margin-bottom: 20px;
+}
+
+.system-fields {
+    background: rgba(0,0,0,0.2);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.preview-table {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 15px;
+}
+
+.mapping-highlight {
+    background: rgba(246,152,152,0.1);
+    border: 1px solid #F69898;
+}
+
+.auto-mapped {
+    background: rgba(40,167,69,0.1);
+    border: 1px solid #28a745;
+}
 
         .copyright {
             text-align: center;
@@ -1392,6 +1428,9 @@
         // משתנים גלובליים
         let jobs = [];
         let filteredJobs = [];
+        let rawDataForMapping = [];
+let rawDataForMapping = [];
+let mappingData = {};
         let currentPage = 1;
         const jobsPerPage = 15;
         let isFiltered = false;
@@ -2142,6 +2181,8 @@ function processMappedData() { ... }
                 const modal = document.getElementById(modalId);
                 if (event.target === modal) {
                     modal.style.display = 'none';
+                    const modals = ['import-modal', 'job-edit-modal', 'bulk-modal', 'mapping-modal']; // הוסף mapping-modal
+
                 }
             });
         });
@@ -2153,6 +2194,8 @@ function processMappedData() { ... }
                     const modal = document.getElementById(modalId);
                     if (modal.style.display === 'block') {
                         modal.style.display = 'none';
+                        const modals = ['import-modal', 'job-edit-modal', 'bulk-modal', 'mapping-modal']; // הוסף mapping-modal
+
                     }
                 });
             }
