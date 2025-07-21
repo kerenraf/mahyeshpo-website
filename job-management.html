@@ -696,6 +696,154 @@
             margin-bottom: 1rem;
         }
 
+        /* מערכת מיפוי שדות */
+        .mapping-section {
+            background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 2px solid #F69898;
+            margin: 2rem 0;
+        }
+
+        .mapping-title {
+            color: #F69898;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .mapping-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 2rem;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-label {
+            color: #ccc;
+        }
+
+        .stat-value {
+            color: #F69898;
+            font-weight: bold;
+        }
+
+        .stat-value.complete {
+            color: #28a745;
+        }
+
+        .stat-value.incomplete {
+            color: #ffc107;
+        }
+
+        .mapping-grid {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .mapping-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr 1fr;
+            gap: 15px;
+            align-items: center;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #555;
+            transition: all 0.3s ease;
+        }
+
+        .mapping-row:hover {
+            border-color: #F69898;
+            background: rgba(246,152,152,0.05);
+        }
+
+        .target-field {
+            background: linear-gradient(135deg, #F69898, #ff9e9e);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .target-field.required {
+            background: linear-gradient(135deg, #ff6b6b, #ff8a8a);
+        }
+
+        .arrow {
+            color: #F69898;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .source-select-container {
+            position: relative;
+        }
+
+        .source-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #555;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #2a2a2a 0%, #333333 100%);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .source-select:focus {
+            border-color: #F69898;
+            outline: none;
+            box-shadow: 0 0 15px rgba(246,152,152,0.3);
+        }
+
+        .preview-container {
+            background: rgba(0,0,0,0.4);
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #444;
+        }
+
+        .preview-value {
+            color: #ccc;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+            max-height: 60px;
+            overflow-y: auto;
+        }
+
+        .mapping-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn-disabled {
+            background: linear-gradient(135deg, #666, #777) !important;
+            cursor: not-allowed !important;
+            opacity: 0.6;
+        }
+
+        .btn-disabled:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
         .notification {
             position: fixed;
             bottom: 30px;
@@ -801,57 +949,13 @@
             text-decoration: none;
             font-weight: bold;
             box-shadow: 0 5px 15px rgba(40,167,69,0.3);
-            transition: all 0.3s ease;
+            transition:all 0.3s ease;
             z-index: 1000;
         }
 
         .back-to-site:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(40,167,69,0.4);
-        }
-
-        @media (max-width: 768px) {
-            .admin-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .search-filters {
-                grid-template-columns: 1fr;
-            }
-            
-            .filter-buttons {
-                flex-direction: column;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-                gap: 0.25rem;
-            }
-            
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .modal-content {
-                width: 95%;
-                margin: 5% auto;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .sync-info {
-                grid-template-columns: 1fr;
-            }
-
-            .page-title {
-                font-size: 2rem;
-            }
-
-            .admin-login-box {
-                padding: 30px;
-            }
         }
 
         .error-message {
@@ -913,13 +1017,66 @@
         .footer-link:hover {
             color: #F69898;
             background: rgba(246,152,152,0.1);
-            }
+        }
 
         .copyright {
             text-align: center;
             color: #aaa;
             margin-top: 2rem;
             font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-filters {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sync-info {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .admin-login-box {
+                padding: 30px;
+            }
+
+            .mapping-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .mapping-stats {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -1099,8 +1256,8 @@
 
                     <div class="admin-card" onclick="openImportModal()">
                         <div class="admin-icon"><i class="fas fa-file-import"></i></div>
-                        <div class="admin-card-title">ייבוא משרות</div>
-                        <div class="admin-card-desc">ייבא משרות מקובץ CSV או JSON</div>
+                        <div class="admin-card-title">ייבוא משרות חכם</div>
+                        <div class="admin-card-desc">ייבא משרות מקובץ JSON עם מיפוי אוטומטי</div>
                     </div>
                     
                     <div class="admin-card" onclick="bulkActions()">
@@ -1285,13 +1442,13 @@
             </div>
         </div>
 
-        <!-- מודל ייבוא משרות -->
+        <!-- מודל ייבוא משרות עם מיפוי אוטומטי -->
         <div id="import-modal" class="modal">
-            <div class="modal-content">
+            <div class="modal-content" style="max-width: 1200px;">
                 <div class="modal-header">
                     <h3 class="modal-title">
                         <i class="fas fa-file-import"></i>
-                        ייבוא משרות
+                        ייבוא משרות עם מיפוי אוטומטי
                     </h3>
                     <span class="close" onclick="closeImportModal()">&times;</span>
                 </div>
@@ -1299,9 +1456,34 @@
                 <div class="import-section">
                     <div class="file-upload" onclick="document.getElementById('file-input').click()">
                         <div class="file-upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                        <h4>גרור קובץ או לחץ להעלאה</h4>
-                        <p>תומך ב-CSV ו-JSON</p>
-                        <input type="file" id="file-input" accept=".csv,.json" style="display: none;" onchange="handleFileUpload(event)">
+                        <h4>גרור קובץ JSON או לחץ להעלאה</h4>
+                        <p>המערכת תזהה אוטומטית את השדות ותציע מיפוי חכם</p>
+                        <input type="file" id="file-input" accept=".json" style="display: none;" onchange="handleFileUpload(event)">
+                    </div>
+                    
+                    <!-- אזור מיפוי השדות -->
+                    <div id="mapping-section" class="mapping-section" style="display: none;">
+                        <h3 class="mapping-title">
+                            <i class="fas fa-exchange-alt"></i>
+                            מיפוי שדות - התאמה בין הקובץ למערכת
+                        </h3>
+                        
+                        <div class="mapping-stats" id="mapping-stats">
+                            <!-- יעודכן על ידי JavaScript -->
+                        </div>
+                        
+                        <div class="mapping-grid" id="mapping-container">
+                            <!-- יעודכן על ידי JavaScript -->
+                        </div>
+                        
+                        <div class="mapping-actions">
+                            <button class="btn btn-secondary" onclick="resetMapping()">
+                                <i class="fas fa-undo"></i> איפוס מיפוי
+                            </button>
+                            <button class="btn" id="execute-import-btn" onclick="executeImport()">
+                                <i class="fas fa-check"></i> בצע ייבוא
+                            </button>
+                        </div>
                     </div>
                     
                     <div style="text-align: center; margin-top: 20px;">
@@ -1391,6 +1573,57 @@
         let featuredJobId = null;
         let githubUrl = '';
         let hasLocalChanges = false;
+
+        // מערכת מיפוי שדות מתקדמת
+        let importedData = null;
+        let fieldMapping = {};
+        
+        // שדות המערכת הקבועים
+        const systemFields = {
+            'jobNumber': { label: 'מספר משרה', required: false, type: 'string' },
+            'title': { label: 'כותרת המשרה', required: true, type: 'string' },
+            'category': { label: 'קטגוריה', required: false, type: 'string' },
+            'city': { label: 'עיר', required: true, type: 'string' },
+            'region': { label: 'אזור', required: true, type: 'string' },
+            'description': { label: 'תיאור המשרה', required: false, type: 'string' },
+            'requirements': { label: 'דרישות התפקיד', required: false, type: 'string' },
+            'status': { label: 'סטטוס', required: false, type: 'string' },
+            'featured': { label: 'משרה מומלצת', required: false, type: 'boolean' }
+        };
+
+        // אתחול מיפוי אוטומטי חכם
+        function initializeSmartMapping(sourceFields) {
+            fieldMapping = {};
+            
+            // מיפוי חכם על בסיס דמיון בשמות
+            const mappingRules = {
+                'jobNumber': ['job_number', 'jobnum', 'job_id', 'מספר_משרה', 'מספר משרה', 'jobNumber', 'id', 'משרה_מספר'],
+                'title': ['title', 'job_title', 'position', 'כותרת', 'תפקיד', 'position_title', 'job_name', 'שם_משרה'],
+                'category': ['category', 'job_category', 'קטגוריה', 'סוג_משרה', 'department', 'field', 'תחום'],
+                'city': ['city', 'location', 'עיר', 'מיקום', 'workplace', 'place', 'מקום_עבודה'],
+                'region': ['region', 'area', 'אזור', 'מחוז', 'district', 'zone', 'איזור'],
+                'description': ['description', 'job_description', 'תיאור', 'פרטים', 'details', 'about', 'info'],
+                'requirements': ['requirements', 'job_requirements', 'דרישות', 'qualification', 'skills', 'כישורים'],
+                'status': ['status', 'job_status', 'סטטוס', 'active', 'state', 'מצב', 'פעיל'],
+                'featured': ['featured', 'highlighted', 'מומלצת', 'premium', 'featured_job', 'מומלץ', 'vip']
+            };
+
+            Object.keys(systemFields).forEach(systemField => {
+                const rules = mappingRules[systemField];
+                for (let sourceField of sourceFields) {
+                    const normalizedSource = sourceField.toLowerCase().replace(/[_\s-]/g, '');
+                    const foundMatch = rules.find(rule => 
+                        normalizedSource.includes(rule.toLowerCase().replace(/[_\s-]/g, '')) ||
+                        rule.toLowerCase().replace(/[_\s-]/g, '').includes(normalizedSource)
+                    );
+                    
+                    if (foundMatch) {
+                        fieldMapping[systemField] = sourceField;
+                        break;
+                    }
+                }
+            });
+        }
 
         // פונקציות אתחול
         function checkAdminPassword() {
@@ -1486,6 +1719,252 @@
                 console.error('❌ שגיאה בטעינה מ-GitHub:', error);
                 updateSyncStatus('github', false);
                 throw error;
+            }
+        }
+
+        // ייבוא וייצוא עם מיפוי מתקדם
+        function openImportModal() {
+            document.getElementById('import-modal').style.display = 'block';
+        }
+
+        function closeImportModal() {
+            document.getElementById('import-modal').style.display = 'none';
+            document.getElementById('file-input').value = '';
+            document.getElementById('mapping-section').style.display = 'none';
+            importedData = null;
+            fieldMapping = {};
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            showLoading();
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    if (!file.name.endsWith('.json')) {
+                        throw new Error('רק קבצי JSON נתמכים במערכת זו');
+                    }
+                    
+                    importedData = JSON.parse(e.target.result);
+                    
+                    if (!Array.isArray(importedData)) {
+                        throw new Error('הקובץ חייב להכיל מערך של משרות');
+                    }
+                    
+                    if (importedData.length === 0) {
+                        throw new Error('הקובץ ריק - אין משרות לייבא');
+                    }
+                    
+                    // זיהוי השדות בקובץ המקור
+                    const sourceFields = Object.keys(importedData[0]);
+                    
+                    // יצירת מיפוי אוטומטי חכם
+                    initializeSmartMapping(sourceFields);
+                    
+                    // הצגת ממשק המיפוי
+                    showMappingInterface(sourceFields);
+                    
+                    hideLoading();
+                    showNotification(`זוהו ${importedData.length} משרות עם ${sourceFields.length} שדות. אנא בדוק את המיפוי.`, 'warning');
+                    
+                } catch (error) {
+                    hideLoading();
+                    showNotification('שגיאה: ' + error.message, 'error');
+                }
+            };
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        function showMappingInterface(sourceFields) {
+            const mappingSection = document.getElementById('mapping-section');
+            const mappingContainer = document.getElementById('mapping-container');
+            
+            mappingContainer.innerHTML = '';
+            
+            // יצירת שורות מיפוי
+            Object.keys(systemFields).forEach(systemField => {
+                const fieldInfo = systemFields[systemField];
+                const row = document.createElement('div');
+                row.className = 'mapping-row';
+                
+                row.innerHTML = `
+                    <div class="target-field ${fieldInfo.required ? 'required' : ''}">
+                        ${fieldInfo.label}
+                        ${fieldInfo.required ? ' <span style="color: #ff6b6b;">*</span>' : ''}
+                    </div>
+                    <div class="arrow">←</div>
+                    <div class="source-select-container">
+                        <select class="source-select" onchange="updateMapping('${systemField}', this.value)">
+                            <option value="">בחר שדה מקור...</option>
+                            ${sourceFields.map(field => 
+                                `<option value="${field}" ${fieldMapping[systemField] === field ? 'selected' : ''}>${field}</option>`
+                            ).join('')}
+                        </select>
+                    </div>
+                    <div class="preview-container">
+                        <div class="preview-value" id="preview-${systemField}">
+                            ${fieldMapping[systemField] ? getPreviewValue(fieldMapping[systemField]) : 'לא נבחר'}
+                        </div>
+                    </div>
+                `;
+                
+                mappingContainer.appendChild(row);
+            });
+            
+            mappingSection.style.display = 'block';
+            updateMappingStats();
+        }
+
+        function updateMapping(systemField, sourceField) {
+            if (sourceField) {
+                fieldMapping[systemField] = sourceField;
+            } else {
+                delete fieldMapping[systemField];
+            }
+            
+            // עדכון תצוגה מקדימה
+            const previewElement = document.getElementById(`preview-${systemField}`);
+            if (previewElement) {
+                previewElement.textContent = sourceField ? getPreviewValue(sourceField) : 'לא נבחר';
+            }
+            
+            updateMappingStats();
+        }
+
+        function getPreviewValue(sourceField) {
+            if (!importedData || importedData.length === 0) return '';
+            
+            const sampleValue = importedData[0][sourceField];
+            if (sampleValue === undefined || sampleValue === null) return '(ריק)';
+            
+            const strValue = String(sampleValue);
+            return strValue.length > 30 ? strValue.substring(0, 30) + '...' : strValue;
+        }
+
+        function updateMappingStats() {
+            const mappedCount = Object.keys(fieldMapping).length;
+            const requiredCount = Object.keys(systemFields).filter(key => systemFields[key].required).length;
+            const mappedRequired = Object.keys(fieldMapping).filter(key => systemFields[key].required).length;
+            
+            document.getElementById('mapping-stats').innerHTML = `
+                <div class="stat-item">
+                    <span class="stat-label">שדות ממופים:</span>
+                    <span class="stat-value">${mappedCount}/${Object.keys(systemFields).length}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">שדות חובה ממופים:</span>
+                    <span class="stat-value ${mappedRequired === requiredCount ? 'complete' : 'incomplete'}">${mappedRequired}/${requiredCount}</span>
+                </div>
+            `;
+            
+            // הפעלת/השבתת כפתור הייבוא
+            const importBtn = document.getElementById('execute-import-btn');
+            importBtn.disabled = mappedRequired < requiredCount;
+            importBtn.className = `btn ${mappedRequired >= requiredCount ? '' : 'btn-disabled'}`;
+        }
+
+        function resetMapping() {
+            fieldMapping = {};
+            if (importedData && importedData.length > 0) {
+                const sourceFields = Object.keys(importedData[0]);
+                initializeSmartMapping(sourceFields);
+                showMappingInterface(sourceFields);
+                showNotification('המיפוי אופס והוגדר מחדש אוטומטית', 'success');
+            }
+        }
+
+        function executeImport() {
+            if (!importedData || Object.keys(fieldMapping).length === 0) {
+                showNotification('אין נתונים לייבא', 'error');
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                let successCount = 0;
+                let errorCount = 0;
+                
+                importedData.forEach((sourceJob, index) => {
+                    try {
+                        const mappedJob = {};
+                        
+                        // מיפוי השדות
+                        Object.keys(systemFields).forEach(systemField => {
+                            const sourceField = fieldMapping[systemField];
+                            
+                            if (sourceField && sourceJob.hasOwnProperty(sourceField)) {
+                                let value = sourceJob[sourceField];
+                                
+                                // טיפול בסוגי נתונים שונים
+                                if (systemField === 'featured') {
+                                    // המרה לבוליאני
+                                    value = value === true || value === 'true' || value === 'כן' || value === '1' || value === 1;
+                                } else if (systemFields[systemField].type === 'string') {
+                                    value = String(value || '').trim();
+                                }
+                                
+                                mappedJob[systemField] = value;
+                            } else {
+                                // ערכי ברירת מחדל
+                                switch (systemField) {
+                                    case 'jobNumber':
+                                        mappedJob[systemField] = generateJobNumber();
+                                        break;
+                                    case 'status':
+                                        mappedJob[systemField] = 'פעיל';
+                                        break;
+                                    case 'category':
+                                        mappedJob[systemField] = 'אחר';
+                                        break;
+                                    case 'region':
+                                        mappedJob[systemField] = 'מרכז';
+                                        break;
+                                    case 'featured':
+                                        mappedJob[systemField] = false;
+                                        break;
+                                    default:
+                                        mappedJob[systemField] = '';
+                                }
+                            }
+                        });
+                        
+                        // בדיקת שדות חובה
+                        const missingRequired = Object.keys(systemFields)
+                            .filter(field => systemFields[field].required && !mappedJob[field]);
+                        
+                        if (missingRequired.length > 0) {
+                            console.warn(`שורה ${index + 1}: חסרים שדות חובה:`, missingRequired);
+                            errorCount++;
+                            return;
+                        }
+                        
+                        jobs.push(mappedJob);
+                        successCount++;
+                        
+                    } catch (error) {
+                        console.error(`שגיאה בשורה ${index + 1}:`, error);
+                        errorCount++;
+                    }
+                });
+                
+                markLocalChanges();
+                updateAllDisplays();
+                closeImportModal();
+                hideLoading();
+                
+                showNotification(
+                    `ייבוא הושלם: ${successCount} משרות יובאו בהצלחה` + 
+                    (errorCount > 0 ? `, ${errorCount} שגיאות` : ''), 
+                    successCount > 0 ? 'success' : 'warning'
+                );
+                
+            } catch (error) {
+                hideLoading();
+                showNotification('שגיאה בייבוא: ' + error.message, 'error');
             }
         }
 
@@ -1911,99 +2390,6 @@
             openBulkModal();
         }
 
-        // ייבוא וייצוא
-        function openImportModal() {
-            document.getElementById('import-modal').style.display = 'block';
-        }
-
-        function closeImportModal() {
-            document.getElementById('import-modal').style.display = 'none';
-            document.getElementById('file-input').value = '';
-        }
-
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    let importedJobs;
-                    
-                    if (file.name.endsWith('.json')) {
-                        importedJobs = JSON.parse(e.target.result);
-                    } else if (file.name.endsWith('.csv')) {
-                        importedJobs = parseCSV(e.target.result);
-                    } else {
-                        throw new Error('סוג קובץ לא נתמך');
-                    }
-                    
-                    if (!Array.isArray(importedJobs)) {
-                        throw new Error('הקובץ חייב להכיל מערך של משרות');
-                    }
-                    
-                    // הוספת המשרות החדשות
-                    importedJobs.forEach(job => {
-                        jobs.push({
-                            jobNumber: job.jobNumber || generateJobNumber(),
-                            title: job.title || '',
-                            category: job.category || 'אחר',
-                            city: job.city || '',
-                            region: job.region || 'מרכז',
-                            description: job.description || '',
-                            requirements: job.requirements || '',
-                            status: job.status || 'פעיל',
-                            featured: job.featured || false
-                        });
-                    });
-                    
-                    markLocalChanges();
-                    updateAllDisplays();
-                    closeImportModal();
-                    showNotification(`${importedJobs.length} משרות יובאו בהצלחה!`, 'success');
-                    
-                } catch (error) {
-                    showNotification('שגיאה: ' + error.message, 'error');
-                }
-            };
-            reader.readAsText(file, 'UTF-8');
-        }
-        
-        function parseCSV(csvText) {
-            const lines = csvText.split('\n').filter(line => line.trim());
-            if (lines.length < 2) {
-                throw new Error('הקובץ חייב להכיל כותרות ונתונים');
-            }
-            
-            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-            const data = [];
-            
-            for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
-                const job = {};
-                headers.forEach((header, index) => {
-                    job[header] = values[index] || '';
-                });
-                
-                // המרה לפורמט הנכון
-                const normalizedJob = {
-                    jobNumber: job['מספר משרה'] || job.jobNumber || generateJobNumber(),
-                    title: job['כותרת'] || job.title || '',
-                    category: job['קטגוריה'] || job.category || 'אחר',
-                    city: job['עיר'] || job.city || '',
-                    region: job['אזור'] || job.region || 'מרכז',
-                    description: job['תיאור'] || job.description || '',
-                    requirements: job['דרישות'] || job.requirements || '',
-                    status: job['סטטוס'] || job.status || 'פעיל',
-                    featured: (job['מומלצת'] || job.featured) === 'כן' || (job['מומלצת'] || job.featured) === true
-                };
-                
-                data.push(normalizedJob);
-            }
-            
-            return data;
-        }
-
         function exportForGitHub() {
             if (jobs.length === 0) {
                 showNotification('אין משרות לייצוא', 'warning');
@@ -2177,8 +2563,11 @@
         window.bulkAction = bulkAction;
         window.exportForGitHub = exportForGitHub;
         window.bulkActions = bulkActions;
+        window.resetMapping = resetMapping;
+        window.updateMapping = updateMapping;
+        window.executeImport = executeImport;
 
-        console.log('🚀 מערכת ניהול GitHub נטענה בהצלחה!');
+        console.log('🚀 מערכת ניהול GitHub עם מיפוי שדות נטענה בהצלחה!');
     </script>
 </body>
 </html>
