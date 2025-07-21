@@ -1256,8 +1256,8 @@
 
                     <div class="admin-card" onclick="openImportModal()">
                         <div class="admin-icon"><i class="fas fa-file-import"></i></div>
-                        <div class="admin-card-title">ייבוא משרות חכם</div>
-                        <div class="admin-card-desc">ייבא משרות מקובץ JSON עם מיפוי אוטומטי</div>
+                        <div class="admin-card-title">החלפת משרות חכמה</div>
+                        <div class="admin-card-desc">החלף את כל המשרות בקובץ JSON חדש עם מיפוי אוטומטי</div>
                     </div>
                     
                     <div class="admin-card" onclick="bulkActions()">
@@ -1448,7 +1448,7 @@
                 <div class="modal-header">
                     <h3 class="modal-title">
                         <i class="fas fa-file-import"></i>
-                        ייבוא משרות עם מיפוי אוטומטי
+                        החלפת משרות עם מיפוי אוטומטי
                     </h3>
                     <span class="close" onclick="closeImportModal()">&times;</span>
                 </div>
@@ -1457,7 +1457,8 @@
                     <div class="file-upload" onclick="document.getElementById('file-input').click()">
                         <div class="file-upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
                         <h4>גרור קובץ JSON או לחץ להעלאה</h4>
-                        <p>המערכת תזהה אוטומטית את השדות ותציע מיפוי חכם</p>
+                        <p>המערכת תחליף את כל המשרות הקיימות בנתונים החדשים</p>
+                        <p style="color: #ffc107; font-weight: bold;">⚠️ פעולה זו תמחק את כל הנתונים הנוכחיים!</p>
                         <input type="file" id="file-input" accept=".json" style="display: none;" onchange="handleFileUpload(event)">
                     </div>
                     
@@ -1481,7 +1482,7 @@
                                 <i class="fas fa-undo"></i> איפוס מיפוי
                             </button>
                             <button class="btn" id="execute-import-btn" onclick="executeImport()">
-                                <i class="fas fa-check"></i> בצע ייבוא
+                                <i class="fas fa-sync-alt"></i> החלף כל המשרות
                             </button>
                         </div>
                     </div>
