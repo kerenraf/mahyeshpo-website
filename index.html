@@ -2158,7 +2158,7 @@
                 var quickEditButton = isQuickEditMode ? 
                     '<button class="contact-button feature-toggle-button ' + (job.featured ? 'featured-active' : '') + '" ' +
                     'title="' + (job.featured ? 'בטל המלצה' : 'סמן כמומלצת') + '" ' +
-                    'onclick="event.stopPropagation(); toggleQuickFeature(' + index + ')" ' +
+'onclick="event.stopPropagation(); toggleQuickFeature(\'' + job.jobNumber + '\')"'
                     'style="background: linear-gradient(135deg, ' + (job.featured ? '#8B5CF6' : '#6c757d') + ', ' + (job.featured ? '#A855F7' : '#545b62') + ');">' +
                     '<i class="fas ' + (job.featured ? 'fa-star' : 'fa-star-o') + '"></i>' +
                     '</button>' : '';
@@ -2172,7 +2172,7 @@
                     '<div class="job-description">' + shortDescription + '</div>' +
                     '<div class="job-badge" style="background: ' + categoryColor + ';">' + job.category + '</div>' +
                     '<div class="job-card-bottom">' +
-                        '<div class="job-card-gnome" onclick="event.stopPropagation(); openJobModal(' + index + ')">' +
+'<div class="job-card-gnome" onclick="event.stopPropagation(); openJobModal(\'' + job.jobNumber + '\')">' +
                             '<img src="https://mayeshpo.co.il/images/gnome.png" ' +
                                 'alt="גמדה פרטים" ' +
                                 'onerror="this.src=\'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XkNee15XXmDwvdGV4dD48L3N2Zz4i\'>">' +
@@ -2185,44 +2185,48 @@
                             '<a href="' + smsLink + '" class="contact-button sms-button" title="פנייה ב-SMS" onclick="event.stopPropagation();">' +
                                 '<i class="fas fa-sms"></i>' +
                             '</a>' +
-                            '<button class="contact-button share-button" title="שתף משרה" onclick="event.stopPropagation(); shareJob(' + index + ')" style="background: linear-gradient(135deg, #FF6B6B, #EE5A52);">' +
-                                '<i class="fas fa-share-alt"></i>' +
-                            '</button>' +
-                            quickEditButton +
+'<button class="contact-button share-button" title="שתף משרה" onclick="event.stopPropagation(); shareJob(\'' + job.jobNumber + '\')" style="background: linear-gradient(135deg, #FF6B6B, #EE5A52);">' +
+    '<i class="fas fa-share-alt"></i>' +
+'</button>'
+                    quickEditButton +
                         '</div>' +
                     '</div>';
                 
                 jobCard.addEventListener('click', function() {
-                    openJobModal(index);
+    openJobModal(job.jobNumber);
                 });
                 
                 jobsContainer.appendChild(jobCard);
             });
         }
 
-        // פונקציית שיתוף משרה
-        function shareJob(index) {
-            var job = currentDisplayedJobs[index];
-            if (!job) return;
-            
-            var baseUrl = window.location.origin + window.location.pathname;
-            var jobUrl = baseUrl + '?job=' + encodeURIComponent(job.jobNumber);
-            var shareText = '🎯 משרה מעניינת: ' + job.title + '\n📍 ' + (job.city ? job.city + ', ' + (job.region || '') : job.region || 'ישראל') + '\n💼 ' + job.category + '\n\n' + jobUrl;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'משרה: ' + job.title,
-                    text: job.title + ' ב' + (job.city ? job.city : job.region),
-                    url: jobUrl
-                }).catch(function(err) { 
-                    console.log('שגיאה בשיתוף:', err); 
-                });
-            } else {
-                copyToClipboard(shareText);
-                showShareOptions(job, shareText, jobUrl);
-            }
-        }
-
+// פונקציית שיתוף משרה
+function shareJob(jobNumber) {
+    var job = currentDisplayedJobs.find(function(j) { return j.jobNumber === jobNumber; });
+    if (!job) {
+        console.error('לא נמצאה משרה עם מספר: ' + jobNumber);
+        showNotification('שגיאה: משרה לא נמצאה', 'error');
+        return;
+    }
+    
+    var baseUrl = window.location.origin + window.location.pathname;
+    var jobUrl = baseUrl + '?job=' + encodeURIComponent(job.jobNumber);
+    var shareText = '🎯 משרה מעניינת: ' + job.title + '\\n📍 ' + (job.city ? job.city + ', ' + (job.region || '') : job.region || 'ישראל') + '\\n💼 ' + job.category + '\\n\\n' + jobUrl;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'משרה: ' + job.title,
+            text: job.title + ' ב' + (job.city ? job.city : job.region),
+            url: jobUrl
+        }).catch(function(err) { 
+            console.log('שגיאה בשיתוף:', err); 
+        });
+    } else {
+        copyToClipboard(shareText);
+        showShareOptions(job, shareText, jobUrl);
+    }
+}
+        
         // פונקציה להצגת אפשרויות שיתוף
         function showShareOptions(job, shareText, jobUrl) {
             var whatsappShare = 'https://wa.me/?text=' + encodeURIComponent(shareText);
@@ -2306,14 +2310,14 @@
         }
 
         // פונקציות מודל
-        function openJobModal(index) {
-            if (!currentDisplayedJobs || !currentDisplayedJobs[index]) {
-                alert('אירעה שגיאה בטעינת פרטי המשרה');
-                return;
-            }
-            
-            var job = currentDisplayedJobs[index];
-            
+function openJobModal(jobNumber) {
+    var job = currentDisplayedJobs.find(function(j) { return j.jobNumber === jobNumber; });
+    if (!job) {
+        console.error('לא נמצאה משרה עם מספר: ' + jobNumber);
+        alert('אירעה שגיאה בטעינת פרטי המשרה');
+        return;
+    }
+    
             var location = '';
             if (job.city && job.region) {
                 location = job.city + ', ' + job.region;
@@ -2338,11 +2342,11 @@
             document.getElementById('modal-whatsapp-btn').href = whatsappLink;
             document.getElementById('modal-sms-btn').href = smsLink;
             
-            var modalShareBtn = document.getElementById('modal-share-btn');
-            if (modalShareBtn) {
-                modalShareBtn.onclick = function() { shareJob(index); };
-            }
-            
+var modalShareBtn = document.getElementById('modal-share-btn');
+if (modalShareBtn) {
+    modalShareBtn.onclick = function() { shareJob(jobNumber); };
+}
+    
             document.getElementById('job-modal').style.display = 'block';
             document.body.style.overflow = 'hidden';
         }
@@ -2451,8 +2455,11 @@
             if (!isQuickEditMode) return;
             
             var job = currentDisplayedJobs[index];
-            if (!job) return;
-            
+            if (!job) re    var job = currentDisplayedJobs.find(function(j) { return j.jobNumber === jobNumber; });
+    if (!job) {
+        console.error('לא נמצאה משרה עם מספר: ' + jobNumber);
+        return;
+    }            
             job.featured = !job.featured;
             
             var mainJobIndex = allJobs.findIndex(function(j) { return j.jobNumber === job.jobNumber; });
