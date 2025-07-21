@@ -1894,12 +1894,89 @@
                 console.log('🚀 משרות זמינות, מפתח משרה:', jobParam);
                 
                 // חפש את המשרה
-                var job = window.allJobs.find(function(j) {
-                    return (j.jobNumber === jobParam || 
-                           j.jobNumber === decodeURIComponent(jobParam)) && 
-                           j.status === 'פעיל';
-                });
+// DEBUG מפורט לחיפוש המשרה
+console.log('🔍 מחפש משרה:', jobParam);
+console.log('📊 סה"כ משרות במערך:', window.allJobs.length);
 
+// הדפס כמה משרות ראשונות
+console.log('📋 דוגמאות למשרות:');
+window.allJobs.slice(0, 5).forEach(function(j, index) {
+    console.log(index + ': jobNumber="' + j.jobNumber + '" status="' + j.status + '"');
+});
+
+// חפש את המשרה עם debug
+var job = null;
+
+// ניסיון 1: חיפוש מדויק
+job = window.allJobs.find(function(j) {
+    if (j.jobNumber === jobParam) {
+        console.log('✅ נמצאה התאמה מדויקת:', j.title);
+        return true;
+    }
+    return false;
+});
+
+// ניסיון 2: חיפוש עם decode
+if (!job) {
+    var decodedParam = decodeURIComponent(jobParam);
+    console.log('🔄 מנסה עם decoded:', decodedParam);
+    
+    job = window.allJobs.find(function(j) {
+        if (j.jobNumber === decodedParam) {
+            console.log('✅ נמצאה התאמה decoded:', j.title);
+            return true;
+        }
+        return false;
+    });
+}
+
+// ניסיון 3: חיפוש עם trim
+if (!job) {
+    console.log('🔄 מנסה עם trim...');
+    
+    job = window.allJobs.find(function(j) {
+        var cleanJobNumber = j.jobNumber ? j.jobNumber.trim() : '';
+        var cleanParam = jobParam ? jobParam.trim() : '';
+        
+        if (cleanJobNumber === cleanParam) {
+            console.log('✅ נמצאה התאמה עם trim:', j.title);
+            return true;
+        }
+        return false;
+    });
+}
+
+// ניסיון 4: חיפוש חלקי
+if (!job) {
+    console.log('🔄 מחפש משרות דומות...');
+    
+    var similarJobs = window.allJobs.filter(function(j) {
+        return j.jobNumber && j.jobNumber.includes('226568');
+    });
+    
+    console.log('🔍 משרות דומות עם 226568:', similarJobs.length);
+    similarJobs.forEach(function(j) {
+        console.log('  - "' + j.jobNumber + '": ' + j.title + ' (סטטוס: ' + j.status + ')');
+    });
+    
+    if (similarJobs.length > 0) {
+        job = similarJobs[0];
+        console.log('📝 משתמש במשרה דומה:', job.title);
+    }
+}
+
+// בדיקת סטטוס
+if (job) {
+    console.log('📋 פרטי המשרה שנמצאה:');
+    console.log('  - מספר:', job.jobNumber);
+    console.log('  - כותרת:', job.title);
+    console.log('  - סטטוס:', job.status);
+    
+    if (job.status !== 'פעיל') {
+        console.log('⚠️ אזהרה: המשרה לא פעילה!');
+        // אל תסנן לפי סטטוס כדי לבדוק
+    }
+}
                 // DEBUG - הוסיפי זמנית
 window.debugJobSearch = function(jobNumber) {
     console.log('🔍 DEBUG חיפוש משרה:', jobNumber);
