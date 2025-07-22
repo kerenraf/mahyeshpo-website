@@ -1936,143 +1936,165 @@ function extractRequirementsFromDescription(description) {
     };
 }
         
-        function executeImport() {
-            if (!importedData || Object.keys(fieldMapping).length === 0) {
-                showNotification('אין נתונים לייבא', 'error');
-                return;
-            }
-            
-            // אישור החלפה
-            if (jobs.length > 0) {
-                const confirmed = confirm(`האם אתה בטוח שברצונך להחליף את כל ${jobs.length} המשרות הקיימות עם ${importedData.length} משרות חדשות?
+function executeImport() {
+    if (!importedData || Object.keys(fieldMapping).length === 0) {
+        showNotification('אין נתונים לייבא', 'error');
+        return;
+    }
+    
+    // אישור החלפה
+    if (jobs.length > 0) {
+        const confirmed = confirm(`האם אתה בטוח שברצונך להחליף את כל ${jobs.length} המשרות הקיימות עם ${importedData.length} משרות חדשות?
 
 ⚠️ פעולה זו תמחק את כל הנתונים הקיימים!
 
 לחץ OK להמשך או Cancel לביטול.`);
-                
-                if (!confirmed) {
-                    return;
-                }
-            }
-            
-            showLoading();
-            
-            try {
-                let successCount = 0;
-                let errorCount = 0;
-                const newJobs = []; // מערך חדש לנתונים המובאים
-                
-                importedData.forEach((sourceJob, index) => {
-                    try {
-                        const mappedJob = {};
-                        
-                        // מיפוי השדות
-                        Object.keys(systemFields).forEach(systemField => {
-                            const sourceField = fieldMapping[systemField];
-                            
-                            if (sourceField && sourceJob.hasOwnProperty(sourceField)) {
-                                let value = sourceJob[sourceField];
-                                
-                                // טיפול בסוגי נתונים שונים
-                                if (systemField === 'featured') {
-                                    // המרה לבוליאני
-                                    value = value === true || value === 'true' || value === 'כן' || value === '1' || value === 1;
-                                } else if (systemFields[systemField].type === 'string') {
-                                    value = String(value || '').trim();
-                                }
-                                
-if (systemField === 'description' && value && autoSplitEnabled) {
-    // אם זה שדה תיאור ויש בו תוכן, נבדוק אם יש דרישות להפריד
-    const extracted = extractRequirementsFromDescription(value);
-    mappedJob['description'] = extracted.description;
-    
-    // אם יש דרישות ושדה הדרישות לא ממופה, נוסיף אותן
-    if (extracted.requirements && !fieldMapping['requirements']) {
-        mappedJob['requirements'] = extracted.requirements;
+        
+        if (!confirmed) {
+            return;
+        }
     }
-} else {
-    mappedJob[systemField] = value;
-}
-                            } else {
-                                // ערכי ברירת מחדל - רק אם השדה לא ממופה
-                                switch (systemField) {
-                                    case 'jobNumber':
-                                        // אם יש מיפוי לשדה jobNumber, נשמור אותו מהמקור
-                                        if (!fieldMapping['jobNumber']) {
-                                            mappedJob[systemField] = generateJobNumberForImport(newJobs, index);
-                                        }
-                                        break;
-                                    case 'status':
-                                        mappedJob[systemField] = 'פעיל';
-                                        break;
-                                    case 'category':
-                                        mappedJob[systemField] = 'אחר';
-                                        break;
-                                    case 'region':
-                                        mappedJob[systemField] = 'מרכז';
-                                        break;
-                                    case 'featured':
-                                        mappedJob[systemField] = false;
-                                        break;
-                                    default:
-                                        mappedJob[systemField] = '';
-                                }
+    
+    showLoading();
+    
+    try {
+        let successCount = 0;
+        let errorCount = 0;
+        const newJobs = [];
+        
+        importedData.forEach((sourceJob, index) => {
+            try {
+                const mappedJob = {};
+                
+                // מיפוי השדות
+                Object.keys(systemFields).forEach(systemField => {
+                    const sourceField = fieldMapping[systemField];
+                    
+                    if (sourceField && sourceJob.hasOwnProperty(sourceField)) {
+                        let value = sourceJob[sourceField];
+                        
+                        // טיפול בסוגי נתונים שונים
+                        if (systemField === 'featured') {
+                            value = value === true || value === 'true' || value === 'כן' || value === '1' || value === 1;
+                        } else if (systemFields[systemField].type === 'string') {
+                            value = String(value || '').trim();
+                        }
+                        
+                        // ✅ הקוד החדש הנכון לפיצול:
+                        if (systemField === 'description' && value && autoSplitEnabled) {
+                            console.log('🔄 מפצל תיאור:', value.substring(0, 50) + '...');
+                            
+                            const extracted = extractRequirementsFromDescription(value);
+                            
+                            console.log('📝 תיאור אחרי פיצול:', extracted.description.substring(0, 50) + '...');
+                            console.log('📋 דרישות אחרי פיצול:', extracted.requirements.substring(0, 50) + '...');
+                            
+                            mappedJob['description'] = extracted.description;
+                            
+                            // אם יש דרישות ושדה הדרישות לא ממופה בנפרד, נוסיף אותן
+                            if (extracted.requirements && !fieldMapping['requirements']) {
+                                mappedJob['requirements'] = extracted.requirements;
+                                console.log('✅ הוספתי דרישות:', extracted.requirements.substring(0, 30) + '...');
                             }
-                        });
-                        
-                        // וידוא שיש מספר משרה (אם לא ממופה או ריק)
-                        if (!mappedJob.jobNumber || mappedJob.jobNumber.trim() === '') {
-                            mappedJob.jobNumber = generateJobNumberForImport(newJobs, index);
+                        } else {
+                            mappedJob[systemField] = value;
                         }
-
-                        // בדיקת שדות חובה
-                        const missingRequired = Object.keys(systemFields)
-                            .filter(field => systemFields[field].required && !mappedJob[field]);
-                        
-                        if (missingRequired.length > 0) {
-                            console.warn(`שורה ${index + 1}: חסרים שדות חובה:`, missingRequired);
-                            errorCount++;
-                            return;
+                    } else {
+                        // ערכי ברירת מחדל
+                        switch (systemField) {
+                            case 'jobNumber':
+                                if (!fieldMapping['jobNumber']) {
+                                    mappedJob[systemField] = generateJobNumberForImport(newJobs, index);
+                                }
+                                break;
+                            case 'status':
+                                mappedJob[systemField] = 'פעיל';
+                                break;
+                            case 'category':
+                                mappedJob[systemField] = 'אחר';
+                                break;
+                            case 'region':
+                                mappedJob[systemField] = 'מרכז';
+                                break;
+                            case 'featured':
+                                mappedJob[systemField] = false;
+                                break;
+                            default:
+                                mappedJob[systemField] = '';
                         }
-                        
-                        newJobs.push(mappedJob);
-                        successCount++;
-                        
-                    } catch (error) {
-                        console.error(`שגיאה בשורה ${index + 1}:`, error);
-                        errorCount++;
                     }
                 });
                 
-                // החלפת הנתונים הקיימים עם החדשים
-                if (successCount > 0) {
-                    jobs.length = 0; // מחיקת כל הנתונים הקיימים
-                    jobs.push(...newJobs); // הוספת הנתונים החדשים
-                    selectedJobs.clear(); // ניקוי הבחירות
-                    currentPage = 1; // חזרה לעמוד הראשון
+                // וידוא שיש מספר משרה
+                if (!mappedJob.jobNumber || mappedJob.jobNumber.trim() === '') {
+                    mappedJob.jobNumber = generateJobNumberForImport(newJobs, index);
+                }
+
+                // בדיקת שדות חובה
+                const missingRequired = Object.keys(systemFields)
+                    .filter(field => systemFields[field].required && !mappedJob[field]);
+                
+                if (missingRequired.length > 0) {
+                    console.warn(`שורה ${index + 1}: חסרים שדות חובה:`, missingRequired);
+                    errorCount++;
+                    return;
                 }
                 
-                markLocalChanges();
-                updateAllDisplays();
-                closeImportModal();
-                hideLoading();
+                // ✅ הדפסה לבדיקה:
+                console.log(`✅ משרה ${index + 1}:`, {
+                    title: mappedJob.title,
+                    description: mappedJob.description?.substring(0, 30) + '...',
+                    requirements: mappedJob.requirements?.substring(0, 30) + '...'
+                });
                 
-                if (successCount > 0) {
-                    showNotification(
-                        `הייבוא הושלם! החלפת ${successCount} משרות` + 
-                        (errorCount > 0 ? ` (${errorCount} שגיאות)` : ''), 
-                        'success'
-                    );
-                } else {
-                    showNotification('לא ניתן היה לייבא אף משרה בשל שגיאות', 'error');
-                }
+                newJobs.push(mappedJob);
+                successCount++;
                 
             } catch (error) {
-                hideLoading();
-                showNotification('שגיאה בייבוא: ' + error.message, 'error');
+                console.error(`שגיאה בשורה ${index + 1}:`, error);
+                errorCount++;
             }
+        });
+        
+        // החלפת הנתונים
+        if (successCount > 0) {
+            jobs.length = 0;
+            jobs.push(...newJobs);
+            selectedJobs.clear();
+            currentPage = 1;
         }
-
+        
+        markLocalChanges();
+        updateAllDisplays();
+        closeImportModal();
+        hideLoading();
+        
+        if (successCount > 0) {
+            showNotification(
+                `הייבוא הושלם! החלפת ${successCount} משרות` + 
+                (errorCount > 0 ? ` (${errorCount} שגיאות)` : ''), 
+                'success'
+            );
+            
+            // ✅ הדפסה נוספת לבדיקה:
+            console.log('🔍 בדיקה סופית - כל המשרות:', jobs.map(job => ({
+                title: job.title,
+                hasDescription: !!job.description,
+                hasRequirements: !!job.requirements,
+                descLength: job.description?.length || 0,
+                reqLength: job.requirements?.length || 0
+            })));
+            
+        } else {
+            showNotification('לא ניתן היה לייבא אף משרה בשל שגיאות', 'error');
+        }
+        
+    } catch (error) {
+        hideLoading();
+        showNotification('שגיאה בייבוא: ' + error.message, 'error');
+    }
+}
+        
         // פונקציה מיוחדת ליצירת מספרי משרות בייבוא
         function generateJobNumberForImport(existingJobs, index) {
             const baseNumber = index + 1;
