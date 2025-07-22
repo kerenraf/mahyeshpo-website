@@ -2164,7 +2164,71 @@
                 categoriesContainer.appendChild(card);
             });
         }
-        ה פרטים" ' +
+        // הצגת משרות עם תמיכה במשרות מומלצות וכפתורי שיתוף
+        function displayJobs(jobs) {
+            var jobsContainer = document.getElementById('jobsContainer');
+            if (!jobsContainer) return;
+            
+            jobsContainer.innerHTML = '';
+            
+            if (!jobs || jobs.length === 0) {
+                jobsContainer.innerHTML = 
+                    '<div class="no-jobs-message">' +
+                        '<h3>אין משרות פעילות כרגע</h3>' +
+                        '<p>נסה לחפש שוב מאוחר יותר או לשנות את המסננים</p>' +
+                    '</div>';
+                return;
+            }
+            
+            // מיון משרות: מומלצות קודם
+            var sortedJobs = jobs.sort(function(a, b) {
+                if (a.featured && !b.featured) return -1;
+                if (!a.featured && b.featured) return 1;
+                return 0;
+            });
+            
+            currentDisplayedJobs = sortedJobs.slice(0, 12);
+            
+            currentDisplayedJobs.forEach(function(job, index) {
+                var jobCard = document.createElement('div');
+                jobCard.className = 'job-card' + (job.featured ? ' featured' : '');
+                
+                var location = '';
+                if (job.city && job.region) {
+                    location = job.city + ', ' + job.region;
+                } else if (job.city) {
+                    location = job.city;
+                } else {
+                    location = job.region || 'ישראל';
+                }
+                
+                var shortDescription = job.description
+                    ? (job.description.substring(0, 120) + (job.description.length > 120 ? '...' : ''))
+                    : 'לחץ על הגמדה לפרטים נוספים';
+                
+                var messageText = 'שלום, אני מעוניין/ת במשרה: ' + job.title + ' (' + job.jobNumber + ')';
+                var whatsappLink = 'https://wa.me/972555504633?text=' + encodeURIComponent(messageText);
+                var smsLink = 'sms:+972555504633?body=' + encodeURIComponent(messageText);
+                
+                var categoryColor = getCategoryColor(job.category);
+                
+                jobCard.innerHTML = 
+                    '<div class="job-number">' + job.jobNumber + '</div>' +
+                    '<div class="job-card-pointing-gnome" onclick="event.stopPropagation(); openJobModal(' + index + ')">' +
+                        '<img src="https://mayeshpo.co.il/images/גמדה מצביעה בלי רקע.png" ' +
+                             'alt="גמדה מצביעה" ' +
+                             'onerror="this.src=\'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XkNee15XXmDwvdGV4dD48L3N2Zz4i\'>">' +
+                    '</div>' +
+                    '<h3 class="job-title">' + job.title + '</h3>' +
+                    '<div class="job-location">' +
+                        '<i class="fas fa-map-marker-alt"></i> ' + location +
+                    '</div>' +
+                    '<div class="job-description">' + shortDescription + '</div>' +
+                    '<div class="job-badge" style="background: ' + categoryColor + ';">' + job.category + '</div>' +
+                    '<div class="job-card-bottom">' +
+                        '<div class="job-card-gnome" onclick="event.stopPropagation(); openJobModal(' + index + ')">' +
+                            '<img src="https://mayeshpo.co.il/images/gnome.png" ' +
+                                'alt="גמדה פרטים" ' +
                                 'onerror="this.src=\'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XkNee15XXmDwvdGV4dD48L3N2Zz4i\'>">' +
                             '<div class="job-card-gnome-text">פרטים נוספים</div>' +
                         '</div>' +
