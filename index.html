@@ -2281,9 +2281,19 @@ currentDisplayedJobs = sortedJobs;
                     location = job.region || 'ישראל';
                 }
                 
-                var shortDescription = job.description
-                    ? (job.description.substring(0, 120) + (job.description.length > 120 ? '...' : ''))
-                    : 'לחץ על הגמדה לפרטים נוספים';
+// איחוד תיאור ודרישות לתצוגה בכרטיס
+var fullContent = '';
+if (job.description && job.description.trim()) {
+    fullContent += job.description.trim();
+}
+if (job.requirements && job.requirements.trim()) {
+    if (fullContent) fullContent += '\n\n';
+    fullContent += job.requirements.trim();
+}
+
+var shortDescription = fullContent
+    ? (fullContent.substring(0, 120) + (fullContent.length > 120 ? '...' : ''))
+    : 'לחץ על הגמדה לפרטים נוספים';
                 
                 var messageText = 'שלום, אני מעוניין/ת במשרה: ' + job.title + ' (' + job.jobNumber + ')';
                 var whatsappLink = 'https://wa.me/972555504633?text=' + encodeURIComponent(messageText);
@@ -2355,8 +2365,12 @@ currentDisplayedJobs = sortedJobs;
             document.getElementById('modal-job-type').textContent = job.jobType || 'משרה מלאה';
             document.getElementById('modal-job-category').textContent = job.category || 'אחר';
             document.getElementById('modal-job-number').textContent = job.jobNumber || 'לא צוין';
-            document.getElementById('modal-job-description').textContent = job.description || 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
-            document.getElementById('modal-job-requirements').textContent = job.requirements ? job.requirements.replace(/\\n/g, '\n') : 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
+// הצגת תיאור ודרישות נפרדים במודל
+var modalDescription = job.description || 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
+var modalRequirements = job.requirements ? job.requirements.replace(/\\n/g, '\n') : 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
+
+document.getElementById('modal-job-description').textContent = modalDescription;
+document.getElementById('modal-job-requirements').textContent = modalRequirements;
             
             var messageText = 'שלום, אני מעוניין/ת במשרה: ' + job.title + ' (' + job.jobNumber + ')';
             var whatsappLink = 'https://wa.me/972555504633?text='+ encodeURIComponent(messageText);
