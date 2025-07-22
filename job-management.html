@@ -955,7 +955,7 @@
 
         .back-to-site:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(40,167,69,0.4);
+            box-shadow: 0 8px 20pxrgba(40,167,69,0.4);
         }
 
         .error-message {
@@ -1562,984 +1562,995 @@
             </div>
         </footer>
     </div>
-
     <script>
-        // משתנים גלובליים
-        let jobs = [];
-        let filteredJobs = [];
-        let currentPage = 1;
-        const jobsPerPage = 15;
-        let isFiltered = false;
-        let selectedJobs = new Set();
-        let featuredJobId = null;
-        let githubUrl = '';
-        let hasLocalChanges = false;
+// משתנים גלובליים
+let jobs = [];
+let filteredJobs = [];
+let currentPage = 1;
+const jobsPerPage = 15;
+let isFiltered = false;
+let selectedJobs = new Set();
+let featuredJobId = null;
+let githubUrl = '';
+let hasLocalChanges = false;
 
-        // מערכת מיפוי שדות מתקדמת
-        let importedData = null;
-        let fieldMapping = {};
-        
-        // שדות המערכת הקבועים
-        const systemFields = {
-            'jobNumber': { label: 'מספר משרה', required: false, type: 'string' },
-            'title': { label: 'כותרת המשרה', required: true, type: 'string' },
-            'category': { label: 'קטגוריה', required: false, type: 'string' },
-            'city': { label: 'עיר', required: true, type: 'string' },
-            'region': { label: 'אזור', required: true, type: 'string' },
-            'description': { label: 'תיאור המשרה', required: false, type: 'string' },
-            'requirements': { label: 'דרישות התפקיד', required: false, type: 'string' },
-            'status': { label: 'סטטוס', required: false, type: 'string' },
-            'featured': { label: 'משרה מומלצת', required: false, type: 'boolean' }
-        };
+// מערכת מיפוי שדות מתקדמת
+let importedData = null;
+let fieldMapping = {};
 
-        // אתחול מיפוי אוטומטי חכם
-        function initializeSmartMapping(sourceFields) {
-            fieldMapping = {};
-            
-            // מיפוי חכם על בסיס דמיון בשמות
-            const mappingRules = {
-                'jobNumber': ['job_number', 'jobnum', 'job_id', 'מספר_משרה', 'מספר משרה', 'jobNumber', 'id', 'משרה_מספר'],
-                'title': ['title', 'job_title', 'position', 'כותרת', 'תפקיד', 'position_title', 'job_name', 'שם_משרה'],
-                'category': ['category', 'job_category', 'קטגוריה', 'סוג_משרה', 'department', 'field', 'תחום'],
-                'city': ['city', 'location', 'עיר', 'מיקום', 'workplace', 'place', 'מקום_עבודה'],
-                'region': ['region', 'area', 'אזור', 'מחוז', 'district', 'zone', 'איזור'],
-                'description': ['description', 'job_description', 'תיאור', 'פרטים', 'details', 'about', 'info'],
-                'requirements': ['requirements', 'job_requirements', 'דרישות', 'qualification', 'skills', 'כישורים'],
-                'status': ['status', 'job_status', 'סטטוס', 'active', 'state', 'מצב', 'פעיל'],
-                'featured': ['featured', 'highlighted', 'מומלצת', 'premium', 'featured_job', 'מומלץ', 'vip']
-            };
+// שדות המערכת הקבועים
+const systemFields = {
+    'jobNumber': { label: 'מספר משרה', required: false, type: 'string' },
+    'title': { label: 'כותרת המשרה', required: true, type: 'string' },
+    'category': { label: 'קטגוריה', required: false, type: 'string' },
+    'city': { label: 'עיר', required: true, type: 'string' },
+    'region': { label: 'אזור', required: true, type: 'string' },
+    'description': { label: 'תיאור המשרה', required: false, type: 'string' },
+    'requirements': { label: 'דרישות התפקיד', required: false, type: 'string' },
+    'status': { label: 'סטטוס', required: false, type: 'string' },
+    'featured': { label: 'משרה מומלצת', required: false, type: 'boolean' }
+};
 
-            Object.keys(systemFields).forEach(systemField => {
-                const rules = mappingRules[systemField];
-                for (let sourceField of sourceFields) {
-                    const normalizedSource = sourceField.toLowerCase().replace(/[_\s-]/g, '');
-                    const foundMatch = rules.find(rule => 
-                        normalizedSource.includes(rule.toLowerCase().replace(/[_\s-]/g, '')) ||
-                        rule.toLowerCase().replace(/[_\s-]/g, '').includes(normalizedSource)
-                    );
-                    
-                    if (foundMatch) {
-                        fieldMapping[systemField] = sourceField;
-                        break;
-                    }
-                }
-            });
-        }
+// אתחול מיפוי אוטומטי חכם
+function initializeSmartMapping(sourceFields) {
+    fieldMapping = {};
+    
+    // מיפוי חכם על בסיס דמיון בשמות
+    const mappingRules = {
+        'jobNumber': ['job_number', 'jobnum', 'job_id', 'מספר_משרה', 'מספר משרה', 'jobNumber', 'id', 'משרה_מספר'],
+        'title': ['title', 'job_title', 'position', 'כותרת', 'תפקיד', 'position_title', 'job_name', 'שם_משרה'],
+        'category': ['category', 'job_category', 'קטגוריה', 'סוג_משרה', 'department', 'field', 'תחום'],
+        'city': ['city', 'location', 'עיר', 'מיקום', 'workplace', 'place', 'מקום_עבודה'],
+        'region': ['region', 'area', 'אזור', 'מחוז', 'district', 'zone', 'איזור'],
+        'description': ['description', 'job_description', 'תיאור', 'פרטים', 'details', 'about', 'info'],
+        'requirements': ['requirements', 'job_requirements', 'דרישות', 'qualification', 'skills', 'כישורים'],
+        'status': ['status', 'job_status', 'סטטוס', 'active', 'state', 'מצב', 'פעיל'],
+        'featured': ['featured', 'highlighted', 'מומלצת', 'premium', 'featured_job', 'מומלץ', 'vip']
+    };
 
-        // פונקציות אתחול
-        function checkAdminPassword() {
-            const password = document.getElementById('adminPassword').value;
-            const correctPassword = "yarin080708";
-            const gitUrl = document.getElementById('githubUrl').value.trim();
+    Object.keys(systemFields).forEach(systemField => {
+        const rules = mappingRules[systemField];
+        for (let sourceField of sourceFields) {
+            const normalizedSource = sourceField.toLowerCase().replace(/[_\s-]/g, '');
+            const foundMatch = rules.find(rule => 
+                normalizedSource.includes(rule.toLowerCase().replace(/[_\s-]/g, '')) ||
+                rule.toLowerCase().replace(/[_\s-]/g, '').includes(normalizedSource)
+            );
             
-            if (password !== correctPassword) {
-                showError('סיסמה שגויה');
-                return;
-            }
-            
-            if (!gitUrl) {
-                showError('יש להזין כתובת GitHub');
-                return;
-            }
-            
-            githubUrl = gitUrl;
-            localStorage.setItem('github_url', githubUrl);
-            
-            document.getElementById('adminLoginSection').style.display = 'none';
-            document.getElementById('adminContentSection').style.display = 'block';
-            document.getElementById('backToSite').style.display = 'block';
-            
-            initializeAdminSystem();
-        }
-
-        function showError(message) {
-            const errorDiv = document.getElementById('adminErrorMessage');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 3000);
-        }
-
-        // אתחול מערכת הניהול
-        function initializeAdminSystem() {
-            document.getElementById('currentGitHubUrl').textContent = githubUrl;
-            showNotification('טוען מ-GitHub...', 'warning');
-            showLoading();
-            
-            syncFromGitHub()
-                .then(() => {
-                    updateStatistics();
-                    showNotification('המערכת מוכנה לשימוש!', 'success');
-                })
-                .catch(error => {
-                    console.error('שגיאה באתחול:', error);
-                    showNotification('שגיאה בטעינה מ-GitHub', 'error');
-                })
-                .finally(() => {
-                    hideLoading();
-                });
-        }
-
-        // סנכרון עם GitHub
-        async function syncFromGitHub() {
-            try {
-                showSyncStatus('syncing');
-                const response = await fetch(githubUrl);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                if (!Array.isArray(data)) {
-                    throw new Error('הקובץ מ-GitHub אינו מערך תקין');
-                }
-                
-                jobs = data.map(job => ({
-                    jobNumber: job.jobNumber || generateJobNumber(),
-                    title: job.title || '',
-                    category: job.category || 'אחר',
-                    city: job.city || '',
-                    region: job.region || 'מרכז',
-                    description: job.description || '',
-                    requirements: job.requirements || '',
-                    status: job.status || 'פעיל',
-                    featured: job.featured || false
-                }));
-                
-                updateAllDisplays();
-                updateSyncStatus('github', true);
-                hasLocalChanges = false;
-                updateLocalChangesStatus();
-                
-                console.log('✅ נטענו', jobs.length, 'משרות מ-GitHub');
-                
-            } catch (error) {
-                console.error('❌ שגיאה בטעינה מ-GitHub:', error);
-                updateSyncStatus('github', false);
-                throw error;
-            }
-        }
-
-        // ייבוא וייצוא עם מיפוי מתקדם
-        function openImportModal() {
-            document.getElementById('import-modal').style.display = 'block';
-        }
-
-        function closeImportModal() {
-            document.getElementById('import-modal').style.display = 'none';
-            document.getElementById('file-input').value = '';
-            document.getElementById('mapping-section').style.display = 'none';
-            importedData = null;
-            fieldMapping = {};
-        }
-
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            showLoading();
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    if (!file.name.endsWith('.json')) {
-                        throw new Error('רק קבצי JSON נתמכים במערכת זו');
-                    }
-                    
-                    importedData = JSON.parse(e.target.result);
-                    
-                    if (!Array.isArray(importedData)) {
-                        throw new Error('הקובץ חייב להכיל מערך של משרות');
-                    }
-                    
-                    if (importedData.length === 0) {
-                        throw new Error('הקובץ ריק - אין משרות לייבא');
-                    }
-                    
-                    // זיהוי השדות בקובץ המקור
-                    const sourceFields = Object.keys(importedData[0]);
-                    
-                    // יצירת מיפוי אוטומטי חכם
-                    initializeSmartMapping(sourceFields);
-                    
-                    // הצגת ממשק המיפוי
-                    showMappingInterface(sourceFields);
-                    
-                    hideLoading();
-                    showNotification(`זוהו ${importedData.length} משרות עם ${sourceFields.length} שדות. המערכת תחליף את כל הנתונים הקיימים!`, 'warning');
-                    
-                } catch (error) {
-                    hideLoading();
-                    showNotification('שגיאה: ' + error.message, 'error');
-                }
-            };
-            reader.readAsText(file, 'UTF-8');
-        }
-
-        function showMappingInterface(sourceFields) {
-            const mappingSection = document.getElementById('mapping-section');
-            const mappingContainer = document.getElementById('mapping-container');
-            
-            mappingContainer.innerHTML = '';
-            
-            // יצירת שורות מיפוי
-            Object.keys(systemFields).forEach(systemField => {
-                const fieldInfo = systemFields[systemField];
-                const row = document.createElement('div');
-                row.className = 'mapping-row';
-                
-                row.innerHTML = `
-                    <div class="target-field ${fieldInfo.required ? 'required' : ''}">
-                        ${fieldInfo.label}
-                        ${fieldInfo.required ? ' <span style="color: #ff6b6b;">*</span>' : ''}
-                    </div>
-                    <div class="arrow">←</div>
-                    <div class="source-select-container">
-                        <select class="source-select" onchange="updateMapping('${systemField}', this.value)">
-                            <option value="">בחר שדה מקור...</option>
-                            ${sourceFields.map(field => 
-                                `<option value="${field}" ${fieldMapping[systemField] === field ? 'selected' : ''}>${field}</option>`
-                            ).join('')}
-                        </select>
-                    </div>
-                    <div class="preview-container">
-                        <div class="preview-value" id="preview-${systemField}">
-                            ${fieldMapping[systemField] ? getPreviewValue(fieldMapping[systemField]) : 'לא נבחר'}
-                        </div>
-                    </div>
-                `;
-                
-                mappingContainer.appendChild(row);
-            });
-            
-            mappingSection.style.display = 'block';
-            updateMappingStats();
-        }
-
-        function updateMapping(systemField, sourceField) {
-            if (sourceField) {
+            if (foundMatch) {
                 fieldMapping[systemField] = sourceField;
-            } else {
-                delete fieldMapping[systemField];
+                break;
             }
-            
-            // עדכון תצוגה מקדימה
-            const previewElement = document.getElementById(`preview-${systemField}`);
-            if (previewElement) {
-                previewElement.textContent = sourceField ? getPreviewValue(sourceField) : 'לא נבחר';
-            }
-            
-            updateMappingStats();
         }
+    });
+}
 
-        function getPreviewValue(sourceField) {
-            if (!importedData || importedData.length === 0) return '';
-            
-            const sampleValue = importedData[0][sourceField];
-            if (sampleValue === undefined || sampleValue === null) return '(ריק)';
-            
-            const strValue = String(sampleValue);
-            return strValue.length > 30 ? strValue.substring(0, 30) + '...' : strValue;
+// 🎯 פונקציה חדשה להפרדת תיאור מדרישות
+function separateDescriptionAndRequirements(combinedText) {
+    if (!combinedText || typeof combinedText !== 'string') {
+        return { description: '', requirements: '' };
+    }
+    
+    const text = combinedText.trim();
+    
+    // מילות מפתח לזיהוי דרישות
+    const requirementKeywords = [
+        'דרישות',
+        'דרישות התפקיד',
+        'דרישות הפעולה',
+        'מה נדרש',
+        'כישורים נדרשים',
+        'דרישות מקצועיות',
+        'כישורים',
+        'ניסיון נדרש',
+        'הכישורים הנדרשים',
+        'הדרישות',
+        'Requirements',
+        'Required',
+        'Skills',
+        'Qualifications'
+    ];
+    
+    // חיפוש מילת המפתח הראשונה שמופיעה בטקסט
+    let splitIndex = -1;
+    let foundKeyword = '';
+    
+    for (const keyword of requirementKeywords) {
+        const regex = new RegExp(`\\b${keyword}\\b`, 'i');
+        const match = text.search(regex);
+        
+        if (match !== -1 && (splitIndex === -1 || match < splitIndex)) {
+            splitIndex = match;
+            foundKeyword = keyword;
         }
+    }
+    
+    if (splitIndex === -1) {
+        // לא נמצאה מילת מפתח - כל הטקסט הוא תיאור
+        return {
+            description: text,
+            requirements: ''
+        };
+    }
+    
+    // הפרדה לפי מיקום מילת המפתח
+    const description = text.substring(0, splitIndex).trim();
+    
+    // מציאת תחילת הדרישות (אחרי מילת המפתח + נקודותיים או רווח)
+    const requirementsStartRegex = new RegExp(`\\b${foundKeyword}\\b\\s*:?\\s*`, 'i');
+    const requirementsText = text.substring(splitIndex);
+    const cleanRequirements = requirementsText.replace(requirementsStartRegex, '').trim();
+    
+    return {
+        description: description || '',
+        requirements: cleanRequirements || ''
+    };
+}
 
-        function updateMappingStats() {
-            const mappedCount = Object.keys(fieldMapping).length;
-            const requiredCount = Object.keys(systemFields).filter(key => systemFields[key].required).length;
-            const mappedRequired = Object.keys(fieldMapping).filter(key => systemFields[key].required).length;
-            
-            document.getElementById('mapping-stats').innerHTML = `
-                <div class="stat-item">
-                    <span class="stat-label">שדות ממופים:</span>
-                    <span class="stat-value">${mappedCount}/${Object.keys(systemFields).length}</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">שדות חובה ממופים:</span>
-                    <span class="stat-value ${mappedRequired === requiredCount ? 'complete' : 'incomplete'}">${mappedRequired}/${requiredCount}</span>
-                </div>
-            `;
-            
-            // הפעלת/השבתת כפתור הייבוא
-            const importBtn = document.getElementById('execute-import-btn');
-            importBtn.disabled = mappedRequired < requiredCount;
-            importBtn.className = `btn ${mappedRequired >= requiredCount ? '' : 'btn-disabled'}`;
-        }
+// פונקציות אתחול
+function checkAdminPassword() {
+    const password = document.getElementById('adminPassword').value;
+    const correctPassword = "yarin080708";
+    const gitUrl = document.getElementById('githubUrl').value.trim();
+    
+    if (password !== correctPassword) {
+        showError('סיסמה שגויה');
+        return;
+    }
+    
+    if (!gitUrl) {
+        showError('יש להזין כתובת GitHub');
+        return;
+    }
+    
+    githubUrl = gitUrl;
+    localStorage.setItem('github_url', githubUrl);
+    
+    document.getElementById('adminLoginSection').style.display = 'none';
+    document.getElementById('adminContentSection').style.display = 'block';
+    document.getElementById('backToSite').style.display = 'block';
+    
+    initializeAdminSystem();
+}
 
-        function resetMapping() {
-            fieldMapping = {};
-            if (importedData && importedData.length > 0) {
-                const sourceFields = Object.keys(importedData[0]);
-                initializeSmartMapping(sourceFields);
-                showMappingInterface(sourceFields);
-                showNotification('המיפוי אופס והוגדר מחדש אוטומטית', 'success');
-            }
-        }
-// פונקציה להפרדת תיאור מדרישות
-        function separateDescriptionAndRequirements(combinedText) {
-            if (!combinedText || typeof combinedText !== 'string') {
-                return { description: '', requirements: '' };
-            }
-            
-            const text = combinedText.trim();
-            
-            // מילות מפתח לזיהוי דרישות
-            const requirementKeywords = [
-                'דרישות',
-                'דרישות התפקיד',
-                'דרישות הפעולה',
-                'מה נדרש',
-                'כישורים נדרשים',
-                'דרישות מקצועיות',
-                'כישורים',
-                'ניסיון נדרש',
-                'הכישורים הנדרשים',
-                'הדרישות',
-                'Requirements',
-                'Required',
-                'Skills',
-                'Qualifications'
-            ];
-            
-            // חיפוש מילת המפתח הראשונה שמופיעה בטקסט
-            let splitIndex = -1;
-            let foundKeyword = '';
-            
-            for (const keyword of requirementKeywords) {
-                const regex = new RegExp(`\\b${keyword}\\b`, 'i');
-                const match = text.search(regex);
-                
-                if (match !== -1 && (splitIndex === -1 || match < splitIndex)) {
-                    splitIndex = match;
-                    foundKeyword = keyword;
-                }
-            }
-            
-            if (splitIndex === -1) {
-                // לא נמצאה מילת מפתח - כל הטקסט הוא תיאור
-                return {
-                    description: text,
-                    requirements: ''
-                };
-            }
-            
-            // הפרדה לפי מיקום מילת המפתח
-            const description = text.substring(0, splitIndex).trim();
-            
-            // מציאת תחילת הדרישות (אחרי מילת המפתח + נקודותיים או רווח)
-            const requirementsStartRegex = new RegExp(`\\b${foundKeyword}\\b\\s*:?\\s*`, 'i');
-            const requirementsText = text.substring(splitIndex);
-            const cleanRequirements = requirementsText.replace(requirementsStartRegex, '').trim();
-            
-            return {
-                description: description || '',
-                requirements: cleanRequirements || ''
-            };
+function showError(message) {
+    const errorDiv = document.getElementById('adminErrorMessage');
+    errorDiv.textContent = message;
+    errorDiv.style.display = 'block';
+    setTimeout(() => {
+        errorDiv.style.display = 'none';
+    }, 3000);
+}
+
+// אתחול מערכת הניהול
+function initializeAdminSystem() {
+    document.getElementById('currentGitHubUrl').textContent = githubUrl;
+    showNotification('טוען מ-GitHub...', 'warning');
+    showLoading();
+    
+    syncFromGitHub()
+        .then(() => {
+            updateStatistics();
+            showNotification('המערכת מוכנה לשימוש!', 'success');
+        })
+        .catch(error => {
+            console.error('שגיאה באתחול:', error);
+            showNotification('שגיאה בטעינה מ-GitHub', 'error');
+        })
+        .finally(() => {
+            hideLoading();
+        });
+}
+
+// סנכרון עם GitHub
+async function syncFromGitHub() {
+    try {
+        showSyncStatus('syncing');
+        const response = await fetch(githubUrl);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
         }
         
-        function executeImport() {
-            if (!importedData || Object.keys(fieldMapping).length === 0) {
-                showNotification('אין נתונים לייבא', 'error');
-                return;
+        const data = await response.json();
+        
+        if (!Array.isArray(data)) {
+            throw new Error('הקובץ מ-GitHub אינו מערך תקין');
+        }
+        
+        jobs = data.map(job => ({
+            jobNumber: job.jobNumber || generateJobNumber(),
+            title: job.title || '',
+            category: job.category || 'אחר',
+            city: job.city || '',
+            region: job.region || 'מרכז',
+            description: job.description || '',
+            requirements: job.requirements || '',
+            status: job.status || 'פעיל',
+            featured: job.featured || false
+        }));
+        
+        updateAllDisplays();
+        updateSyncStatus('github', true);
+        hasLocalChanges = false;
+        updateLocalChangesStatus();
+        
+        console.log('✅ נטענו', jobs.length, 'משרות מ-GitHub');
+        
+    } catch (error) {
+        console.error('❌ שגיאה בטעינה מ-GitHub:', error);
+        updateSyncStatus('github', false);
+        throw error;
+    }
+}
+
+// ייבוא וייצוא עם מיפוי מתקדם
+function openImportModal() {
+    document.getElementById('import-modal').style.display = 'block';
+}
+
+function closeImportModal() {
+    document.getElementById('import-modal').style.display = 'none';
+    document.getElementById('file-input').value = '';
+    document.getElementById('mapping-section').style.display = 'none';
+    importedData = null;
+    fieldMapping = {};
+}
+
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    showLoading();
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            if (!file.name.endsWith('.json')) {
+                throw new Error('רק קבצי JSON נתמכים במערכת זו');
             }
             
-            // אישור החלפה
-            if (jobs.length > 0) {
-                const confirmed = confirm(`האם אתה בטוח שברצונך להחליף את כל ${jobs.length} המשרות הקיימות עם ${importedData.length} משרות חדשות?
+            importedData = JSON.parse(e.target.result);
+            
+            if (!Array.isArray(importedData)) {
+                throw new Error('הקובץ חייב להכיל מערך של משרות');
+            }
+            
+            if (importedData.length === 0) {
+                throw new Error('הקובץ ריק - אין משרות לייבא');
+            }
+            
+            // זיהוי השדות בקובץ המקור
+            const sourceFields = Object.keys(importedData[0]);
+            
+            // יצירת מיפוי אוטומטי חכם
+            initializeSmartMapping(sourceFields);
+            
+            // הצגת ממשק המיפוי
+            showMappingInterface(sourceFields);
+            
+            hideLoading();
+            showNotification(`זוהו ${importedData.length} משרות עם ${sourceFields.length} שדות. המערכת תחליף את כל הנתונים הקיימים!`, 'warning');
+            
+        } catch (error) {
+            hideLoading();
+            showNotification('שגיאה: ' + error.message, 'error');
+        }
+    };
+    reader.readAsText(file, 'UTF-8');
+}
+
+function showMappingInterface(sourceFields) {
+    const mappingSection = document.getElementById('mapping-section');
+    const mappingContainer = document.getElementById('mapping-container');
+    
+    mappingContainer.innerHTML = '';
+    
+    // יצירת שורות מיפוי
+    Object.keys(systemFields).forEach(systemField => {
+        const fieldInfo = systemFields[systemField];
+        const row = document.createElement('div');
+        row.className = 'mapping-row';
+        
+        row.innerHTML = `
+            <div class="target-field ${fieldInfo.required ? 'required' : ''}">
+                ${fieldInfo.label}
+                ${fieldInfo.required ? ' <span style="color: #ff6b6b;">*</span>' : ''}
+            </div>
+            <div class="arrow">←</div>
+            <div class="source-select-container">
+                <select class="source-select" onchange="updateMapping('${systemField}', this.value)">
+                    <option value="">בחר שדה מקור...</option>
+                    ${sourceFields.map(field => 
+                        `<option value="${field}" ${fieldMapping[systemField] === field ? 'selected' : ''}>${field}</option>`
+                    ).join('')}
+                </select>
+            </div>
+            <div class="preview-container">
+                <div class="preview-value" id="preview-${systemField}">
+                    ${fieldMapping[systemField] ? getPreviewValue(fieldMapping[systemField]) : 'לא נבחר'}
+                </div>
+            </div>
+        `;
+        
+        mappingContainer.appendChild(row);
+    });
+    
+    mappingSection.style.display = 'block';
+    updateMappingStats();
+}
+
+function updateMapping(systemField, sourceField) {
+    if (sourceField) {
+        fieldMapping[systemField] = sourceField;
+    } else {
+        delete fieldMapping[systemField];
+    }
+    
+    // עדכון תצוגה מקדימה
+    const previewElement = document.getElementById(`preview-${systemField}`);
+    if (previewElement) {
+        previewElement.textContent = sourceField ? getPreviewValue(sourceField) : 'לא נבחר';
+    }
+    
+    updateMappingStats();
+}
+
+function getPreviewValue(sourceField) {
+    if (!importedData || importedData.length === 0) return '';
+    
+    const sampleValue = importedData[0][sourceField];
+    if (sampleValue === undefined || sampleValue === null) return '(ריק)';
+    
+    const strValue = String(sampleValue);
+    return strValue.length > 30 ? strValue.substring(0, 30) + '...' : strValue;
+}
+
+function updateMappingStats() {
+    const mappedCount = Object.keys(fieldMapping).length;
+    const requiredCount = Object.keys(systemFields).filter(key => systemFields[key].required).length;
+    const mappedRequired = Object.keys(fieldMapping).filter(key => systemFields[key].required).length;
+    
+    document.getElementById('mapping-stats').innerHTML = `
+        <div class="stat-item">
+            <span class="stat-label">שדות ממופים:</span>
+            <span class="stat-value">${mappedCount}/${Object.keys(systemFields).length}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">שדות חובה ממופים:</span>
+            <span class="stat-value ${mappedRequired === requiredCount ? 'complete' : 'incomplete'}">${mappedRequired}/${requiredCount}</span>
+        </div>
+    `;
+    
+    // הפעלת/השבתת כפתור הייבוא
+    const importBtn = document.getElementById('execute-import-btn');
+    importBtn.disabled = mappedRequired < requiredCount;
+    importBtn.className = `btn ${mappedRequired >= requiredCount ? '' : 'btn-disabled'}`;
+}
+
+function resetMapping() {
+    fieldMapping = {};
+    if (importedData && importedData.length > 0) {
+        const sourceFields = Object.keys(importedData[0]);
+        initializeSmartMapping(sourceFields);
+        showMappingInterface(sourceFields);
+        showNotification('המיפוי אופס והוגדר מחדש אוטומטית', 'success');
+    }
+}
+
+// 🔥 פונקציה משופרת עם הפרדת דרישות
+function executeImport() {
+    if (!importedData || Object.keys(fieldMapping).length === 0) {
+        showNotification('אין נתונים לייבא', 'error');
+        return;
+    }
+    
+    // אישור החלפה
+    if (jobs.length > 0) {
+        const confirmed = confirm(`האם אתה בטוח שברצונך להחליף את כל ${jobs.length} המשרות הקיימות עם ${importedData.length} משרות חדשות?
 
 ⚠️ פעולה זו תמחק את כל הנתונים הקיימים!
 
 ✨ המערכת תפריד אוטומטית בין תיאור לדרישות אם הם במקום אחד
 
 לחץ OK להמשך או Cancel לביטול.`);
-                
-                if (!confirmed) {
-                    return;
-                }
-            }
-            
-            showLoading();
-            
+        
+        if (!confirmed) {
+            return;
+        }
+    }
+    
+    showLoading();
+    
+    try {
+        let successCount = 0;
+        let errorCount = 0;
+        let separationCount = 0; // מספר המשרות שבוצעה בהן הפרדה
+        const newJobs = []; // מערך חדש לנתונים המובאים
+        
+        importedData.forEach((sourceJob, index) => {
             try {
-                let successCount = 0;
-                let errorCount = 0;
-                let separationCount = 0; // מספר המשרות שבוצעה בהן הפרדה
-                const newJobs = []; // מערך חדש לנתונים המובאים
+                const mappedJob = {};
                 
-                importedData.forEach((sourceJob, index) => {
-                    try {
-                        const mappedJob = {};
+                // מיפוי השדות
+                Object.keys(systemFields).forEach(systemField => {
+                    const sourceField = fieldMapping[systemField];
+                    
+                    if (sourceField && sourceJob.hasOwnProperty(sourceField)) {
+                        let value = sourceJob[sourceField];
                         
-                        // מיפוי השדות
-                        Object.keys(systemFields).forEach(systemField => {
-                            const sourceField = fieldMapping[systemField];
-                            
-                            if (sourceField && sourceJob.hasOwnProperty(sourceField)) {
-                                let value = sourceJob[sourceField];
-                                
-                                // טיפול בסוגי נתונים שונים
-                                if (systemField === 'featured') {
-                                    // המרה לבוליאני
-                                    value = value === true || value === 'true' || value === 'כן' || value === '1' || value === 1;
-                                } else if (systemFields[systemField].type === 'string') {
-                                    value = String(value || '').trim();
+                        // טיפול בסוגי נתונים שונים
+                        if (systemField === 'featured') {
+                            // המרה לבוליאני
+                            value = value === true || value === 'true' || value === 'כן' || value === '1' || value === 1;
+                        } else if (systemFields[systemField].type === 'string') {
+                            value = String(value || '').trim();
+                        }
+                        
+                        mappedJob[systemField] = value;
+                    } else {
+                        // ערכי ברירת מחדל - רק אם השדה לא ממופה
+                        switch (systemField) {
+                            case 'jobNumber':
+                                // אם יש מיפוי לשדה jobNumber, נשמור אותו מהמקור
+                                if (!fieldMapping['jobNumber']) {
+                                    mappedJob[systemField] = generateJobNumberForImport(newJobs, index);
                                 }
-                                
-                                mappedJob[systemField] = value;
-                            } else {
-                                // ערכי ברירת מחדל - רק אם השדה לא ממופה
-                                switch (systemField) {
-                                    case 'jobNumber':
-                                        // אם יש מיפוי לשדה jobNumber, נשמור אותו מהמקור
-                                        if (!fieldMapping['jobNumber']) {
-                                            mappedJob[systemField] = generateJobNumberForImport(newJobs, index);
-                                        }
-                                        break;
-                                    case 'status':
-                                        mappedJob[systemField] = 'פעיל';
-                                        break;
-                                    case 'category':
-                                        mappedJob[systemField] = 'אחר';
-                                        break;
-                                    case 'region':
-                                        mappedJob[systemField] = 'מרכז';
-                                        break;
-                                    case 'featured':
-                                        mappedJob[systemField] = false;
-                                        break;
-                                    default:
-                                        mappedJob[systemField] = '';
-                                }
-                            }
-                        });
-                        
-});
-                        
-                        // הפרדה חכמה של תיאור ודרישות
-                        const needsSeparation = (
-                            mappedJob.description && 
-                            !mappedJob.requirements && 
-                            mappedJob.description.length > 100 && // רק לטקסטים ארוכים
-                            /דרישות|כישורים|ניסיון נדרש/i.test(mappedJob.description)
-                        );
-                        
-                        if (needsSeparation) {
-                            const separated = separateDescriptionAndRequirements(mappedJob.description);
-                            if (separated.requirements) {
-                                mappedJob.description = separated.description;
-                                mappedJob.requirements = separated.requirements;
-                                separationCount++;
-                                console.log(`✂️ הופרדו תיאור ודרישות במשרה ${index + 1}:`, {
-                                    original: mappedJob.description,
-                                    newDescription: separated.description,
-                                    newRequirements: separated.requirements
-                                });
-                            }
+                                break;
+                            case 'status':
+                                mappedJob[systemField] = 'פעיל';
+                                break;
+                            case 'category':
+                                mappedJob[systemField] = 'אחר';
+                                break;
+                            case 'region':
+                                mappedJob[systemField] = 'מרכז';
+                                break;
+                            case 'featured':
+                                mappedJob[systemField] = false;
+                                break;
+                            default:
+                                mappedJob[systemField] = '';
                         }
-                        // וידוא שיש מספר משרה (אם לא ממופה או ריק)  
-                if (!mappedJob.jobNumber || mappedJob.jobNumber.trim() === '') {
-                            mappedJob.jobNumber = generateJobNumberForImport(newJobs, index);
-                        }
-
-                        // בדיקת שדות חובה
-                        const missingRequired = Object.keys(systemFields)
-                            .filter(field => systemFields[field].required && !mappedJob[field]);
-                        
-                        if (missingRequired.length > 0) {
-                            console.warn(`שורה ${index + 1}: חסרים שדות חובה:`, missingRequired);
-                            errorCount++;
-                            return;
-                        }
-                        
-                        newJobs.push(mappedJob);
-                        successCount++;
-                        
-                    } catch (error) {
-                        console.error(`שגיאה בשורה ${index + 1}:`, error);
-                        errorCount++;
                     }
                 });
                 
-                // החלפת הנתונים הקיימים עם החדשים
-if (successCount > 0) {
-                    let message = `הייבוא הושלם! החלפת ${successCount} משרות`;
-                    if (separationCount > 0) {
-                        message += `\n✂️ בוצעה הפרדה אוטומטית של תיאור ודרישות ב-${separationCount} משרות`;
-                    }
-                    if (errorCount > 0) {
-                        message += ` (${errorCount} שגיאות)`;
-                    }
-                    
-                    showNotification(message, 'success');
-                    
-                    // הודעה נוספת אם בוצעה הפרדה
-                    if (separationCount > 0) {
-                        setTimeout(() => {
-                            showNotification(`✨ הופרדו תיאור ודרישות ב-${separationCount} משרות באופן אוטומטי`, 'success');
-                        }, 2000);
-                    }
-} else {
-                    showNotification('לא ניתן היה לייבא אף משרה בשל שגיאות', 'error');
-                }
-                
-            } catch (error) {
-                hideLoading();
-                showNotification('שגיאה בייבוא: ' + error.message, 'error');
-            }
-        }
-
-        // פונקציה מיוחדת ליצירת מספרי משרות בייבוא
-        function generateJobNumberForImport(existingJobs, index) {
-            const baseNumber = index + 1;
-            return `A-${baseNumber.toString().padStart(5, '0')}`;
-        }
-
-        // עדכון כל התצוגות
-        function updateAllDisplays() {
-            if (isFiltered) {
-                applyFilters();
-            } else {
-                filteredJobs = [...jobs];
-            }
-            
-            displayJobsAdvanced();
-            updateCategoryFilters();
-            updateStatistics();
-        }
-
-        // הצגת משרות
-        function displayJobsAdvanced() {
-            const tableBody = document.getElementById('jobsTableBody');
-            tableBody.innerHTML = '';
-            
-            const jobsToDisplay = filteredJobs;
-            
-            if (jobsToDisplay.length === 0) {
-                const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="8" style="text-align: center; padding: 3rem; color: #aaa;">
-                    ${isFiltered ? 
-                        'לא נמצאו משרות התואמות את הסינון<br><button class="btn btn-secondary" onclick="clearJobsFilters()">נקה סינון</button>' : 
-                        'אין משרות להצגה<br><button class="btn" onclick="syncFromGitHub()">טען מ-GitHub</button>'
-                    }
-                </td>`;
-                tableBody.appendChild(row);
-                document.getElementById('jobsPagination').innerHTML = '';
-                return;
-            }
-            
-            const totalPages = Math.ceil(jobsToDisplay.length / jobsPerPage);
-            currentPage = Math.min(currentPage, totalPages);
-            currentPage = Math.max(currentPage, 1);
-            
-            const startIndex = (currentPage - 1) * jobsPerPage;
-            const endIndex = Math.min(startIndex + jobsPerPage, jobsToDisplay.length);
-            const pageJobs = jobsToDisplay.slice(startIndex, endIndex);
-            
-            pageJobs.forEach((job, index) => {
-                const actualIndex = startIndex + index;
-                const originalIndex = jobs.findIndex(j => 
-                    j.jobNumber === job.jobNumber && j.title === job.title
+                // 🎯 הפרדה חכמה של תיאור ודרישות
+                const needsSeparation = (
+                    mappedJob.description && 
+                    !mappedJob.requirements && 
+                    mappedJob.description.length > 100 && // רק לטקסטים ארוכים
+                    /דרישות|כישורים|ניסיון נדרש/i.test(mappedJob.description)
                 );
                 
-                const row = document.createElement('tr');
-                if (job.featured) {
-                    row.classList.add('featured-row');
+                if (needsSeparation) {
+                    const separated = separateDescriptionAndRequirements(mappedJob.description);
+                    if (separated.requirements) {
+                        mappedJob.description = separated.description;
+                        mappedJob.requirements = separated.requirements;
+                        separationCount++;
+                        console.log(`✂️ הופרדו תיאור ודרישות במשרה ${index + 1}:`, {
+                            original: mappedJob.description,
+                            newDescription: separated.description,
+                            newRequirements: separated.requirements
+                        });
+                    }
                 }
                 
-                const isSelected = selectedJobs.has(originalIndex);
-                row.innerHTML = `
-                    <td>
-                        <input type="checkbox" ${isSelected ? 'checked' : ''} 
-                               onchange="toggleJobSelection(${originalIndex})">
-                    </td>
-                    <td>${job.jobNumber || 'אוטו'}</td>
-                    <td>
-                        ${job.featured ? '<span class="featured-badge">⭐ מומלצת</span>' : ''}
-                        ${job.title || '-'}
-                    </td>
-                    <td>${job.category || 'אחר'}</td>
-                    <td>${job.city ? job.city + ', ' + job.region : job.region}</td>
-                    <td class="${job.status === 'לא פעיל' ? 'status-inactive' : 'status-active'}">
-                        ${job.status || 'פעיל'}
-                    </td>
-                    <td>
-                        <button class="btn btn-sm ${job.featured ? 'btn-featured' : 'btn-secondary'}" 
-                                onclick="toggleJobFeatured(${originalIndex})" 
-                                title="${job.featured ? 'בטל המלצה' : 'סמן כמומלצת'}">
-                            <i class="fas ${job.featured ? 'fa-star' : 'fa-star-o'}"></i>
-                        </button>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-sm btn-view" onclick="viewJobAdvanced(${originalIndex})" title="הצג פרטים">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-sm btn-edit" onclick="editJobAdvanced(${originalIndex})" title="ערוך">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-sm btn-delete" onclick="deleteJobAdvanced(${originalIndex})" title="מחק">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                `;
+                // וידוא שיש מספר משרה (אם לא ממופה או ריק)
+                if (!mappedJob.jobNumber || mappedJob.jobNumber.trim() === '') {
+                    mappedJob.jobNumber = generateJobNumberForImport(newJobs, index);
+                }
+
+                // בדיקת שדות חובה
+                const missingRequired = Object.keys(systemFields)
+                    .filter(field => systemFields[field].required && !mappedJob[field]);
                 
-                tableBody.appendChild(row);
-            });
-            
-            updatePaginationAdvanced(totalPages);
-        }
-
-        // עדכון מניית דפים
-        function updatePaginationAdvanced(totalPages) {
-            const pagination = document.getElementById('jobsPagination');
-            pagination.innerHTML = '';
-            
-            if (totalPages <= 1) return;
-            
-            for (let i = 1; i <= totalPages; i++) {
-                const pageBtn = document.createElement('div');
-                pageBtn.className = 'page-item' + (i === currentPage ? ' active' : '');
-                pageBtn.textContent = i;
-                pageBtn.onclick = () => {
-                    currentPage = i;
-                    displayJobsAdvanced();
-                };
-                pagination.appendChild(pageBtn);
-            }
-        }
-
-        // עדכון סטטיסטיקות
-        function updateStatistics() {
-            const total = jobs.length;
-            const active = jobs.filter(job => job.status === 'פעיל').length;
-            const featured = jobs.filter(job => job.featured).length;
-            const categories = [...new Set(jobs.map(job => job.category).filter(Boolean))].length;
-            
-            document.getElementById('totalJobsCount').textContent = total;
-            document.getElementById('activeJobsCount').textContent = active;
-            document.getElementById('featuredJobsCount').textContent = featured;
-            document.getElementById('categoriesCount').textContent = categories;
-        }
-
-        // עדכון מסנני קטגוריות
-        function updateCategoryFilters() {
-            const categoryFilter = document.getElementById('categoryFilterAdmin');
-            const currentValue = categoryFilter.value;
-            
-            const categories = [...new Set(jobs.map(job => job.category).filter(Boolean))].sort();
-            
-            categoryFilter.innerHTML = '<option value="">כל הקטגוריות</option>';
-            categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category;
-                option.textContent = category;
-                categoryFilter.appendChild(option);
-            });
-            
-            categoryFilter.value = currentValue;
-        }
-
-        // פונקציות ניהול משרות
-        function toggleJobSelection(index) {
-            if (selectedJobs.has(index)) {
-                selectedJobs.delete(index);
-            } else {
-                selectedJobs.add(index);
-            }
-        }
-
-        function toggleSelectAll() {
-            const selectAllCheckbox = document.getElementById('selectAllJobs');
-            if (selectAllCheckbox.checked) {
-                filteredJobs.forEach((job, index) => {
-                    const originalIndex = jobs.findIndex(j => 
-                        j.jobNumber === job.jobNumber && j.title === job.title
-                    );
-                    if (originalIndex !== -1) {
-                        selectedJobs.add(originalIndex);
-                    }
-                });
-            } else {
-                selectedJobs.clear();
-            }
-            displayJobsAdvanced();
-        }
-
-        function toggleJobFeatured(index) {
-            jobs[index].featured = !jobs[index].featured;
-            markLocalChanges();
-            updateAllDisplays();
-            showNotification(
-                jobs[index].featured ? 'המשרה סומנה כמומלצת' : 'ההמלצה בוטלה',
-                'success'
-            );
-        }
-
-        function editJobAdvanced(index) {
-            const job = jobs[index];
-            
-            document.getElementById('edit-modal-title').innerHTML = '<i class="fas fa-edit"></i> עריכת משרה';
-            document.getElementById('edit-job-id').value = index;
-            document.getElementById('edit-job-number').value = job.jobNumber || '';
-            document.getElementById('edit-job-title').value = job.title || '';
-            document.getElementById('edit-job-category').value = job.category || 'אחר';
-            document.getElementById('edit-job-city').value = job.city || '';
-            document.getElementById('edit-job-region').value = job.region || 'מרכז';
-            document.getElementById('edit-job-status').value = job.status || 'פעיל';
-            document.getElementById('edit-job-description').value = job.description || '';
-            document.getElementById('edit-job-requirements').value = job.requirements || '';
-            
-            featuredJobId = job.featured;
-            updateFeaturedToggle();
-            
-            document.getElementById('job-edit-modal').style.display = 'block';
-        }
-
-        function viewJobAdvanced(index) {
-            const job = jobs[index];
-            let details = '';
-            
-            details += `🔢 מספר משרה: ${job.jobNumber || 'אוטומטי'}\n`;
-            details += `📋 כותרת: ${job.title || 'לא הוגדר'}\n`;
-            details += `📂 קטגוריה: ${job.category || 'אחר'}\n`;
-            details += `📍 מיקום: ${job.city ? job.city + ', ' + job.region : job.region}\n`;
-            details += `📊 סטטוס: ${job.status || 'פעיל'}\n`;
-            details += `⭐ מומלצת: ${job.featured ? 'כן' : 'לא'}\n\n`;
-            details += `📝 תיאור המשרה:\n${job.description || '(אין תיאור)'}\n\n`;
-            details += `📋 דרישות התפקיד:\n${job.requirements || '(אין דרישות מיוחדות)'}`;
-            
-            alert(details);
-        }
-
-        function deleteJobAdvanced(index) {
-            const job = jobs[index];
-            if (confirm(`האם אתה בטוח שברצונך למחוק את המשרה:\n"${job.title}"?`)) {
-                jobs.splice(index, 1);
-                selectedJobs.delete(index);
-                markLocalChanges();
-                updateAllDisplays();
-                showNotification('המשרה נמחקה', 'success');
-            }
-        }
-
-        // פונקציות מודל
-        function openAddJobModal() {
-            document.getElementById('edit-modal-title').innerHTML = '<i class="fas fa-plus"></i> הוספת משרה חדשה';
-            document.getElementById('job-edit-form').reset();
-            document.getElementById('edit-job-id').value = '';
-            
-            featuredJobId = false;
-            updateFeaturedToggle();
-            
-            document.getElementById('job-edit-modal').style.display = 'block';
-        }
-
-        function closeEditModal() {
-            document.getElementById('job-edit-modal').style.display = 'none';
-        }
-
-        function saveJob(event) {
-            event.preventDefault();
-            
-            const id = document.getElementById('edit-job-id').value;
-            const job = {
-                jobNumber: document.getElementById('edit-job-number').value || generateJobNumber(),
-                title: document.getElementById('edit-job-title').value,
-                category: document.getElementById('edit-job-category').value,
-                city: document.getElementById('edit-job-city').value,
-                region: document.getElementById('edit-job-region').value,
-                status: document.getElementById('edit-job-status').value,
-                description: document.getElementById('edit-job-description').value,
-                requirements: document.getElementById('edit-job-requirements').value,
-                featured: featuredJobId
-            };
-            
-            if (id === '') {
-                jobs.push(job);
-                showNotification('משרה חדשה נוספה!', 'success');
-            } else {
-                jobs[parseInt(id)] = job;
-                showNotification('המשרה עודכנה!', 'success');
-            }
-            
-            markLocalChanges();
-            updateAllDisplays();
-            closeEditModal();
-            return false;
-        }
-
-        function generateJobNumber() {
-            const existing = jobs.map(job => job.jobNumber).filter(Boolean);
-            const numbers = existing.map(num => {
-                const match = num.match(/(\d+)/);
-                return match ? parseInt(match[1]) : 0;
-            });
-            const maxNumber = numbers.length > 0 ? Math.max(...numbers) : 0;
-            return `A-${(maxNumber + 1).toString().padStart(5, '0')}`;
-        }
-
-        // טוגל למשרה מומלצת
-        function toggleFeatured() {
-            featuredJobId = !featuredJobId;
-            updateFeaturedToggle();
-        }
-
-        function updateFeaturedToggle() {
-            const toggle = document.getElementById('featuredToggle');
-            if (featuredJobId) {
-                toggle.classList.add('active');
-            } else {
-                toggle.classList.remove('active');
-            }
-        }
-
-        // סינון
-        function filterJobsList() {
-            applyFilters();
-            currentPage = 1;
-            displayJobsAdvanced();
-        }
-
-        function applyFilters() {
-            const searchText = document.getElementById('searchJobsInput').value.toLowerCase();
-            const categoryFilter = document.getElementById('categoryFilterAdmin').value;
-            const statusFilter = document.getElementById('statusFilterAdmin').value;
-            const featuredFilter = document.getElementById('featuredFilterAdmin').value;
-            
-            isFiltered = searchText || categoryFilter || statusFilter || featuredFilter;
-            
-            filteredJobs = jobs.filter(job => {
-                const matchesSearch = !searchText || 
-                    (job.title && job.title.toLowerCase().includes(searchText)) ||
-                    (job.jobNumber && job.jobNumber.toLowerCase().includes(searchText)) ||
-                    (job.city && job.city.toLowerCase().includes(searchText));
+                if (missingRequired.length > 0) {
+                    console.warn(`שורה ${index + 1}: חסרים שדות חובה:`, missingRequired);
+                    errorCount++;
+                    return;
+                }
                 
-                const matchesCategory = !categoryFilter || job.category === categoryFilter;
-                const matchesStatus = !statusFilter || job.status === statusFilter;
-                const matchesFeatured = !featuredFilter || 
-                    (featuredFilter === 'true' && job.featured) ||
-                    (featuredFilter === 'false' && !job.featured);
+                newJobs.push(mappedJob);
+                successCount++;
                 
-                return matchesSearch && matchesCategory && matchesStatus && matchesFeatured;
-            });
+            } catch (error) {
+                console.error(`שגיאה בשורה ${index + 1}:`, error);
+                errorCount++;
+            }
+        });
+        
+        // החלפת הנתונים הקיימים עם החדשים
+        if (successCount > 0) {
+            jobs.length = 0; // מחיקת כל הנתונים הקיימים
+            jobs.push(...newJobs); // הוספת הנתונים החדשים
+            selectedJobs.clear(); // ניקוי הבחירות
+            currentPage = 1; // חזרה לעמוד הראשון
         }
-
-        function clearJobsFilters() {
-            document.getElementById('searchJobsInput').value = '';
-            document.getElementById('categoryFilterAdmin').value = '';
-            document.getElementById('statusFilterAdmin').value = '';
-            document.getElementById('featuredFilterAdmin').value = '';
-            
-            isFiltered = false;
-            filteredJobs = [...jobs];
-            selectedJobs.clear();
-            currentPage = 1;
-            displayJobsAdvanced();
-        }
-
-        // פעולות מרובות
-        function openBulkModal() {
-            if (selectedJobs.size === 0) {
-                showNotification('יש לבחור לפחות משרה אחת', 'warning');
-                return;
+        
+        markLocalChanges();
+        updateAllDisplays();
+        closeImportModal();
+        hideLoading();
+        
+        if (successCount > 0) {
+            let message = `הייבוא הושלם! החלפת ${successCount} משרות`;
+            if (separationCount > 0) {
+                message += `\n✂️ בוצעה הפרדה אוטומטית של תיאור ודרישות ב-${separationCount} משרות`;
+            }
+            if (errorCount > 0) {
+                message += ` (${errorCount} שגיאות)`;
             }
             
-            document.getElementById('selectedCount').textContent = selectedJobs.size;
-            document.getElementById('bulk-modal').style.display = 'block';
-        }
-
-        function closeBulkModal() {
-            document.getElementById('bulk-modal').style.display = 'none';
-        }
-
-        function bulkAction(action) {
-            if (selectedJobs.size === 0) return;
-            
-            let message = '';
-            
-            switch (action) {
-                case 'activate':
-                    selectedJobs.forEach(index => {
-                        jobs[index].status = 'פעיל';
-                    });
-                    message = `${selectedJobs.size} משרות הופעלו`;
-                    break;
-                    
-                case 'deactivate':
-                    selectedJobs.forEach(index => {
-                        jobs[index].status = 'לא פעיל';
-                    });
-                    message = `${selectedJobs.size} משרות הושבתו`;
-                    break;
-                    
-                case 'feature':
-                    selectedJobs.forEach(index => {
-                        jobs[index].featured = true;
-                    });
-                    message = `${selectedJobs.size} משרות סומנו כמומלצות`;
-                    break;
-                    
-                case 'unfeature':
-                    selectedJobs.forEach(index => {
-                        jobs[index].featured = false;
-                    });
-                    message = `${selectedJobs.size} משרות בוטלה המלצתן`;
-                    break;
-                    
-                case 'delete':
-                    if (!confirm(`האם אתה בטוח שברצונך למחוק ${selectedJobs.size} משרות?`)) {
-                        return;
-                    }
-                    
-                    const sortedIndexes = Array.from(selectedJobs).sort((a, b) => b - a);
-                    sortedIndexes.forEach(index => {
-                        jobs.splice(index, 1);
-                    });
-                    
-                    selectedJobs.clear();
-                    message = `${sortedIndexes.length} משרות נמחקו`;
-                    break;
-            }
-            
-            markLocalChanges();
-            updateAllDisplays();
-            closeBulkModal();
             showNotification(message, 'success');
+            
+            // הודעה נוספת אם בוצעה הפרדה
+            if (separationCount > 0) {
+                setTimeout(() => {
+                    showNotification(`✨ הופרדו תיאור ודרישות ב-${separationCount} משרות באופן אוטומטי`, 'success');
+                }, 2000);
+            }
+        } else {
+            showNotification('לא ניתן היה לייבא אף משרה בשל שגיאות', 'error');
         }
+        
+    } catch (error) {
+        hideLoading();
+        showNotification('שגיאה בייבוא: ' + error.message, 'error');
+    }
+}
 
-        function bulkActions() {
-            if (selectedJobs.size === 0) {
-                showNotification('בחר משרות קודם', 'warning');
+// פונקציה מיוחדת ליצירת מספרי משרות בייבוא
+function generateJobNumberForImport(existingJobs, index) {
+    const baseNumber = index + 1;
+    return `A-${baseNumber.toString().padStart(5, '0')}`;
+}
+
+// עדכון כל התצוגות
+function updateAllDisplays() {
+    if (isFiltered) {
+        applyFilters();
+    } else {
+        filteredJobs = [...jobs];
+    }
+    
+    displayJobsAdvanced();
+    updateCategoryFilters();
+    updateStatistics();
+}
+
+// הצגת משרות
+function displayJobsAdvanced() {
+    const tableBody = document.getElementById('jobsTableBody');
+    tableBody.innerHTML = '';
+    
+    const jobsToDisplay = filteredJobs;
+    
+    if (jobsToDisplay.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td colspan="8" style="text-align: center; padding: 3rem; color: #aaa;">
+            ${isFiltered ? 
+                'לא נמצאו משרות התואמות את הסינון<br><button class="btn btn-secondary" onclick="clearJobsFilters()">נקה סינון</button>' : 
+                'אין משרות להצגה<br><button class="btn" onclick="syncFromGitHub()">טען מ-GitHub</button>'
+            }
+        </td>`;
+        tableBody.appendChild(row);
+        document.getElementById('jobsPagination').innerHTML = '';
+        return;
+    }
+    
+    const totalPages = Math.ceil(jobsToDisplay.length / jobsPerPage);
+    currentPage = Math.min(currentPage, totalPages);
+    currentPage = Math.max(currentPage, 1);
+    
+    const startIndex = (currentPage - 1) * jobsPerPage;
+    const endIndex = Math.min(startIndex + jobsPerPage, jobsToDisplay.length);
+    const pageJobs = jobsToDisplay.slice(startIndex, endIndex);
+    
+    pageJobs.forEach((job, index) => {
+        const actualIndex = startIndex + index;
+        const originalIndex = jobs.findIndex(j => 
+            j.jobNumber === job.jobNumber && j.title === job.title
+        );
+        
+        const row = document.createElement('tr');
+        if (job.featured) {
+            row.classList.add('featured-row');
+        }
+        
+        const isSelected = selectedJobs.has(originalIndex);
+        row.innerHTML = `
+            <td>
+                <input type="checkbox" ${isSelected ? 'checked' : ''} 
+                       onchange="toggleJobSelection(${originalIndex})">
+            </td>
+            <td>${job.jobNumber || 'אוטו'}</td>
+            <td>
+                ${job.featured ? '<span class="featured-badge">⭐ מומלצת</span>' : ''}
+                ${job.title || '-'}
+            </td>
+            <td>${job.category || 'אחר'}</td>
+            <td>${job.city ? job.city + ', ' + job.region : job.region}</td>
+            <td class="${job.status === 'לא פעיל' ? 'status-inactive' : 'status-active'}">
+                ${job.status || 'פעיל'}
+            </td>
+            <td>
+                <button class="btn btn-sm ${job.featured ? 'btn-featured' : 'btn-secondary'}" 
+                        onclick="toggleJobFeatured(${originalIndex})" 
+                        title="${job.featured ? 'בטל המלצה' : 'סמן כמומלצת'}">
+                    <i class="fas ${job.featured ? 'fa-star' : 'fa-star-o'}"></i>
+                </button>
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn btn-sm btn-view" onclick="viewJobAdvanced(${originalIndex})" title="הצג פרטים">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-edit" onclick="editJobAdvanced(${originalIndex})" title="ערוך">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-delete" onclick="deleteJobAdvanced(${originalIndex})" title="מחק">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+    
+    updatePaginationAdvanced(totalPages);
+}
+
+// עדכון מניית דפים
+function updatePaginationAdvanced(totalPages) {
+    const pagination = document.getElementById('jobsPagination');
+    pagination.innerHTML = '';
+    
+    if (totalPages <= 1) return;
+    
+    for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement('div');
+        pageBtn.className = 'page-item' + (i === currentPage ? ' active' : '');
+        pageBtn.textContent = i;
+        pageBtn.onclick = () => {
+            currentPage = i;
+            displayJobsAdvanced();
+        };
+        pagination.appendChild(pageBtn);
+    }
+}
+
+// עדכון סטטיסטיקות
+function updateStatistics() {
+    const total = jobs.length;
+    const active = jobs.filter(job => job.status === 'פעיל').length;
+    const featured = jobs.filter(job => job.featured).length;
+    const categories = [...new Set(jobs.map(job => job.category).filter(Boolean))].length;
+    
+    document.getElementById('totalJobsCount').textContent = total;
+    document.getElementById('activeJobsCount').textContent = active;
+    document.getElementById('featuredJobsCount').textContent = featured;
+    document.getElementById('categoriesCount').textContent = categories;
+}
+
+// עדכון מסנני קטגוריות
+function updateCategoryFilters() {
+    const categoryFilter = document.getElementById('categoryFilterAdmin');
+    const currentValue = categoryFilter.value;
+    
+    const categories = [...new Set(jobs.map(job => job.category).filter(Boolean))].sort();
+    
+    categoryFilter.innerHTML = '<option value="">כל הקטגוריות</option>';
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categoryFilter.appendChild(option);
+    });
+    
+    categoryFilter.value = currentValue;
+}
+
+// פונקציות ניהול משרות
+function toggleJobSelection(index) {
+    if (selectedJobs.has(index)) {
+        selectedJobs.delete(index);
+    } else {
+        selectedJobs.add(index);
+    }
+}
+
+function toggleSelectAll() {
+    const selectAllCheckbox = document.getElementById('selectAllJobs');
+    if (selectAllCheckbox.checked) {
+        filteredJobs.forEach((job, index) => {
+            const originalIndex = jobs.findIndex(j =>j.jobNumber === job.jobNumber && j.title === job.title
+            );
+            if (originalIndex !== -1) {
+                selectedJobs.add(originalIndex);
+            }
+        });
+    } else {
+        selectedJobs.clear();
+    }
+    displayJobsAdvanced();
+}
+
+function toggleJobFeatured(index) {
+    jobs[index].featured = !jobs[index].featured;
+    markLocalChanges();
+    updateAllDisplays();
+    showNotification(
+        jobs[index].featured ? 'המשרה סומנה כמומלצת' : 'ההמלצה בוטלה',
+        'success'
+    );
+}
+
+function editJobAdvanced(index) {
+    const job = jobs[index];
+    
+    document.getElementById('edit-modal-title').innerHTML = '<i class="fas fa-edit"></i> עריכת משרה';
+    document.getElementById('edit-job-id').value = index;
+    document.getElementById('edit-job-number').value = job.jobNumber || '';
+    document.getElementById('edit-job-title').value = job.title || '';
+    document.getElementById('edit-job-category').value = job.category || 'אחר';
+    document.getElementById('edit-job-city').value = job.city || '';
+    document.getElementById('edit-job-region').value = job.region || 'מרכז';
+    document.getElementById('edit-job-status').value = job.status || 'פעיל';
+    document.getElementById('edit-job-description').value = job.description || '';
+    document.getElementById('edit-job-requirements').value = job.requirements || '';
+    
+    featuredJobId = job.featured;
+    updateFeaturedToggle();
+    
+    document.getElementById('job-edit-modal').style.display = 'block';
+}
+
+function viewJobAdvanced(index) {
+    const job = jobs[index];
+    let details = '';
+    
+    details += `🔢 מספר משרה: ${job.jobNumber || 'אוטומטי'}\n`;
+    details += `📋 כותרת: ${job.title || 'לא הוגדר'}\n`;
+    details += `📂 קטגוריה: ${job.category || 'אחר'}\n`;
+    details += `📍 מיקום: ${job.city ? job.city + ', ' + job.region : job.region}\n`;
+    details += `📊 סטטוס: ${job.status || 'פעיל'}\n`;
+    details += `⭐ מומלצת: ${job.featured ? 'כן' : 'לא'}\n\n`;
+    details += `📝 תיאור המשרה:\n${job.description || '(אין תיאור)'}\n\n`;
+    details += `📋 דרישות התפקיד:\n${job.requirements || '(אין דרישות מיוחדות)'}`;
+    
+    alert(details);
+}
+
+function deleteJobAdvanced(index) {
+    const job = jobs[index];
+    if (confirm(`האם אתה בטוח שברצונך למחוק את המשרה:\n"${job.title}"?`)) {
+        jobs.splice(index, 1);
+        selectedJobs.delete(index);
+        markLocalChanges();
+        updateAllDisplays();
+        showNotification('המשרה נמחקה', 'success');
+    }
+}
+
+// פונקציות מודל
+function openAddJobModal() {
+    document.getElementById('edit-modal-title').innerHTML = '<i class="fas fa-plus"></i> הוספת משרה חדשה';
+    document.getElementById('job-edit-form').reset();
+    document.getElementById('edit-job-id').value = '';
+    
+    featuredJobId = false;
+    updateFeaturedToggle();
+    
+    document.getElementById('job-edit-modal').style.display = 'block';
+}
+
+function closeEditModal() {
+    document.getElementById('job-edit-modal').style.display = 'none';
+}
+
+function saveJob(event) {
+    event.preventDefault();
+    
+    const id = document.getElementById('edit-job-id').value;
+    const job = {
+        jobNumber: document.getElementById('edit-job-number').value || generateJobNumber(),
+        title: document.getElementById('edit-job-title').value,
+        category: document.getElementById('edit-job-category').value,
+        city: document.getElementById('edit-job-city').value,
+        region: document.getElementById('edit-job-region').value,
+        status: document.getElementById('edit-job-status').value,
+        description: document.getElementById('edit-job-description').value,
+        requirements: document.getElementById('edit-job-requirements').value,
+        featured: featuredJobId
+    };
+    
+    if (id === '') {
+        jobs.push(job);
+        showNotification('משרה חדשה נוספה!', 'success');
+    } else {
+        jobs[parseInt(id)] = job;
+        showNotification('המשרה עודכנה!', 'success');
+    }
+    
+    markLocalChanges();
+    updateAllDisplays();
+    closeEditModal();
+    return false;
+}
+
+function generateJobNumber() {
+    const existing = jobs.map(job => job.jobNumber).filter(Boolean);
+    const numbers = existing.map(num => {
+        const match = num.match(/(\d+)/);
+        return match ? parseInt(match[1]) : 0;
+    });
+    const maxNumber = numbers.length > 0 ? Math.max(...numbers) : 0;
+    return `A-${(maxNumber + 1).toString().padStart(5, '0')}`;
+}
+
+// טוגל למשרה מומלצת
+function toggleFeatured() {
+    featuredJobId = !featuredJobId;
+    updateFeaturedToggle();
+}
+
+function updateFeaturedToggle() {
+    const toggle = document.getElementById('featuredToggle');
+    if (featuredJobId) {
+        toggle.classList.add('active');
+    } else {
+        toggle.classList.remove('active');
+    }
+}
+
+// סינון
+function filterJobsList() {
+    applyFilters();
+    currentPage = 1;
+    displayJobsAdvanced();
+}
+
+function applyFilters() {
+    const searchText = document.getElementById('searchJobsInput').value.toLowerCase();
+    const categoryFilter = document.getElementById('categoryFilterAdmin').value;
+    const statusFilter = document.getElementById('statusFilterAdmin').value;
+    const featuredFilter = document.getElementById('featuredFilterAdmin').value;
+    
+    isFiltered = searchText || categoryFilter || statusFilter || featuredFilter;
+    
+    filteredJobs = jobs.filter(job => {
+        const matchesSearch = !searchText || 
+            (job.title && job.title.toLowerCase().includes(searchText)) ||
+            (job.jobNumber && job.jobNumber.toLowerCase().includes(searchText)) ||
+            (job.city && job.city.toLowerCase().includes(searchText));
+        
+        const matchesCategory = !categoryFilter || job.category === categoryFilter;
+        const matchesStatus = !statusFilter || job.status === statusFilter;
+        const matchesFeatured = !featuredFilter || 
+            (featuredFilter === 'true' && job.featured) ||
+            (featuredFilter === 'false' && !job.featured);
+        
+        return matchesSearch && matchesCategory && matchesStatus && matchesFeatured;
+    });
+}
+
+function clearJobsFilters() {
+    document.getElementById('searchJobsInput').value = '';
+    document.getElementById('categoryFilterAdmin').value = '';
+    document.getElementById('statusFilterAdmin').value = '';
+    document.getElementById('featuredFilterAdmin').value = '';
+    
+    isFiltered = false;
+    filteredJobs = [...jobs];
+    selectedJobs.clear();
+    currentPage = 1;
+    displayJobsAdvanced();
+}
+
+// פעולות מרובות
+function openBulkModal() {
+    if (selectedJobs.size === 0) {
+        showNotification('יש לבחור לפחות משרה אחת', 'warning');
+        return;
+    }
+    
+    document.getElementById('selectedCount').textContent = selectedJobs.size;
+    document.getElementById('bulk-modal').style.display = 'block';
+}
+
+function closeBulkModal() {
+    document.getElementById('bulk-modal').style.display = 'none';
+}
+
+function bulkAction(action) {
+    if (selectedJobs.size === 0) return;
+    
+    let message = '';
+    
+    switch (action) {
+        case 'activate':
+            selectedJobs.forEach(index => {
+                jobs[index].status = 'פעיל';
+            });
+            message = `${selectedJobs.size} משרות הופעלו`;
+            break;
+            
+        case 'deactivate':
+            selectedJobs.forEach(index => {
+                jobs[index].status = 'לא פעיל';
+            });
+            message = `${selectedJobs.size} משרות הושבתו`;
+            break;
+            
+        case 'feature':
+            selectedJobs.forEach(index => {
+                jobs[index].featured = true;
+            });
+            message = `${selectedJobs.size} משרות סומנו כמומלצות`;
+            break;
+            
+        case 'unfeature':
+            selectedJobs.forEach(index => {
+                jobs[index].featured = false;
+            });
+            message = `${selectedJobs.size} משרות בוטלה המלצתן`;
+            break;
+            
+        case 'delete':
+            if (!confirm(`האם אתה בטוח שברצונך למחוק ${selectedJobs.size} משרות?`)) {
                 return;
             }
-            openBulkModal();
-        }
+            
+            const sortedIndexes = Array.from(selectedJobs).sort((a, b) => b - a);
+            sortedIndexes.forEach(index => {
+                jobs.splice(index, 1);
+            });
+            
+            selectedJobs.clear();
+            message = `${sortedIndexes.length} משרות נמחקו`;
+            break;
+    }
+    
+    markLocalChanges();
+    updateAllDisplays();
+    closeBulkModal();
+    showNotification(message, 'success');
+}
 
-        function exportForGitHub() {
-            if (jobs.length === 0) {
-                showNotification('אין משרות לייצוא', 'warning');
-                return;
-            }
-            
-            const jobsJson = JSON.stringify(jobs, null, 2);
-            const blob = new Blob([jobsJson], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            
-            const downloadLink = document.createElement('a');
-            downloadLink.href = url;
-            downloadLink.download = 'jobs.json';
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            
-            URL.revokeObjectURL(url);
-            
-            showNotification('קובץ ל-GitHub יוצא!', 'success');
-            
-            setTimeout(() => {
-                alert(`קובץ jobs.json הורד בהצלחה!
+function bulkActions() {
+    if (selectedJobs.size === 0) {
+        showNotification('בחר משרות קודם', 'warning');
+        return;
+    }
+    openBulkModal();
+}
+
+function exportForGitHub() {
+    if (jobs.length === 0) {
+        showNotification('אין משרות לייצוא', 'warning');
+        return;
+    }
+    
+    const jobsJson = JSON.stringify(jobs, null, 2);
+    const blob = new Blob([jobsJson], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = 'jobs.json';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    
+    URL.revokeObjectURL(url);
+    
+    showNotification('קובץ ל-GitHub יוצא!', 'success');
+    
+    setTimeout(() => {
+        alert(`קובץ jobs.json הורד בהצלחה!
 
 הוראות לעדכון GitHub:
 1. היכנס ל-GitHub לפרויקט שלך
@@ -2550,151 +2561,148 @@ if (successCount > 0) {
 6. לחץ "Commit changes"
 
 ✅ האתר יתעדכן אוטומטית!`);
-            }, 1000);
+    }, 1000);
+}
+
+// עדכון סטטוס
+function markLocalChanges() {
+    hasLocalChanges = true;
+    updateLocalChangesStatus();
+}
+
+function updateLocalChangesStatus() {
+    const element = document.getElementById('localChanges');
+    if (hasLocalChanges) {
+        element.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i> יש שינויים';
+    } else {
+        element.innerHTML = '<i class="fas fa-check-circle" style="color: #28a745;"></i> אין';
+    }
+}
+
+function updateSyncStatus(system, isConnected) {
+    const element = document.getElementById('githubSync');
+    if (isConnected) {
+        element.innerHTML = '<i class="fas fa-check-circle" style="color: #28a745;"></i> מחובר';
+    } else {
+        element.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i> שגיאה';
+    }
+    
+    document.getElementById('lastLoad').textContent = new Date().toLocaleString('he-IL');
+    document.getElementById('lastCheck').textContent = new Date().toLocaleString('he-IL');
+}
+
+function showSyncStatus(status) {
+    const indicator = document.getElementById('syncIndicator');
+    const text = document.getElementById('syncText');
+    
+    switch(status) {
+        case 'syncing':
+            indicator.className = 'sync-indicator syncing';
+            text.textContent = 'מסנכרן...';
+            break;
+        case 'success':
+            indicator.className = 'sync-indicator';
+            text.textContent = 'מסונכרן';
+            break;
+        case 'error':
+            indicator.className = 'sync-indicator error';
+            text.textContent = 'שגיאה';
+            break;
+    }
+}
+
+// פונקציות עזר
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    const textElement = document.getElementById('notificationText');
+    
+    const icons = {
+        'success': 'fas fa-check-circle',
+        'error': 'fas fa-exclamation-triangle', 
+        'warning': 'fas fa-exclamation-circle'
+    };
+    
+    notification.className = `notification ${type}`;
+    textElement.innerHTML = `<i class="${icons[type]}"></i> ${message}`;
+    notification.style.display = 'block';
+    
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, type === 'error' ? 5000 : 3000);
+}
+
+function showLoading() {
+    document.getElementById('loadingOverlay').style.display = 'flex';
+}
+
+function hideLoading() {
+    document.getElementById('loadingOverlay').style.display = 'none';
+}
+
+// אתחול
+document.addEventListener('DOMContentLoaded', function() {
+    // טעינת URL מהאחסון המקומי
+    const savedUrl = localStorage.getItem('github_url');
+    if (savedUrl) {
+        document.getElementById('githubUrl').value = savedUrl;
+    }
+    
+    // מאזיני אירועים
+    document.getElementById('adminPassword').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            checkAdminPassword();
         }
+    });
+});
 
-        // עדכון סטטוס
-        function markLocalChanges() {
-            hasLocalChanges = true;
-            updateLocalChangesStatus();
+// סגירת מודלים
+window.addEventListener('click', function(event) {
+    const modals = ['import-modal', 'job-edit-modal', 'bulk-modal'];
+    modals.forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (event.target === modal) {
+            modal.style.display = 'none';
         }
+    });
+});
 
-        function updateLocalChangesStatus() {
-            const element = document.getElementById('localChanges');
-            if (hasLocalChanges) {
-                element.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i> יש שינויים';
-            } else {
-                element.innerHTML = '<i class="fas fa-check-circle" style="color: #28a745;"></i> אין';
-            }
-        }
-
-        function updateSyncStatus(system, isConnected) {
-            const element = document.getElementById('githubSync');
-            if (isConnected) {
-                element.innerHTML = '<i class="fas fa-check-circle" style="color: #28a745;"></i> מחובר';
-            } else {
-                element.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i> שגיאה';
-            }
-            
-            document.getElementById('lastLoad').textContent = new Date().toLocaleString('he-IL');
-            document.getElementById('lastCheck').textContent = new Date().toLocaleString('he-IL');
-        }
-
-        function showSyncStatus(status) {
-            const indicator = document.getElementById('syncIndicator');
-            const text = document.getElementById('syncText');
-            
-            switch(status) {
-                case 'syncing':
-                    indicator.className = 'sync-indicator syncing';
-                    text.textContent = 'מסנכרן...';
-                    break;
-                case 'success':
-                    indicator.className = 'sync-indicator';
-                    text.textContent = 'מסונכרן';
-                    break;
-                case 'error':
-                    indicator.className = 'sync-indicator error';
-                    text.textContent = 'שגיאה';
-                    break;
-            }
-        }
-
-        // פונקציות עזר
-        function showNotification(message, type = 'success') {
-            const notification = document.getElementById('notification');
-            const textElement = document.getElementById('notificationText');
-            
-            const icons = {
-                'success': 'fas fa-check-circle',
-                'error': 'fas fa-exclamation-triangle', 
-                'warning': 'fas fa-exclamation-circle'
-            };
-            
-            notification.className = `notification ${type}`;
-            textElement.innerHTML = `<i class="${icons[type]}"></i> ${message}`;
-            notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, type === 'error' ? 5000 : 3000);
-        }
-
-        function showLoading() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-        }
-
-        function hideLoading() {
-            document.getElementById('loadingOverlay').style.display = 'none';
-        }
-
-        // אתחול
-        document.addEventListener('DOMContentLoaded', function() {
-            // טעינת URL מהאחסון המקומי
-            const savedUrl = localStorage.getItem('github_url');
-            if (savedUrl) {
-                document.getElementById('githubUrl').value = savedUrl;
-            }
-            
-            // מאזיני אירועים
-            document.getElementById('adminPassword').addEventListener('keyup', function(event) {
-                if (event.key === 'Enter') {
-                    checkAdminPassword();
-                }
-            });
-        });
-
-        // סגירת מודלים
-        window.addEventListener('click', function(event) {
-            const modals = ['import-modal', 'job-edit-modal', 'bulk-modal'];
-            modals.forEach(modalId => {
-                const modal = document.getElementById(modalId);
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
-        });
-
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                const modals = ['import-modal', 'job-edit-modal', 'bulk-modal'];
-                modals.forEach(modalId => {
-                    const modal = document.getElementById(modalId);
-                    if (modal.style.display === 'block') {
-                        modal.style.display = 'none';
-                    }
-                });
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const modals = ['import-modal', 'job-edit-modal', 'bulk-modal'];
+        modals.forEach(modalId => {
+            const modal = document.getElementById(modalId);
+            if (modal.style.display === 'block') {
+                modal.style.display = 'none';
             }
         });
+    }
+});
 
-        // פונקציות גלובליות
-        window.checkAdminPassword = checkAdminPassword;
-        window.syncFromGitHub = syncFromGitHub;
-        window.openImportModal = openImportModal;
-        window.closeImportModal = closeImportModal;
-        window.handleFileUpload = handleFileUpload;
-        window.openAddJobModal = openAddJobModal;
-        window.closeEditModal = closeEditModal;
-        window.saveJob = saveJob;
-        window.toggleFeatured = toggleFeatured;
-        window.editJobAdvanced = editJobAdvanced;
-        window.viewJobAdvanced = viewJobAdvanced;
-        window.deleteJobAdvanced = deleteJobAdvanced;
-        window.toggleJobSelection = toggleJobSelection;
-        window.toggleSelectAll = toggleSelectAll;
-        window.toggleJobFeatured = toggleJobFeatured;
-        window.filterJobsList = filterJobsList;
-        window.clearJobsFilters = clearJobsFilters;
-        window.openBulkModal = openBulkModal;
-        window.closeBulkModal = closeBulkModal;
-        window.bulkAction = bulkAction;
-        window.exportForGitHub = exportForGitHub;
-        window.bulkActions = bulkActions;
-        window.resetMapping = resetMapping;
-        window.updateMapping = updateMapping;
-        window.executeImport = executeImport;
+// פונקציות גלובליות
+window.checkAdminPassword = checkAdminPassword;
+window.syncFromGitHub = syncFromGitHub;
+window.openImportModal = openImportModal;
+window.closeImportModal = closeImportModal;
+window.handleFileUpload = handleFileUpload;
+window.openAddJobModal = openAddJobModal;
+window.closeEditModal = closeEditModal;
+window.saveJob = saveJob;
+window.toggleFeatured = toggleFeatured;
+window.editJobAdvanced = editJobAdvanced;
+window.viewJobAdvanced = viewJobAdvanced;
+window.deleteJobAdvanced = deleteJobAdvanced;
+window.toggleJobSelection = toggleJobSelection;
+window.toggleSelectAll = toggleSelectAll;
+window.toggleJobFeatured = toggleJobFeatured;
+window.filterJobsList = filterJobsList;
+window.clearJobsFilters = clearJobsFilters;
+window.openBulkModal = openBulkModal;
+window.closeBulkModal = closeBulkModal;
+window.bulkAction = bulkAction;
+window.exportForGitHub = exportForGitHub;
+window.bulkActions = bulkActions;
+window.resetMapping = resetMapping;
+window.updateMapping = updateMapping;
+window.executeImport = executeImport;
 
-        console.log('🚀 מערכת ניהול GitHub עם מיפוי שדות נטענה בהצלחה!');
-    </script>
-</body>
-</html>
+console.log('🚀 מערכת ניהול GitHub עם הפרדת דרישות נטענה בהצלחה!');
