@@ -1620,6 +1620,18 @@
                 </div>
             </div>
             
+            <div class="form-group">
+    <label class="form-label">אזור</label>
+    <select class="form-control" id="areaFilter">
+        <option value="">כל האזורים</option>
+        <option value="מרכז">מרכז</option>
+        <option value="חיפה קריות והצפון">חיפה קריות והצפון</option>
+        <option value="ירושלים והסביבה">ירושלים והסביבה</option>
+        <option value="שפלה">שפלה</option>
+        <option value="שרון">שרון</option>
+        <option value="דרום">דרום</option>
+    </select>
+</div>
             <div class="search-buttons">
                 <button class="btn" id="searchButton">חיפוש</button>
                 <button class="btn btn-secondary" id="clearButton">נקה</button>
@@ -2330,33 +2342,38 @@ currentDisplayedJobs = sortedJobs;
             }
         }
 
-        function filterJobs() {
-            var searchText = document.getElementById('searchInput').value.trim().toLowerCase();
-            var category = document.getElementById('categoryFilter').value;
-            var city = document.getElementById('regionFilter').value;
-            
-            var activeJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; });
-            
-            filteredJobs = activeJobs.filter(function(job) {
-                if (searchText && !jobMatchesSearch(job, searchText)) {
-                    return false;
-                }
-                
-                if (category && job.category !== category) {
-                    return false;
-                }
-                
-                if (city && job.city !== city) {
-                    return false;
-                }
-                
-                return true;
-            });
-            
-            displayJobs(filteredJobs);
-            console.log('🔍 נמצאו ' + filteredJobs.length + ' תוצאות');
+function filterJobs() {
+    var searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+    var category = document.getElementById('categoryFilter').value;
+    var city = document.getElementById('regionFilter').value;
+    var area = document.getElementById('areaFilter').value; // הוספה חדשה
+    
+    var activeJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; });
+    
+    filteredJobs = activeJobs.filter(function(job) {
+        if (searchText && !jobMatchesSearch(job, searchText)) {
+            return false;
         }
-
+        
+        if (category && job.category !== category) {
+            return false;
+        }
+        
+        if (city && job.city !== city) {
+            return false;
+        }
+        
+        if (area && job.region !== area) { // הוספה חדשה
+            return false;
+        }
+        
+        return true;
+    });
+    
+    displayJobs(filteredJobs);
+    console.log('🔍 נמצאו ' + filteredJobs.length + ' תוצאות');
+}
+        
         function jobMatchesSearch(job, searchText) {
             return (
                 (job.title && job.title.toLowerCase().indexOf(searchText) !== -1) ||
@@ -2369,18 +2386,19 @@ currentDisplayedJobs = sortedJobs;
             );
         }
 
-        function clearFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('categoryFilter').value = '';
-            document.getElementById('regionFilter').value = '';
-            
-            var activeJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; });
-            filteredJobs = [];
-            displayJobs(activeJobs);
-            
-            console.log('🧹 מסננים נוקו');
-        }
-
+function clearFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('categoryFilter').value = '';
+    document.getElementById('regionFilter').value = '';
+    document.getElementById('areaFilter').value = ''; // הוספה חדשה
+    
+    var activeJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; });
+    filteredJobs = [];
+    displayJobs(activeJobs);
+    
+    console.log('🧹 מסננים נוקו');
+}
+        
         // פונקציות מערכת ניהול
         function openAdminLogin() {
             document.getElementById('admin-login-modal').style.display = 'block';
