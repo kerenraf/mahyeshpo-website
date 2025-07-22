@@ -1477,6 +1477,11 @@
                             <!-- יעודכן על ידי JavaScript -->
                         </div>
                         
+<button class="btn" style="background: linear-gradient(135deg, #17a2b8, #20c997);" onclick="toggleAutoSplit()">
+    <i class="fas fa-cut" id="splitIcon"></i>
+    <span id="splitText">פיצול תיאור לדרישות: מופעל</span>
+</button>
+                        
                         <div class="mapping-actions">
                             <button class="btn btn-secondary" onclick="resetMapping()">
                                 <i class="fas fa-undo"></i> איפוס מיפוי
@@ -1565,6 +1570,7 @@
 
     <script>
         // משתנים גלובליים
+        let autoSplitEnabled = true; // פיצול אוטומטי מופעל כברירת מחדל
         let jobs = [];
         let filteredJobs = [];
         let currentPage = 1;
@@ -1591,6 +1597,8 @@
             'status': { label: 'סטטוס', required: false, type: 'string' },
             'featured': { label: 'משרה מומלצת', required: false, type: 'boolean' }
         };
+
+        
 
         // אתחול מיפוי אוטומטי חכם
         function initializeSmartMapping(sourceFields) {
@@ -1875,8 +1883,58 @@
                 showMappingInterface(sourceFields);
                 showNotification('המיפוי אופס והוגדר מחדש אוטומטית', 'success');
             }
-        }
 
+            function toggleAutoSplit() {
+    autoSplitEnabled = !autoSplitEnabled;
+    const text = document.getElementById('splitText');
+    const icon = document.getElementById('splitIcon');
+    
+    if (autoSplitEnabled) {
+        text.textContent = 'פיצול תיאור לדרישות: מופעל';
+        icon.className = 'fas fa-cut';
+    } else {
+        text.textContent = 'פיצול תיאור לדרישות: כבוי';
+        icon.className = 'fas fa-times';
+    }
+}       
+        }
+function extractRequirementsFromDescription(description) {
+    if (!description) return { description: '', requirements: '' };
+    
+    // מילות מפתח לזיהוי דרישות
+    const requirementKeywords = [
+        'דרישות:', 'דרישות התפקיד:', 'נדרש:', 'חובה:', 'כישורים נדרשים:',
+        'Requirements:', 'Required:', 'Must have:', 'Qualifications:',
+        'צריך:', 'דרוש:', 'כישורים:', 'ניסיון:', 'השכלה:'
+    ];
+    
+    const text = description.trim();
+    let splitIndex = -1;
+    
+    // חיפוש מילת מפתח שמתחילה דרישות
+    for (let keyword of requirementKeywords) {
+        const index = text.indexOf(keyword);
+        if (index !== -1) {
+            splitIndex = index;
+            break;
+        }
+    }
+    
+    if (splitIndex === -1) {
+        // אין דרישות מזוהות - כל הטקסט נשאר תיאור
+        return { description: text, requirements: '' };
+    }
+    
+    // פיצול הטקסט
+    const descriptionPart = text.substring(0, splitIndex).trim();
+    const requirementsPart = text.substring(splitIndex).trim();
+    
+    return {
+        description: descriptionPart,
+        requirements: requirementsPart
+    };
+}
+        
         function executeImport() {
             if (!importedData || Object.keys(fieldMapping).length === 0) {
                 showNotification('אין נתונים לייבא', 'error');
@@ -1922,7 +1980,19 @@
                                     value = String(value || '').trim();
                                 }
                                 
-                                mappedJob[systemField] = value;
+if (systemField === 'descriif (systemField === 'description' && value && autoSplitEnabled) {
+    ption' && value) {
+    // אם זה שדה תיאור ויש בו תוכן, נבדוק אם יש דרישות להפריד
+    const extracted = extractRequirementsFromDescription(value);
+    mappedJob['description'] = extracted.description;
+    
+    // אם יש דרישות ושדה הדרישות לא ממופה, נוסיף אותן
+    if (extracted.requirements && !fieldMapping['requirements']) {
+        mappedJob['requirements'] = extracted.requirements;
+    }
+} else {
+    mappedJob[systemField] = value;
+}
                             } else {
                                 // ערכי ברירת מחדל - רק אם השדה לא ממופה
                                 switch (systemField) {
@@ -2607,6 +2677,7 @@
         window.resetMapping = resetMapping;
         window.updateMapping = updateMapping;
         window.executeImport = executeImport;
+        window.toggleAutoSplit = toggleAutoSplit;
 
         console.log('🚀 מערכת ניהול GitHub עם מיפוי שדות נטענה בהצלחה!');
     </script>
