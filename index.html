@@ -2054,13 +2054,15 @@
         // פונקציה לפתיחת משרה ספציפית
         function openSpecificJob(jobNumber) {
             setTimeout(function() {
-                var jobIndex = currentDisplayedJobs.findIndex(function(job) {
-                    return job.jobNumber === decodeURIComponent(jobNumber);
-                });
-                
+var jobIndex = allJobs.findIndex(function(job) {
+    return job.jobNumber === decodeURIComponent(jobNumber) && job.status === 'פעיל';
+});                
                 if (jobIndex !== -1) {
                     console.log('🎯 פותח משרה ספציפית: ' + jobNumber);
-                    openJobModal(jobIndex);
+var displayedIndex = currentDisplayedJobs.findIndex(function(j) {
+    return j.jobNumber === allJobs[jobIndex].jobNumber;
+});
+openJobModal(displayedIndex);
                     
                     document.getElementById('search').scrollIntoView({ 
                         behavior: 'smooth', 
@@ -2195,7 +2197,7 @@
                 return 0;
             });
             
-            currentDisplayedJobs = sortedJobs.slice(0, 12);
+currentDisplayedJobs = sortedJobs;
             
             currentDisplayedJobs.forEach(function(job, index) {
                 var jobCard = document.createElement('div');
