@@ -93,7 +93,8 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;        }
+            font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;
+        }
 
         body {
             background-color: #000;
@@ -209,6 +210,250 @@ font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;       
         .mobile-menu a:hover, .mobile-menu a.active {
             background: rgba(246, 152, 152, 0.2);
             color: #F69898;
+        }
+
+        /* כפתור נגישות */
+        .accessibility-button {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4CAF50, #45A049);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+            transition: all 0.3s ease;
+            animation: accessibilityPulse 3s infinite;
+        }
+
+        .accessibility-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+        }
+
+        .accessibility-button:focus {
+            outline: 3px solid #FFD700;
+            outline-offset: 2px;
+        }
+
+        @keyframes accessibilityPulse {
+            0%, 100% { 
+                box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+            }
+            50% { 
+                box-shadow: 0 4px 20px rgba(76, 175, 80, 0.7), 0 0 20px rgba(76, 175, 80, 0.3);
+            }
+        }
+
+        /* פאנל נגישות */
+        .accessibility-panel {
+            position: fixed;
+            bottom: 100px;
+            left: 30px;
+            width: 320px;
+            max-height: 400px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid #4CAF50;
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .accessibility-panel.show {
+            display: block;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .accessibility-panel h3 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            text-align: center;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+
+        .accessibility-controls {
+            display: grid;
+            gap: 15px;
+        }
+
+        .accessibility-control {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .accessibility-control:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .accessibility-control label {
+            font-size: 0.9rem;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .accessibility-toggle {
+            width: 50px;
+            height: 25px;
+            background: #666;
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .accessibility-toggle.active {
+            background: #4CAF50;
+        }
+
+        .accessibility-toggle::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 21px;
+            height: 21px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .accessibility-toggle.active::before {
+            transform: translateX(25px);
+        }
+
+        .font-size-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .font-size-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .font-size-btn:hover {
+            background: #45A049;
+            transform: scale(1.1);
+        }
+
+        .accessibility-reset {
+            background: linear-gradient(135deg, #FF6B6B, #EE5A52);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .accessibility-reset:hover {
+            background: linear-gradient(135deg, #EE5A52, #DC4A3D);
+            transform: translateY(-1px);
+        }
+
+        /* מצבי נגישות */
+        body.high-contrast {
+            filter: contrast(1.5);
+        }
+
+        body.dark-mode {
+            background: #000 !important;
+        }
+
+        body.dark-mode * {
+            background-color: inherit !important;
+        }
+
+        body.large-text {
+            font-size: 1.2rem;
+        }
+
+        body.large-text h1 {
+            font-size: 4rem !important;
+        }
+
+        body.large-text h2 {
+            font-size: 3rem !important;
+        }
+
+        body.large-text h3 {
+            font-size: 2.5rem !important;
+        }
+
+        body.large-text .btn {
+            font-size: 1.3rem !important;
+            padding: 18px 35px !important;
+        }
+
+        body.underline-links a {
+            text-decoration: underline !important;
+        }
+
+        body.reading-guide {
+            position: relative;
+        }
+
+        .reading-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #FFD700;
+            z-index: 9999;
+            display: none;
+            box-shadow: 0 0 10px #FFD700;
+        }
+
+        body.reading-guide .reading-line {
+            display: block;
+        }
+
+        body.reduce-animations * {
+            animation-duration: 0.01s !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01s !important;
+        }
+
+        /* פוקוס נגיש */
+        body.enhanced-focus *:focus {
+            outline: 3px solid #FFD700 !important;
+            outline-offset: 2px !important;
+            border-radius: 3px !important;
         }
 
         .hero-section {
@@ -500,28 +745,17 @@ font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;       
             padding-bottom: 90px;
         }
 
-        /* =============== עיצוב מחודש למשרות מומלצות - מעודן וסובטיל =============== */
         .job-card.featured {
-            /* רקע עדין עם מעט צבע */
             background: linear-gradient(145deg, 
                 rgba(246, 152, 152, 0.08) 0%, 
                 rgba(58, 58, 58, 1) 50%, 
                 rgba(246, 152, 152, 0.05) 100%);
-            
-            /* גבול עדין */
             border: 2px solid rgba(246, 152, 152, 0.3);
-            
-            /* צל עדין */
             box-shadow: 0 8px 25px rgba(246, 152, 152, 0.15);
-            
-            /* הסרת כל האנימציות המוגזמות */
             animation: none;
-            
-            /* מיקום מועדף בגריד */
             order: -1;
         }
 
-        /* תג "מומלצת" פשוט ונקי */
         .job-card.featured::before {
             content: "⭐ מומלצת";
             position: absolute;
@@ -535,96 +769,20 @@ font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;       
             font-weight: bold;
             z-index: 10;
             box-shadow: 0 2px 8px rgba(246, 152, 152, 0.3);
-            /* הסרת האנימציה המוגזמת */
             animation: none;
             background-size: 100% 100%;
         }
 
-        /* הסרת האפקט הנוסף של הגבול */
-        .job-card.featured::after {
-            display: none;
-        }
-
-        /* הובר עדין למשרות מומלצות */
         .job-card.featured:hover {
             background: linear-gradient(145deg, 
                 rgba(246, 152, 152, 0.12) 0%, 
                 rgba(68, 68, 68, 1) 50%, 
                 rgba(246, 152, 152, 0.08) 100%);
-            
             transform: translateY(-3px);
             box-shadow: 0 12px 30px rgba(246, 152, 152, 0.2);
         }
 
-        /* כותרת המשרה המומלצת - ללא אפקטים מוגזמים */
-        .job-card.featured .job-title {
-            color: #F69898;
-            font-weight: bold;
-            /* הסרת הגרדיאנט מהטקסט */
-            background: none;
-            -webkit-background-clip: unset;
-            -webkit-text-fill-color: unset;
-            background-clip: unset;
-        }
-
-        /* הסרת האפקט הנוצץ */
-        .job-card.featured .job-title::after {
-            display: none;
-        }
-
-        /* תג הקטגוריה של המשרה המומלצת */
-        .job-card.featured .job-badge {
-            background: linear-gradient(135deg, #F69898, #e58080);
-            /* הסרת האנימציה */
-            animation: none;
-            transform: none;
-        }
-
-        /* הגמדה של המשרה המומלצת */
-        .job-card.featured .job-card-gnome {
-            /* הסרת כל האפקטים המוגזמים */
-            filter: drop-shadow(0 3px 10px rgba(246, 152, 152, 0.3));
-            animation: none;
-        }
-
-        /* כפתורי הקשר של המשרה המומלצת */
-        .job-card.featured .contact-buttons .contact-button {
-            /* הסרת הצלליות המוגזמות */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        /* כפתורי הקשר ללא אנימציות */
-        .job-card.featured .contact-buttons .whatsapp-button,
-        .job-card.featured .contact-buttons .sms-button,
-        .job-card.featured .contact-buttons .share-button {
-            background-size: 100% 100%;
-            animation: none;
-        }
-
-        /* תיאור המשרה המומלצת */
-        .job-card.featured .job-description {
-            background: rgba(246, 152, 152, 0.06);
-            border-radius: 6px;
-            padding: 8px;
-            border-right: 3px solid rgba(246, 152, 152, 0.4);
-        }
-
-        /* מספר המשרה המומלצת */
-        .job-card.featured .job-number {
-            background: linear-gradient(135deg, #F69898, #e58080);
-            /* הסרת האנימציה */
-            background-size: 100% 100%;
-            animation: none;
-            transform: none;
-        }
-
         .job-card:hover {
-            background: linear-gradient(145deg, #444444, #383838);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-
-        .job-card:not(.featured):hover {
             background: linear-gradient(145deg, #444444, #383838);
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
@@ -656,13 +814,6 @@ font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;       
             margin-top: 35px;
         }
 
-        .job-company {
-            color: #cccccc;
-            margin-bottom: 8px;
-            font-weight: 500;
-            display: none;
-        }
-
         .job-location {
             color: #aaaaaa;
             font-size: 0.9rem;
@@ -681,18 +832,19 @@ font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;       
             overflow: hidden;
         }
 
-.job-badge {
-    color: #333333;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    display: inline-block;
-    margin-bottom: 20px;
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    position: relative;
-    z-index: 5;
-}
+        .job-badge {
+            color: #333333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 5;
+        }
+
         .job-card-bottom {
             position: absolute;
             bottom: 15px;
@@ -704,58 +856,59 @@ font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;       
             z-index: 20;
         }
 
-.job-card-gnome {
-    width: 55px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    z-index: 25;
-    position: relative;
-}
+        .job-card-gnome {
+            width: 55px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 25;
+            position: relative;
+        }
 
-.job-card-gnome:hover {
-    transform: scale(1.1);
-}
+        .job-card-gnome:hover {
+            transform: scale(1.1);
+        }
 
-.job-card-gnome img {
-    width: 100%;
-    height: auto;
-    filter: drop-shadow(0 3px 10px rgba(246, 152, 152, 0.5));
-}
+        .job-card-gnome img {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 3px 10px rgba(246, 152, 152, 0.5));
+        }
 
-.job-card-gnome-text {
-    text-align: center;
-    font-size: 8px;
-    color: white;
-    font-weight: bold;
-    margin-top: 4px;
-    background: rgba(246, 152, 152, 0.9);
-    border-radius: 12px;
-    padding: 4px 8px;
-    white-space: nowrap;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    min-width: 70px;
-    line-height: 1.2;
-}
+        .job-card-gnome-text {
+            text-align: center;
+            font-size: 8px;
+            color: white;
+            font-weight: bold;
+            margin-top: 4px;
+            background: rgba(246, 152, 152, 0.9);
+            border-radius: 12px;
+            padding: 4px 8px;
+            white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            min-width: 70px;
+            line-height: 1.2;
+        }
+
         .job-card-pointing-gnome {
-    position: absolute;
-        top: 60px;
-        left: 45px;
-        width: 70px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    z-index: 30;
-    transform: rotate(10deg);
-}
+            position: absolute;
+            top: 60px;
+            left: 45px;
+            width: 70px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 30;
+            transform: rotate(10deg);
+        }
 
-.job-card-pointing-gnome:hover {
-    transform: rotate(10deg) scale(1.1);
-}
+        .job-card-pointing-gnome:hover {
+            transform: rotate(10deg) scale(1.1);
+        }
 
-.job-card-pointing-gnome img {
-    width: 100%;
-    height: auto;
-    filter: drop-shadow(0 3px 10px rgba(246, 152, 152, 0.4));
-}
+        .job-card-pointing-gnome img {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 3px 10px rgba(246, 152, 152, 0.4));
+        }
         
         .contact-buttons {
             display: flex;
@@ -794,78 +947,6 @@ font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;       
 
         .share-button {
             background: linear-gradient(135deg, #FF6B6B, #EE5A52) !important;
-        }
-        
-        .share-button:hover {
-            background: linear-gradient(135deg, #EE5A52, #DC4A3D) !important;
-            transform: scale(1.15) !important;
-        }
-        
-        .feature-toggle-button {
-            transition: all 0.3s ease !important;
-        }
-        
-        .feature-toggle-button.featured-active {
-            background: linear-gradient(135deg, #8B5CF6, #A855F7) !important;
-            box-shadow: 0 0 10px rgba(139, 92, 246, 0.4) !important;
-        }
-        
-        .feature-toggle-button:hover {
-            transform: scale(1.15) !important;
-        }
-        
-        .quick-edit-indicator {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: linear-gradient(135deg, #8B5CF6, #A855F7);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 25px;
-            font-weight: bold;
-            z-index: 1001;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-            animation: pulseGlow 2s infinite;
-        }
-        
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
-            50% { box-shadow: 0 4px 25px rgba(139, 92, 246, 0.6); }
-        }
-        
-        .quick-edit-controls {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.9);
-            padding: 15px 25px;
-            border-radius: 25px;
-            display: flex;
-            gap: 15px;
-            z-index: 1001;
-            backdrop-filter: blur(10px);
-            border: 2px solid #8B5CF6;
-        }
-        
-        .quick-edit-btn {
-            background: linear-gradient(135deg, #8B5CF6, #A855F7);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        
-        .quick-edit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
-        }
-        
-        .quick-edit-btn.secondary {
-            background: linear-gradient(135deg, #6c757d, #545b62);
         }
 
         .categories {
@@ -1229,10 +1310,11 @@ font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;       
                 transform: none;
             }
             
-    .job-title {
-        font-size: 1.1rem;
-        margin-top: 35px;
-        padding-right: 10px; /* מקום נוסף לגמדה */
+            .job-title {
+                font-size: 1.1rem;
+                margin-top: 35px;
+                padding-right: 10px;
+            }
             
             .job-description {
                 height: 50px;
@@ -1321,24 +1403,21 @@ font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;       
             .sms-btn {
                 display: flex !important;
             }
-            
-            .quick-edit-indicator {
-                font-size: 0.8rem;
-                padding: 8px 12px;
-                top: 10px;
-                left: 10px;
+
+            .accessibility-button {
+                bottom: 20px !important;
+                left: 20px !important;
+                width: 50px !important;
+                height: 50px !important;
+                font-size: 1.2rem !important;
             }
             
-            .quick-edit-controls {
-                bottom: 10px;
-                padding: 10px 15px;
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .quick-edit-btn {
-                padding: 8px 15px;
-                font-size: 0.9rem;
+            .accessibility-panel {
+                width: 100% !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                border-radius: 15px 15px 0 0 !important;
             }
         }
 
@@ -1382,71 +1461,6 @@ font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;       
             .job-card-gnome {
                 width: 35px;
             }
-
-            /* התראה חמה */
-.hot-banner {
-    background: linear-gradient(135deg, #ff6b6b, #feca57);
-    color: white;
-    padding: 12px 0;
-    text-align: center;
-    position: relative;
-    z-index: 100;
-    animation: hotPulse 3s ease-in-out infinite;
-}
-
-@keyframes hotPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-}
-
-.hot-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.hot-icon {
-    font-size: 1.2rem;
-    animation: flame 1s ease-in-out infinite alternate;
-}
-
-@keyframes flame {
-    0% { transform: scale(1) rotate(-2deg); }
-    100% { transform: scale(1.1) rotate(2deg); }
-}
-
-.hot-text {
-    font-weight: 500;
-}
-
-.hot-cta {
-    background: white;
-    color: #ff6b6b;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.hot-cta:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-@media (max-width: 768px) {
-    .hot-content {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .hot-text {
-        font-size: 0.9rem;
-    }
-}
         }
     </style>
 </head>
@@ -1475,6 +1489,78 @@ font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;       
             </ul>
         </div>
     </header>
+
+    <!-- כפתור נגישות -->
+    <button class="accessibility-button" id="accessibilityBtn" 
+            onclick="toggleAccessibilityPanel()" 
+            title="פתח תפריט נגישות" 
+            aria-label="פתח תפריט נגישות">
+        <i class="fas fa-universal-access"></i>
+    </button>
+
+    <!-- פאנל נגישות -->
+    <div class="accessibility-panel" id="accessibilityPanel">
+        <h3><i class="fas fa-universal-access"></i> נגישות</h3>
+        
+        <div class="accessibility-controls">
+            <!-- גודל טקסט -->
+            <div class="accessibility-control">
+                <label>גודל טקסט:</label>
+                <div class="font-size-controls">
+                    <button class="font-size-btn" onclick="changeFontSize('decrease')" title="הקטן טקסט">A-</button>
+                    <button class="font-size-btn" onclick="changeFontSize('reset')" title="איפוס גודל טקסט">A</button>
+                    <button class="font-size-btn" onclick="changeFontSize('increase')" title="הגדל טקסט">A+</button>
+                </div>
+            </div>
+
+            <!-- ניגודיות גבוהה -->
+            <div class="accessibility-control">
+                <label for="highContrast">ניגודיות גבוהה</label>
+                <div class="accessibility-toggle" id="highContrastToggle" 
+                     onclick="toggleAccessibilityFeature('highContrast')" 
+                     role="switch" aria-checked="false" tabindex="0"></div>
+            </div>
+
+            <!-- הדגשת קישורים -->
+            <div class="accessibility-control">
+                <label for="underlineLinks">הדגשת קישורים</label>
+                <div class="accessibility-toggle" id="underlineLinksToggle" 
+                     onclick="toggleAccessibilityFeature('underlineLinks')" 
+                     role="switch" aria-checked="false" tabindex="0"></div>
+            </div>
+
+            <!-- הפחתת אנימציות -->
+            <div class="accessibility-control">
+                <label for="reduceAnimations">הפחתת אנימציות</label>
+                <div class="accessibility-toggle" id="reduceAnimationsToggle" 
+                     onclick="toggleAccessibilityFeature('reduceAnimations')" 
+                     role="switch" aria-checked="false" tabindex="0"></div>
+            </div>
+
+            <!-- פוקוס משופר -->
+            <div class="accessibility-control">
+                <label for="enhancedFocus">פוקוס משופר</label>
+                <div class="accessibility-toggle" id="enhancedFocusToggle" 
+                     onclick="toggleAccessibilityFeature('enhancedFocus')" 
+                     role="switch" aria-checked="false" tabindex="0"></div>
+            </div>
+
+            <!-- קו קריאה -->
+            <div class="accessibility-control">
+                <label for="readingGuide">קו עזר לקריאה</label>
+                <div class="accessibility-toggle" id="readingGuideToggle" 
+                     onclick="toggleAccessibilityFeature('readingGuide')" 
+                     role="switch" aria-checked="false" tabindex="0"></div>
+            </div>
+        </div>
+
+        <button class="accessibility-reset" onclick="resetAccessibility()">
+            <i class="fas fa-undo"></i> איפוס הגדרות נגישות
+        </button>
+    </div>
+
+    <!-- קו עזר לקריאה -->
+    <div class="reading-line" id="readingLine"></div>
 
     <section class="hero-section">
         <div class="hero-bg"></div>
@@ -1587,7 +1673,6 @@ font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;       
             </div>
         </div>
     </section>
-
     <!-- מודל פרטי משרה -->
     <div id="job-modal" class="modal">
         <div class="modal-content">
@@ -1686,7 +1771,7 @@ font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;       
                     בואו נמצא ביחד את העבודה הבאה שלכם! 🚀
                 </p>
             </div>
-            </div>
+        </div>
     </div>
 
     <!-- מודל כניסה למערכת ניהול -->
@@ -1861,6 +1946,9 @@ font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;       
             } else {
                 initializeApp();
             }
+            
+            // טעינת הגדרות נגישות
+            loadAccessibilitySettings();
         });
 
         // פונקציה ראשית לאתחול
@@ -1999,10 +2087,10 @@ font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;       
         }
 
         function generateCategoryColors() {
-var predefinedColors = [
-    '#B8D4F1', '#B8E6B8', '#FFE4B8', '#FFB8B8', '#D4B8E6', 
-    '#B8E4E6', '#F1B8D4', '#D1D1D1', '#D4E6B8', '#FFD1B8'
-];
+            var predefinedColors = [
+                '#B8D4F1', '#B8E6B8', '#FFE4B8', '#FFB8B8', '#D4B8E6', 
+                '#B8E4E6', '#F1B8D4', '#D1D1D1', '#D4E6B8', '#FFD1B8'
+            ];
             
             categoryColors = {};
             uniqueCategories.forEach(function(category, index) {
@@ -2076,80 +2164,7 @@ var predefinedColors = [
                 categoriesContainer.appendChild(card);
             });
         }
-
-        // הצגת משרות עם תמיכה במשרות מומלצות וכפתורי שיתוף
-        function displayJobs(jobs) {
-            var jobsContainer = document.getElementById('jobsContainer');
-            if (!jobsContainer) return;
-            
-            jobsContainer.innerHTML = '';
-            
-            if (!jobs || jobs.length === 0) {
-                jobsContainer.innerHTML = 
-                    '<div class="no-jobs-message">' +
-                        '<h3>אין משרות פעילות כרגע</h3>' +
-                        '<p>נסה לחפש שוב מאוחר יותר או לשנות את המסננים</p>' +
-                    '</div>';
-                return;
-            }
-            
-            // מיון משרות: מומלצות קודם
-            var sortedJobs = jobs.sort(function(a, b) {
-                if (a.featured && !b.featured) return -1;
-                if (!a.featured && b.featured) return 1;
-                return 0;
-            });
-            
-            currentDisplayedJobs = sortedJobs.slice(0, 12);
-            
-            currentDisplayedJobs.forEach(function(job, index) {
-                var jobCard = document.createElement('div');
-                jobCard.className = 'job-card' + (job.featured ? ' featured' : '');
-                
-                var location = '';
-                if (job.city && job.region) {
-                    location = job.city + ', ' + job.region;
-                } else if (job.city) {
-                    location = job.city;
-                } else {
-                    location = job.region || 'ישראל';
-                }
-                
-                var shortDescription = job.description
-                    ? (job.description.substring(0, 120) + (job.description.length > 120 ? '...' : ''))
-                    : 'לחץ על הגמדה לפרטים נוספים';
-                
-                var messageText = 'שלום, אני מעוניין/ת במשרה: ' + job.title + ' (' + job.jobNumber + ')';
-                var whatsappLink = 'https://wa.me/972555504633?text=' + encodeURIComponent(messageText);
-                var smsLink = 'sms:+972555504633?body=' + encodeURIComponent(messageText);
-                
-                var categoryColor = getCategoryColor(job.category);
-                
-                var quickEditButton = isQuickEditMode ? 
-                    '<button class="contact-button feature-toggle-button ' + (job.featured ? 'featured-active' : '') + '" ' +
-                    'title="' + (job.featured ? 'בטל המלצה' : 'סמן כמומלצת') + '" ' +
-                    'onclick="event.stopPropagation(); toggleQuickFeature(' + index + ')" ' +
-                    'style="background: linear-gradient(135deg, ' + (job.featured ? '#8B5CF6' : '#6c757d') + ', ' + (job.featured ? '#A855F7' : '#545b62') + ');">' +
-                    '<i class="fas ' + (job.featured ? 'fa-star' : 'fa-star-o') + '"></i>' +
-                    '</button>' : '';
-                
-jobCard.innerHTML = 
-    '<div class="job-number">' + job.jobNumber + '</div>' +
-    '<div class="job-card-pointing-gnome" onclick="event.stopPropagation(); openJobModal(' + index + ')">' +
-        '<img src="https://mayeshpo.co.il/images/גמדה מצביעה בלי רקע.png" ' +
-             'alt="גמדה מצביעה" ' +
-             'onerror="this.src=\'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XkNee15XXmDwvdGV4dD48L3N2Zz4i\'>">' +
-    '</div>' +
-    '<h3 class="job-title">' + job.title + '</h3>' +
-                       '<div class="job-location">' +
-                        '<i class="fas fa-map-marker-alt"></i> ' + location +
-                    '</div>' +
-                    '<div class="job-description">' + shortDescription + '</div>' +
-                    '<div class="job-badge" style="background: ' + categoryColor + ';">' + job.category + '</div>' +
-                    '<div class="job-card-bottom">' +
-                        '<div class="job-card-gnome" onclick="event.stopPropagation(); openJobModal(' + index + ')">' +
-                            '<img src="https://mayeshpo.co.il/images/gnome.png" ' +
-                                'alt="גמדה פרטים" ' +
+        ה פרטים" ' +
                                 'onerror="this.src=\'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XkNee15XXmDwvdGV4dD48L3N2Zz4i\'>">' +
                             '<div class="job-card-gnome-text">פרטים נוספים</div>' +
                         '</div>' +
@@ -2163,7 +2178,6 @@ jobCard.innerHTML =
                             '<button class="contact-button share-button" title="שתף משרה" onclick="event.stopPropagation(); shareJob(' + index + ')" style="background: linear-gradient(135deg, #FF6B6B, #EE5A52);">' +
                                 '<i class="fas fa-share-alt"></i>' +
                             '</button>' +
-                            quickEditButton +
                         '</div>' +
                     '</div>';
                 
@@ -2173,82 +2187,6 @@ jobCard.innerHTML =
                 
                 jobsContainer.appendChild(jobCard);
             });
-        }
-
-        // שאר הפונקציות נמשכות כפי שהיו במקור...
-        // (כל הפונקציות הנוספות נשארות ללא שינוי)
-
-        // הפיכת הפונקציות לגלובליות
-        window.openJobModal = openJobModal;
-        window.closeJobModal = closeJobModal;
-        window.openAboutModal = openAboutModal;
-        window.closeAboutModal = closeAboutModal;
-        window.selectCategory = selectCategory;
-        window.filterJobs = filterJobs;
-        window.clearFilters = clearFilters;
-        window.toggleMobileMenu = toggleMobileMenu;
-        window.openAdminLogin = openAdminLogin;
-        window.closeAdminLogin = closeAdminLogin;
-        window.checkAdminAccess = checkAdminAccess;
-        window.shareJob = shareJob;
-
-        // כל שאר הפונקציות ממשיכות כפי שהיו...
-        function shareJob(index) {
-            var job = currentDisplayedJobs[index];
-            if (!job) return;
-            
-            var baseUrl = window.location.origin + window.location.pathname;
-            var jobUrl = baseUrl + '?job=' + encodeURIComponent(job.jobNumber);
-            var shareText = '🎯 משרה מעניינת: ' + job.title + '\n📍 ' + (job.city ? job.city + ', ' + (job.region || '') : job.region || 'ישראל') + '\n💼 ' + job.category + '\n\n' + jobUrl;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'משרה: ' + job.title,
-                    text: job.title + ' ב' + (job.city ? job.city : job.region),
-                    url: jobUrl
-                }).catch(function(err) { 
-                    console.log('שגיאה בשיתוף:', err); 
-                });
-            } else {
-                copyToClipboard(shareText);
-                showShareOptions(job, shareText, jobUrl);
-            }
-        }
-
-        function copyToClipboard(text) {
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(text).then(function() {
-                    showNotification('הועתק ללוח!');
-                }).catch(function() {
-                    fallbackCopyTextToClipboard(text);
-                });
-            } else {
-                fallbackCopyTextToClipboard(text);
-            }
-        }
-        
-        function fallbackCopyTextToClipboard(text) {
-            var textArea = document.createElement('textarea');
-            textArea.value = text;
-            textArea.style.position = 'fixed';
-            textArea.style.top = '-9999px';
-            textArea.style.left = '-9999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
-try {
-    var successful = document.execCommand('copy');
-    if (successful) {
-        showNotification('הועתק ללוח!');
-    } else {
-        showNotification('לא ניתן להעתיק', 'error');
-    }
-} catch (err) {
-    showNotification('לא ניתן להעתיק', 'error');
-}
-            
-            document.body.removeChild(textArea);
         }
 
         // פונקציות מודל
@@ -2402,6 +2340,65 @@ try {
             }
         }
 
+        // פונקציית שיתוף
+        function shareJob(index) {
+            var job = currentDisplayedJobs[index];
+            if (!job) return;
+            
+            var baseUrl = window.location.origin + window.location.pathname;
+            var jobUrl = baseUrl + '?job=' + encodeURIComponent(job.jobNumber);
+            var shareText = '🎯 משרה מעניינת: ' + job.title + '\n📍 ' + (job.city ? job.city + ', ' + (job.region || '') : job.region || 'ישראל') + '\n💼 ' + job.category + '\n\n' + jobUrl;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'משרה: ' + job.title,
+                    text: job.title + ' ב' + (job.city ? job.city : job.region),
+                    url: jobUrl
+                }).catch(function(err) { 
+                    console.log('שגיאה בשיתוף:', err); 
+                });
+            } else {
+                copyToClipboard(shareText);
+                showShareOptions(job, shareText, jobUrl);
+            }
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(function() {
+                    showNotification('הועתק ללוח!');
+                }).catch(function() {
+                    fallbackCopyTextToClipboard(text);
+                });
+            } else {
+                fallbackCopyTextToClipboard(text);
+            }
+        }
+        
+        function fallbackCopyTextToClipboard(text) {
+            var textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.top = '-9999px';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                var successful = document.execCommand('copy');
+                if (successful) {
+                    showNotification('הועתק ללוח!');
+                } else {
+                    showNotification('לא ניתן להעתיק', 'error');
+                }
+            } catch (err) {
+                showNotification('לא ניתן להעתיק', 'error');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
         // פונקציה להצגת הודעות
         function showNotification(message, type) {
             type = type || 'success';
@@ -2480,6 +2477,222 @@ try {
             });
         }
 
+        // ======================== פונקציות נגישות ========================
+
+        // הגדרות נגישות
+        var accessibilitySettings = {
+            highContrast: false,
+            largeText: false,
+            underlineLinks: false,
+            reduceAnimations: false,
+            enhancedFocus: false,
+            readingGuide: false,
+            fontSize: 1
+        };
+
+        // טעינת הגדרות נגישות משמורות
+        function loadAccessibilitySettings() {
+            var saved = localStorage.getItem('accessibilitySettings');
+            if (saved) {
+                try {
+                    accessibilitySettings = Object.assign(accessibilitySettings, JSON.parse(saved));
+                    applyAllAccessibilitySettings();
+                } catch (e) {
+                    console.log('שגיאה בטעינת הגדרות נגישות:', e);
+                }
+            }
+        }
+
+        // שמירת הגדרות נגישות
+        function saveAccessibilitySettings() {
+            localStorage.setItem('accessibilitySettings', JSON.stringify(accessibilitySettings));
+        }
+
+        // החלת כל ההגדרות
+        function applyAllAccessibilitySettings() {
+            // החלת מחלקות CSS
+            Object.keys(accessibilitySettings).forEach(function(setting) {
+                if (setting !== 'fontSize' && accessibilitySettings[setting]) {
+                    var className = setting.replace(/([A-Z])/g, '-$1').toLowerCase();
+                    document.body.classList.add(className);
+                }
+            });
+
+            // החלת גודל טקסט
+            if (accessibilitySettings.fontSize !== 1) {
+                var percentage = 100 + ((accessibilitySettings.fontSize - 1) * 20);
+                document.documentElement.style.fontSize = percentage + '%';
+            }
+
+            // עדכון הממשק
+            updateAccessibilityUI();
+        }
+
+        // עדכון ממשק המשתמש של הנגישות
+        function updateAccessibilityUI() {
+            Object.keys(accessibilitySettings).forEach(function(setting) {
+                if (setting !== 'fontSize') {
+                    var toggle = document.getElementById(setting + 'Toggle');
+                    if (toggle) {
+                        if (accessibilitySettings[setting]) {
+                            toggle.classList.add('active');
+                            toggle.setAttribute('aria-checked', 'true');
+                        } else {
+                            toggle.classList.remove('active');
+                            toggle.setAttribute('aria-checked', 'false');
+                        }
+                    }
+                }
+            });
+        }
+
+        // פתיחה/סגירה של פאנל נגישות
+        function toggleAccessibilityPanel() {
+            var panel = document.getElementById('accessibilityPanel');
+            var button = document.getElementById('accessibilityBtn');
+            
+            if (panel.classList.contains('show')) {
+                panel.classList.remove('show');
+                button.setAttribute('aria-expanded', 'false');
+                button.title = 'פתח תפריט נגישות';
+            } else {
+                panel.classList.add('show');
+                button.setAttribute('aria-expanded', 'true');
+                button.title = 'סגור תפריט נגישות';
+            }
+        }
+
+        // הפעלה/כיבוי של תכונת נגישות
+        function toggleAccessibilityFeature(feature) {
+            accessibilitySettings[feature] = !accessibilitySettings[feature];
+            
+            var className = feature.replace(/([A-Z])/g, '-$1').toLowerCase();
+            
+            if (accessibilitySettings[feature]) {
+                document.body.classList.add(className);
+                
+                // טיפול מיוחד בקו קריאה
+                if (feature === 'readingGuide') {
+                    initializeReadingGuide();
+                }
+            } else {
+                document.body.classList.remove(className);
+                
+                // טיפול מיוחד בקו קריאה
+                if (feature === 'readingGuide') {
+                    removeReadingGuide();
+                }
+            }
+            
+            updateAccessibilityUI();
+            saveAccessibilitySettings();
+            
+            // הודעה על השינוי
+            var featureNames = {
+                'highContrast': 'ניגודיות גבוהה',
+                'underlineLinks': 'הדגשת קישורים',
+                'reduceAnimations': 'הפחתת אנימציות',
+                'enhancedFocus': 'פוקוס משופר',
+                'readingGuide': 'קו עזר לקריאה'
+            };
+            
+            var statusText = accessibilitySettings[feature] ? 'הופעל' : 'בוטל';
+            showNotification(featureNames[feature] + ' ' + statusText);
+        }
+
+        // שינוי גודל טקסט
+        function changeFontSize(action) {
+            var currentSize = accessibilitySettings.fontSize;
+            
+            switch (action) {
+                case 'increase':
+                    if (currentSize < 1.5) {
+                        accessibilitySettings.fontSize = Math.min(currentSize + 0.1, 1.5);
+                    }
+                    break;
+                case 'decrease':
+                    if (currentSize > 0.8) {
+                        accessibilitySettings.fontSize = Math.max(currentSize - 0.1, 0.8);
+                    }
+                    break;
+                case 'reset':
+                    accessibilitySettings.fontSize = 1;
+                    break;
+            }
+            
+            var percentage = 100 + ((accessibilitySettings.fontSize - 1) * 20);
+            document.documentElement.style.fontSize = percentage + '%';
+            
+            saveAccessibilitySettings();
+            
+            var sizeText = Math.round(percentage) + '%';
+            showNotification('גודל טקסט: ' + sizeText);
+        }
+
+        // איפוס כל הגדרות הנגישות
+        function resetAccessibility() {
+            // הסרת כל המחלקות
+            var classesToRemove = [
+                'high-contrast', 'large-text', 'underline-links', 
+                'reduce-animations', 'enhanced-focus', 'reading-guide'
+            ];
+            
+            classesToRemove.forEach(function(className) {
+                document.body.classList.remove(className);
+            });
+            
+            // איפוס גודל טקסט
+            document.documentElement.style.fontSize = '';
+            
+            // איפוס הגדרות
+            accessibilitySettings = {
+                highContrast: false,
+                largeText: false,
+                underlineLinks: false,
+                reduceAnimations: false,
+                enhancedFocus: false,
+                readingGuide: false,
+                fontSize: 1
+            };
+            
+            // הסרת קו קריאה
+            removeReadingGuide();
+            
+            // עדכון ממשק ושמירה
+            updateAccessibilityUI();
+            saveAccessibilitySettings();
+            
+            showNotification('הגדרות נגישות אופסו');
+        }
+
+        // אתחול קו עזר לקריאה
+        function initializeReadingGuide() {
+            var readingLine = document.getElementById('readingLine');
+            if (readingLine) {
+                document.addEventListener('mousemove', updateReadingLine);
+                readingLine.style.display = 'block';
+            }
+        }
+
+        // עדכון מיקום קו הקריאה
+        function updateReadingLine(e) {
+            var readingLine = document.getElementById('readingLine');
+            if (readingLine && accessibilitySettings.readingGuide) {
+                readingLine.style.top = (e.clientY - 1) + 'px';
+            }
+        }
+
+        // הסרת קו עזר לקריאה
+        function removeReadingGuide() {
+            var readingLine = document.getElementById('readingLine');
+            if (readingLine) {
+                readingLine.style.display = 'none';
+                document.removeEventListener('mousemove', updateReadingLine);
+            }
+        }
+
+        // ======================== סיום פונקציות נגישות ========================
+
         // מאזיני אירועים
         function attachEventListeners() {
             var searchButton = document.getElementById('searchButton');
@@ -2553,9 +2766,35 @@ try {
                     }
                 });
             }
+
+            // הוספת תמיכה במקלדת לטוגלים
+            document.addEventListener('keydown', function(e) {
+                if (e.target.classList.contains('accessibility-toggle') && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault();
+                    e.target.click();
+                }
+            });
             
             console.log('✅ מאזיני אירועים הוספו');
         }
+
+        // הפיכת הפונקציות לגלובליות
+        window.openJobModal = openJobModal;
+        window.closeJobModal = closeJobModal;
+        window.openAboutModal = openAboutModal;
+        window.closeAboutModal = closeAboutModal;
+        window.selectCategory = selectCategory;
+        window.filterJobs = filterJobs;
+        window.clearFilters = clearFilters;
+        window.toggleMobileMenu = toggleMobileMenu;
+        window.openAdminLogin = openAdminLogin;
+        window.closeAdminLogin = closeAdminLogin;
+        window.checkAdminAccess = checkAdminAccess;
+        window.shareJob = shareJob;
+        window.toggleAccessibilityPanel = toggleAccessibilityPanel;
+        window.toggleAccessibilityFeature = toggleAccessibilityFeature;
+        window.changeFontSize = changeFontSize;
+        window.resetAccessibility = resetAccessibility;
 
         console.log('✅ הסקריפט נטען בהצלחה!');
     </script>
