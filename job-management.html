@@ -1876,7 +1876,68 @@
                 showNotification('המיפוי אופס והוגדר מחדש אוטומטית', 'success');
             }
         }
-
+// פונקציה להפרדת תיאור מדרישות
+        function separateDescriptionAndRequirements(combinedText) {
+            if (!combinedText || typeof combinedText !== 'string') {
+                return { description: '', requirements: '' };
+            }
+            
+            const text = combinedText.trim();
+            
+            // מילות מפתח לזיהוי דרישות
+            const requirementKeywords = [
+                'דרישות',
+                'דרישות התפקיד',
+                'דרישות הפעולה',
+                'מה נדרש',
+                'כישורים נדרשים',
+                'דרישות מקצועיות',
+                'כישורים',
+                'ניסיון נדרש',
+                'הכישורים הנדרשים',
+                'הדרישות',
+                'Requirements',
+                'Required',
+                'Skills',
+                'Qualifications'
+            ];
+            
+            // חיפוש מילת המפתח הראשונה שמופיעה בטקסט
+            let splitIndex = -1;
+            let foundKeyword = '';
+            
+            for (const keyword of requirementKeywords) {
+                const regex = new RegExp(`\\b${keyword}\\b`, 'i');
+                const match = text.search(regex);
+                
+                if (match !== -1 && (splitIndex === -1 || match < splitIndex)) {
+                    splitIndex = match;
+                    foundKeyword = keyword;
+                }
+            }
+            
+            if (splitIndex === -1) {
+                // לא נמצאה מילת מפתח - כל הטקסט הוא תיאור
+                return {
+                    description: text,
+                    requirements: ''
+                };
+            }
+            
+            // הפרדה לפי מיקום מילת המפתח
+            const description = text.substring(0, splitIndex).trim();
+            
+            // מציאת תחילת הדרישות (אחרי מילת המפתח + נקודותיים או רווח)
+            const requirementsStartRegex = new RegExp(`\\b${foundKeyword}\\b\\s*:?\\s*`, 'i');
+            const requirementsText = text.substring(splitIndex);
+            const cleanRequirements = requirementsText.replace(requirementsStartRegex, '').trim();
+            
+            return {
+                description: description || '',
+                requirements: cleanRequirements || ''
+            };
+        }
+        
         function executeImport() {
             if (!importedData || Object.keys(fieldMapping).length === 0) {
                 showNotification('אין נתונים לייבא', 'error');
@@ -1888,6 +1949,8 @@
                 const confirmed = confirm(`האם אתה בטוח שברצונך להחליף את כל ${jobs.length} המשרות הקיימות עם ${importedData.length} משרות חדשות?
 
 ⚠️ פעולה זו תמחק את כל הנתונים הקיימים!
+
+✨ המערכת תפריד אוטומטית בין תיאור לדרישות אם הם במקום אחד
 
 לחץ OK להמשך או Cancel לביטול.`);
                 
@@ -1901,6 +1964,7 @@
             try {
                 let successCount = 0;
                 let errorCount = 0;
+                let separationCount = 0; // מספר המשרות שבוצעה בהן הפרדה
                 const newJobs = []; // מערך חדש לנתונים המובאים
                 
                 importedData.forEach((sourceJob, index) => {
@@ -1950,8 +2014,31 @@
                             }
                         });
                         
-                        // וידוא שיש מספר משרה (אם לא ממופה או ריק)
-                        if (!mappedJob.jobNumber || mappedJob.jobNumber.trim() === '') {
+});
+                        
+                        // הפרדה חכמה של תיאור ודרישות
+                        const needsSeparation = (
+                            mappedJob.description && 
+                            !mappedJob.requirements && 
+                            mappedJob.description.length > 100 && // רק לטקסטים ארוכים
+                            /דרישות|כישורים|ניסיון נדרש/i.test(mappedJob.description)
+                        );
+                        
+                        if (needsSeparation) {
+                            const separated = separateDescriptionAndRequirements(mappedJob.description);
+                            if (separated.requirements) {
+                                mappedJob.description = separated.description;
+                                mappedJob.requirements = separated.requirements;
+                                separationCount++;
+                                console.log(`✂️ הופרדו תיאור ודרישות במשרה ${index + 1}:`, {
+                                    original: mappedJob.description,
+                                    newDescription: separated.description,
+                                    newRequirements: separated.requirements
+                                });
+                            }
+                        }
+                        // וידוא שיש מספר משרה (אם לא ממופה או ריק)  
+                if (!mappedJob.jobNumber || mappedJob.jobNumber.trim() === '') {
                             mappedJob.jobNumber = generateJobNumberForImport(newJobs, index);
                         }
 
@@ -1975,25 +2062,24 @@
                 });
                 
                 // החלפת הנתונים הקיימים עם החדשים
-                if (successCount > 0) {
-                    jobs.length = 0; // מחיקת כל הנתונים הקיימים
-                    jobs.push(...newJobs); // הוספת הנתונים החדשים
-                    selectedJobs.clear(); // ניקוי הבחירות
-                    currentPage = 1; // חזרה לעמוד הראשון
-                }
-                
-                markLocalChanges();
-                updateAllDisplays();
-                closeImportModal();
-                hideLoading();
-                
-                if (successCount > 0) {
-                    showNotification(
-                        `הייבוא הושלם! החלפת ${successCount} משרות` + 
-                        (errorCount > 0 ? ` (${errorCount} שגיאות)` : ''), 
-                        'success'
-                    );
-                } else {
+if (successCount > 0) {
+                    let message = `הייבוא הושלם! החלפת ${successCount} משרות`;
+                    if (separationCount > 0) {
+                        message += `\n✂️ בוצעה הפרדה אוטומטית של תיאור ודרישות ב-${separationCount} משרות`;
+                    }
+                    if (errorCount > 0) {
+                        message += ` (${errorCount} שגיאות)`;
+                    }
+                    
+                    showNotification(message, 'success');
+                    
+                    // הודעה נוספת אם בוצעה הפרדה
+                    if (separationCount > 0) {
+                        setTimeout(() => {
+                            showNotification(`✨ הופרדו תיאור ודרישות ב-${separationCount} משרות באופן אוטומטי`, 'success');
+                        }, 2000);
+                    }
+} else {
                     showNotification('לא ניתן היה לייבא אף משרה בשל שגיאות', 'error');
                 }
                 
