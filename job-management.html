@@ -1875,16 +1875,17 @@ let hasLocalChanges = false;
             importBtn.className = `btn ${mappedRequired >= requiredCount ? '' : 'btn-disabled'}`;
         }
 
-        function resetMapping() {
-            fieldMapping = {};
-            if (importedData && importedData.length > 0) {
-                const sourceFields = Object.keys(importedData[0]);
-                initializeSmartMapping(sourceFields);
-                showMappingInterface(sourceFields);
-                showNotification('המיפוי אופס והוגדר מחדש אוטומטית', 'success');
-            }
+function resetMapping() {
+    fieldMapping = {};
+    if (importedData && importedData.length > 0) {
+        const sourceFields = Object.keys(importedData[0]);
+        initializeSmartMapping(sourceFields);
+        showMappingInterface(sourceFields);
+        showNotification('המיפוי אופס והוגדר מחדש אוטומטית', 'success');
+    }
+}
 
-            function toggleAutoSplit() {
+function toggleAutoSplit() {
     autoSplitEnabled = !autoSplitEnabled;
     const text = document.getElementById('splitText');
     const icon = document.getElementById('splitIcon');
@@ -1896,7 +1897,7 @@ let hasLocalChanges = false;
         text.textContent = 'פיצול תיאור לדרישות: כבוי';
         icon.className = 'fas fa-times';
     }
-}       
+}
         }
 function extractRequirementsFromDescription(description) {
     if (!description) return { description: '', requirements: '' };
