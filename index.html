@@ -1620,16 +1620,10 @@
                 </div>
             </div>
             
-            <div class="form-group">
+<div class="form-group">
     <label class="form-label">אזור</label>
     <select class="form-control" id="areaFilter">
         <option value="">כל האזורים</option>
-        <option value="מרכז">מרכז</option>
-        <option value="חיפה קריות והצפון">חיפה קריות והצפון</option>
-        <option value="ירושלים והסביבה">ירושלים והסביבה</option>
-        <option value="שפלה">שפלה</option>
-        <option value="שרון">שרון</option>
-        <option value="דרום">דרום</option>
     </select>
 </div>
             <div class="search-buttons">
@@ -1859,6 +1853,7 @@
         var filteredJobs = [];
         var uniqueCategories = [];
         var uniqueCities = [];
+        var uniqueAreas = [];
         var categoryColors = {};
         var currentDisplayedJobs = [];
         var isQuickEditMode = false;
@@ -2050,13 +2045,17 @@
                 console.log('- ' + job.title + ' (featured: ' + job.featured + ')');
             });
             
-            extractUniqueCategories();
-            extractUniqueCities();
-            generateCategoryColors();
-            updateCategoryFilters();
-            updateCityFilters();
-            updateCategoryCards();
-            displayJobs(allJobs.filter(function(job) { return job.status === 'פעיל'; }));
+extractUniqueCategories();
+extractUniqueCities();
+extractUniqueAreas(); // חדש
+generateCategoryColors();
+updateCategoryFilters();
+updateCityFilters();
+updateAreaFilters(); // חדש
+updateCategoryCards();
+            
+displayJobs(allJobs.filter(function(job) { return job.status === 'פעיל'; }));
+
             
             if (specificJobNumber) {
                 openSpecificJob(specificJobNumber);
@@ -2108,6 +2107,16 @@ openJobModal(displayedIndex);
             console.log('🏷️ קטגוריות נמצאו:', uniqueCategories);
         }
 
+        function extractUniqueAreas() {
+    var areas = allJobs
+        .filter(function(job) { return job.region && job.region.trim(); })
+        .map(function(job) { return job.region.trim(); })
+        .filter(function(area, index, self) { return self.indexOf(area) === index; });
+    
+    uniqueAreas = areas.sort();
+    console.log('🗺️ אזורים נמצאו:', uniqueAreas);
+}
+        
         function generateCategoryColors() {
             var predefinedColors = [
                 '#B8D4F1', '#B8E6B8', '#FFE4B8', '#FFB8B8', '#D4B8E6', 
@@ -2159,6 +2168,45 @@ openJobModal(displayedIndex);
                 cityFilter.value = currentValue;
             }
         }
+function updateAreaFilters() {
+    var areaFilter = document.getElementById('areaFilter');
+    if (!areaFilter) return;
+    
+    var currentValue = areaFilter.value;
+    
+    areaFilter.innerHTML = '<option value="">כל האזורים</option>';
+    
+    uniqueAreas.forEach(function(area) {
+        var option = document.createElement('option');
+        option.value = area;
+        option.textContent = area;
+        areaFilter.appendChild(option);
+    });
+    
+    if (currentValue && uniqueAreas.indexOf(currentValue) !== -1) {
+        areaFilter.value = currentValue;
+    }
+}
+
+        function updateAreaFilters() {
+    var areaFilter = document.getElementById('areaFilter');
+    if (!areaFilter) return;
+    
+    var currentValue = areaFilter.value;
+    
+    areaFilter.innerHTML = '<option value="">כל האזורים</option>';
+    
+    uniqueAreas.forEach(function(area) {
+        var option = document.createElement('option');
+        option.value = area;
+        option.textContent = area;
+        areaFilter.appendChild(option);
+    });
+    
+    if (currentValue && uniqueAreas.indexOf(currentValue) !== -1) {
+        areaFilter.value = currentValue;
+    }
+}
 
         function updateCategoryCards() {
             var categoriesContainer = document.getElementById('categoriesContainer');
