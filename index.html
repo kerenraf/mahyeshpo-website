@@ -17,6 +17,7 @@
     <!-- נתונים לשיתוף ברשתות חברתיות (פייסבוק, וואטסאפ) -->
 <meta property="og:title" content="דרושים ומשרות חדשות - מה יש פה?">
 <meta property="og:description" content="💼 אלפי משרות זמינות בכל התחומים | 📍 בכל רחבי הארץ | 📞 פנייה ישירה 055-550-4633">
+<meta property="og:image" content="https://mayeshpo.co.il/images/share-default.jpg">
     <meta property="og:image" content="https://mayeshpo.co.il/images/gnome-pointing.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -2634,42 +2635,80 @@ function clearFilters() {
         }
 
 // פונקציית שיתוף משופרת
-        function shareJob(index) {
-            var job = currentDisplayedJobs[index];
-            if (!job) return;
-            
-            var baseUrl = window.location.origin + window.location.pathname;
-            var jobUrl = baseUrl + '?job=' + encodeURIComponent(job.jobNumber);
-            var location = job.city ? job.city + ', ' + (job.region || '') : (job.region || 'ישראל');
-            
-            // תמיד עדכן מטא תגים לפני השיתוף
-            var shareImageUrl = createJobShareImage(job);
-            updateMetaTags(job, shareImageUrl);
-            
-            var shareText = '🎯 דרוש/ה ' + job.title + ' ב' + location + 
-                '\n💼 ' + job.category + 
-                '\n📞 לפרטים נוספים: 055-550-4633' +
-                '\n📱 או לחצו על הקישור:' +
-                '\n' + jobUrl;
-            
-            // המתן רגע לעדכון המטא תגים לפני השיתוף
-            setTimeout(function() {
-                if (navigator.share) {
-                    navigator.share({
-                        title: 'דרוש/ה ' + job.title + ' ב' + location,
-                        text: shareText,
-                        url: jobUrl
-                    }).catch(function(err) { 
-                        console.log('שגיאה בשיתוף:', err);
-                        copyToClipboard(shareText);
-                        showShareOptions(job, shareText, jobUrl);
-                    });
-                } else {
-                    copyToClipboard(shareText);
-                    showShareOptions(job, shareText, jobUrl);
-                }
-            }, 100);
+function shareJob(index) {
+    var job = currentDisplayedJobs[index];
+    if (!job) return;
+    
+    var baseUrl = window.location.origin + window.location.pathname;
+    var jobUrl = baseUrl + '?job=' + encodeURIComponent(job.jobNumber);
+    var location = job.city ? job.city + ', ' + (job.region || '') : (job.region || 'ישראל');
+    
+    // טקסט שיתוף עם כל הפרטים
+    var shareTitle = 'דרוש/ה ' + job.title + ' ב' + location;
+    var shareText = '🎯 ' + shareTitle + 
+        '\n💼 ' + job.category + 
+        '\n📞 לפרטים נוספים: 055-550-4633' +
+        '\n📱 לחצו לפרטים נוספים:' +
+        '\n' + jobUrl;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: shareTitle,
+            text: shareText,
+            url: jobUrl
+        }).catch(function(err) { 
+            console.log('שגיאה בשיתוף:', err);
+            fallbackShare(job, shareText, jobUrl, shareTitle);
+        });
+    } else {
+        fallbackShare(job, shareText, jobUrl, shareTitle);
+    }
+}
+
+// פונקציית שיתוף חלופית
+function fallbackShare(job, shareText, jobUrl, shareTitle) {
+    // העתק טקסט אוטומטי
+    copyToClipboard(shareText);
+    
+    // הצג אפשרויות שיתוף
+    var location = job.city ? job.city + ', ' + (job.region || '') : (job.region || 'ישראל');
+    var whatsappText = encodeURIComponent(shareText);
+    var whatsappShare = 'https://wa.me/?text=' + whatsappText;
+    
+    var shareModal = document.createElement('div');
+    shareModal.className = 'modal';
+    shareModal.style.display = 'block';
+    shareModal.innerHTML = 
+        '<div class="modal-content" style="max-width: 400px;">' +
+            '<div class="modal-header">' +
+                '<h3 class="modal-title"><i class="fas fa-share-alt"></i> שתף משרה</h3>' +
+                '<span class="close" onclick="this.closest(\'.modal\').remove()">&times;</span>' +
+            '</div>' +
+            '<div style="padding: 20px;">' +
+                '<h4 style="color: #F69898; margin-bottom: 15px;">דרוש/ה ' + job.title + '</h4>' +
+                '<p style="color: #ccc; margin-bottom: 15px;">📍 ' + location + '</p>' +
+                '<p style="background: #333; padding: 10px; border-radius: 5px; font-size: 0.9rem; margin-bottom: 15px;">הטקסט הועתק אוטומטי! עכשיו פשוט הדביקו בוואטסאפ או ברשת החברתית שלכם</p>' +
+                '<div style="display: grid; gap: 15px;">' +
+                    '<a href="' + whatsappShare + '" target="_blank" class="contact-method-btn whatsapp-btn" style="text-decoration: none;">' +
+                        '<i class="fab fa-whatsapp"></i>' +
+                        '<span>שתף בוואטסאפ</span>' +
+                    '</a>' +
+                    '<button onclick="copyToClipboard(\'' + shareText.replace(/'/g, "\\'") + '\'); showNotification(\'הועתק שוב!\')" class="contact-method-btn" style="background: linear-gradient(135deg, #6c757d, #545b62); border: none; cursor: pointer;">' +
+                        '<i class="fas fa-copy"></i>' +
+                        '<span>העתק שוב</span>' +
+                    '</button>' +
+                '</div>' +
+            '</div>' +
+        '</div>';
+    
+    document.body.appendChild(shareModal);
+    
+    shareModal.addEventListener('click', function(e) {
+        if (e.target === shareModal) {
+            shareModal.remove();
         }
+    });
+}
         
         function copyToClipboard(text) {
             if (navigator.clipboard) {
