@@ -2512,11 +2512,14 @@ function filterJobs() {
 }
 // גלילה לתוצאות החיפוש אחרי שהן מוצגות
 setTimeout(function() {
-    document.getElementById('jobsContainer').scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-    });
-}, 100);
+    var jobsSection = document.querySelector('.jobs');
+    if (jobsSection) {
+        jobsSection.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+    }
+}, 200);
         
         function jobMatchesSearch(job, searchText) {
             return (
