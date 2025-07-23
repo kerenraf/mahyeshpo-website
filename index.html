@@ -217,7 +217,9 @@
             color: #F69898;
         }
 .floating-search-gnome {
-            position: fixed;
+    display: none !important;
+}
+        position: fixed;
             bottom: 120px;
             right: 30px;
             width: 80px;
@@ -3504,5 +3506,585 @@ document.addEventListener('keydown', function(event) {
 updateWebsiteShareLinks();
 console.log('🚀 תכונת שיתוף האתר מוכנה!');
     </script>
+    <!-- 2. הגמדה החכמה החדשה -->
+<div id="smartGnome" class="smart-floating-gnome">
+    <img src="images/virtual gnome.png" alt="גמדה חכמה" class="gnome-image">
+    <div class="gnome-text">מדריכה חכמה</div>
+</div>
+
+<!-- חלון השיחה -->
+<div id="smartGuideModal" class="smart-guide-modal">
+    <div class="guide-content">
+        <div class="guide-header">
+            <h3>🧙‍♀️ הגמדה החכמה כאן לעזור!</h3>
+            <button class="close-btn" onclick="closeGuide()">✕</button>
+        </div>
+        <div class="guide-messages" id="guideMessages">
+            <div class="guide-message bot">
+                שלום! איך אני יכולה לעזור?
+            </div>
+        </div>
+        <div class="guide-options" id="guideOptions">
+            <button onclick="startJobSearch()">🔍 חיפוש עבודה</button>
+            <button onclick="backToSearch()">⬅️ חזרה לחיפוש</button>
+            <button onclick="scrollToTop()">⬆️ חזרה למעלה</button>
+            <button onclick="showContactForm()">📞 לא מצאתי מה שחיפשתי</button>
+        </div>
+    </div>
+</div>
+
+<!-- טופס יצירת קשר -->
+<div id="contactForm" class="contact-form" style="display: none;">
+    <h4>📞 בואו נעזור לך למצוא עבודה!</h4>
+    <input type="text" id="fullName" placeholder="שם מלא" required>
+    <input type="text" id="phone" placeholder="מספר טלפון" required>
+    <input type="text" id="jobTitle" placeholder="תפקיד מבוקש" required>
+    <input type="text" id="location" placeholder="אזור או ישוב" required>
+    <button onclick="sendWhatsApp()">שלח בוואטסאפ 📱</button>
+    <button onclick="closeContactForm()">ביטול</button>
+</div>
+
+<style>
+/* סטיילים לגמדה החכמה */
+.smart-floating-gnome {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #ff6b9d, #ffa726);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(255, 107, 157, 0.3);
+    transition: all 0.3s ease;
+    font-family: 'Assistant', sans-serif;
+}
+
+.smart-floating-gnome:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
+}
+
+.gnome-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.gnome-text {
+    font-size: 10px;
+    color: white;
+    text-align: center;
+    margin-top: 2px;
+    font-weight: bold;
+}
+
+/* חלון השיחה */
+.smart-guide-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+}
+
+.guide-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.guide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.guide-header h3 {
+    margin: 0;
+    color: #333;
+    font-family: 'Assistant', sans-serif;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #999;
+}
+
+.close-btn:hover {
+    color: #ff6b9d;
+}
+
+.guide-messages {
+    margin-bottom: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.guide-message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    font-family: 'Assistant', sans-serif;
+}
+
+.guide-message.bot {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.guide-message.user {
+    background: linear-gradient(135deg, #ff6b9d, #ffa726);
+    color: white;
+    text-align: left;
+}
+
+.guide-options {
+    display: grid;
+    gap: 10px;
+}
+
+.guide-options button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #ff6b9d, #ffa726);
+    color: white;
+    font-family: 'Assistant', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.guide-options button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+}
+
+/* טופס יצירת קשר */
+.contact-form {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.contact-form h4 {
+    margin: 0 0 15px 0;
+    color: #333;
+    text-align: center;
+}
+
+.contact-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: 'Assistant', sans-serif;
+    box-sizing: border-box;
+}
+
+.contact-form button {
+    width: 48%;
+    padding: 10px;
+    margin: 5px 1%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Assistant', sans-serif;
+}
+
+.contact-form button:first-of-type {
+    background: #25d366;
+    color: white;
+}
+
+.contact-form button:last-of-type {
+    background: #999;
+    color: white;
+}
+
+/* כפתורי הבחירה */
+.category-options, .location-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.category-options button, .location-options button {
+    padding: 8px 12px;
+    border: 1px solid #ff6b9d;
+    border-radius: 5px;
+    background: white;
+    color: #ff6b9d;
+    font-family: 'Assistant', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.category-options button:hover, .location-options button:hover {
+    background: #ff6b9d;
+    color: white;
+}
+
+/* רספונסיבי */
+@media (max-width: 768px) {
+    .smart-floating-gnome {
+        width: 70px;
+        height: 70px;
+        bottom: 20px;
+        left: 20px;
+    }
+    
+    .gnome-image {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .gnome-text {
+        font-size: 9px;
+    }
+    
+    .guide-content {
+        width: 95%;
+        padding: 15px;
+    }
+    
+    .category-options, .location-options {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+// הגמדה החכמה - קוד JavaScript
+let currentStep = 0;
+let selectedCategory = '';
+let selectedLocation = '';
+
+// פתיחת המדריכה
+document.addEventListener('DOMContentLoaded', function() {
+    const smartGnome = document.getElementById('smartGnome');
+    if (smartGnome) {
+        smartGnome.addEventListener('click', function() {
+            document.getElementById('smartGuideModal').style.display = 'block';
+            addBotMessage(getContextMessage());
+        });
+    }
+});
+
+// סגירת המדריכה
+function closeGuide() {
+    document.getElementById('smartGuideModal').style.display = 'none';
+    currentStep = 0;
+}
+
+// סגירה בלחיצה על הרקע
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('smartGuideModal');
+    if (modal && e.target === modal) {
+        closeGuide();
+    }
+});
+
+// הוספת הודעה של הבוט
+function addBotMessage(message) {
+    const messagesDiv = document.getElementById('guideMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'guide-message bot';
+    messageDiv.innerHTML = message;
+    messagesDiv.appendChild(messageDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// הוספת הודעה של המשתמש
+function addUserMessage(message) {
+    const messagesDiv = document.getElementById('guideMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'guide-message user';
+    messageDiv.innerHTML = message;
+    messagesDiv.appendChild(messageDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// קבלת הודעה מותאמת לפי המצב
+function getContextMessage() {
+    const url = window.location.href;
+    
+    if (url.includes('search') || document.querySelector('.search-container')) {
+        return "רואה שאתה בדף החיפוש! איך אני יכולה לעזור לך למצוא עבודה מושלמת? 🎯";
+    } else if (document.querySelector('.job-details') || url.includes('job')) {
+        return "רואה שאתה צופה במשרה! המשרה הזו מעניינת אותך? אני יכולה להדריך אותך איך ליצור קשר! 💼";
+    } else {
+        return "שלום! אני הגמדה החכמה של האתר 🧙‍♀️<br>איך אני יכולה לעזור לך למצוא עבודה?";
+    }
+}
+
+// התחלת חיפוש עבודה
+function startJobSearch() {
+    addUserMessage("אני רוצה לחפש עבודה");
+    addBotMessage("מעולה! בואו נתחיל בחיפוש. באיזה תחום אתה מעוניין לעבוד?");
+    
+    // נסה לקרוא קטגוריות מהמערכת הקיימת
+    const categorySelect = document.querySelector('select[name="category"]') || document.getElementById('categoryFilter');
+    if (categorySelect) {
+        let options = '<div class="category-options">';
+        Array.from(categorySelect.options).forEach(option => {
+            if (option.value && option.value !== '') {
+                options += `<button onclick="selectCategory('${option.value}')">${option.text}</button>`;
+            }
+        });
+        options += '</div>';
+        addBotMessage(options);
+    } else {
+        // קטגוריות ברירת מחדל
+        addBotMessage(`
+            <div class="category-options">
+                <button onclick="selectCategory('פיתוח ותוכנה')">פיתוח ותוכנה</button>
+                <button onclick="selectCategory('מכירות ושיווק')">מכירות ושיווק</button>
+                <button onclick="selectCategory('חינוך והוראה')">חינוך והוראה</button>
+                <button onclick="selectCategory('מזון ומסעדנות')">מזון ומסעדנות</button>
+                <button onclick="selectCategory('בריאות ורפואה')">בריאות ורפואה</button>
+                <button onclick="selectCategory('אחר')">אחר</button>
+            </div>
+        `);
+    }
+}
+
+// בחירת קטגוריה
+function selectCategory(category) {
+    selectedCategory = category;
+    addUserMessage(category);
+    addBotMessage("נהדר! באיזה אזור אתה מעוניין לעבוד?");
+    
+    // נסה לקרוא אזורים מהמערכת הקיימת
+    const locationSelect = document.querySelector('select[name="location"]') || document.getElementById('regionFilter') || document.getElementById('areaFilter');
+    if (locationSelect) {
+        let options = '<div class="location-options">';
+        Array.from(locationSelect.options).forEach(option => {
+            if (option.value && option.value !== '') {
+                options += `<button onclick="selectLocation('${option.value}')">${option.text}</button>`;
+            }
+        });
+        options += '</div>';
+        addBotMessage(options);
+    } else {
+        // אזורים ברירת מחדל
+        addBotMessage(`
+            <div class="location-options">
+                <button onclick="selectLocation('תל אביב')">תל אביב</button>
+                <button onclick="selectLocation('ירושלים')">ירושלים</button>
+                <button onclick="selectLocation('חיפה')">חיפה</button>
+                <button onclick="selectLocation('באר שבע')">באר שבע</button>
+                <button onclick="selectLocation('מרכז')">מרכז</button>
+                <button onclick="selectLocation('צפון')">צפון</button>
+                <button onclick="selectLocation('דרום')">דרום</button>
+                <button onclick="selectLocation('עבודה מהבית')">עבודה מהבית</button>
+            </div>
+        `);
+    }
+}
+
+// בחירת מיקום
+function selectLocation(location) {
+    selectedLocation = location;
+    addUserMessage(location);
+    
+    // מילוי שדות החיפוש אוטומטית
+    fillSearchFields();
+    
+    addBotMessage(`מושלם! חיפשתי עבודות ב${selectedCategory} באזור ${selectedLocation}. האם תרצה שאני אבצע את החיפוש בשבילך?`);
+    
+    document.getElementById('guideOptions').innerHTML = `
+        <button onclick="performSearch()">🔍 בצע חיפוש</button>
+        <button onclick="startOver()">🔄 התחל מחדש</button>
+        <button onclick="closeGuide()">❌ סגור</button>
+    `;
+}
+
+// מילוי שדות החיפוש
+function fillSearchFields() {
+    const categoryField = document.getElementById('categoryFilter');
+    const locationField = document.getElementById('regionFilter') || document.getElementById('areaFilter');
+    
+    if (categoryField && selectedCategory) {
+        // חיפוש הערך הנכון בתפריט
+        for (let i = 0; i < categoryField.options.length; i++) {
+            if (categoryField.options[i].text === selectedCategory || categoryField.options[i].value === selectedCategory) {
+                categoryField.value = categoryField.options[i].value;
+                break;
+            }
+        }
+    }
+    
+    if (locationField && selectedLocation) {
+        // חיפוש הערך הנכון בתפריט
+        for (let i = 0; i < locationField.options.length; i++) {
+            if (locationField.options[i].text === selectedLocation || locationField.options[i].value === selectedLocation) {
+                locationField.value = locationField.options[i].value;
+                break;
+            }
+        }
+    }
+}
+
+// ביצוע החיפוש
+function performSearch() {
+    addUserMessage("כן, בצע חיפוש");
+    
+    // חיפוש כפתור החיפוש והקלקה עליו
+    const searchButton = document.querySelector('.search-button') || 
+                        document.querySelector('button[type="submit"]') || 
+                        document.querySelector('.btn-search') ||
+                        document.getElementById('searchButton');
+    
+    if (searchButton) {
+        searchButton.click();
+        addBotMessage("מעולה! ביצעתי את החיפוש בשבילך. בהצלחה! 🎉");
+        setTimeout(closeGuide, 2000);
+    } else {
+        // אם אין כפתור, נקרא לפונקציה ישירות
+        if (typeof filterJobs === 'function') {
+            filterJobs();
+            addBotMessage("מעולה! ביצעתי את החיפוש בשבילך. בהצלחה! 🎉");
+            setTimeout(closeGuide, 2000);
+        } else {
+            addBotMessage("המערכת מוכנה לחיפוש! לחץ על כפתור החיפוש כדי לראות את התוצאות.");
+        }
+    }
+}
+
+// התחלה מחדש
+function startOver() {
+    currentStep = 0;
+    selectedCategory = '';
+    selectedLocation = '';
+    document.getElementById('guideMessages').innerHTML = '<div class="guide-message bot">בואו נתחיל מחדש! איך אני יכולה לעזור?</div>';
+    document.getElementById('guideOptions').innerHTML = `
+        <button onclick="startJobSearch()">🔍 חיפוש עבודה</button>
+        <button onclick="backToSearch()">⬅️ חזרה לחיפוש</button>
+        <button onclick="scrollToTop()">⬆️ חזרה למעלה</button>
+        <button onclick="showContactForm()">📞 לא מצאתי מה שחיפשתי</button>
+    `;
+}
+
+// חזרה לחיפוש
+function backToSearch() {
+    addUserMessage("חזרה לחיפוש");
+    const searchSection = document.getElementById('search');
+    if (searchSection) {
+        searchSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    addBotMessage("חוזרים לחיפוש! 🔍");
+    setTimeout(closeGuide, 1000);
+}
+
+// חזרה למעלה
+function scrollToTop() {
+    addUserMessage("חזרה למעלה");
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    addBotMessage("חוזרים למעלה! ⬆️");
+    setTimeout(closeGuide, 1000);
+}
+
+// הצגת טופס יצירת קשר
+function showContactForm() {
+    addUserMessage("לא מצאתי מה שחיפשתי");
+    addBotMessage("אל תדאג! בואו נעזור לך למצוא בדיוק מה שאתה מחפש:");
+    document.getElementById('contactForm').style.display = 'block';
+}
+
+// סגירת טופס יצירת קשר
+function closeContactForm() {
+    document.getElementById('contactForm').style.display = 'none';
+}
+
+// שליחת וואטסאפ
+function sendWhatsApp() {
+    const fullName = document.getElementById('fullName').value;
+    const phone = document.getElementById('phone').value;
+    const jobTitle = document.getElementById('jobTitle').value;
+    const location = document.getElementById('location').value;
+    
+    if (!fullName || !phone || !jobTitle || !location) {
+        alert('אנא מלא את כל השדות');
+        return;
+    }
+    
+    const message = `שלום! 👋
+
+אני ${fullName} ואני מחפש/ת עבודה:
+
+🎯 תפקיד מבוקש: ${jobTitle}
+📍 אזור מועדף: ${location}
+📱 טלפון: ${phone}
+
+הגמדה החכמה של האתר הפנתה אותי אליכם.
+אשמח לקבל עזרה במציאת משרות מתאימות!
+
+תודה! 😊`;
+
+    // 🚨 שנה את המספר הזה למספר הוואטסאפ שלך!
+    const whatsappUrl = `https://wa.me/972555504633?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+    
+    addBotMessage("נהדר! הפניתי אותך לוואטסאפ עם כל הפרטים. מישהו יחזור אליך בקרוב! 📱");
+    closeContactForm();
+    setTimeout(closeGuide, 3000);
+}
+
+// טקסט דינמי לגמדה
+const gnomeTexts = ['מדריכה חכמה', 'עזרה אישית', 'חיפוש מותאם', 'תמיכה 24/7', 'מציאת עבודה'];
+let textIndex = 0;
+
+setInterval(() => {
+    const gnomeTextElement = document.querySelector('.gnome-text');
+    if (gnomeTextElement) {
+        gnomeTextElement.textContent = gnomeTexts[textIndex];
+        textIndex = (textIndex + 1) % gnomeTexts.length;
+    }
+}, 3000);
+
+// לחיצה כפולה לחזרה למעלה
+document.addEventListener('DOMContentLoaded', function() {
+    const smartGnome = document.getElementById('smartGnome');
+    if (smartGnome) {
+        smartGnome.addEventListener('dblclick', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+});
+
+console.log('🧙‍♀️ הגמדה החכמה הופעלה בהצלחה!');
+</script>
 </body>
 </html>
