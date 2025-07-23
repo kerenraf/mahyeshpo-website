@@ -2510,11 +2510,13 @@ function filterJobs() {
     displayJobs(filteredJobs);
     console.log('🔍 נמצאו ' + filteredJobs.length + ' תוצאות');
 }
-// גלילה לתוצאות החיפוש
-document.getElementById('jobsContainer').scrollIntoView({ 
-    behavior: 'smooth', 
-    block: 'start' 
-});
+// גלילה לתוצאות החיפוש אחרי שהן מוצגות
+setTimeout(function() {
+    document.getElementById('jobsContainer').scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+    });
+}, 100);
         
         function jobMatchesSearch(job, searchText) {
             return (
