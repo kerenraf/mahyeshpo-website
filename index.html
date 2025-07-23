@@ -1528,31 +1528,34 @@
             }
         }
 
-        /* שיתוף האתר - סטיילים */
+/* שיתוף האתר - סטיילים */
 .floating-website-share {
     position: fixed;
-    bottom: 200px;
+    bottom: 100px;
     right: 30px;
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     background: linear-gradient(135deg, #25D366, #128C7E);
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    z-index: 1001;
-    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
     transition: all 0.3s ease;
     animation: websiteSharePulse 4s infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .floating-website-share:hover {
     transform: scale(1.1);
-    box-shadow: 0 12px 30px rgba(37, 211, 102, 0.6);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
 }
 
 .floating-website-share i {
     color: white;
-    font-size: 1.6rem;
+    font-size: 1.2rem;
 }
 
 .floating-website-share-text {
@@ -1582,10 +1585,10 @@
 
 @keyframes websiteSharePulse {
     0%, 100% { 
-        box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
     }
     50% { 
-        box-shadow: 0 8px 30px rgba(37, 211, 102, 0.7), 0 0 25px rgba(37, 211, 102, 0.3);
+        box-shadow: 0 4px 20px rgba(37, 211, 102, 0.7), 0 0 20px rgba(37, 211, 102, 0.3);
     }
 }
 
@@ -1711,16 +1714,16 @@
 
 @media (max-width: 768px) {
     .floating-website-share {
-        width: 60px;
-        height: 60px;
-        bottom: 180px;
+        width: 45px;
+        height: 45px;
+        bottom: 90px;
         right: 20px;
     }
     
     .floating-website-share i {
-        font-size: 1.4rem;
-    }
-    
+        font-size: 1rem;
+        
+    }RetryClaude can make mistakes. Please double-check responses.
     .website-share-modal-content {
         width: 95%;
         margin: 2% auto;
