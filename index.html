@@ -2570,10 +2570,23 @@ function clearFilters() {
         }
 
         // פונקציית שיתוף
-        function shareJob(index) {
-            var job = currentDisplayedJobs[index];
-            if (!job) return;
-            
+function shareJob(index) {
+    var job = currentDisplayedJobs[index];
+    if (!job) return;
+    
+    // עדכון מטא תגים דינמי
+    var ogTitle = document.querySelector('meta[property="og:title"]');
+    var ogDescription = document.querySelector('meta[property="og:description"]');
+    var twitterTitle = document.querySelector('meta[name="twitter:title"]');
+    var twitterDescription = document.querySelector('meta[name="twitter:description"]');
+    
+    var jobTitle = '🎯 ' + job.title + ' - ' + (job.city || job.region || 'ישראל');
+    var jobDesc = '💼 ' + job.category + '\n📍 ' + (job.city ? job.city + ', ' + (job.region || '') : job.region || 'ישראל') + '\n\n👆 לפרטים נוספים לחצו על התמונה ועל כפתור הוואטסאפ/SMS';
+    
+    if (ogTitle) ogTitle.setAttribute('content', jobTitle);
+    if (ogDescription) ogDescription.setAttribute('content', jobDesc);
+    if (twitterTitle) twitterTitle.setAttribute('content', jobTitle);
+    if (twitterDescription) twitterDescription.setAttribute('content', jobDesc);            
             var baseUrl = window.location.origin + window.location.pathname;
             var jobUrl = baseUrl + '?job=' + encodeURIComponent(job.jobNumber);
 var shareText = '🎯 משרה מעניינת: ' + job.title + 
