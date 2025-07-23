@@ -2424,77 +2424,19 @@ var shortDescription = fullContent
             document.getElementById('modal-job-type').textContent = job.jobType || 'משרה מלאה';
             document.getElementById('modal-job-category').textContent = job.category || 'אחר';
             document.getElementById('modal-job-number').textContent = job.jobNumber || 'לא צוין';
-// ========== זיהוי חכם של תוכן ==========
+// הצגת תיאור המשרה
+var description = job.description && job.description.trim() 
+    ? job.description.trim() 
+    : 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
 
-// איחוד כל התוכן
-var fullContent = '';
-if (job.description) fullContent += job.description;
-if (job.requirements) {
-    if (fullContent) fullContent += '\n\n';
-    fullContent += job.requirements;
-}
+// הצגת דרישות המשרה
+var requirements = job.requirements && job.requirements.trim() 
+    ? job.requirements.trim() 
+    : 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
 
-// אם אין תוכן
-if (!fullContent.trim()) {
-    document.getElementById('modal-job-description').textContent = 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
-    document.getElementById('modal-job-requirements').textContent = 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
-} else {
-    // חיפוש כותרות מדויקות
-    var descriptionMatch = fullContent.match(/(?:^|\n)\s*(תיאור משרה|תיאור התפקיד|תיאור|פרטי המשרה)\s*:?\s*\n?(.*?)(?=\n\s*(?:דרישות|תנאים|$))/is);
-    var requirementsMatch = fullContent.match(/(?:^|\n)\s*(דרישות|דרישות התפקיד|נדרש|מה נדרש)\s*:?\s*\n?(.*?)(?=\n\s*(?:תנאים|$))/is);
-    var conditionsMatch = fullContent.match(/(?:^|\n)\s*(תנאים|תנאי עבודה|מה אנחנו מציעים|הטבות)\s*:?\s*\n?(.*?)$/is);
-    
-    var description = '';
-    var requirements = '';
-    
-    // חילוץ תיאור
-    if (descriptionMatch && descriptionMatch[2] && descriptionMatch[2].trim()) {
-        description = descriptionMatch[2].trim();
-    }
-    
-    // חילוץ דרישות
-    if (requirementsMatch && requirementsMatch[2] && requirementsMatch[2].trim()) {
-        requirements = requirementsMatch[2].trim();
-    }
-    
-    // הוספת תנאים לדרישות
-    if (conditionsMatch && conditionsMatch[2] && conditionsMatch[2].trim()) {
-        if (requirements) {
-            requirements += '\n\n' + conditionsMatch[2].trim();
-        } else {
-            requirements = conditionsMatch[2].trim();
-        }
-    }
-    
-    // אם לא מצאנו מבנה ברור - נסה פיצול פשוט
-    if (!description && !requirements) {
-        var simpleKeywords = ['דרישות:', 'נדרש:', 'תנאים:'];
-        var splitPoint = -1;
-        
-        for (var i = 0; i < simpleKeywords.length; i++) {
-            var keywordIndex = fullContent.indexOf(simpleKeywords[i]);
-            if (keywordIndex !== -1) {
-                splitPoint = keywordIndex;
-                break;
-            }
-        }
-        
-        if (splitPoint !== -1) {
-            description = fullContent.substring(0, splitPoint).trim();
-            requirements = fullContent.substring(splitPoint).trim();
-        } else {
-            // אין חלוקה ברורה - הכל הולך לתיאור
-            description = fullContent.trim();
-            requirements = 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
-        }
-    }
-    
-    // הצגת התוכן המעובד
-    document.getElementById('modal-job-description').textContent = description || 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
-    document.getElementById('modal-job-requirements').textContent = requirements || 'לחץ על כפתורי יצירת הקשר לפרטים נוספים';
-}
-
-// ========== סוף זיהוי תוכן ==========
+// הצגת התוכן במודל
+document.getElementById('modal-job-description').textContent = description;
+document.getElementById('modal-job-requirements').textContent = requirements;
             
             var messageText = 'שלום, אני מעוניין/ת במשרה: ' + job.title + ' (' + job.jobNumber + ')';
             var whatsappLink = 'https://wa.me/972555504633?text='+ encodeURIComponent(messageText);
