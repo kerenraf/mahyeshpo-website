@@ -2580,57 +2580,6 @@ function clearFilters() {
         }
 // ======================== פונקציות שיתוף ========================
         
-        // יצירת תמונת שיתוף דינמית
-        function createJobShareImage(job) {
-            var canvas = document.createElement('canvas');
-            canvas.width = 1200;
-            canvas.height = 630;
-            var ctx = canvas.getContext('2d');
-            
-            // רקע
-            ctx.fillStyle = '#F69898';
-            ctx.fillRect(0, 0, 1200, 630);
-            
-            // טקסט
-            ctx.fillStyle = 'white';
-            ctx.font = 'bold 48px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('דרוש/ה ' + job.title, 600, 200);
-            
-            ctx.font = '36px Arial';
-            var location = job.city ? job.city + ', ' + (job.region || '') : (job.region || 'ישראל');
-            ctx.fillText('ב' + location, 600, 280);
-            
-            ctx.font = '32px Arial';
-            ctx.fillText(job.category, 600, 360);
-            
-            ctx.font = 'bold 28px Arial';
-            ctx.fillText('לפרטים: 055-550-4633', 600, 450);
-            
-            return canvas.toDataURL();
-        }
-
-        function updateMetaTags(job, imageUrl) {
-            var location = job.city ? job.city + ', ' + (job.region || '') : (job.region || 'ישראל');
-            var title = 'דרוש/ה ' + job.title + ' ב' + location;
-            var description = '💼 ' + job.category + ' | 📞 לפרטים: 055-550-4633';
-            
-            // עדכון מטא תגים
-            updateMetaTag('property', 'og:title', title);
-            updateMetaTag('property', 'og:description', description);
-            updateMetaTag('property', 'og:image', imageUrl);
-            updateMetaTag('name', 'twitter:title', title);
-            updateMetaTag('name', 'twitter:description', description);
-            updateMetaTag('name', 'twitter:image', imageUrl);
-        }
-
-        function updateMetaTag(attribute, name, content) {
-            var meta = document.querySelector('meta[' + attribute + '="' + name + '"]');
-            if (meta) {
-                meta.setAttribute('content', content);
-            }
-        }
-
 // ======================== פונקציות שיתוף ========================
         
         // יצירת תמונת שיתוף דינמית
@@ -2684,36 +2633,42 @@ function clearFilters() {
             }
         }
 
-        // פונקציית שיתוף משופרת
+// פונקציית שיתוף משופרת
         function shareJob(index) {
             var job = currentDisplayedJobs[index];
             if (!job) return;
             
-            // יצירת תמונת שיתוף דינמית
-            var shareImageUrl = createJobShareImage(job);
-            updateMetaTags(job, shareImageUrl);
-            
             var baseUrl = window.location.origin + window.location.pathname;
             var jobUrl = baseUrl + '?job=' + encodeURIComponent(job.jobNumber);
             var location = job.city ? job.city + ', ' + (job.region || '') : (job.region || 'ישראל');
+            
+            // תמיד עדכן מטא תגים לפני השיתוף
+            var shareImageUrl = createJobShareImage(job);
+            updateMetaTags(job, shareImageUrl);
+            
             var shareText = '🎯 דרוש/ה ' + job.title + ' ב' + location + 
                 '\n💼 ' + job.category + 
                 '\n📞 לפרטים נוספים: 055-550-4633' +
                 '\n📱 או לחצו על הקישור:' +
                 '\n' + jobUrl;
             
-            if (navigator.share) {
-                navigator.share({
-                    title: 'דרוש/ה ' + job.title,
-                    text: job.title + ' ב' + location,
-                    url: jobUrl
-                }).catch(function(err) { 
-                    console.log('שגיאה בשיתוף:', err); 
-                });
-            } else {
-                copyToClipboard(shareText);
-                showShareOptions(job, shareText, jobUrl);
-            }
+            // המתן רגע לעדכון המטא תגים לפני השיתוף
+            setTimeout(function() {
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'דרוש/ה ' + job.title + ' ב' + location,
+                        text: shareText,
+                        url: jobUrl
+                    }).catch(function(err) { 
+                        console.log('שגיאה בשיתוף:', err);
+                        copyToClipboard(shareText);
+                        showShareOptions(job, shareText, jobUrl);
+                    });
+                } else {
+                    copyToClipboard(shareText);
+                    showShareOptions(job, shareText, jobUrl);
+                }
+            }, 100);
         }
         
         function copyToClipboard(text) {
