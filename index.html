@@ -16,8 +16,10 @@
     
     <!-- נתונים לשיתוף ברשתות חברתיות (פייסבוק, וואטסאפ) -->
     <meta property="og:title" content="מה יש פה? - מצא עבודה תוך 24 שעות!">
-    <meta property="og:description" content="האתר החכם למציאת עבודה! אלפי משרות מעודכנות יומית עם פנייה ישירה לרק״ד">
-    <meta property="og:image" content="https://mayeshpo.co.il/images/og-image.jpg">
+    <meta property="og:description" content="האתר החכם למציאת עבודה! אלפי משרות מעודכנות יומית עם פנייה ישירה ">
+<meta property="og:image" content="https://mayeshpo.co.il/images/גמדה מצביעה בלי רקע.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
     <meta property="og:url" content="https://mayeshpo.co.il">
     <meta property="og:type" content="website">
     
@@ -25,8 +27,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="מה יש פה? - לוח משרות חכם">
     <meta name="twitter:description" content="מצא עבודה מושלמת עם הגמדה החכמה שלנו!">
-    <meta name="twitter:image" content="https://mayeshpo.co.il/images/twitter-image.jpg">
-    
+<meta name="twitter:image" content="https://mayeshpo.co.il/images/גמדה מצביעה בלי רקע.png">    
     <!-- נתונים מובנים לגוגל -->
     <script type="application/ld+json">
     {
@@ -2575,7 +2576,11 @@ function clearFilters() {
             
             var baseUrl = window.location.origin + window.location.pathname;
             var jobUrl = baseUrl + '?job=' + encodeURIComponent(job.jobNumber);
-            var shareText = '🎯 משרה מעניינת: ' + job.title + '\n📍 ' + (job.city ? job.city + ', ' + (job.region || '') : job.region || 'ישראל') + '\n💼 ' + job.category + '\n\n' + jobUrl;
+var shareText = '🎯 משרה מעניינת: ' + job.title + 
+    '\n📍 ' + (job.city ? job.city + ', ' + (job.region || '') : job.region || 'ישראל') + 
+    '\n💼 ' + job.category + 
+    '\n\n👆 לפרטים נוספים לחצו על התמונה ועל כפתור הוואטסאפ/SMS שמופיע במשרה' +
+    '\n\n' + jobUrl;
             
             if (navigator.share) {
                 navigator.share({
@@ -2676,10 +2681,11 @@ function clearFilters() {
                     '</div>' +
                     '<div style="padding: 20px;">' +
                         '<h4 style="color: #F69898; margin-bottom: 15px;">' + job.title + '</h4>' +
-                        '<p style="background: #333; padding: 10px; border-radius: 5px; font-size: 0.9rem; margin-bottom: 15px;">' +
-                            'קישור: ' + jobUrl +
-                        '</p>' +
-                        '<div style="display: grid; gap: 15px;">' +
+'<p style="background: #333; padding: 10px; border-radius: 5px; font-size: 0.9rem; margin-bottom: 15px;">' +
+    '👆 לפרטים נוספים לחצו על התמונה ועל כפתור הוואטסאפ/SMS<br>' +
+    'קישור: ' + jobUrl +
+'</p>' +
+                '<div style="display: grid; gap: 15px;">' +
                             '<a href="' + whatsappShare + '" target="_blank" class="contact-method-btn whatsapp-btn" style="text-decoration: none;">' +
                                 '<i class="fab fa-whatsapp"></i>' +
                                 '<span>שתף בוואטסאפ</span>' +
