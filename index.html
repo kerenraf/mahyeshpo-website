@@ -2510,6 +2510,14 @@ function filterJobs() {
     displayJobs(filteredJobs);
     console.log('🔍 נמצאו ' + filteredJobs.length + ' תוצאות');
 }
+        displayJobs(filteredJobs);
+console.log('🔍 נמצאו ' + filteredJobs.length + ' תוצאות');
+
+// גלילה לתוצאות החיפוש
+document.getElementById('jobsContainer').scrollIntoView({ 
+    behavior: 'smooth', 
+    block: 'start' 
+});
         
         function jobMatchesSearch(job, searchText) {
             return (
