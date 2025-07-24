@@ -4018,12 +4018,9 @@ function getDynamicCategories() {
 // קבלת אזורים דינמיים מהמערכת
 function getDynamicAreas() {
     let areas = [];
-    
-    // בדיקת שני המסננים - ערים ואזורים
-    const citySelect = document.getElementById('regionFilter');
+
     const areaSelect = document.getElementById('areaFilter');
-    
-    // קודם נסה לקחת מאזורים
+
     if (areaSelect && areaSelect.options) {
         for (let i = 1; i < areaSelect.options.length; i++) {
             const option = areaSelect.options[i];
@@ -4035,32 +4032,20 @@ function getDynamicAreas() {
             }
         }
     }
-    
-    // אם אין אזורים, קח מערים
-    if (areas.length === 0 && citySelect && citySelect.options) {
-        for (let i = 1; i < citySelect.options.length; i++) {
-            const option = citySelect.options[i];
-            if (option.value && option.value.trim()) {
-                areas.push({
-                    value: option.value,
-                    text: option.text
-                });
-            }
-        }
-    }
-    
-    // אם עדיין אין, תחזיר ברירת מחדל
+
     if (areas.length === 0) {
         areas = [
-            { value: 'תל אביב', text: 'תל אביב' },
-            { value: 'ירושלים', text: 'ירושלים' },
-            { value: 'חיפה', text: 'חיפה' },
             { value: 'מרכז', text: 'מרכז' },
             { value: 'צפון', text: 'צפון' },
-            { value: 'דרום', text: 'דרום' }
+            { value: 'דרום', text: 'דרום' },
+            { value: 'שרון', text: 'שרון' },
+            { value: 'גליל', text: 'גליל' },
+            { value: 'נגב', text: 'נגב' },
+            { value: 'שומרון', text: 'שומרון' },
+            { value: 'יהודה', text: 'יהודה' }
         ];
     }
-    
+
     return areas;
 }
 
