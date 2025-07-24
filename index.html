@@ -2759,19 +2759,162 @@ setTimeout(function() {
     }
 }, 200);
         
-        function jobMatchesSearch(job, searchText) {
-            return (
-                (job.title && job.title.toLowerCase().indexOf(searchText) !== -1) ||
-                (job.company && job.company.toLowerCase().indexOf(searchText) !== -1) ||
-                (job.description && job.description.toLowerCase().indexOf(searchText) !== -1) ||
-                (job.requirements && job.requirements.toLowerCase().indexOf(searchText) !== -1) ||
-                (job.city && job.city.toLowerCase().indexOf(searchText) !== -1) ||
-                (job.region && job.region.toLowerCase().indexOf(searchText) !== -1) ||
-                (job.category && job.category.toLowerCase().indexOf(searchText) !== -1)
-            );
-        }
+// =============== החלפת הפונקציה jobMatchesSearch ===============
+// מצאי את הפונקציה הזו בקובץ שלך והחליפי אותה בקוד הזה:
 
-function clearFilters() {
+function jobMatchesSearch(job, searchText) {
+    // נרמול טקסט החיפוש
+    const normalizedSearchText = normalizeSearchText(searchText);
+    
+    // שדות לחיפוש
+    const searchFields = [
+        job.title,
+        job.company, 
+        job.description,
+        job.requirements,
+        job.city,
+        job.region,
+        job.category
+    ];
+    
+    // חיפוש בכל השדות
+    return searchFields.some(field => {
+        if (!field) return false;
+        
+        const normalizedField = normalizeSearchText(field);
+        
+        // חיפוש רגיל
+        if (normalizedField.includes(normalizedSearchText)) {
+            return true;
+        }
+        
+        // חיפוש עם וריאציות זכר/נקבה
+        return checkGenderVariations(normalizedField, normalizedSearchText);
+    });
+}
+
+// =============== הוספת פונקציות עזר חדשות ===============
+// הוסיפי את הפונקציות האלה אחרי הפונקציה jobMatchesSearch:
+
+// נרמול טקסט - הסרת רווחים וסימנים
+function normalizeSearchText(text) {
+    if (!text) return '';
+    return text.toLowerCase()
+               .trim()
+               .replace(/\s+/g, ' '); // מחליף כמה רווחים ברווח אחד
+}
+
+// בדיקת וריאציות זכר/נקבה
+function checkGenderVariations(fieldText, searchText) {
+    // מילון וריאציות מקיף
+    const genderVariations = {
+        // מקצועות פיתוח וטכנולוגיה
+        'מפתח': ['מפתח/ת', 'מפתחת', 'מפתח', 'developer', 'programmer'],
+        'מפתחת': ['מפתח/ת', 'מפתח', 'מפתחת', 'developer'],
+        'מתכנת': ['מתכנת/ת', 'מתכנתת', 'מתכנת', 'programmer', 'coder'],
+        'מתכנתת': ['מתכנת/ת', 'מתכנת', 'מתכנתת', 'programmer'],
+        'מהנדס': ['מהנדס/ת', 'מהנדסת', 'מהנדס', 'engineer'],
+        'מהנדסת': ['מהנדס/ת', 'מהנדס', 'מהנדסת', 'engineer'],
+        'אנליסט': ['אנליסט/ית', 'אנליסטית', 'אנליסט', 'analyst'],
+        'אנליסטית': ['אנליסט/ית', 'אנליסט', 'אנליסטית'],
+        'טכנאי': ['טכנאי/ת', 'טכנאית', 'טכנאי', 'technician'],
+        'טכנאית': ['טכנאי/ת', 'טכנאי', 'טכנאית'],
+        
+        // מקצועות שירות ומסעדנות
+        'מלצר': ['מלצר/ית', 'מלצרית', 'מלצר', 'waiter', 'server'],
+        'מלצרית': ['מלצר/ית', 'מלצר', 'מלצרית', 'waitress'],
+        'ברמן': ['ברמן/ית', 'ברמנית', 'ברמן', 'bartender'],
+        'ברמנית': ['ברמן/ית', 'ברמן', 'ברמנית'],
+        'טבח': ['טבח/ית', 'טבחית', 'טבח', 'chef', 'cook'],
+        'טבחית': ['טבח/ית', 'טבח', 'טבחית'],
+        'קופאי': ['קופאי/ת', 'קופאית', 'קופאי', 'cashier'],
+        'קופאית': ['קופאי/ת', 'קופאי', 'קופאית'],
+        
+        // מקצועות חינוך ורפואה
+        'מורה': ['מורה', 'מורת', 'מחנך/ת', 'מחנכת', 'teacher'],
+        'מורת': ['מורה', 'מורת', 'מחנך/ת', 'מחנכת'],
+        'מחנך': ['מחנך/ת', 'מחנכת', 'מחנך', 'educator'],
+        'מחנכת': ['מחנך/ת', 'מחנך', 'מחנכת'],
+        'רופא': ['רופא/ה', 'רופאה', 'רופא', 'doctor'],
+        'רופאה': ['רופא/ה', 'רופא', 'רופאה', 'doctor'],
+        'אחות': ['אח/ות', 'אח', 'אחות', 'nurse'],
+        'אח': ['אח/ות', 'אחות', 'אח', 'nurse'],
+        'פיזיותרפיסט': ['פיזיותרפיסט/ית', 'פיזיותרפיסטית', 'פיזיותרפיסט'],
+        'פיזיותרפיסטית': ['פיזיותרפיסט/ית', 'פיזיותרפיסט', 'פיזיותרפיסטית'],
+        
+        // מקצועות ניהול ומכירות
+        'מנהל': ['מנהל/ת', 'מנהלת', 'מנהל', 'manager'],
+        'מנהלת': ['מנהל/ת', 'מנהל', 'מנהלת', 'manager'],
+        'מוכר': ['מוכר/ת', 'מוכרת', 'מוכר', 'salesperson'],
+        'מוכרת': ['מוכר/ת', 'מוכר', 'מוכרת', 'salesperson'],
+        'יועץ': ['יועץ/ת', 'יועצת', 'יועץ', 'consultant', 'advisor'],
+        'יועצת': ['יועץ/ת', 'יועץ', 'יועצת', 'consultant'],
+        'נציג': ['נציג/ה', 'נציגה', 'נציג', 'representative'],
+        'נציגה': ['נציג/ה', 'נציג', 'נציגה'],
+        'רכז': ['רכז/ת', 'רכזת', 'רכז', 'coordinator'],
+        'רכזת': ['רכז/ת', 'רכז', 'רכזת'],
+        
+        // מקצועות כלליים
+        'עובד': ['עובד/ת', 'עובדת', 'עובד', 'worker', 'employee'],
+        'עובדת': ['עובד/ת', 'עובד', 'עובדת', 'worker'],
+        'פקיד': ['פקיד/ה', 'פקידה', 'פקיד', 'clerk'],
+        'פקידה': ['פקיד/ה', 'פקיד', 'פקידה'],
+        'עוזר': ['עוזר/ת', 'עוזרת', 'עוזר', 'assistant'],
+        'עוזרת': ['עוזר/ת', 'עוזר', 'עוזרת', 'assistant'],
+        'מתאמן': ['מתאמן/ת', 'מתאמנת', 'מתאמן', 'trainee'],
+        'מתאמנת': ['מתאמן/ת', 'מתאמן', 'מתאמנת'],
+        
+        // מקצועות ספציפיים נוספים
+        'שמאי': ['שמאי/ת', 'שמאית', 'שמאי', 'appraiser'],
+        'שמאית': ['שמאי/ת', 'שמאי', 'שמאית'],
+        'עורך': ['עורך/ת', 'עורכת', 'עורך', 'editor', 'lawyer'],
+        'עורכת': ['עורך/ת', 'עורך', 'עורכת'],
+        'מעצב': ['מעצב/ת', 'מעצבת', 'מעצב', 'designer'],
+        'מעצבת': ['מעצב/ת', 'מעצב', 'מעצבת', 'designer'],
+        'צלם': ['צלם/ת', 'צלמת', 'צלם', 'photographer'],
+        'צלמת': ['צלם/ת', 'צלם', 'צלמת'],
+        'נהג': ['נהג/ת', 'נהגת', 'נהג', 'driver'],
+        'נהגת': ['נהג/ת', 'נהג', 'נהגת'],
+        'שומר': ['שומר/ת', 'שומרת', 'שומר', 'guard'],
+        'שומרת': ['שומר/ת', 'שומר', 'שומרת']
+    };
+    
+    // בדיקה ישירה במילון
+    const variations = genderVariations[searchText];
+    if (variations) {
+        return variations.some(variation => fieldText.includes(variation));
+    }
+    
+    // בדיקה הפוכה - אם יש במשרה מילה עם /
+    const wordsWithSlash = fieldText.match(/\S*\/\S*/g);
+    if (wordsWithSlash) {
+        return wordsWithSlash.some(word => {
+            // מפרק מילים עם / ובודק התאמה
+            const parts = word.split('/');
+            return parts.some(part => {
+                const cleanPart = part.replace(/[^\u0590-\u05FF\u0041-\u005A\u0061-\u007A]/g, '');
+                return cleanPart === searchText || 
+                       searchText.includes(cleanPart) || 
+                       cleanPart.includes(searchText);
+            });
+        });
+    }
+    
+    // חיפוש חלקי במילים
+    return partialWordMatch(fieldText, searchText);
+}
+
+// פונקציה עזר לחיפוש חלקי במילים
+function partialWordMatch(text, searchTerm) {
+    if (searchTerm.length < 3) return false; // חיפוש חלקי רק למילים של 3 אותיות או יותר
+    
+    const words = text.split(/\s+/);
+    return words.some(word => {
+        const cleanWord = word.replace(/[^\u0590-\u05FF\u0041-\u005A\u0061-\u007A]/g, '');
+        return cleanWord.includes(searchTerm) || searchTerm.includes(cleanWord);
+    });
+}
+        function clearFilters() {
     document.getElementById('searchInput').value = '';
     document.getElementById('categoryFilter').value = '';
     document.getElementById('regionFilter').value = '';
