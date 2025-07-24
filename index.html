@@ -3380,6 +3380,10 @@ function fallbackShare(job, shareText, jobUrl, shareTitle) {
         window.toggleAccessibilityFeature = toggleAccessibilityFeature;
         window.changeFontSize = changeFontSize;
         window.resetAccessibility = resetAccessibility;
+        window.openGuideModal = openGuideModal;
+window.clearMessages = clearMessages;
+window.resetOptions = resetOptions;
+
 
         function scrollToSearch() {
             document.getElementById('search').scrollIntoView({ 
@@ -3572,22 +3576,25 @@ console.log('🚀 תכונת שיתוף האתר מוכנה!');
 }
 
 .gnome-image {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
     object-fit: contain;
     border-radius: 0;
     background: none;
 }
 
 .gnome-text {
-    font-size: 18px;
+    font-size: 14px;
     color: white;
-    text-align: right;
-    margin-top: -5px; /* קירוב הטקסט לגמדה על ידי מרווח שלילי */
+    text-align: center;
+    margin-top: 5px;
     font-weight: bold;
-    transform: translateX(25px); /* הזזה לימין כדי שייראה שהיא מצביעה עליו */
+    background: rgba(246, 152, 152, 0.9);
+    padding: 4px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
-
 /* חלון השיחה */
 .smart-guide-modal {
     display: none;
@@ -3598,8 +3605,13 @@ console.log('🚀 תכונת שיתוף האתר מוכנה!');
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
     z-index: 2000;
+    animation: fadeIn 0.3s ease;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 .guide-content {
     position: absolute;
     top: 50%;
@@ -3609,12 +3621,23 @@ console.log('🚀 תכונת שיתוף האתר מוכנה!');
     padding: 20px;
     border-radius: 15px;
     width: 90%;
-    max-width: 400px;
+    max-width: 450px;
     max-height: 80vh;
     overflow-y: auto;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease;
 }
 
+@keyframes slideIn {
+    from { 
+        transform: translate(-50%, -60%);
+        opacity: 0;
+    }
+    to { 
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+}
 .guide-header {
     display: flex;
     justify-content: space-between;
@@ -3631,17 +3654,24 @@ console.log('🚀 תכונת שיתוף האתר מוכנה!');
 }
 
 .close-btn {
-    background: none;
+    background: #ff6b6b;
     border: none;
-    font-size: 20px;
+    font-size: 18px;
     cursor: pointer;
-    color: #999;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
 }
 
 .close-btn:hover {
-    color: #ff6b9d;
+    background: #ff5252;
+    transform: scale(1.1);
 }
-
 .guide-messages {
     margin-bottom: 20px;
     max-height: 200px;
@@ -3760,21 +3790,22 @@ console.log('🚀 תכונת שיתוף האתר מוכנה!');
 /* רספונסיבי */
 @media (max-width: 768px) {
     .smart-floating-gnome {
-        width: 70px;
-        height: 70px;
-        bottom: 20px;
-        left: 20px;
+        width: auto;
+        height: auto;
+        bottom: 120px;
+        right: 20px;
     }
     
     .gnome-image {
-        width: 40px;
-        height: 40px;
+        width: 80px;
+        height: 80px;
     }
     
     .gnome-text {
-        font-size: 9px;
+        font-size: 12px;
+        padding: 3px 6px;
     }
-    
+}    
     .guide-content {
         width: 95%;
         padding: 15px;
@@ -3794,7 +3825,53 @@ let selectedLocation = '';
 
 // פתיחת המדריכה
 document.addEventListener('DOMContentLoaded', function() {
+    const sm// פתיחת המדריכה - תיקון בעיית הפתיחה
+document.addEventListener('DOMContentLoaded', function() {
     const smartGnome = document.getElementById('smartGnome');
+    if (smartGnome) {
+        smartGnome.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('🧙‍♀️ פותח את המדריכה החכמה');
+            openGuideModal();
+        });
+    }
+});
+
+// פונקציה נפרדת לפתיחת המודל
+function openGuideModal() {
+    const modal = document.getElementById('smartGuideModal');
+    if (modal) {
+        clearMessages();
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => {
+            addBotMessage(getContextMessage());
+            resetOptions();
+        }, 100);
+    }
+}
+
+// נקה הודעות
+function clearMessages() {
+    const messagesDiv = document.getElementById('guideMessages');
+    if (messagesDiv) {
+        messagesDiv.innerHTML = '';
+    }
+}
+
+// איפוס כפתורי האפשרויות
+function resetOptions() {
+    const optionsDiv = document.getElementById('guideOptions');
+    if (optionsDiv) {
+        optionsDiv.innerHTML = `
+            <button onclick="startJobSearch()">🔍 חיפוש עבודה</button>
+            <button onclick="backToSearch()">⬅️ חזרה לחיפוש</button>
+            <button onclick="scrollToTop()">⬆️ חזרה למעלה</button>
+            <button onclick="showContactForm()">📞 לא מצאתי מה שחיפשתי</button>
+        `;
+    }
+}artGnome = document.getElementById('smartGnome');
     if (smartGnome) {
         smartGnome.addEventListener('click', function() {
             document.getElementById('smartGuideModal').style.display = 'block';
@@ -4021,7 +4098,24 @@ function scrollToTop() {
 function showContactForm() {
     addUserMessage("לא מצאתי מה שחיפשתי");
     addBotMessage("אל תדאג! בואו נעזור לך למצוא בדיוק מה שאתה מחפש:");
-    document.getElementById('contactForm').style.display = 'block';
+    document.ge// הצגת טופס יצירת קשר - תיקון הבעיה
+function showContactForm() {
+    addUserMessage("לא מצאתי מה שחיפשתי");
+    addBotMessage("אל תדאג! בואו נעזור לך למצוא בדיוק מה שאתה מחפש:");
+    
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.style.display = 'block';
+        
+        // מיקוד על השדה הראשון
+        setTimeout(() => {
+            const firstInput = contactForm.querySelector('input');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }, 300);
+    }
+}tElementById('contactForm').style.display = 'block';
 }
 
 // סגירת טופס יצירת קשר
