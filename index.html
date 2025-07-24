@@ -4003,8 +4003,8 @@ function startGuideJobSearch() {
     const categories = getDynamicCategories();
     
     let categoryButtons = '<div class="category-options">';
-    categories.slice(0, 6).forEach(category => { // מגביל ל-6 כפתורים כדי שלא יהיה עמוס
-        const icon = getCategoryIcon(category.text);
+categories.forEach(category => { // כל הקטגוריות
+    const icon = getCategoryIcon(category.text);
         categoryButtons += `<button onclick="selectGuideCategory('${category.value}')">${icon} ${category.text}</button>`;
     });
     categoryButtons += '</div>';
@@ -4052,8 +4052,8 @@ function selectGuideCategory(category) {
     const areas = getDynamicAreas();
     
     let locationButtons = '<div class="location-options">';
-    areas.slice(0, 6).forEach(area => { // מגביל ל-6 כפתורים
-        const icon = getAreaIcon(area.text);
+areas.forEach(area => { // כל האזורים
+    const icon = getAreaIcon(area.text);
         locationButtons += `<button onclick="selectGuideLocation('${area.value}')">${icon} ${area.text}</button>`;
     });
     locationButtons += '</div>';
