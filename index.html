@@ -3511,8 +3511,8 @@ updateWebsiteShareLinks();
 console.log('🚀 תכונת שיתוף האתר מוכנה!');
     </script>
     <!-- 2. הגמדה החכמה החדשה -->
-<div id="smartGnome" class="smart-floating-gnome">
-<img src="images/gnome-pointing.png" alt="גמדה חכמה מצב מצביעה" class="gnome-image">
+<div id="smartGnome" class="smart-floating-gnome" onclick="openSmartGuide()" style="cursor: pointer;">
+    <img src="images/gnome-pointing.png" alt="גמדה חכמה מצב מצביעה" class="gnome-image">
     <div class="gnome-text">מדריכה חכמה</div>
 </div>
 
@@ -4180,8 +4180,382 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+// 🧙‍♀️ הגמדה החכמה - קוד מתוקן
+let gnomeCurrentStep = 0;
+let gnomeSelectedCategory = '';
+let gnomeSelectedLocation = '';
 
-console.log('🧙‍♀️ הגמדה החכמה הופעלה בהצלחה!');
+// פונקציה ראשית לפתיחת הגמדה
+function openSmartGuide() {
+    console.log('🧙‍♀️ לחיצה על הגמדה החכמה!');
+    
+    const modal = document.getElementById('smartGuideModal');
+    if (!modal) {
+        console.error('❌ לא נמצא המודל smartGuideModal');
+        alert('שגיאה: לא נמצא חלון הגמדה החכמה');
+        return;
+    }
+    
+    // נקה הודעות קודמות
+    clearGuideMessages();
+    
+    // פתח את המודל
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    
+    // הוסף הודעת פתיחה
+    setTimeout(() => {
+        addGuideBotMessage(getGuideContextMessage());
+        resetGuideOptions();
+    }, 200);
+    
+    console.log('✅ המודל נפתח בהצלחה!');
+}
+
+// נקה הודעות
+function clearGuideMessages() {
+    const messagesDiv = document.getElementById('guideMessages');
+    if (messagesDiv) {
+        messagesDiv.innerHTML = '';
+    }
+}
+
+// איפוס כפתורי האפשרויות
+function resetGuideOptions() {
+    const optionsDiv = document.getElementById('guideOptions');
+    if (optionsDiv) {
+        optionsDiv.innerHTML = `
+            <button onclick="startGuideJobSearch()">🔍 חיפוש עבודה</button>
+            <button onclick="guideBackToSearch()">⬅️ חזרה לחיפוש</button>
+            <button onclick="guideScrollToTop()">⬆️ חזרה למעלה</button>
+            <button onclick="showGuideContactForm()">📞 לא מצאתי מה שחיפשתי</button>
+        `;
+    }
+}
+
+// סגירת המדריכה
+function closeGuide() {
+    console.log('🚪 סוגר את המדריכה');
+    const modal = document.getElementById('smartGuideModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+    
+    // איפוס משתנים
+    gnomeCurrentStep = 0;
+    gnomeSelectedCategory = '';
+    gnomeSelectedLocation = '';
+    
+    // הסתר טופס יצירת קשר
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.style.display = 'none';
+    }
+}
+
+// הוספת הודעה של הבוט
+function addGuideBotMessage(message) {
+    const messagesDiv = document.getElementById('guideMessages');
+    if (messagesDiv) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'guide-message bot';
+        messageDiv.innerHTML = message;
+        messagesDiv.appendChild(messageDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+}
+
+// הוספת הודעה של המשתמש
+function addGuideUserMessage(message) {
+    const messagesDiv = document.getElementById('guideMessages');
+    if (messagesDiv) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'guide-message user';
+        messageDiv.innerHTML = message;
+        messagesDiv.appendChild(messageDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+}
+
+// קבלת הודעה מותאמת לפי המצב
+function getGuideContextMessage() {
+    const url = window.location.href;
+    
+    if (url.includes('search') || document.querySelector('.search-section')) {
+        return "רואה שאתה בדף החיפוש! איך אני יכולה לעזור לך למצוא עבודה מושלמת? 🎯";
+    } else if (document.querySelector('.job-details') || url.includes('job')) {
+        return "רואה שאתה צופה במשרה! המשרה הזו מעניינת אותך? אני יכולה להדריך אותך איך ליצור קשר! 💼";
+    } else {
+        return "שלום! אני הגמדה החכמה של האתר 🧙‍♀️<br>איך אני יכולה לעזור לך למצוא עבודה?";
+    }
+}
+
+// התחלת חיפוש עבודה
+function startGuideJobSearch() {
+    addGuideUserMessage("אני רוצה לחפש עבודה");
+    addGuideBotMessage("מעולה! בואו נתחיל בחיפוש. באיזה תחום אתה מעוניין לעבוד?");
+    
+    addGuideBotMessage(`
+        <div class="category-options">
+            <button onclick="selectGuideCategory('פיתוח ותוכנה')">💻 פיתוח ותוכנה</button>
+            <button onclick="selectGuideCategory('מכירות ושיווק')">📈 מכירות ושיווק</button>
+            <button onclick="selectGuideCategory('חינוך והוראה')">📚 חינוך והוראה</button>
+            <button onclick="selectGuideCategory('מזון ומסעדנות')">🍽️ מזון ומסעדנות</button>
+            <button onclick="selectGuideCategory('בריאות ורפואה')">🏥 בריאות ורפואה</button>
+            <button onclick="selectGuideCategory('אחר')">🔧 אחר</button>
+        </div>
+    `);
+}
+
+// בחירת קטגוריה
+function selectGuideCategory(category) {
+    gnomeSelectedCategory = category;
+    addGuideUserMessage(category);
+    addGuideBotMessage("נהדר! באיזה אזור אתה מעוניין לעבוד?");
+    
+    addGuideBotMessage(`
+        <div class="location-options">
+            <button onclick="selectGuideLocation('תל אביב')">🏙️ תל אביב</button>
+            <button onclick="selectGuideLocation('ירושלים')">🕌 ירושלים</button>
+            <button onclick="selectGuideLocation('חיפה')">🌊 חיפה</button>
+            <button onclick="selectGuideLocation('מרכז')">📍 מרכז</button>
+            <button onclick="selectGuideLocation('צפון')">🌲 צפון</button>
+            <button onclick="selectGuideLocation('דרום')">🏜️ דרום</button>
+        </div>
+    `);
+}
+
+// בחירת מיקום
+function selectGuideLocation(location) {
+    gnomeSelectedLocation = location;
+    addGuideUserMessage(location);
+    
+    // מילוי שדות החיפוש אוטומטית
+    fillGuideSearchFields();
+    
+    addGuideBotMessage(`מושלם! חיפשתי עבודות ב${gnomeSelectedCategory} באזור ${gnomeSelectedLocation}. האם תרצה שאני אבצע את החיפוש בשבילך?`);
+    
+    const optionsDiv = document.getElementById('guideOptions');
+    if (optionsDiv) {
+        optionsDiv.innerHTML = `
+            <button onclick="performGuideSearch()">🔍 בצע חיפוש</button>
+            <button onclick="startGuideOver()">🔄 התחל מחדש</button>
+            <button onclick="closeGuide()">❌ סגור</button>
+        `;
+    }
+}
+
+// מילוי שדות החיפוש
+function fillGuideSearchFields() {
+    const categoryField = document.getElementById('categoryFilter');
+    const locationField = document.getElementById('regionFilter') || document.getElementById('areaFilter');
+    
+    if (categoryField && gnomeSelectedCategory) {
+        for (let i = 0; i < categoryField.options.length; i++) {
+            if (categoryField.options[i].text.includes(gnomeSelectedCategory.split(' ')[0]) || 
+                categoryField.options[i].value === gnomeSelectedCategory) {
+                categoryField.value = categoryField.options[i].value;
+                break;
+            }
+        }
+    }
+    
+    if (locationField && gnomeSelectedLocation) {
+        for (let i = 0; i < locationField.options.length; i++) {
+            if (locationField.options[i].text === gnomeSelectedLocation || 
+                locationField.options[i].value === gnomeSelectedLocation) {
+                locationField.value = locationField.options[i].value;
+                break;
+            }
+        }
+    }
+}
+
+// ביצוע החיפוש
+function performGuideSearch() {
+    addGuideUserMessage("כן, בצע חיפוש");
+    
+    const searchButton = document.getElementById('searchButton') || 
+                        document.querySelector('.search-button') || 
+                        document.querySelector('button[type="submit"]') || 
+                        document.querySelector('.btn-search');
+    
+    if (searchButton) {
+        searchButton.click();
+        addGuideBotMessage("מעולה! ביצעתי את החיפוש בשבילך. גלול למטה לראות את התוצאות! 🎉");
+        
+        setTimeout(() => {
+            const jobsSection = document.querySelector('.jobs') || document.querySelector('.jobs-grid');
+            if (jobsSection) {
+                jobsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            closeGuide();
+        }, 2000);
+    } else {
+        if (typeof filterJobs === 'function') {
+            filterJobs();
+            addGuideBotMessage("מעולה! ביצעתי את החיפוש בשבילך. גלול למטה לראות את התוצאות! 🎉");
+            setTimeout(() => {
+                closeGuide();
+            }, 2000);
+        } else {
+            addGuideBotMessage("המערכת מוכנה לחיפוש! לחץ על כפתור החיפוש כדי לראות את התוצאות.");
+        }
+    }
+}
+
+// התחלה מחדש
+function startGuideOver() {
+    gnomeCurrentStep = 0;
+    gnomeSelectedCategory = '';
+    gnomeSelectedLocation = '';
+    clearGuideMessages();
+    setTimeout(() => {
+        addGuideBotMessage("בואו נתחיל מחדש! איך אני יכולה לעזור?");
+        resetGuideOptions();
+    }, 100);
+}
+
+// חזרה לחיפוש
+function guideBackToSearch() {
+    addGuideUserMessage("חזרה לחיפוש");
+    const searchSection = document.getElementById('search');
+    if (searchSection) {
+        searchSection.scrollIntoView({ behavior: 'smooth' });
+        addGuideBotMessage("חוזרים לחיפוש! 🔍");
+    }
+    setTimeout(closeGuide, 1500);
+}
+
+// חזרה למעלה
+function guideScrollToTop() {
+    addGuideUserMessage("חזרה למעלה");
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    addGuideBotMessage("חוזרים למעלה! ⬆️");
+    setTimeout(closeGuide, 1500);
+}
+
+// הצגת טופס יצירת קשר
+function showGuideContactForm() {
+    addGuideUserMessage("לא מצאתי מה שחיפשתי");
+    addGuideBotMessage("אל תדאג! בואו נעזור לך למצוא בדיוק מה שאתה מחפש:");
+    
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.style.display = 'block';
+        
+        setTimeout(() => {
+            const firstInput = contactForm.querySelector('input');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }, 300);
+    }
+}
+
+// סגירת טופס יצירת קשר
+function closeContactForm() {
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.style.display = 'none';
+        
+        const inputs = contactForm.querySelectorAll('input');
+        inputs.forEach(input => input.value = '');
+    }
+}
+
+// שליחת וואטסאפ
+function sendWhatsApp() {
+    const fullName = document.getElementById('fullName')?.value?.trim();
+    const phone = document.getElementById('phone')?.value?.trim();
+    const jobTitle = document.getElementById('jobTitle')?.value?.trim();
+    const location = document.getElementById('location')?.value?.trim();
+    
+    if (!fullName || !phone || !jobTitle || !location) {
+        alert('אנא מלא את כל השדות');
+        return;
+    }
+    
+    const message = `שלום! 👋
+
+אני ${fullName} ואני מחפש/ת עבודה:
+
+🎯 תפקיד מבוקש: ${jobTitle}
+📍 אזור מועדף: ${location}
+📱 טלפון: ${phone}
+
+הגמדה החכמה של האתר הפנתה אותי אליכם.
+אשמח לקבל עזרה במציאת משרות מתאימות!
+
+תודה! 😊`;
+
+    const whatsappUrl = `https://wa.me/972555504633?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+    
+    addGuideBotMessage("נהדר! הפניתי אותך לוואטסאפ עם כל הפרטים. מישהו יחזור אליך בקרוב! 📱");
+    closeContactForm();
+    setTimeout(closeGuide, 3000);
+}
+
+// סגירה בלחיצה על הרקע או ESC
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('smartGuideModal');
+    if (modal && e.target === modal) {
+        closeGuide();
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const modal = document.getElementById('smartGuideModal');
+        if (modal && modal.style.display === 'block') {
+            closeGuide();
+        }
+    }
+});
+
+// טקסט דינמי לגמדה
+const gnomeTexts = ['מדריכה חכמה', 'עזרה אישית', 'חיפוש מותאם', 'תמיכה 24/7', 'מציאת עבודה'];
+let gnomeTextIndex = 0;
+
+setInterval(() => {
+    const gnomeTextElement = document.querySelector('.gnome-text');
+    if (gnomeTextElement) {
+        gnomeTextElement.style.opacity = '0';
+        setTimeout(() => {
+            gnomeTextElement.textContent = gnomeTexts[gnomeTextIndex];
+            gnomeTextElement.style.opacity = '1';
+            gnomeTextIndex = (gnomeTextIndex + 1) % gnomeTexts.length;
+        }, 200);
+    }
+}, 4000);
+
+// הפיכת הפונקציות לגלובליות
+window.openSmartGuide = openSmartGuide;
+window.closeGuide = closeGuide;
+window.startGuideJobSearch = startGuideJobSearch;
+window.selectGuideCategory = selectGuideCategory;
+window.selectGuideLocation = selectGuideLocation;
+window.performGuideSearch = performGuideSearch;
+window.startGuideOver = startGuideOver;
+window.guideBackToSearch = guideBackToSearch;
+window.guideScrollToTop = guideScrollToTop;
+window.showGuideContactForm = showGuideContactForm;
+window.closeContactForm = closeContactForm;
+window.sendWhatsApp = sendWhatsApp;
+
+console.log('🧙‍♀️ הגמדה החכמה טעונה ומוכנה לפעולה בהצלחה!');
+
+// בדיקה שהגמדה קיימת
+document.addEventListener('DOMContentLoaded', function() {
+    const gnome = document.getElementById('smartGnome');
+    if (gnome) {
+        console.log('✅ הגמדה החכמה נמצאה בדף');
+    } else {
+        console.error('❌ הגמדה החכמה לא נמצאה בדף!');
+    }
+});
 </script>
 </body>
 </html>
