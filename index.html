@@ -1685,11 +1685,32 @@
     .website-share-buttons-grid {
         grid-template-columns: 1fr;
     }
+  /* שעון משרות פשוט */
+.simple-job-timer {
+    background: rgba(246, 152, 152, 0.1);
+    padding: 10px 20px;
+    text-align: center;
+    color: white;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(246, 152, 152, 0.3);
+}
+
+.timer-text {
+    color: #F69898;
+    font-weight: bold;
+}      
 }    
     </style>
 </head>
 <body>
+    <!-- שעון משרות פשוט -->
+    <div class="simple-job-timer">
+        💼 <span class="timer-text" id="jobCount">טוען...</span> משרות פעילות 
+        • 🕐 עודכן היום ב-<span class="timer-text" id="updateTime">08:30</span>
+        • 🔄 מתעדכן יומית
+    </div>    
     <header class="header">
+        
         <div class="header-inner">
             <h2 class="text-logo">מה יש פה?</h2>
 <nav class="main-nav">
@@ -2361,8 +2382,8 @@ updateAreaFilters(); // חדש
 updateCategoryCards();
             
 displayJobs(allJobs.filter(function(job) { return job.status === 'פעיל'; }));
+            updateSimpleTimer();
 
-            
             if (specificJobNumber) {
                 openSpecificJob(specificJobNumber);
             }
@@ -3541,7 +3562,27 @@ function fallbackShare(job, shareText, jobUrl, shareTitle) {
 
         // הפיכת הפונקציה לגלובלית
         window.scrollToSearch = scrollToSearch;
+// עדכון פשוט של שעון המשרות
+        function updateSimpleTimer() {
+            const jobCountElement = document.getElementById('jobCount');
+            const updateTimeElement = document.getElementById('updateTime');
+            
+            if (jobCountElement && window.allJobs) {
+                const activeJobs = window.allJobs.filter(job => job.status === 'פעיל');
+                jobCountElement.textContent = activeJobs.length;
+            }
+            
+            if (updateTimeElement) {
+                const now = new Date();
+                const timeString = now.getHours().toString().padStart(2, '0') + 
+                                 ':' + now.getMinutes().toString().padStart(2, '0');
+                updateTimeElement.textContent = timeString;
+            }
+        }
 
+        setTimeout(() => {
+            updateSimpleTimer();
+        }, 3000);
         console.log('✅ הסקריפט נטען בהצלחה!');
         // ======================== שיתוף האתר ========================
 
