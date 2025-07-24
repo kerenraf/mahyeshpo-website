@@ -3524,11 +3524,12 @@ console.log('🚀 תכונת שיתוף האתר מוכנה!');
                 שלום! אני הגמדה החכמה 🧙‍♀️<br>איך אני יכולה לעזור לך למצוא עבודה?
             </div>
         </div>
-        <div class="guide-options" id="guideOptions">
+<div class="guide-options" id="guideOptions">
             <button onclick="startGuideJobSearch()">🔍 חיפוש עבודה</button>
             <button onclick="guideBackToSearch()">⬅️ חזרה לחיפוש</button>
             <button onclick="guideScrollToTop()">⬆️ חזרה למעלה</button>
             <button onclick="showGuideContactForm()">📞 לא מצאתי מה שחיפשתי</button>
+            <button onclick="showGuideContactForm()">💬 צרו איתי קשר</button>
         </div>
     </div>
 </div>
@@ -3999,10 +4000,11 @@ function resetGuideOptions() {
             <button onclick="guideBackToSearch()">⬅️ חזרה לחיפוש</button>
             <button onclick="guideScrollToTop()">⬆️ חזרה למעלה</button>
             <button onclick="showGuideContactForm()">📞 לא מצאתי מה שחיפשתי</button>
+            <button onclick="showGuideContactForm()">💬 צרו איתי קשר</button>
         `;
     }
 }
-
+    
 // סגירת המדריכה
 function closeSmartGuide() {
     console.log('🚪 סוגר גמדה חכמה');
@@ -4296,8 +4298,16 @@ function guideScrollToTop() {
 
 // הצגת טופס יצירת קשר - תיקון הבעיה!
 function showGuideContactForm() {
-    addGuideUserMessage("לא מצאתי מה שחיפשתי");
-    addGuideBotMessage("אל תדאג! בואו נעזור לך למצוא בדיוק מה שאתה מחפש:");
+    // זיהוי איזה כפתור לחץ המשתמש
+    const clickedButton = event.target.textContent;
+    
+    if (clickedButton.includes('לא מצאתי')) {
+        addGuideUserMessage("לא מצאתי מה שחיפשתי");
+        addGuideBotMessage("אל תדאג! בואו נעזור לך למצוא בדיוק מה שאתה מחפש:");
+    } else if (clickedButton.includes('צרו איתי קשר')) {
+        addGuideUserMessage("אני רוצה ליצור קשר");
+        addGuideBotMessage("כמובן! אשמח לעזור לך. בואו נמלא פרטים ונחזור אליך:");
+    }
     
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
@@ -4316,7 +4326,6 @@ function showGuideContactForm() {
         addGuideBotMessage("שגיאה: לא ניתן לפתוח את הטופס. אנא צרו קשר ישירות בוואטסאפ: 055-550-4633");
     }
 }
-
 // סגירת טופס יצירת קשר
 function closeGuideContactForm() {
     const contactForm = document.getElementById('contactForm');
