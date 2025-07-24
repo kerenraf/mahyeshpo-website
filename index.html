@@ -3692,45 +3692,90 @@ console.log('🚀 תכונת שיתוף האתר מוכנה!');
     box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
 }
 
-/* טופס יצירת קשר */
+/* טופס יצירת קשר - מתאים לעיצוב האתר */
 .contact-form {
-    background: #f9f9f9;
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #222222;
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 0;
+    z-index: 3000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    border: 3px solid #F69898;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .contact-form h4 {
-    margin: 0 0 15px 0;
-    color: #333;
+    margin: 0 0 20px 0;
+    color: #F69898;
     text-align: center;
+    font-size: 1.2rem;
+    border-bottom: 2px solid #F69898;
+    padding-bottom: 10px;
 }
 
 .contact-form input {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #555;
+    border-radius: 8px;
     font-family: 'Assistant', sans-serif;
     box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    background: #333;
+    color: white;
+}
+
+.contact-form input:focus {
+    border-color: #F69898;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(246, 152, 152, 0.3);
+}
+
+.contact-form input::placeholder {
+    color: #ccc;
 }
 
 .contact-form button {
     width: 48%;
-    padding: 10px;
+    padding: 12px;
     margin: 5px 1%;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     font-family: 'Assistant', sans-serif;
+    font-weight: bold;
+    transition: all 0.3s ease;
 }
 
 .contact-form button:first-of-type {
-    background: #25d366;
+    background: linear-gradient(135deg, #25D366, #128C7E);
     color: white;
 }
 
+.contact-form button:first-of-type:hover {
+    background: linear-gradient(135deg, #1ea952, #0f6b5c);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+.contact-form button:last-of-type {
+    background: linear-gradient(135deg, #666, #555);
+    color: white;
+}
+
+.contact-form button:last-of-type:hover {
+    background: linear-gradient(135deg, #777, #666);
+    transform: translateY(-1px);
+}
 .contact-form button:last-of-type {
     background: #999;
     color: white;
