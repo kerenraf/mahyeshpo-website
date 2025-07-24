@@ -3790,7 +3790,7 @@ console.log('🚀 תכונת שיתוף האתר מוכנה!');
 </style>
 
 <script>
-// הגמדה החכמה - קוד JavaScript מתוקן
+// הגמדה החכמה - קוד JavaScript מתוקן ודינמי
 let gnomeSelectedCategory = '';
 let gnomeSelectedLocation = '';
 
@@ -3801,6 +3801,31 @@ function openSmartGuide() {
     if (modal) {
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
+        
+        // איפוס הודעות וכפתורים
+        resetGuideMessages();
+        resetGuideOptions();
+    }
+}
+
+// איפוס הודעות
+function resetGuideMessages() {
+    const messagesDiv = document.getElementById('guideMessages');
+    if (messagesDiv) {
+        messagesDiv.innerHTML = '<div class="guide-message bot">שלום! אני הגמדה החכמה 🧙‍♀️<br>איך אני יכולה לעזור לך למצוא עבודה?</div>';
+    }
+}
+
+// איפוס כפתורי אפשרויות
+function resetGuideOptions() {
+    const optionsDiv = document.getElementById('guideOptions');
+    if (optionsDiv) {
+        optionsDiv.innerHTML = `
+            <button onclick="startGuideJobSearch()">🔍 חיפוש עבודה</button>
+            <button onclick="guideBackToSearch()">⬅️ חזרה לחיפוש</button>
+            <button onclick="guideScrollToTop()">⬆️ חזרה למעלה</button>
+            <button onclick="showGuideContactForm()">📞 לא מצאתי מה שחיפשתי</button>
+        `;
     }
 }
 
@@ -3844,21 +3869,133 @@ function addGuideUserMessage(message) {
     }
 }
 
-// התחלת חיפוש עבודה
+// קבלת קטגוריות דינמיות מהמערכת
+function getDynamicCategories() {
+    const categorySelect = document.getElementById('categoryFilter');
+    let categories = [];
+    
+    if (categorySelect && categorySelect.options) {
+        for (let i = 1; i < categorySelect.options.length; i++) { // מתחיל מ-1 כדי לדלג על "כל הקטגוריות"
+            const option = categorySelect.options[i];
+            if (option.value && option.value.trim()) {
+                categories.push({
+                    value: option.value,
+                    text: option.text
+                });
+            }
+        }
+    }
+    
+    // אם אין קטגוריות במערכת, תחזיר ברירת מחדל
+    if (categories.length === 0) {
+        categories = [
+            { value: 'פיתוח ותוכנה', text: 'פיתוח ותוכנה' },
+            { value: 'מכירות ושיווק', text: 'מכירות ושיווק' },
+            { value: 'חינוך והוראה', text: 'חינוך והוראה' },
+            { value: 'מזון ומסעדנות', text: 'מזון ומסעדנות' },
+            { value: 'בריאות ורפואה', text: 'בריאות ורפואה' },
+            { value: 'אחר', text: 'אחר' }
+        ];
+    }
+    
+    return categories;
+}
+
+// קבלת אזורים דינמיים מהמערכת
+function getDynamicAreas() {
+    let areas = [];
+    
+    // בדיקת שני המסננים - ערים ואזורים
+    const citySelect = document.getElementById('regionFilter');
+    const areaSelect = document.getElementById('areaFilter');
+    
+    // קודם נסה לקחת מאזורים
+    if (areaSelect && areaSelect.options) {
+        for (let i = 1; i < areaSelect.options.length; i++) {
+            const option = areaSelect.options[i];
+            if (option.value && option.value.trim()) {
+                areas.push({
+                    value: option.value,
+                    text: option.text
+                });
+            }
+        }
+    }
+    
+    // אם אין אזורים, קח מערים
+    if (areas.length === 0 && citySelect && citySelect.options) {
+        for (let i = 1; i < citySelect.options.length; i++) {
+            const option = citySelect.options[i];
+            if (option.value && option.value.trim()) {
+                areas.push({
+                    value: option.value,
+                    text: option.text
+                });
+            }
+        }
+    }
+    
+    // אם עדיין אין, תחזיר ברירת מחדל
+    if (areas.length === 0) {
+        areas = [
+            { value: 'תל אביב', text: 'תל אביב' },
+            { value: 'ירושלים', text: 'ירושלים' },
+            { value: 'חיפה', text: 'חיפה' },
+            { value: 'מרכז', text: 'מרכז' },
+            { value: 'צפון', text: 'צפון' },
+            { value: 'דרום', text: 'דרום' }
+        ];
+    }
+    
+    return areas;
+}
+
+// התחלת חיפוש עבודה עם קטגוריות דינמיות
 function startGuideJobSearch() {
     addGuideUserMessage("אני רוצה לחפש עבודה");
     addGuideBotMessage("מעולה! בואו נתחיל בחיפוש. באיזה תחום אתה מעוניין לעבוד?");
     
-    addGuideBotMessage(`
-        <div class="category-options">
-            <button onclick="selectGuideCategory('פיתוח ותוכנה')">💻 פיתוח ותוכנה</button>
-            <button onclick="selectGuideCategory('מכירות ושיווק')">📈 מכירות ושיווק</button>
-            <button onclick="selectGuideCategory('חינוך והוראה')">📚 חינוך והוראה</button>
-            <button onclick="selectGuideCategory('מזון ומסעדנות')">🍽️ מזון ומסעדנות</button>
-            <button onclick="selectGuideCategory('בריאות ורפואה')">🏥 בריאות ורפואה</button>
-            <button onclick="selectGuideCategory('אחר')">🔧 אחר</button>
-        </div>
-    `);
+    const categories = getDynamicCategories();
+    
+    let categoryButtons = '<div class="category-options">';
+    categories.slice(0, 6).forEach(category => { // מגביל ל-6 כפתורים כדי שלא יהיה עמוס
+        const icon = getCategoryIcon(category.text);
+        categoryButtons += `<button onclick="selectGuideCategory('${category.value}')">${icon} ${category.text}</button>`;
+    });
+    categoryButtons += '</div>';
+    
+    addGuideBotMessage(categoryButtons);
+}
+
+// פונקציה לקבלת אייקון לפי קטגוריה
+function getCategoryIcon(categoryText) {
+    const icons = {
+        'פיתוח': '💻',
+        'מכירות': '📈', 
+        'שיווק': '📈',
+        'חינוך': '📚',
+        'הוראה': '📚',
+        'מזון': '🍽️',
+        'מסעדנות': '🍽️',
+        'בריאות': '🏥',
+        'רפואה': '🏥',
+        'בנייה': '🏗️',
+        'הנדסה': '⚙️',
+        'עיצוב': '🎨',
+        'אבטחה': '🛡️',
+        'ניהול': '👔',
+        'משפט': '⚖️',
+        'כספים': '💰',
+        'נהיגה': '🚗',
+        'תחבורה': '🚛'
+    };
+    
+    for (const [key, icon] of Object.entries(icons)) {
+        if (categoryText.includes(key)) {
+            return icon;
+        }
+    }
+    return '💼'; // אייקון ברירת מחדל
 }
 
 // בחירת קטגוריה
@@ -3867,23 +4004,52 @@ function selectGuideCategory(category) {
     addGuideUserMessage(category);
     addGuideBotMessage("נהדר! באיזה אזור אתה מעוניין לעבוד?");
     
-    addGuideBotMessage(`
-        <div class="location-options">
-            <button onclick="selectGuideLocation('תל אביב')">🏙️ תל אביב</button>
-            <button onclick="selectGuideLocation('ירושלים')">🕌 ירושלים</button>
-            <button onclick="selectGuideLocation('חיפה')">🌊 חיפה</button>
-            <button onclick="selectGuideLocation('מרכז')">📍 מרכז</button>
-            <button onclick="selectGuideLocation('צפון')">🌲 צפון</button>
-            <button onclick="selectGuideLocation('דרום')">🏜️ דרום</button>
-        </div>
-    `);
+    const areas = getDynamicAreas();
+    
+    let locationButtons = '<div class="location-options">';
+    areas.slice(0, 6).forEach(area => { // מגביל ל-6 כפתורים
+        const icon = getAreaIcon(area.text);
+        locationButtons += `<button onclick="selectGuideLocation('${area.value}')">${icon} ${area.text}</button>`;
+    });
+    locationButtons += '</div>';
+    
+    addGuideBotMessage(locationButtons);
+}
+
+// פונקציה לקבלת אייקון לפי אזור
+function getAreaIcon(areaText) {
+    const icons = {
+        'תל אביב': '🏙️',
+        'ירושלים': '🕌',
+        'חיפה': '🌊',
+        'באר שבע': '🏜️',
+        'מרכז': '📍',
+        'צפון': '🌲',
+        'דרום': '🏜️',
+        'שרון': '🌿',
+        'גליל': '⛰️',
+        'נגב': '🏜️',
+        'יהודה': '🏛️',
+        'שומרון': '🏔️'
+    };
+    
+    for (const [key, icon] of Object.entries(icons)) {
+        if (areaText.includes(key)) {
+            return icon;
+        }
+    }
+    return '📍'; // אייקון ברירת מחדל
 }
 
 // בחירת מיקום
 function selectGuideLocation(location) {
     gnomeSelectedLocation = location;
     addGuideUserMessage(location);
-    addGuideBotMessage(`מושלם! עכשיו אני אעזור לך למצוא משרות מתאימות. האם תרצה שאעביר אותך לדף החיפוש?`);
+    
+    // מילוי השדות במערכת החיפוש
+    fillSearchFieldsAutomatically();
+    
+    addGuideBotMessage(`מושלם! מילאתי עבורך את שדות החיפוש ב${gnomeSelectedCategory} באזור ${gnomeSelectedLocation}. האם תרצה שאבצע את החיפוש?`);
     
     const optionsDiv = document.getElementById('guideOptions');
     if (optionsDiv) {
@@ -3895,36 +4061,72 @@ function selectGuideLocation(location) {
     }
 }
 
+// מילוי שדות החיפוש אוטומטית
+function fillSearchFieldsAutomatically() {
+    // מילוי קטגוריה
+    const categoryField = document.getElementById('categoryFilter');
+    if (categoryField && gnomeSelectedCategory) {
+        categoryField.value = gnomeSelectedCategory;
+    }
+    
+    // מילוי מיקום - בודק קודם באזורים ואחר כך בערים
+    const areaField = document.getElementById('areaFilter');
+    const cityField = document.getElementById('regionFilter');
+    
+    if (areaField && gnomeSelectedLocation) {
+        // מחפש באזורים
+        for (let i = 0; i < areaField.options.length; i++) {
+            if (areaField.options[i].value === gnomeSelectedLocation) {
+                areaField.value = gnomeSelectedLocation;
+                break;
+            }
+        }
+    }
+    
+    if (cityField && gnomeSelectedLocation) {
+        // מחפש בערים
+        for (let i = 0; i < cityField.options.length; i++) {
+            if (cityField.options[i].value === gnomeSelectedLocation) {
+                cityField.value = gnomeSelectedLocation;
+                break;
+            }
+        }
+    }
+}
+
 // ביצוע החיפוש
 function performGuideSearch() {
     addGuideUserMessage("כן, בצע חיפוש");
-    addGuideBotMessage("מעביר אותך לחיפוש... 🚀");
+    addGuideBotMessage("מבצע חיפוש... 🚀");
+    
+    // קריאה לפונקציית החיפוש של המערכת
+    if (typeof filterJobs === 'function') {
+        filterJobs();
+        addGuideBotMessage("מעולה! ביצעתי את החיפוש בשבילך. גלול למטה לראות את התוצאות! 🎉");
+    } else {
+        // אם הפונקציה לא קיימת, נקרא לכפתור החיפוש
+        const searchButton = document.getElementById('searchButton');
+        if (searchButton) {
+            searchButton.click();
+            addGuideBotMessage("מעולה! ביצעתי את החיפוש בשבילך. גלול למטה לראות את התוצאות! 🎉");
+        }
+    }
     
     setTimeout(() => {
-        const searchSection = document.getElementById('search');
-        if (searchSection) {
-            searchSection.scrollIntoView({ behavior: 'smooth' });
+        const jobsSection = document.querySelector('.jobs');
+        if (jobsSection) {
+            jobsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         closeSmartGuide();
-    }, 1500);
+    }, 2000);
 }
 
 // התחלה מחדש
 function startGuideOver() {
-    const messagesDiv = document.getElementById('guideMessages');
-    if (messagesDiv) {
-        messagesDiv.innerHTML = '<div class="guide-message bot">בואו נתחיל מחדש! איך אני יכולה לעזור?</div>';
-    }
-    
-    const optionsDiv = document.getElementById('guideOptions');
-    if (optionsDiv) {
-        optionsDiv.innerHTML = `
-            <button onclick="startGuideJobSearch()">🔍 חיפוש עבודה</button>
-            <button onclick="guideBackToSearch()">⬅️ חזרה לחיפוש</button>
-            <button onclick="guideScrollToTop()">⬆️ חזרה למעלה</button>
-            <button onclick="showGuideContactForm()">📞 לא מצאתי מה שחיפשתי</button>
-        `;
-    }
+    gnomeSelectedCategory = '';
+    gnomeSelectedLocation = '';
+    resetGuideMessages();
+    resetGuideOptions();
 }
 
 // חזרה לחיפוש
@@ -3946,7 +4148,7 @@ function guideScrollToTop() {
     setTimeout(closeSmartGuide, 1500);
 }
 
-// הצגת טופס יצירת קשר
+// הצגת טופס יצירת קשר - תיקון הבעיה!
 function showGuideContactForm() {
     addGuideUserMessage("לא מצאתי מה שחיפשתי");
     addGuideBotMessage("אל תדאג! בואו נעזור לך למצוא בדיוק מה שאתה מחפש:");
@@ -3954,6 +4156,18 @@ function showGuideContactForm() {
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
         contactForm.style.display = 'block';
+        console.log('✅ טופס יצירת קשר נפתח');
+        
+        // מיקוד על השדה הראשון
+        setTimeout(() => {
+            const firstInput = contactForm.querySelector('input');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }, 300);
+    } else {
+        console.error('❌ טופס יצירת קשר לא נמצא');
+        addGuideBotMessage("שגיאה: לא ניתן לפתוח את הטופס. אנא צרו קשר ישירות בוואטסאפ: 055-550-4633");
     }
 }
 
@@ -4026,6 +4240,7 @@ let gnomeTextIndex = 0;
 setInterval(() => {
     const gnomeTextElement = document.querySelector('.gnome-text');
     if (gnomeTextElement) {
+        gnomeTextElement.style.transition = 'opacity 0.3s ease';
         gnomeTextElement.style.opacity = '0.5';
         setTimeout(() => {
             gnomeTextElement.textContent = gnomeTexts[gnomeTextIndex];
@@ -4035,8 +4250,7 @@ setInterval(() => {
     }
 }, 4000);
 
-console.log('🧙‍♀️ הגמדה החכמה הופעלה בהצלחה!');
-</script>
+console.log('🧙‍♀️ הגמדה החכמה הופעלה בהצלחה עם פונקציונליות מלאה!');
 </script>
 </body>
 </html>
