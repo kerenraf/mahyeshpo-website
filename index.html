@@ -4021,7 +4021,6 @@ function getDynamicAreas() {
     
     // בדיקת שני המסננים - ערים ואזורים
     const citySelect = document.getElementById('regionFilter');
-    const areaSelect = document.getElementById('areaFilter');
     
     // קודם נסה לקחת מאזורים
     if (areaSelect && areaSelect.options) {
@@ -4036,18 +4035,6 @@ function getDynamicAreas() {
         }
     }
     
-    // אם אין אזורים, קח מערים
-    if (areas.length === 0 && citySelect && citySelect.options) {
-        for (let i = 1; i < citySelect.options.length; i++) {
-            const option = citySelect.options[i];
-            if (option.value && option.value.trim()) {
-                areas.push({
-                    value: option.value,
-                    text: option.text
-                });
-            }
-        }
-    }
     
     // אם עדיין אין, תחזיר ברירת מחדל
     if (areas.length === 0) {
