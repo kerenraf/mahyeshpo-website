@@ -1297,27 +1297,48 @@
 
         /* תיקונים למובייל */
 @media (max-width: 768px) {
-    .text-logo {
+    /* תיקון הטקסט הראשי שברח לצד */
+    .hero-content {
         text-align: center !important;
-        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 15px !important;
+    }
+    
+    .hero-content h1 {
+        text-align: center !important;
         margin: 0 auto !important;
     }
     
-    .header-inner {
-        flex-direction: column !important;
+    .main-title {
         text-align: center !important;
+        margin: 0 auto !important;
     }
     
-    .mobile-menu-toggle {
-        margin-top: 10px !important;
+    .hero-description {
+        text-align: center !important;
+        margin: 0 auto 40px !important;
+        max-width: 100% !important;
     }
     
+    .hero-buttons {
+        text-align: center !important;
+        justify-content: center !important;
+    }
+    
+    /* תיקון הסטטיסטיקות במובייל */
     .job-stats-header {
         margin-top: 80px !important;
         margin-left: 10px !important;
         margin-right: 10px !important;
+        flex-direction: column !important;
+        text-align: center !important;
     }
-}            
+    
+    .stats-item {
+        justify-content: center !important;
+        margin-bottom: 10px !important;
+    }
+}
            @media (max-width: 768px) {
     .search-buttons {
         margin-top: 30px !important;
