@@ -4162,18 +4162,13 @@ function selectGuideLocation(location) {
 
 // מילוי שדות החיפוש אוטומטית
 function fillSearchFieldsAutomatically() {
-    // מילוי קטגוריה
     const categoryField = document.getElementById('categoryFilter');
     if (categoryField && gnomeSelectedCategory) {
         categoryField.value = gnomeSelectedCategory;
     }
-    
-    // מילוי מיקום - בודק קודם באזורים ואחר כך בערים
+
     const areaField = document.getElementById('areaFilter');
-    const cityField = document.getElementById('regionFilter');
-    
     if (areaField && gnomeSelectedLocation) {
-        // מחפש באזורים
         for (let i = 0; i < areaField.options.length; i++) {
             if (areaField.options[i].value === gnomeSelectedLocation) {
                 areaField.value = gnomeSelectedLocation;
@@ -4181,16 +4176,8 @@ function fillSearchFieldsAutomatically() {
             }
         }
     }
-    
-    if (cityField && gnomeSelectedLocation) {
-        // מחפש בערים
-        for (let i = 0; i < cityField.options.length; i++) {
-            if (cityField.options[i].value === gnomeSelectedLocation) {
-                cityField.value = gnomeSelectedLocation;
-                break;
-            }
-        }
-    }
+
+    // אין יותר regionFilter
 }
 
 // ביצוע החיפוש
