@@ -1296,8 +1296,11 @@
         }
 
         /* תיקונים למובייל */
-@media (max-width: 768px) {
-
+        @media (max-width: 768px) {
+            .text-logo {
+                font-size: 1.4rem;
+            }
+            
            @media (max-width: 768px) {
     .search-buttons {
         margin-top: 30px !important;
@@ -1527,112 +1530,6 @@
             }
         }
 /* כפתור שיתוף בכותרת */
-   /* ======================== שעון משרות ======================== */
-.job-stats-header {
-    background: linear-gradient(135deg, rgba(246, 152, 152, 0.1), rgba(255, 158, 158, 0.05));
-    padding: 15px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    border: 1px solid rgba(246, 152, 152, 0.3);
-    margin: 90px 20px 20px 20px;  /* הוספתי margin-top: 90px */
-    position: relative;
-    z-index: 100;
-}
-
-.stats-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: white;
-    font-weight: 500;
-}
-
-.stats-number {
-    background: linear-gradient(135deg, #F69898, #ff9e9e);
-    color: white;
-    padding: 4px 12px;
-    border-radius: 15px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.stats-icon {
-    font-size: 18px;
-}
-
-.live-indicator {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(40, 167, 69, 0.1);
-    padding: 6px 12px;
-    border-radius: 20px;
-    border: 1px solid #28a745;
-    font-size: 12px;
-    color: #28a745;
-}
-
-.pulse-dot {
-    width: 8px;
-    height: 8px;
-    background: #28a745;
-    border-radius: 50%;
-    animation: pulseDot 2s infinite;
-}
-
-@keyframes pulseDot {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.2); opacity: 0.7; }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-.gnome-timer-bubble {
-    position: absolute;
-    top: -45px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(135deg, #333, #2a2a2a);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-    white-space: nowrap;
-    border: 2px solid #F69898;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    z-index: 1000;
-}
-
-.gnome-timer-bubble::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 8px solid #F69898;
-}
-
-.gnome-character:hover .gnome-timer-bubble {
-    opacity: 1;
-    visibility: visible;
-}
-
-@media (max-width: 768px) {
-    .job-stats-header {
-        flex-direction: column;
-        text-align: center;
-    }
-}
-     
 .header-share-btn {
     background: rgba(246, 152, 152, 0.2);
     border: none;
@@ -1818,26 +1715,6 @@
     </ul>
 </div>
     </header>
-    <!-- סטטיסטיקות משרות -->
-    <div class="job-stats-header">
-        <div class="stats-item">
-            <span class="stats-icon">💼</span>
-            <span class="stats-number" id="totalJobsDisplay">טוען...</span>
-            <span>משרות פעילות</span>
-        </div>
-        <div class="stats-item">
-            <span class="stats-icon">🕐</span>
-            <span>עודכן היום ב-<span id="lastUpdateTimeDisplay">טוען...</span></span>
-        </div>
-        <div class="stats-item">
-            <span class="stats-icon">🔄</span>
-            <div class="live-indicator">
-                <div class="pulse-dot"></div>
-                <span>מתעדכן יומית</span>
-            </div>
-        </div>
-    </div>
-
 
     <!-- כפתור נגישות -->
     <button class="accessibility-button" id="accessibilityBtn" 
@@ -1943,16 +1820,7 @@
             </div>
         </div>
         
-        <div class="gnome-character" id="mainGnome" onclick="refreshJobsData()">
-            <img src="https://mayeshpo.co.il/images/gnome.png" 
-                 alt="גמדה עוזרת" 
-                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XkNee15XXmDwvdGV4dD48L3N2Zz4i'">
-            <div class="gnome-tooltip">אני אעזור לך למצוא משרה!</div>
-            <div class="gnome-timer-bubble">
-                <div id="gnomeTimerDisplay">רענון אחרון לפני 15 דקות</div>
-                <div style="color: #F69898; font-size: 11px;">לחץ לרענון</div>
-            </div>
-        </div>
+        <div class="gnome-character" id="mainGnome" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
             <img src="https://mayeshpo.co.il/images/gnome.png" 
                  alt="גמדה עוזרת" 
                  onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XkNee15XXmDwvdGV4dD48L3N2Zz4='">
@@ -3053,7 +2921,6 @@ function partialWordMatch(text, searchTerm) {
     document.getElementById('areaFilter').value = ''; // הוספה חדשה
     
     var activeJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; });
-                        onJobsLoaded();
     filteredJobs = [];
     displayJobs(activeJobs);
     
@@ -3780,84 +3647,6 @@ document.addEventListener('keydown', function(event) {
 });
 
 updateWebsiteShareLinks();
-            // ======================== שעון משרות ========================
-        
-        var jobTimer = {
-            startTime: new Date(),
-            lastUpdate: new Date(),
-            
-            init: function() {
-                this.updateDisplay();
-                setInterval(() => this.updateDisplay(), 60000);
-                this.updateJobStats();
-            },
-            
-            updateDisplay: function() {
-                const now = new Date();
-                const timeDiff = now - this.startTime;
-                const minutes = Math.floor(timeDiff / (1000 * 60));
-                const hours = Math.floor(minutes / 60);
-                
-                const gnomeDisplay = document.getElementById('gnomeTimerDisplay');
-                if (gnomeDisplay) {
-                    if (hours > 0) {
-                        gnomeDisplay.textContent = `רענון אחרון לפני ${hours} שעות`;
-                    } else if (minutes > 0) {
-                        gnomeDisplay.textContent = `רענון אחרון לפני ${minutes} דקות`;
-                    } else {
-                        gnomeDisplay.textContent = 'רענון אחרון עכשיו';
-                    }
-                }
-                
-                const timeDisplay = document.getElementById('lastUpdateTimeDisplay');
-                if (timeDisplay) {
-                    const timeString = this.startTime.getHours().toString().padStart(2, '0') + 
-                                     ':' + this.startTime.getMinutes().toString().padStart(2, '0');
-                    timeDisplay.textContent = timeString;
-                }
-            },
-            
-            updateJobStats: function() {
-                const totalJobsDisplay = document.getElementById('totalJobsDisplay');
-                if (totalJobsDisplay && window.allJobs) {
-                    const activeJobs = window.allJobs.filter(job => job.status === 'פעיל');
-                    totalJobsDisplay.textContent = activeJobs.length;
-                }
-            },
-            
-            refresh: function() {
-                this.startTime = new Date();
-                this.updateDisplay();
-                this.updateJobStats();
-                
-                if (typeof showNotification === 'function') {
-                    showNotification('הנתונים רוענו!', 'success');
-                }
-            }
-        };
-
-        function refreshJobsData() {
-            jobTimer.refresh();
-            
-            if (typeof loadJobsFromGitHub === 'function') {
-                loadJobsFromGitHub();
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
-                if (typeof jobTimer !== 'undefined') {
-                    jobTimer.init();
-                }
-            }, 2000);
-        });
-
-        function onJobsLoaded() {
-            if (typeof jobTimer !== 'undefined') {
-                jobTimer.updateJobStats();
-            }
-        }
-    
 console.log('🚀 תכונת שיתוף האתר מוכנה!');
     </script>
 <!-- הגמדה החכמה החדשה -->
