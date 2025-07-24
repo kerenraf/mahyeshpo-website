@@ -3511,7 +3511,7 @@ updateWebsiteShareLinks();
 console.log('🚀 תכונת שיתוף האתר מוכנה!');
     </script>
     <!-- 2. הגמדה החכמה החדשה -->
-<div id="smartGnome" class="smart-floating-gnome" style="cursor: pointer;">
+<div id="smartGnome" class="smart-floating-gnome" onclick="openSmartGuide()" style="cursor: pointer;">
     <img src="images/gnome-pointing.png" alt="גמדה חכמה מצב מצביעה" class="gnome-image">
     <div class="gnome-text">מדריכה חכמה</div>
 </div>
@@ -3827,20 +3827,11 @@ let selectedLocation = '';
 document.addEventListener('DOMContentLoaded', function() {
     const gnome = document.getElementById('smartGnome');
     if (gnome) {
-        console.log('✅ הגמדה החכמה נמצאה בדף');
-        
-        // הוספת מאזין לחיצה
-        gnome.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('🧙‍♀️ לחיצה על הגמדה החכמה!');
-            openSmartGuide();
-        });
+        console.log('✅ הגמדה החכמה נמצאה בדף וחכמה ומוכנה!');
     } else {
         console.error('❌ הגמדה החכמה לא נמצאה בדף!');
     }
-});
-// פונקציה נפרדת לפתיחת המודל
+});// פונקציה נפרדת לפתיחת המודל
 function openGuideModal() {
     const modal = document.getElementById('smartGuideModal');
     if (modal) {
