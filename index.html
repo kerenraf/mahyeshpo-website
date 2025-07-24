@@ -4250,13 +4250,25 @@ function performGuideSearch() {
     // קריאה לפונקציית החיפוש של המערכת
     if (typeof filterJobs === 'function') {
         filterJobs();
-        addGuideBotMessage("מעולה! ביצעתי את החיפוש בשבילך. גלול למטה לראות את התוצאות! 🎉");
+        
+        // הוספת הערה חשובה לאחר החיפוש
+        setTimeout(() => {
+            addGuideBotMessage(`מעולה! ביצעתי את החיפוש בשבילך. גלול למטה לראות את התוצאות! 🎉
+            
+💡 <strong>טיפ חשוב:</strong> אם מצאת משרה שמעניינת אותך ואין מספיק פרטים - לחץ/י על כפתור הווצאפ או SMS בכרטיס המשרה והיא תישלח אלייך ישירות!`);
+        }, 1000);
+        
     } else {
         // אם הפונקציה לא קיימת, נקרא לכפתור החיפוש
         const searchButton = document.getElementById('searchButton');
         if (searchButton) {
             searchButton.click();
-            addGuideBotMessage("מעולה! ביצעתי את החיפוש בשבילך. גלול למטה לראות את התוצאות! 🎉");
+            
+            setTimeout(() => {
+                addGuideBotMessage(`מעולה! ביצעתי את החיפוש בשבילך. גלול למטה לראות את התוצאות! 🎉
+                
+💡 <strong>טיפ חשוב:</strong> אם מצאת משרה שמעניינת אותך ואין מספיק פרטים - לחץ/י על כפתור הווצאפ או SMS בכרטיס המשרה והיא תישלח אלייך ישירות!`);
+            }, 1000);
         }
     }
     
@@ -4266,9 +4278,8 @@ function performGuideSearch() {
             jobsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         closeSmartGuide();
-    }, 2000);
+    }, 3000);
 }
-
 // התחלה מחדש
 function startGuideOver() {
     gnomeSelectedCategory = '';
