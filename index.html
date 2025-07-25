@@ -81,7 +81,7 @@
     <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="//wa.me">
     
-    <style>
+<style>
 @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Heebo:wght@400;500;700&display=swap');
         :root {
             --primary-color: #F69898;
@@ -94,6 +94,29 @@
             --transition: all 0.3s ease;
         }
 
+        /* תיקון בעיית התפריט הריק */
+        .main-nav {
+            display: flex !important;
+            visibility: visible !important;
+        }
+
+        .main-nav li {
+            display: block !important;
+            visibility: visible !important;
+        }
+
+        .main-nav a,
+        .main-nav button {
+            display: flex !important;
+            visibility: visible !important;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Assistant', 'Heebo', 'Open Sans Hebrew', Arial, sans-serif;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -143,38 +166,41 @@
             margin: 0;
         }
 
-        .main-nav ul {
-            display: flex;
-            list-style: none;
-            gap: 15px;
-        }
-
-        .main-nav a {
-            color: white;
-            text-decoration: none;
-            padding: 8px 15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
+.main-nav ul {
+    display: flex !important;
+    list-style: none;
+    gap: 15px;
+    align-items: center;
+    visibility: visible !important;
+}
+        
+.main-nav a {
+    color: white !important;
+    text-decoration: none !important;
+    padding: 8px 15px !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    display: inline-block !important;
+    visibility: visible !important;
+}
         .main-nav a:hover, .main-nav a.active {
             background: rgba(246, 152, 152, 0.2);
             color: #F69898;
         }
 
-        .mobile-menu-toggle {
-            display: none;
-            background: rgba(246, 152, 152, 0.2);
-            border: none;
-            border-radius: 8px;
-            padding: 10px;
-            color: #F69898;
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-
+.mobile-menu-toggle {
+    display: none !important;
+    background: rgba(246, 152, 152, 0.2);
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    color: #F69898;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+        
         .mobile-menu {
             display: none;
             position: fixed;
@@ -1312,9 +1338,10 @@ padding-top: 20px;
     }
     /* עד כאן */
     
-    .main-nav {
-        display: none;
-    }
+.main-nav {
+    display: flex !important;
+    visibility: visible !important;
+}
         @media (max-width: 768px) {
             .text-logo {
                 font-size: 1.4rem;
