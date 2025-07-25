@@ -1704,6 +1704,30 @@ padding-top: 20px;
     .website-share-buttons-grid {
         grid-template-columns: 1fr;
     }
+        /* עיצוב מיוחד ללשונית טווחי שכר */
+.main-nav a[href="salary-ranges.html"],
+.mobile-menu a[href="salary-ranges.html"] {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.1)) !important;
+    border: 1px solid rgba(255, 215, 0, 0.3) !important;
+    font-weight: bold !important;
+    color: #FFD700 !important;
+}
+
+.main-nav a[href="salary-ranges.html"]:hover,
+.mobile-menu a[href="salary-ranges.html"]:hover {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 165, 0, 0.2)) !important;
+    border-color: rgba(255, 215, 0, 0.5) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2) !important;
+}
+
+/* אייקון מיוחד */
+.main-nav a[href="salary-ranges.html"]::before,
+.mobile-menu a[href="salary-ranges.html"]::before {
+    content: "💰";
+    margin-left: 8px;
+    filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.5));
+}
   /* שעון משרות פשוט */
 .simple-job-timer {
     background: rgba(246, 152, 152, 0.1);
@@ -1740,7 +1764,9 @@ padding-top: 20px;
         <li><a href="#" class="active">דף הבית</a></li>
         <li><a href="#contact">צור קשר</a></li>
         <li><a href="#" onclick="openAboutModal()">עוד עלינו</a></li>
+        <li><a href="salary-ranges.html" target="_blank">💰 טווחי שכר</a></li>
         <li><button class="header-share-btn" onclick="openWebsiteShareModal()"><i class="fas fa-share-alt"></i>שתף</button></li>
+
     </ul>
 </nav>
             <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
@@ -1754,6 +1780,7 @@ padding-top: 20px;
         <li><a href="#search">חיפוש משרות</a></li>
         <li><a href="#contact">צור קשר</a></li>
         <li><a href="#" onclick="openAboutModal(); toggleMobileMenu();">עוד עלינו</a></li>
+        <li><a href="salary-ranges.html" target="_blank">💰 טווחי שכר</a></li>
         <li><a href="#" onclick="openWebsiteShareModal(); toggleMobileMenu();"><i class="fas fa-share-alt"></i> שתף אתר</a></li>
     </ul>
 </div>
@@ -2162,6 +2189,7 @@ padding-top: 20px;
             
             <div style="display: flex; justify-content: center; gap: 30px; margin: 25px 0; flex-wrap: wrap;">
                 <a href="#search" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">חיפוש משרות</a>
+                    <a href="salary-ranges.html" target="_blank" style="color: #FFD700; text-decoration: none; transition: color 0.3s; font-size: 1rem; font-weight: bold;">💰 טווחי שכר</a>
                 <a href="#contact" style="color: #cccccc; text-decoration: none; transition: color 0.3s; font-size: 1rem;">צור קשר</a>
                 <a href="#" onclick="openAdminLogin()" style="color: #F69898 !important; text-decoration: none; transition: color 0.3s; font-size: 1rem; font-weight: bold;"><i class="fas fa-cog" style="margin-left: 8px;"></i>מערכת ניהול</a>
             </div>
@@ -4203,10 +4231,12 @@ function resetGuideOptions() {
     if (optionsDiv) {
         optionsDiv.innerHTML = `
             <button onclick="startGuideJobSearch()">🔍 חיפוש עבודה</button>
+            <button onclick="window.open('salary-ranges.html', '_blank')">💰 טווחי שכר</button>
             <button onclick="guideBackToSearch()">⬅️ חזרה לחיפוש</button>
             <button onclick="guideScrollToTop()">⬆️ חזרה למעלה</button>
             <button onclick="showGuideContactForm()">📞 לא מצאתי מה שחיפשתי</button>
             <button onclick="showGuideContactForm()">💬 צרו איתי קשר</button>
+            
         `;
     }
 }
