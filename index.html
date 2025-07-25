@@ -4728,23 +4728,16 @@ setInterval(() => {
     
 
 
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             window.whatsappAlerts = new WhatsAppAlerts({
                 buttonText: 'התראות משרות',
-                position: 'bottom-right'
+                position: 'bottom-left' // פשוט ונקי!
             });
-            
-            // תיקון מיקום - מספר קטן יותר
-            setTimeout(() => {
-                const alertsBtn = document.getElementById('whatsapp-alerts-button');
-                if (alertsBtn) {
-                    alertsBtn.style.bottom = '90px'; // קטן יותר!
-                }
-            }, 500);
             
             console.log('✅ קומפוננטת התראות הופעלה');
         });
     </script>
-                        </body>
+ </body>
 </html>
