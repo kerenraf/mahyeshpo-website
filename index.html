@@ -4727,41 +4727,24 @@ setInterval(() => {
     console.log('🧙‍♀️ הגמדה החכמה הופעלה בהצלחה עם פונקציונליות מלאה!');
 </script>
     
+<link rel="stylesheet" href="css/whatsapp-alerts.css">
+<script src="js/whatsapp-alerts.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('🔍 מתחיל לטעון את הקומפוננטה...');
-        
-        // בדיקה אם הקבצים נטענו
-        if (typeof WhatsAppAlerts === 'undefined') {
-            console.error('❌ שגיאה: הקובץ whatsapp-alerts.js לא נטען!');
-            alert('שגיאה: הקובץ js/whatsapp-alerts.js לא נמצא');
-            return;
-        }
-        
-        console.log('✅ WhatsAppAlerts class נטען בהצלחה');
-        
-        try {
-            window.whatsappAlerts = new WhatsAppAlerts({
-                buttonText: 'התראות משרות',
-                position: 'bottom-left'
-            });
-            console.log('✅ הקומפוננטה נוצרה בהצלחה');
-            
-            // בדיקה אם הכפתור נוצר
-            setTimeout(() => {
-                const alertsBtn = document.getElementById('whatsapp-alerts-button');
-                if (alertsBtn) {
-                    console.log('✅ הכפתור נמצא!', alertsBtn);
-                    console.log('מיקום הכפתור:', window.getComputedStyle(alertsBtn));
-                } else {
-                    console.error('❌ הכפתור לא נוצר!');
-                }
-            }, 1000);
-            
-        } catch (error) {
-            console.error('❌ שגיאה ביצירת הקומפוננטה:', error);
-            alert('שגיאה: ' + error.message);
-        }
+        setTimeout(() => {
+            if (typeof WhatsAppAlerts !== 'undefined') {
+                window.whatsappAlerts = new WhatsAppAlerts({
+                    buttonText: 'התראות משרות',
+                    position: 'bottom-left'
+                });
+                
+                // מיקום מעל כפתור הנגישות
+                setTimeout(() => {
+                    const button = document.getElementById('whatsapp-alerts-button');
+                    if (button) button.style.bottom = '90px';
+                }, 500);
+            }
+        }, 1000);
     });
 </script>
 </body>
