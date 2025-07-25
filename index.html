@@ -4726,18 +4726,24 @@ setInterval(() => {
     console.log('🧙‍♀️ הגמדה החכמה הופעלה בהצלחה עם פונקציונליות מלאה!');
 </script>
     
-    <!-- קומפוננטת התראות WhatsApp -->
-    <link rel="stylesheet" href="css/whatsapp-alerts.css">
-    <script src="js/whatsapp-alerts.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             window.whatsappAlerts = new WhatsAppAlerts({
                 buttonText: 'התראות משרות',
-                position: 'bottom-right'  // ← הוחלף ל-right!
+                position: 'bottom-right'
             });
+            
+            // תיקון מיקום כדי שלא יתנגש עם הגמדה
+            setTimeout(() => {
+                const alertsBtn = document.getElementById('whatsapp-alerts-button');
+                if (alertsBtn) {
+                    alertsBtn.style.bottom = '130px'; // במקום 30px
+                }
+            }, 500);
             
             console.log('✅ קומפוננטת התראות הופעלה');
         });
     </script>
-</body>
+            </body>
 </html>
