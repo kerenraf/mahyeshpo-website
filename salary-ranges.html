@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- כותרת הדף - מה שמופיע בחיפוש גוגל ובלשונית הדפדפן -->
+    <!-- כותרת הדף -->
     <title>טווחי שכר במשק הישראלי 2025 | מה יש פה? - השוואת משכורות מעודכנת</title>
     
-    <!-- תיאור הדף - מה שמופיע מתחת לכותרת בגוגל -->
+    <!-- תיאור הדף -->
     <meta name="description" content="📊 טווחי שכר מעודכנים לכל המקצועות בישראל 2025 | השוואת משכורות: פיתוח, מכירות, חינוך, בריאות ועוד | נתונים אמינים מהלמ״ס">
     
     <!-- מילות מפתח -->
@@ -196,48 +196,6 @@
             font-size: 1.2rem;
         }
 
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            top: 70px;
-            left: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 999;
-            padding: 20px;
-        }
-
-        .mobile-menu.active {
-            display: block;
-        }
-
-        .mobile-menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .mobile-menu li {
-            margin-bottom: 10px;
-        }
-
-        .mobile-menu a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 15px;
-            border-radius: 8px;
-            transition: var(--transition);
-            text-align: center;
-            font-size: 1.1rem;
-        }
-
-        .mobile-menu a:hover, .mobile-menu a.active {
-            background: rgba(246, 152, 152, 0.2);
-            color: var(--primary-color);
-        }
-
         /* Hero Section */
         .hero-section {
             padding: 60px 0 40px;
@@ -250,23 +208,6 @@
             margin-bottom: 40px;
             position: relative;
             overflow: hidden;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="20" fill="rgba(255,215,0,0.1)">💰</text></svg>') repeat;
-            opacity: 0.3;
-            animation: float 20s infinite linear;
-        }
-
-        @keyframes float {
-            0% { transform: translateX(0) translateY(0); }
-            100% { transform: translateX(-100px) translateY(-100px); }
         }
 
         .hero-title {
@@ -292,71 +233,6 @@
             z-index: 2;
         }
 
-        .last-updated {
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            padding: 12px 25px;
-            border-radius: 25px;
-            display: inline-block;
-            font-size: 1rem;
-            margin-bottom: 20px;
-            color: var(--gold-color);
-            font-weight: 600;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Stats Overview */
-        .stats-overview {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, var(--dark-bg), var(--darker-bg));
-            padding: 30px;
-            border-radius: var(--border-radius);
-            text-align: center;
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--gold-color), var(--primary-color));
-        }
-
-        .stat-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.2);
-            border-color: rgba(255, 215, 0, 0.4);
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, var(--gold-color), var(--primary-color));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .stat-label {
-            color: var(--text-muted);
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
         /* Info Banner */
         .info-banner {
             background: linear-gradient(135deg, 
@@ -368,17 +244,6 @@
             margin-bottom: 30px;
             text-align: center;
             position: relative;
-        }
-
-        .info-banner::before {
-            content: '💡';
-            position: absolute;
-            top: -15px;
-            right: 20px;
-            background: var(--darker-bg);
-            padding: 8px 12px;
-            border-radius: 50%;
-            font-size: 1.2rem;
         }
 
         .info-banner h4 {
@@ -393,285 +258,11 @@
             line-height: 1.6;
         }
 
-        /* Filters */
-        .filters-section {
-            background: linear-gradient(135deg, var(--dark-bg), var(--darker-bg));
-            padding: 30px;
-            border-radius: var(--border-radius);
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .filters-title {
-            color: var(--gold-color);
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .filters-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .filter-label {
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            font-weight: bold;
-            font-size: 0.95rem;
-        }
-
-        .filter-select, .filter-input {
-            padding: 14px;
-            border: 1px solid #555;
-            border-radius: 8px;
-            background: var(--darker-bg);
-            color: white;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .filter-select:focus, .filter-input:focus {
-            border-color: var(--gold-color);
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.25);
-        }
-
-        .filter-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            text-align: center;
-            font-size: 1rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--gold-color), var(--gold-hover));
-            color: #333;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, var(--gold-hover), #FF8C00);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, #6c757d, #545b62);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: linear-gradient(135deg, #545b62, #495057);
-            transform: translateY(-2px);
-        }
-
-        /* Salary Cards */
-        .salary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .salary-card {
-            background: linear-gradient(135deg, var(--dark-bg), var(--darker-bg));
-            border-radius: var(--border-radius);
-            padding: 25px;
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .salary-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--gold-color), var(--primary-color));
-        }
-
-        .salary-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.15);
-            border-color: rgba(255, 215, 0, 0.4);
-        }
-
-        .salary-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-
-        .job-title {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: var(--gold-color);
-            margin-bottom: 8px;
-        }
-
-        .job-category {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            background: rgba(255, 215, 0, 0.1);
-            padding: 4px 12px;
-            border-radius: 12px;
-            display: inline-block;
-            border: 1px solid rgba(255, 215, 0, 0.2);
-        }
-
-        .experience-level {
-            padding: 8px 16px;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            text-align: center;
-            min-width: 90px;
-            color: white;
-        }
-
-        .experience-level.junior {
-            background: linear-gradient(135deg, #17a2b8, #138496);
-        }
-
-        .experience-level.mid {
-            background: linear-gradient(135deg, #28a745, #20c997);
-        }
-
-        .experience-level.senior {
-            background: linear-gradient(135deg, #fd7e14, #e36209);
-        }
-
-        .experience-level.expert {
-            background: linear-gradient(135deg, #6f42c1, #59359a);
-        }
-
-        .salary-ranges {
-            margin-bottom: 20px;
-        }
-
-        .salary-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .salary-row:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        .salary-label {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        .salary-amount {
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .salary-amount.high {
-            color: var(--success-color);
-        }
-
-        .salary-amount.medium {
-            color: var(--warning-color);
-        }
-
-        .salary-amount.low {
-            color: var(--primary-color);
-        }
-
-        .salary-note {
-            background: rgba(255, 215, 0, 0.05);
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            border-right: 3px solid var(--gold-color);
-            margin-top: 15px;
-            line-height: 1.5;
-        }
-
-        .trend-indicator {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.8rem;
-            margin-top: 8px;
-            font-weight: 600;
-        }
-
-        .trend-up { color: var(--success-color); }
-        .trend-down { color: var(--danger-color); }
-        .trend-stable { color: var(--warning-color); }
-
-        /* No Results */
-        .no-results {
-            text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(135deg, var(--dark-bg), var(--darker-bg));
-            border-radius: var(--border-radius);
-            border: 2px dashed rgba(255, 215, 0, 0.3);
-            grid-column: 1 / -1;
-        }
-
-        .no-results-icon {
-            font-size: 4rem;
-            color: var(--gold-color);
-            margin-bottom: 20px;
-        }
-
-        .no-results h3 {
-            color: var(--gold-color);
-            margin-bottom: 15px;
-            font-size: 1.6rem;
-        }
-
-        .no-results p {
-            color: var(--text-muted);
-            margin-bottom: 25px;
-            font-size: 1.1rem;
-        }
-
-        /* Loading */
+        /* Loading State */
         .loading {
             text-align: center;
             padding: 60px;
-            grid-column: 1 / -1;
+            color: white;
         }
 
         .loading-spinner {
@@ -687,6 +278,179 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Dynamic Salary Grid */
+        .salary-categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .category-card {
+            background: linear-gradient(135deg, rgba(246, 152, 152, 0.1), rgba(255, 215, 0, 0.05));
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.2);
+            border-color: rgba(255, 215, 0, 0.4);
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        
+        .category-icon {
+            font-size: 2.5rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 50%;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .category-title {
+            flex: 1;
+        }
+        
+        .category-title h3 {
+            color: var(--gold-color);
+            margin: 0 0 5px 0;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        
+        .jobs-count {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3px 10px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        
+        .avg-salary {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--success-color);
+            text-align: center;
+            background: rgba(40, 167, 69, 0.1);
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+        
+        .category-description {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .salary-details {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .salary-range, .salary-trend {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .salary-trend {
+            margin-bottom: 0;
+        }
+        
+        .range-label, .trend-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .range-values {
+            color: white;
+            font-weight: 600;
+        }
+        
+        .trend-value {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+        
+        .view-jobs-btn {
+            background: linear-gradient(135deg, var(--primary-color), #ff9e9e);
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .view-jobs-btn:hover {
+            background: linear-gradient(135deg, var(--primary-hover), #ff8a8a);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(246, 152, 152, 0.3);
+        }
+
+        /* Data Source Notice */
+        .data-source-notice {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .data-source-notice h3 {
+            color: var(--gold-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .data-source-notice p {
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .data-source-notice .categories-list {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .data-source-notice .category-item {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 0.9rem;
+            color: white;
+            border: 1px solid rgba(255, 215, 0, 0.3);
         }
 
         /* Footer */
@@ -769,26 +533,23 @@
                 padding: 0 10px;
             }
 
-            .salary-grid {
+            .salary-categories-grid {
                 grid-template-columns: 1fr;
             }
-
-            .filters-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .filter-buttons {
+            
+            .category-header {
                 flex-direction: column;
-                align-items: center;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .category-title {
+                text-align: center;
             }
 
-            .stats-overview {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .btn {
-                width: 100%;
-                max-width: 300px;
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
             }
         }
 
@@ -801,35 +562,9 @@
                 padding: 40px 0 30px;
             }
 
-            .salary-card {
-                padding: 20px;
-            }
-
-            .stats-overview {
-                grid-template-columns: 1fr;
-            }
-
             .footer-content {
                 grid-template-columns: 1fr;
                 text-align: center;
-            }
-        }
-
-        /* Accessibility */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        /* High contrast mode */
-        @media (prefers-contrast: high) {
-            :root {
-                --primary-color: #FF69B4;
-                --gold-color: #FFFF00;
-                --text-muted: #E0E0E0;
             }
         }
     </style>
@@ -844,8 +579,7 @@
                     <a href="https://mayeshpo.co.il">דף הבית</a>
                     <a href="#" class="salary-active">💰 טווחי שכר</a>
                     <a href="https://mayeshpo.co.il#search">משרות</a>
-                    <a href="https://mayeshpo.co.il#contact">
-                      צור קשר</a>
+                    <a href="https://mayeshpo.co.il#contact">צור קשר</a>
                 </nav>
                 <a href="https://mayeshpo.co.il" class="back-to-jobs">
                     <i class="fas fa-arrow-right"></i>
@@ -856,15 +590,6 @@
                 </button>
             </div>
         </div>
-        
-        <div class="mobile-menu" id="mobileMenu">
-            <ul>
-                <li><a href="https://mayeshpo.co.il">דף הבית</a></li>
-                <li><a href="#" class="salary-active">💰 טווחי שכר</a></li>
-                <li><a href="https://mayeshpo.co.il#search">משרות</a></li>
-                <li><a href="https://mayeshpo.co.il#contact">צור קשר</a></li>
-            </ul>
-        </div>
     </header>
 
     <!-- Hero Section -->
@@ -873,114 +598,52 @@
             <h1 class="hero-title">💰 טווחי שכר במשק הישראלי</h1>
             <p class="hero-subtitle">
                 נתונים מעודכנים ואמינים על שכר ממוצע במקצועות שונים בישראל 2025
-                <br>מבוסס על דוחות ממשרד הכלכלה והתעשייה, הלמ"ס ונתוני השוק
+                <br>מבוסס על נתוני משרות במערכת ומקורות אמינים
             </p>
-            <div class="last-updated">
-                <i class="fas fa-clock"></i>
-                עודכן לאחרונה: <span id="lastUpdated">ינואר 2025</span>
-            </div>
         </div>
     </section>
 
     <div class="container">
         <!-- Info Banner -->
         <div class="info-banner">
-            <h4><i class="fas fa-info-circle"></i> חשוב לדעת</h4>
+            <h4><i class="fas fa-info-circle"></i> איך זה עובד?</h4>
             <p>
-                הנתונים המוצגים הם אומדנים על בסיס סקרי שכר, דוחות חברות ונתוני השוק הישראלי.
-                השכר הסופי מושפע מגורמים נוספים כמו ניסיון, השכלה, מיקום גיאוגרפי וגודל החברה.
-                הנתונים מעודכנים באופן תקופתי ומבוססים על מקורות אמינים.
+                אנחנו מנתחים את המשרות במערכת שלנו ומציגים לכם את הקטגוריות הפעילות
+                עם אומדני שכר מדויקים. הנתונים מתעדכנים באופן תקופתי על פי המשרות החדשות.
             </p>
         </div>
 
-        <!-- Stats Overview -->
-        <div class="stats-overview">
-            <div class="stat-card">
-                <div class="stat-number" id="totalJobs">0</div>
-                <div class="stat-label">מקצועות במערכת</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">₪11,500</div>
-                <div class="stat-label">שכר ממוצע במשק</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">₪18,200</div>
-                <div class="stat-label">שכר ממוצע בהייטק</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">₪5,300</div>
-                <div class="stat-label">שכר מינימום 2025</div>
-            </div>
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <div class="loading-spinner"></div>
+            <p>טוען נתוני משרות ומחשב טווחי שכר...</p>
         </div>
 
-        <!-- Filters -->
-        <div class="filters-section">
-            <h3 class="filters-title">
-                <i class="fas fa-filter"></i>
-                סינון נתוני שכר
-            </h3>
-            <div class="filters-grid">
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-search"></i>
-                        חיפוש מקצוע
-                    </label>
-                    <input type="text" class="filter-input" id="jobSearch" placeholder="הקלד שם מקצוע...">
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-tags"></i>
-                        קטגוריה
-                    </label>
-                    <select class="filter-select" id="categoryFilter">
-                        <option value="">כל הקטגוריות</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-user-graduate"></i>
-                        רמת ניסיון
-                    </label>
-                    <select class="filter-select" id="experienceFilter">
-                        <option value="">כל הרמות</option>
-                        <option value="junior">מתחיל (0-2 שנים)</option>
-                        <option value="mid">בינוני (2-5 שנים)</option>
-                        <option value="senior">בכיר (5+ שנים)</option>
-                        <option value="expert">מומחה (10+ שנים)</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-shekel-sign"></i>
-                        טווח שכר
-                    </label>
-                    <select class="filter-select" id="salaryRangeFilter">
-                        <option value="">כל הטווחים</option>
-                        <option value="low">₪5,000 - ₪10,000</option>
-                        <option value="medium">₪10,000 - ₪20,000</option>
-                        <option value="high">₪20,000 - ₪35,000</option>
-                        <option value="very-high">₪35,000+</option>
-                    </select>
-                </div>
-            </div>
-            <div class="filter-buttons">
-                <button class="btn btn-primary" onclick="applyFilters()">
-                    <i class="fas fa-search"></i>
-                    חפש
-                </button>
-                <button class="btn btn-secondary" onclick="clearFilters()">
-                    <i class="fas fa-times"></i>
-                    נקה מסננים
-                </button>
-            </div>
+        <!-- Data Source Notice -->
+        <div id="dataSourceNotice" class="data-source-notice" style="display: none;">
+            <h3>📊 הקטגוריות שנמצאו במערכת</h3>
+            <p>על בסיס <span id="totalJobsFound">0</span> משרות פעילות, זוהו הקטגוריות הבאות:</p>
+            <div id="categoriesList" class="categories-list"></div>
+            <p style="margin-top: 15px; font-size: 0.9rem;">
+                <strong>שימו לב:</strong> טווחי השכר מבוססים על אומדנים ונתוני שוק ומטרתם לתת כיוון כללי.
+                השכר הסופי תלוי בגורמים רבים כמו ניסיון, השכלה, מיקום וגודל החברה.
+            </p>
         </div>
 
-        <!-- Salary Grid -->
-        <div id="salaryGrid" class="salary-grid">
-            <div class="loading">
-                <div class="loading-spinner"></div>
-                <p>טוען נתוני שכר...</p>
-            </div>
+        <!-- Dynamic Salary Data Container -->
+        <div id="dynamicSalaryContainer" style="display: none;">
+            <!-- הנתונים יוכנסו כאן דינמית -->
+        </div>
+
+        <!-- No Data Message -->
+        <div id="noDataMessage" class="data-source-notice" style="display: none;">
+            <h3>📋 אין נתונים זמינים כרגע</h3>
+            <p>לא הצלחנו לטעון נתוני משרות מהמערכת. אנא נסו שוב מאוחר יותר.</p>
+            <p style="margin-top: 15px;">
+                <a href="https://mayeshpo.co.il" style="color: var(--gold-color); text-decoration: none;">
+                    ← חזרה ללוח המשרות
+                </a>
+            </p>
         </div>
     </div>
 
@@ -994,10 +657,10 @@
                 </div>
                 <div class="footer-section">
                     <h3>📊 המקורות שלנו</h3>
-                    <p>הלשכה המרכזית לסטטיסטיקה<br>
+                    <p>נתוני משרות במערכת<br>
+                    הלשכה המרכזית לסטטיסטיקה<br>
                     משרד הכלכלה והתעשייה<br>
-                    סקרי שכר מקצועיים<br>
-                    נתוני חברות הייטק</p>
+                    סקרי שכר מקצועיים</p>
                 </div>
                 <div class="footer-section">
                     <h3>🔗 קישורים שימושיים</h3>
@@ -1030,1231 +693,374 @@
     </footer>
 
     <script>
-        // נתוני שכר מפורטים - מבוססים על נתונים אמיתיים
-        const salaryData = {
-            'פיתוח ותוכנה': [
-                {
-                    title: 'מפתח Full Stack',
-                    category: 'פיתוח ותוכנה',
-                    junior: { min: 12000, max: 18000, avg: 15000 },
-                    mid: { min: 18000, max: 28000, avg: 23000 },
-                    senior: { min: 28000, max: 45000, avg: 36000 },
-                    expert: { min: 45000, max: 80000, avg: 62000 },
-                    note: 'ביקוש גבוה במיוחד, שכר משתנה לפי טכנולוגיות וגודל החברה',
-                    trend: 'up'
-                },
-                {
-                    title: 'מפתח Frontend',
-                    category: 'פיתוח ותוכנה',
-                    junior: { min: 10000, max: 16000, avg: 13000 },
-                    mid: { min: 16000, max: 25000, avg: 20500 },
-                    senior: { min: 25000, max: 40000, avg: 32500 },
-                    expert: { min: 40000, max: 70000, avg: 55000 },
-                    note: 'ביקוש גבוה למומחי React, Vue וAngular',
-                    trend: 'up'
-                },
-                {
-                    title: 'מפתח Backend',
-                    category: 'פיתוח ותוכנה',
-                    junior: { min: 11000, max: 17000, avg: 14000 },
-                    mid: { min: 17000, max: 26000, avg: 21500 },
-                    senior: { min: 26000, max: 42000, avg: 34000 },
-                    expert: { min: 42000, max: 75000, avg: 58500 },
-                    note: 'מומחי Java, Python, Node.js מבוקשים מאוד',
-                    trend: 'up'
-                },
-                {
-                    title: 'QA Engineer',
-                    category: 'פיתוח ותוכנה',
-                    junior: { min: 8000, max: 14000, avg: 11000 },
-                    mid: { min: 14000, max: 22000, avg: 18000 },
-                    senior: { min: 22000, max: 35000, avg: 28500 },
-                    expert: { min: 35000, max: 60000, avg: 47500 },
-                    note: 'QA אוטומציה מקבל שכר גבוה יותר ב-20-30%',
-                    trend: 'stable'
-                },
-                {
-                    title: 'DevOps Engineer',
-                    category: 'פיתוח ותוכנה',
-                    junior: { min: 13000, max: 20000, avg: 16500 },
-                    mid: { min: 20000, max: 32000, avg: 26000 },
-                    senior: { min: 32000, max: 50000, avg: 41000 },
-                    expert: { min: 50000, max: 90000, avg: 70000 },
-                    note: 'אחד התחומים המבוקשים ביותר בהייטק',
-                    trend: 'up'
-                }
-            ],
-            'מכירות ושיווק': [
-                {
-                    title: 'מנהל מכירות',
-                    category: 'מכירות ושיווק',
-                    junior: { min: 8000, max: 15000, avg: 11500 },
-                    mid: { min: 15000, max: 25000, avg: 20000 },
-                    senior: { min: 25000, max: 45000, avg: 35000 },
-                    expert: { min: 45000, max: 80000, avg: 62500 },
-                    note: 'שכר בסיס + עמלות שיכולות להגיע ל-50% מהשכר',
-                    trend: 'up'
-                },
-                {
-                    title: 'מנהל שיווק דיגיטלי',
-                    category: 'מכירות ושיווק',
-                    junior: { min: 9000, max: 16000, avg: 12500 },
-                    mid: { min: 16000, max: 26000, avg: 21000 },
-                    senior: { min: 26000, max: 40000, avg: 33000 },
-                    expert: { min: 40000, max: 65000, avg: 52500 },
-                    note: 'ביקוש גבוה למומחי Google Ads, Facebook ו-SEO',
-                    trend: 'up'
-                },
-                {
-                    title: 'נציג מכירות B2B',
-                    category: 'מכירות ושיווק',
-                    junior: { min: 7000, max: 13000, avg: 10000 },
-                    mid: { min: 13000, max: 22000, avg: 17500 },
-                    senior: { min: 22000, max: 38000, avg: 30000 },
-                    expert: { min: 38000, max: 65000, avg: 51500 },
-                    note: 'מכירות B2B משלמות יותר ממכירות B2C',
-                    trend: 'stable'
-                }
-            ],
-            'חינוך והוראה': [
-                {
-                    title: 'מורה בבית ספר יסודי',
-                    category: 'חינוך והוראה',
-                    junior: { min: 6500, max: 9500, avg: 8000 },
-                    mid: { min: 9500, max: 13000, avg: 11250 },
-                    senior: { min: 13000, max: 18000, avg: 15500 },
-                    expert: { min: 18000, max: 25000, avg: 21500 },
-                    note: 'שכר קבוע לפי דרוג משרד החינוך + תוספות',
-                    trend: 'stable'
-                },
-                {
-                    title: 'מורה פרטי',
-                    category: 'חינוך והוראה',
-                    junior: { min: 80, max: 150, avg: 115 },
-                    mid: { min: 150, max: 250, avg: 200 },
-                    senior: { min: 250, max: 400, avg: 325 },
-                    expert: { min: 400, max: 600, avg: 500 },
-                    note: 'תעריף לשעה. מקצועות מבוקשים: מתמטיקה, אנגלית, פיזיקה',
-                    trend: 'up'
-                },
-                {
-                    title: 'רכז חינוכי',
-                    category: 'חינוך והוראה',
-                    junior: { min: 7500, max: 11500, avg: 9500 },
-                    mid: { min: 11500, max: 16500, avg: 14000 },
-                    senior: { min: 16500, max: 23000, avg: 19750 },
-                    expert: { min: 23000, max: 32000, avg: 27500 },
-                    note: 'תוספת לשכר בסיס של מורה, כולל אחריות נוספת',
-                    trend: 'stable'
-                }
-            ],
-            'מזון ומסעדנות': [
-                {
-                    title: 'שף במסעדה',
-                    category: 'מזון ומסעדנות',
-                    junior: { min: 6000, max: 10000, avg: 8000 },
-                    mid: { min: 10000, max: 16000, avg: 13000 },
-                    senior: { min: 16000, max: 25000, avg: 20500 },
-                    expert: { min: 25000, max: 50000, avg: 37500 },
-                    note: 'שכר משתנה מאוד לפי סוג המסעדה ורמתה',
-                    trend: 'up'
-                },
-                {
-                    title: 'מלצר/ית',
-                    category: 'מזון ומסעדנות',
-                    junior: { min: 35, max: 60, avg: 47.5 },
-                    mid: { min: 60, max: 90, avg: 75 },
-                    senior: { min: 90, max: 150, avg: 120 },
-                    expert: { min: 150, max: 250, avg: 200 },
-                    note: 'תעריף לשעה + טיפים (יכולים להגיע ל-100% מהשכר)',
-                    trend: 'stable'
-                },
-                {
-                    title: 'מנהל מסעדה',
-                    category: 'מזון ומסעדנות',
-                    junior: { min: 8000, max: 14000, avg: 11000 },
-                    mid: { min: 14000, max: 22000, avg: 18000 },
-                    senior: { min: 22000, max: 35000, avg: 28500 },
-                    expert: { min: 35000, max: 60000, avg: 47500 },
-                    note: 'כולל בונוסים מביצועי המסעדה',
-                    trend: 'up'
-                }
-            ],
-            'בריאות ורפואה': [
-                {
-                    title: 'רופא משפחה',
-                    category: 'בריאות ורפואה',
-                    junior: { min: 25000, max: 35000, avg: 30000 },
-                    mid: { min: 35000, max: 50000, avg: 42500 },
-                    senior: { min: 50000, max: 80000, avg: 65000 },
-                    expert: { min: 80000, max: 150000, avg: 115000 },
-                    note: 'שכר במגזר הציבורי + עבודה פרטית',
-                    trend: 'up'
-                },
-                {
-                    title: 'אחות מוסמכת',
-                    category: 'בריאות ורפואה',
-                    junior: { min: 8000, max: 12000, avg: 10000 },
-                    mid: { min: 12000, max: 18000, avg: 15000 },
-                    senior: { min: 18000, max: 25000, avg: 21500 },
-                    expert: { min: 25000, max: 35000, avg: 30000 },
-                    note: 'כולל תוספות לילה, סופי שבוע וחגים',
-                    trend: 'up'
-                },
-                {
-                    title: 'פיזיותרפיסט',
-                    category: 'בריאות ורפואה',
-                    junior: { min: 120, max: 200, avg: 160 },
-                    mid: { min: 200, max: 300, avg: 250 },
-                    senior: { min: 300, max: 450, avg: 375 },
-                    expert: { min: 450, max: 700, avg: 575 },
-                    note: 'תעריף לטיפול. עבודה פרטית משלמת יותר',
-                    trend: 'stable'
-                }
-            ],
-            'ניהול ומנהלה': [
-                {
-                    title: 'מנהל פרויקטים',
-                    category: 'ניהול ומנהלה',
-                    junior: { min: 12000, max: 20000, avg: 16000 },
-                    mid: { min: 20000, max: 32000, avg: 26000 },
-                    senior: { min: 32000, max: 50000, avg: 41000 },
-                    expert: { min: 50000, max: 90000, avg: 70000 },
-                    note: 'שכר משתנה לפי תחום וגודל הפרויקטים',
-                    trend: 'up'
-                },
-                {
-                    title: 'מנהל משאבי אנוש',
-                    category: 'ניהול ומנהלה',
-                    junior: { min: 10000, max: 16000, avg: 13000 },
-                    mid: { min: 16000, max: 26000, avg: 21000 },
-                    senior: { min: 26000, max: 40000, avg: 33000 },
-                    expert: { min: 40000, max: 70000, avg: 55000 },
-                    note: 'ביקוש גבוה בחברות הייטק ועסקים גדולים',
-                    trend: 'up'
-                }
-            ],
-            'שירות לקוחות': [
-                {
-                    title: 'נציג שירות לקוחות',
-                    category: 'שירות לקוחות',
-                    junior: { min: 5500, max: 8000, avg: 6750 },
-                    mid: { min: 8000, max: 12000, avg: 10000 },
-                    senior: { min: 12000, max: 18000, avg: 15000 },
-                    expert: { min: 18000, max: 28000, avg: 23000 },
-                    note: 'תוספות לזמינות ומשמרות לא שגרתיות',
-                    trend: 'stable'
-                },
-                {
-                    title: 'מנהל מוקד שירות',
-                    category: 'שירות לקוחות',
-                    junior: { min: 9000, max: 15000, avg: 12000 },
-                    mid: { min: 15000, max: 24000, avg: 19500 },
-                    senior: { min: 24000, max: 38000, avg: 31000 },
-                    expert: { min: 38000, max: 60000, avg: 49000 },
-                    note: 'כולל בונוסי ביצועים וניהול צוות',
-                    trend: 'up'
-                }
-            ]
+        // משתנים גלובליים
+        let jobsData = [];
+        let categoriesFound = [];
+
+        // נתוני שכר בסיסיים לפי קטגוריות (ברירת מחדל) - יתעדכנו דינמית
+        const baseSalaryData = {
+            'פיתוח ותוכנה': {
+                icon: '💻',
+                avgSalary: '₪25,000',
+                description: 'תחום הטכנולוגיה והפיתוח - משכורות גבוהות עם פוטנציאל צמיחה',
+                minRange: '₪12,000',
+                maxRange: '₪80,000',
+                trend: 'עולה 📈'
+            },
+            'מכירות ושיווק': {
+                icon: '📈',
+                avgSalary: '₪18,000',
+                description: 'מכירות ושיווק - שכר בסיס + עמלות משתנות',
+                minRange: '₪8,000',
+                maxRange: '₪65,000',
+                trend: 'עולה 📈'
+            },
+            
+            'חינוך והוראה': {
+                icon: '📚',
+                avgSalary: '₪12,500',
+                description: 'מערכת החינוך - שכר יציב עם תוספות',
+                minRange: '₪6,500',
+                maxRange: '₪32,000',
+                trend: 'יציב ➡️'
+            },
+            'מזון ומסעדנות': {
+                icon: '🍽️',
+                avgSalary: '₪9,500',
+                description: 'תעשיית המזון - כולל טיפים ותוספות',
+                minRange: '₪35/שעה',
+                maxRange: '₪50,000',
+                trend: 'עולה 📈'
+            },
+            'בריאות ורפואה': {
+                icon: '🏥',
+                avgSalary: '₪35,000',
+                description: 'מערכת הבריאות - משכורות גבוהות במיוחד',
+                minRange: '₪8,000',
+                maxRange: '₪150,000',
+                trend: 'עולה חזק 📈'
+            },
+            'ניהול ומנהלה': {
+                icon: '👔',
+                avgSalary: '₪28,000',
+                description: 'תפקידי ניהול - תלוי בתחום ובגודל החברה',
+                minRange: '₪12,000',
+                maxRange: '₪90,000',
+                trend: 'עולה 📈'
+            },
+            'שירות לקוחות': {
+                icon: '📞',
+                avgSalary: '₪11,000',
+                description: 'שירות לקוחות - נקודת כניסה טובה לשוק העבודה',
+                minRange: '₪5,500',
+                maxRange: '₪28,000',
+                trend: 'יציב ➡️'
+            },
+            'בנייה והנדסה': {
+                icon: '🏗️',
+                avgSalary: '₪22,000',
+                description: 'בנייה והנדסה - ביקוש גבוה ושכר טוב',
+                minRange: '₪10,000',
+                maxRange: '₪60,000',
+                trend: 'עולה 📈'
+            },
+            'תחבורה ולוגיסטיקה': {
+                icon: '🚛',
+                avgSalary: '₪15,000',
+                description: 'תחבורה ומשלוחים - עם תוספות וקילומטראז',
+                minRange: '₪8,000',
+                maxRange: '₪35,000',
+                trend: 'יציב ➡️'
+            },
+            'יופי ואסתטיקה': {
+                icon: '💄',
+                avgSalary: '₪13,500',
+                description: 'קוסמטיקה ויופי - עבודה פרטית ובשכירות',
+                minRange: '₪80/שעה',
+                maxRange: '₪40,000',
+                trend: 'עולה 📈'
+            },
+            'אבטחה ובטיחות': {
+                icon: '🛡️',
+                avgSalary: '₪11,500',
+                description: 'אבטחה ובטיחות - עבודה במשמרות',
+                minRange: '₪40/שעה',
+                maxRange: '₪25,000',
+                trend: 'יציב ➡️'
+            },
+            // ברירת מחדל לקטגוריות לא מוכרות
+            'default': {
+                icon: '💼',
+                avgSalary: '₪15,000',
+                description: 'נתונים כלליים על התחום',
+                minRange: '₪6,000',
+                maxRange: '₪45,000',
+                trend: 'יציב ➡️'
+            }
         };
 
-        // משתנים גלובליים
-        let allSalaryJobs = [];
-        let filteredSalaryJobs = [];
-
         // פונקציות עזר
-        function formatSalary(amount) {
-            if (amount < 1000) {
-                return `₪${amount}`;
-            }
-            return `₪${amount.toLocaleString()}`;
-        }
-
-        function getExperienceLabel(level) {
-            const labels = {
-                'junior': 'מתחיל',
-                'mid': 'בינוני',
-                'senior': 'בכיר',
-                'expert': 'מומחה'
-            };
-            return labels[level] || level;
-        }
-
-        function getSalaryClass(amount) {
-            if (amount >= 30000) return 'high';
-            if (amount >= 15000) return 'medium';
-            return 'low';
-        }
-
-        function getTrendIcon(trend) {
-            const icons = {
-                'up': '<i class="fas fa-arrow-up trend-up"></i>',
-                'down': '<i class="fas fa-arrow-down trend-down"></i>',
-                'stable': '<i class="fas fa-minus trend-stable"></i>'
-            };
-            return icons[trend] || icons['stable'];
-        }
-
-        function getTrendText(trend) {
-            const texts = {
-                'up': 'עולה',
-                'down': 'יורד',
-                'stable': 'יציב'
-            };
-            return texts[trend] || 'יציב';
-        }
-
-        // אתחול הדף
-        function initializePage() {
-            console.log('💰 אתחול דף טווחי שכר...');
-            
-            processSalaryData();
-            updateCategoryFilter();
-            displaySalaryJobs(allSalaryJobs);
-            updateStats();
-            attachEventListeners();
-            
-            console.log('✅ דף טווחי שכר נטען בהצלחה!');
-        }
-
-        // עיבוד נתוני השכר
-        function processSalaryData() {
-            allSalaryJobs = [];
-            
-            for (const [category, jobs] of Object.entries(salaryData)) {
-                for (const job of jobs) {
-                    ['junior', 'mid', 'senior', 'expert'].forEach(level => {
-                        if (job[level]) {
-                            allSalaryJobs.push({
-                                id: `${job.title}_${level}`,
-                                title: job.title,
-                                category: job.category,
-                                experienceLevel: level,
-                                salaryData: job[level],
-                                note: job.note,
-                                trend: job.trend
-                            });
-                        }
-                    });
-                }
-            }
-            
-            filteredSalaryJobs = [...allSalaryJobs];
-        }
-
-        // עדכון מסנן קטגוריות
-        function updateCategoryFilter() {
-            const categoryFilter = document.getElementById('categoryFilter');
-            const categories = [...new Set(allSalaryJobs.map(job => job.category))];
-            
-            categoryFilter.innerHTML = '<option value="">כל הקטגוריות</option>';
-            
-            categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category;
-                option.textContent = category;
-                categoryFilter.appendChild(option);
-            });
-        }
-
-        // הצגת משרות שכר
-        function displaySalaryJobs(jobs) {
-            const salaryGrid = document.getElementById('salaryGrid');
-            
-            if (jobs.length === 0) {
-                salaryGrid.innerHTML = `
-                    <div class="no-results">
-                        <div class="no-results-icon">
-                            <i class="fas fa-search"></i>
-                        </div>
-                        <h3>לא נמצאו תוצאות</h3>
-                        <p>נסה לשנות את המסננים או חפש מקצוע אחר</p>
-                        <button class="btn btn-primary" onclick="clearFilters()">
-                            <i class="fas fa-times"></i>
-                            נקה מסננים
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-
-            salaryGrid.innerHTML = '';
-
-            jobs.forEach(job => {
-                const card = createSalaryCard(job);
-                salaryGrid.appendChild(card);
-            });
-        }
-
-        // יצירת כרטיס שכר
-        function createSalaryCard(job) {
-            const card = document.createElement('div');
-            card.className = 'salary-card';
-            
-            const experienceClass = job.experienceLevel;
-            const salaryData = job.salaryData;
-            
-            card.innerHTML = `
-                <div class="salary-header">
-                    <div>
-                        <div class="job-title">${job.title}</div>
-                        <div class="job-category">${job.category}</div>
-                    </div>
-                    <div class="experience-level ${experienceClass}">
-                        ${getExperienceLabel(job.experienceLevel)}
-                    </div>
-                </div>
-                
-                <div class="salary-ranges">
-                    <div class="salary-row">
-                        <span class="salary-label">שכר מינימום:</span>
-                        <span class="salary-amount ${getSalaryClass(salaryData.min)}">
-                            ${formatSalary(salaryData.min)}
-                        </span>
-                    </div>
-                    <div class="salary-row">
-                        <span class="salary-label">שכר ממוצע:</span>
-                        <span class="salary-amount ${getSalaryClass(salaryData.avg)}">
-                            ${formatSalary(salaryData.avg)}
-                        </span>צור קשר</a>
-                </nav>
-                <a href="https://mayeshpo.co.il" class="back-to-jobs">
-                    <i class="fas fa-arrow-right"></i>
-                    חזרה למשרות
-                </a>
-                <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-        </div>
-        
-        <div class="mobile-menu" id="mobileMenu">
-            <ul>
-                <li><a href="https://mayeshpo.co.il">דף הבית</a></li>
-                <li><a href="#" class="salary-active">💰 טווחי שכר</a></li>
-                <li><a href="https://mayeshpo.co.il#search">משרות</a></li>
-                <li><a href="https://mayeshpo.co.il#contact">צור קשר</a></li>
-            </ul>
-        </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container">
-            <h1 class="hero-title">💰 טווחי שכר במשק הישראלי</h1>
-            <p class="hero-subtitle">
-                נתונים מעודכנים ואמינים על שכר ממוצע במקצועות שונים בישראל 2025
-                <br>מבוסס על דוחות ממשרד הכלכלה והתעשייה, הלמ"ס ונתוני השוק
-            </p>
-            <div class="last-updated">
-                <i class="fas fa-clock"></i>
-                עודכן לאחרונה: <span id="lastUpdated">ינואר 2025</span>
-            </div>
-        </div>
-    </section>
-
-    <div class="container">
-        <!-- Info Banner -->
-        <div class="info-banner">
-            <h4><i class="fas fa-info-circle"></i> חשוב לדעת</h4>
-            <p>
-                הנתונים המוצגים הם אומדנים על בסיס סקרי שכר, דוחות חברות ונתוני השוק הישראלי.
-                השכר הסופי מושפע מגורמים נוספים כמו ניסיון, השכלה, מיקום גיאוגרפי וגודל החברה.
-                הנתונים מעודכנים באופן תקופתי ומבוססים על מקורות אמינים.
-            </p>
-        </div>
-
-        <!-- Stats Overview -->
-        <div class="stats-overview">
-            <div class="stat-card">
-                <div class="stat-number" id="totalJobs">0</div>
-                <div class="stat-label">מקצועות במערכת</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">₪11,500</div>
-                <div class="stat-label">שכר ממוצע במשק</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">₪18,200</div>
-                <div class="stat-label">שכר ממוצע בהייטק</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">₪5,300</div>
-                <div class="stat-label">שכר מינימום 2025</div>
-            </div>
-        </div>
-
-        <!-- Filters -->
-        <div class="filters-section">
-            <h3 class="filters-title">
-                <i class="fas fa-filter"></i>
-                סינון נתוני שכר
-            </h3>
-            <div class="filters-grid">
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-search"></i>
-                        חיפוש מקצוע
-                    </label>
-                    <input type="text" class="filter-input" id="jobSearch" placeholder="הקלד שם מקצוע...">
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-tags"></i>
-                        קטגוריה
-                    </label>
-                    <select class="filter-select" id="categoryFilter">
-                        <option value="">כל הקטגוריות</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-user-graduate"></i>
-                        רמת ניסיון
-                    </label>
-                    <select class="filter-select" id="experienceFilter">
-                        <option value="">כל הרמות</option>
-                        <option value="junior">מתחיל (0-2 שנים)</option>
-                        <option value="mid">בינוני (2-5 שנים)</option>
-                        <option value="senior">בכיר (5+ שנים)</option>
-                        <option value="expert">מומחה (10+ שנים)</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-shekel-sign"></i>
-                        טווח שכר
-                    </label>
-                    <select class="filter-select" id="salaryRangeFilter">
-                        <option value="">כל הטווחים</option>
-                        <option value="low">₪5,000 - ₪10,000</option>
-                        <option value="medium">₪10,000 - ₪20,000</option>
-                        <option value="high">₪20,000 - ₪35,000</option>
-                        <option value="very-high">₪35,000+</option>
-                    </select>
-                </div>
-            </div>
-            <div class="filter-buttons">
-                <button class="btn btn-primary" onclick="applyFilters()">
-                    <i class="fas fa-search"></i>
-                    חפש
-                </button>
-                <button class="btn btn-secondary" onclick="clearFilters()">
-                    <i class="fas fa-times"></i>
-                    נקה מסננים
-                </button>
-            </div>
-        </div>
-
-        <!-- Salary Grid -->
-        <div id="salaryGrid" class="salary-grid">
-            <div class="loading">
-                <div class="loading-spinner"></div>
-                <p>טוען נתוני שכר...</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>💰 מה יש פה? - טווחי שכר</h3>
-                    <p>המקור המוביל לנתוני שכר מעודכנים במשק הישראלי. מבוסס על מחקרים מקצועיים ונתוני שוק אמינים.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>📊 המקורות שלנו</h3>
-                    <p>הלשכה המרכזית לסטטיסטיקה<br>
-                    משרד הכלכלה והתעשייה<br>
-                    סקרי שכר מקצועיים<br>
-                    נתוני חברות הייטק</p>
-                </div>
-                <div class="footer-section">
-                    <h3>🔗 קישורים שימושיים</h3>
-                    <a href="https://mayeshpo.co.il">לוח המשרות שלנו</a><br>
-                    <a href="https://mayeshpo.co.il#contact">צור קשר</a><br>
-                    <a href="https://www.cbs.gov.il">אתר הלמ"ס</a><br>
-                    <a href="https://www.gov.il/he/departments/ministry_of_economy">משרד הכלכלה</a>
-                </div>
-            </div>
-            
-            <div class="footer-social">
-                <a href="https://www.facebook.com/ma.yesh.po.akko" class="social-icon" title="פייסבוק">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="https://www.instagram.com/kerenraf1/" class="social-icon" title="אינסטגרם">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://www.linkedin.com/company/12620436/" class="social-icon" title="לינקדאין">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
-                <a href="https://wa.me/972555504633" class="social-icon" title="וואטסאפ">
-                    <i class="fab fa-whatsapp"></i>
-                </a>
-            </div>
-            
-            <p style="margin-top: 25px; opacity: 0.8; font-size: 0.9rem;">
-                © 2025 מה יש פה? - כל הזכויות שמורות | נתוני שכר מעודכנים
-            </p>
-        </div>
-    </footer>
-
-    <script>
-        // נתוני שכר מפורטים - מבוססים על נתונים אמיתיים
-        const salaryData = {
-            'פיתוח ותוכנה': [
-                {
-                    title: 'מפתח Full Stack',
-                    category: 'פיתוח ותוכנה',
-                    junior: { min: 12000, max: 18000, avg: 15000 },
-                    mid: { min: 18000, max: 28000, avg: 23000 },
-                    senior: { min: 28000, max: 45000, avg: 36000 },
-                    expert: { min: 45000, max: 80000, avg: 62000 },
-                    note: 'ביקוש גבוה במיוחד, שכר משתנה לפי טכנולוגיות וגודל החברה',
-                    trend: 'up'
-                },
-                {
-                    title: 'מפתח Frontend',
-                    category: 'פיתוח ותוכנה',
-                    junior: { min: 10000, max: 16000, avg: 13000 },
-                    mid: { min: 16000, max: 25000, avg: 20500 },
-                    senior: { min: 25000, max: 40000, avg: 32500 },
-                    expert: { min: 40000, max: 70000, avg: 55000 },
-                    note: 'ביקוש גבוה למומחי React, Vue וAngular',
-                    trend: 'up'
-                },
-                {
-                    title: 'מפתח Backend',
-                    category: 'פיתוח ותוכנה',
-                    junior: { min: 11000, max: 17000, avg: 14000 },
-                    mid: { min: 17000, max: 26000, avg: 21500 },
-                    senior: { min: 26000, max: 42000, avg: 34000 },
-                    expert: { min: 42000, max: 75000, avg: 58500 },
-                    note: 'מומחי Java, Python, Node.js מבוקשים מאוד',
-                    trend: 'up'
-                },
-                {
-                    title: 'QA Engineer',
-                    category: 'פיתוח ותוכנה',
-                    junior: { min: 8000, max: 14000, avg: 11000 },
-                    mid: { min: 14000, max: 22000, avg: 18000 },
-                    senior: { min: 22000, max: 35000, avg: 28500 },
-                    expert: { min: 35000, max: 60000, avg: 47500 },
-                    note: 'QA אוטומציה מקבל שכר גבוה יותר ב-20-30%',
-                    trend: 'stable'
-                },
-                {
-                    title: 'DevOps Engineer',
-                    category: 'פיתוח ותוכנה',
-                    junior: { min: 13000, max: 20000, avg: 16500 },
-                    mid: { min: 20000, max: 32000, avg: 26000 },
-                    senior: { min: 32000, max: 50000, avg: 41000 },
-                    expert: { min: 50000, max: 90000, avg: 70000 },
-                    note: 'אחד התחומים המבוקשים ביותר בהייטק',
-                    trend: 'up'
-                }
-            ],
-            'מכירות ושיווק': [
-                {
-                    title: 'מנהל מכירות',
-                    category: 'מכירות ושיווק',
-                    junior: { min: 8000, max: 15000, avg: 11500 },
-                    mid: { min: 15000, max: 25000, avg: 20000 },
-                    senior: { min: 25000, max: 45000, avg: 35000 },
-                    expert: { min: 45000, max: 80000, avg: 62500 },
-                    note: 'שכר בסיס + עמלות שיכולות להגיע ל-50% מהשכר',
-                    trend: 'up'
-                },
-                {
-                    title: 'מנהל שיווק דיגיטלי',
-                    category: 'מכירות ושיווק',
-                    junior: { min: 9000, max: 16000, avg: 12500 },
-                    mid: { min: 16000, max: 26000, avg: 21000 },
-                    senior: { min: 26000, max: 40000, avg: 33000 },
-                    expert: { min: 40000, max: 65000, avg: 52500 },
-                    note: 'ביקוש גבוה למומחי Google Ads, Facebook ו-SEO',
-                    trend: 'up'
-                },
-                {
-                    title: 'נציג מכירות B2B',
-                    category: 'מכירות ושיווק',
-                    junior: { min: 7000, max: 13000, avg: 10000 },
-                    mid: { min: 13000, max: 22000, avg: 17500 },
-                    senior: { min: 22000, max: 38000, avg: 30000 },
-                    expert: { min: 38000, max: 65000, avg: 51500 },
-                    note: 'מכירות B2B משלמות יותר ממכירות B2C',
-                    trend: 'stable'
-                }
-            ],
-            'חינוך והוראה': [
-                {
-                    title: 'מורה בבית ספר יסודי',
-                    category: 'חינוך והוראה',
-                    junior: { min: 6500, max: 9500, avg: 8000 },
-                    mid: { min: 9500, max: 13000, avg: 11250 },
-                    senior: { min: 13000, max: 18000, avg: 15500 },
-                    expert: { min: 18000, max: 25000, avg: 21500 },
-                    note: 'שכר קבוע לפי דרוג משרד החינוך + תוספות',
-                    trend: 'stable'
-                },
-                {
-                    title: 'מורה פרטי',
-                    category: 'חינוך והוראה',
-                    junior: { min: 80, max: 150, avg: 115 },
-                    mid: { min: 150, max: 250, avg: 200 },
-                    senior: { min: 250, max: 400, avg: 325 },
-                    expert: { min: 400, max: 600, avg: 500 },
-                    note: 'תעריף לשעה. מקצועות מבוקשים: מתמטיקה, אנגלית, פיזיקה',
-                    trend: 'up'
-                },
-                {
-                    title: 'רכז חינוכי',
-                    category: 'חינוך והוראה',
-                    junior: { min: 7500, max: 11500, avg: 9500 },
-                    mid: { min: 11500, max: 16500, avg: 14000 },
-                    senior: { min: 16500, max: 23000, avg: 19750 },
-                    expert: { min: 23000, max: 32000, avg: 27500 },
-                    note: 'תוספת לשכר בסיס של מורה, כולל אחריות נוספת',
-                    trend: 'stable'
-                }
-            ],
-            'מזון ומסעדנות': [
-                {
-                    title: 'שף במסעדה',
-                    category: 'מזון ומסעדנות',
-                    junior: { min: 6000, max: 10000, avg: 8000 },
-                    mid: { min: 10000, max: 16000, avg: 13000 },
-                    senior: { min: 16000, max: 25000, avg: 20500 },
-                    expert: { min: 25000, max: 50000, avg: 37500 },
-                    note: 'שכר משתנה מאוד לפי סוג המסעדה ורמתה',
-                    trend: 'up'
-                },
-                {
-                    title: 'מלצר/ית',
-                    category: 'מזון ומסעדנות',
-                    junior: { min: 35, max: 60, avg: 47.5 },
-                    mid: { min: 60, max: 90, avg: 75 },
-                    senior: { min: 90, max: 150, avg: 120 },
-                    expert: { min: 150, max: 250, avg: 200 },
-                    note: 'תעריף לשעה + טיפים (יכולים להגיע ל-100% מהשכר)',
-                    trend: 'stable'
-                },
-                {
-                    title: 'מנהל מסעדה',
-                    category: 'מזון ומסעדנות',
-                    junior: { min: 8000, max: 14000, avg: 11000 },
-                    mid: { min: 14000, max: 22000, avg: 18000 },
-                    senior: { min: 22000, max: 35000, avg: 28500 },
-                    expert: { min: 35000, max: 60000, avg: 47500 },
-                    note: 'כולל בונוסים מביצועי המסעדה',
-                    trend: 'up'
-                }
-            ],
-            'בריאות ורפואה': [
-                {
-                    title: 'רופא משפחה',
-                    category: 'בריאות ורפואה',
-                    junior: { min: 25000, max: 35000, avg: 30000 },
-                    mid: { min: 35000, max: 50000, avg: 42500 },
-                    senior: { min: 50000, max: 80000, avg: 65000 },
-                    expert: { min: 80000, max: 150000, avg: 115000 },
-                    note: 'שכר במגזר הציבורי + עבודה פרטית',
-                    trend: 'up'
-                },
-                {
-                    title: 'אחות מוסמכת',
-                    category: 'בריאות ורפואה',
-                    junior: { min: 8000, max: 12000, avg: 10000 },
-                    mid: { min: 12000, max: 18000, avg: 15000 },
-                    senior: { min: 18000, max: 25000, avg: 21500 },
-                    expert: { min: 25000, max: 35000, avg: 30000 },
-                    note: 'כולל תוספות לילה, סופי שבוע וחגים',
-                    trend: 'up'
-                },
-                {
-                    title: 'פיזיותרפיסט',
-                    category: 'בריאות ורפואה',
-                    junior: { min: 120, max: 200, avg: 160 },
-                    mid: { min: 200, max: 300, avg: 250 },
-                    senior: { min: 300, max: 450, avg: 375 },
-                    expert: { min: 450, max: 700, avg: 575 },
-                    note: 'תעריף לטיפול. עבודה פרטית משלמת יותר',
-                    trend: 'stable'
-                }
-            ],
-            'ניהול ומנהלה': [
-                {
-                    title: 'מנהל פרויקטים',
-                    category: 'ניהול ומנהלה',
-                    junior: { min: 12000, max: 20000, avg: 16000 },
-                    mid: { min: 20000, max: 32000, avg: 26000 },
-                    senior: { min: 32000, max: 50000, avg: 41000 },
-                    expert: { min: 50000, max: 90000, avg: 70000 },
-                    note: 'שכר משתנה לפי תחום וגודל הפרויקטים',
-                    trend: 'up'
-                },
-                {
-                    title: 'מנהל משאבי אנוש',
-                    category: 'ניהול ומנהלה',
-                    junior: { min: 10000, max: 16000, avg: 13000 },
-                    mid: { min: 16000, max: 26000, avg: 21000 },
-                    senior: { min: 26000, max: 40000, avg: 33000 },
-                    expert: { min: 40000, max: 70000, avg: 55000 },
-                    note: 'ביקוש גבוה בחברות הייטק ועסקים גדולים',
-                    trend: 'up'
-                }
-            ],
-            'שירות לקוחות': [
-                {
-                    title: 'נציג שירות לקוחות',
-                    category: 'שירות לקוחות',
-                    junior: { min: 5500, max: 8000, avg: 6750 },
-                    mid: { min: 8000, max: 12000, avg: 10000 },
-                    senior: { min: 12000, max: 18000, avg: 15000 },
-                    expert: { min: 18000, max: 28000, avg: 23000 },
-                    note: 'תוספות לזמינות ומשמרות לא שגרתיות',
-                    trend: 'stable'
-                },
-                {
-                    title: 'מנהל מוקד שירות',
-                    category: 'שירות לקוחות',
-                    junior: { min: 9000, max: 15000, avg: 12000 },
-                    mid: { min: 15000, max: 24000, avg: 19500 },
-                    senior: { min: 24000, max: 38000, avg: 31000 },
-                    expert: { min: 38000, max: 60000, avg: 49000 },
-                    note: 'כולל בונוסי ביצועים וניהול צוות',
-                    trend: 'up'
-                }
-            ]
-        };
-
-        // משתנים גלובליים
-        let allSalaryJobs = [];
-        let filteredSalaryJobs = [];
-
-        // פונקציות עזר
-        function formatSalary(amount) {
-            if (amount < 1000) {
-                return `₪${amount}`;
-            }
-            return `₪${amount.toLocaleString()}`;
-        }
-
-        function getExperienceLabel(level) {
-            const labels = {
-                'junior': 'מתחיל',
-                'mid': 'בינוני',
-                'senior': 'בכיר',
-                'expert': 'מומחה'
-            };
-            return labels[level] || level;
-        }
-
-        function getSalaryClass(amount) {
-            if (amount >= 30000) return 'high';
-            if (amount >= 15000) return 'medium';
-            return 'low';
-        }
-
-        function getTrendIcon(trend) {
-            const icons = {
-                'up': '<i class="fas fa-arrow-up trend-up"></i>',
-                'down': '<i class="fas fa-arrow-down trend-down"></i>',
-                'stable': '<i class="fas fa-minus trend-stable"></i>'
-            };
-            return icons[trend] || icons['stable'];
-        }
-
-        function getTrendText(trend) {
-            const texts = {
-                'up': 'עולה',
-                'down': 'יורד',
-                'stable': 'יציב'
-            };
-            return texts[trend] || 'יציב';
-        }
-
-        // אתחול הדף
-        function initializePage() {
-            console.log('💰 אתחול דף טווחי שכר...');
-            
-            processSalaryData();
-            updateCategoryFilter();
-            displaySalaryJobs(allSalaryJobs);
-            updateStats();
-            attachEventListeners();
-            
-            console.log('✅ דף טווחי שכר נטען בהצלחה!');
-        }
-
-        // עיבוד נתוני השכר
-        function processSalaryData() {
-            allSalaryJobs = [];
-            
-            for (const [category, jobs] of Object.entries(salaryData)) {
-                for (const job of jobs) {
-                    ['junior', 'mid', 'senior', 'expert'].forEach(level => {
-                        if (job[level]) {
-                            allSalaryJobs.push({
-                                id: `${job.title}_${level}`,
-                                title: job.title,
-                                category: job.category,
-                                experienceLevel: level,
-                                salaryData: job[level],
-                                note: job.note,
-                                trend: job.trend
-                            });
-                        }
-                    });
-                }
-            }
-            
-            filteredSalaryJobs = [...allSalaryJobs];
-        }
-
-        // עדכון מסנן קטגוריות
-        function updateCategoryFilter() {
-            const categoryFilter = document.getElementById('categoryFilter');
-            const categories = [...new Set(allSalaryJobs.map(job => job.category))];
-            
-            categoryFilter.innerHTML = '<option value="">כל הקטגוריות</option>';
-            
-            categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category;
-                option.textContent = category;
-                categoryFilter.appendChild(option);
-            });
-        }
-
-        // הצגת משרות שכר
-        function displaySalaryJobs(jobs) {
-            const salaryGrid = document.getElementById('salaryGrid');
-            
-            if (jobs.length === 0) {
-                salaryGrid.innerHTML = `
-                    <div class="no-results">
-                        <div class="no-results-icon">
-                            <i class="fas fa-search"></i>
-                        </div>
-                        <h3>לא נמצאו תוצאות</h3>
-                        <p>נסה לשנות את המסננים או חפש מקצוע אחר</p>
-                        <button class="btn btn-primary" onclick="clearFilters()">
-                            <i class="fas fa-times"></i>
-                            נקה מסננים
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-
-            salaryGrid.innerHTML = '';
-
-            jobs.forEach(job => {
-                const card = createSalaryCard(job);
-                salaryGrid.appendChild(card);
-            });
-        }
-
-        // יצירת כרטיס שכר
-        function createSalaryCard(job) {
-            const card = document.createElement('div');
-            card.className = 'salary-card';
-            
-            const experienceClass = job.experienceLevel;
-            const salaryData = job.salaryData;
-            
-            card.innerHTML = `
-                <div class="salary-header">
-                    <div>
-                        <div class="job-title">${job.title}</div>
-                        <div class="job-category">${job.category}</div>
-                    </div>
-                    <div class="experience-level ${experienceClass}">
-                        ${getExperienceLabel(job.experienceLevel)}
-                    </div>
-                </div>
-                
-                <div class="salary-ranges">
-                    <div class="salary-row">
-                        <span class="salary-label">שכר מינימום:</span>
-                        <span class="salary-amount ${getSalaryClass(salaryData.min)}">
-                            ${formatSalary(salaryData.min)}
-                        </span>
-                    </div>
-                    <div class="salary-row">
-                        <span class="salary-label">שכר ממוצע:</span>
-                        <span class="salary-amount ${getSalaryClass(salaryData.avg)}">
-                            ${formatSalary(salaryData.avg)}
-                        </span>
-            </div>
-                    <div class="salary-row">
-                        <span class="salary-label">שכר מקסימום:</span>
-                        <span class="salary-amount ${getSalaryClass(salaryData.max)}">
-                            ${formatSalary(salaryData.max)}
-                        </span>
-                    </div>
-                    ${job.trend ? `
-                    <div class="trend-indicator">
-                        ${getTrendIcon(job.trend)}
-                        <span>מגמה: ${getTrendText(job.trend)}</span>
-                    </div>
-                    ` : ''}
-                </div>
-                
-                ${job.note ? `
-                <div class="salary-note">
-                    <i class="fas fa-info-circle"></i>
-                    ${job.note}
-                </div>
-                ` : ''}
-            `;
-            
-            return card;
-        }
-
-        // החלת מסננים
-        function applyFilters() {
-            const jobSearch = document.getElementById('jobSearch').value.toLowerCase().trim();
-            const categoryFilter = document.getElementById('categoryFilter').value;
-            const experienceFilter = document.getElementById('experienceFilter').value;
-            const salaryRangeFilter = document.getElementById('salaryRangeFilter').value;
-            
-            filteredSalaryJobs = allSalaryJobs.filter(job => {
-                // מסנן חיפוש טקסט
-                if (jobSearch && !job.title.toLowerCase().includes(jobSearch) && 
-                    !job.category.toLowerCase().includes(jobSearch)) {
-                    return false;
-                }
-                
-                // מסנן קטגוריה
-                if (categoryFilter && job.category !== categoryFilter) {
-                    return false;
-                }
-                
-                // מסנן רמת ניסיון
-                if (experienceFilter && job.experienceLevel !== experienceFilter) {
-                    return false;
-                }
-                
-                // מסנן טווח שכר
-                if (salaryRangeFilter) {
-                    const avgSalary = job.salaryData.avg;
-                    switch (salaryRangeFilter) {
-                        case 'low':
-                            if (avgSalary < 5000 || avgSalary > 10000) return false;
-                            break;
-                        case 'medium':
-                            if (avgSalary < 10000 || avgSalary > 20000) return false;
-                            break;
-                        case 'high':
-                            if (avgSalary < 20000 || avgSalary > 35000) return false;
-                            break;
-                        case 'very-high':
-                            if (avgSalary < 35000) return false;
-                            break;
-                    }
-                }
-                
-                return true;
-            });
-            
-            displaySalaryJobs(filteredSalaryJobs);
-            
-            // Google Analytics tracking
-            if (typeof gtag === 'function') {
-                gtag('event', 'salary_search', {
-                    'event_category': 'salary_ranges',
-                    'event_label': jobSearch || categoryFilter || 'filter_applied'
-                });
-            }
-            
-            console.log(`🔍 נמצאו ${filteredSalaryJobs.length} תוצאות`);
-        }
-
-        // ניקוי מסננים
-        function clearFilters() {
-            document.getElementById('jobSearch').value = '';
-            document.getElementById('categoryFilter').value = '';
-            document.getElementById('experienceFilter').value = '';
-            document.getElementById('salaryRangeFilter').value = '';
-            
-            filteredSalaryJobs = [...allSalaryJobs];
-            displaySalaryJobs(filteredSalaryJobs);
-            
-            console.log('🧹 מסננים נוקו');
-        }
-
-        // עדכון סטטיסטיקות
-        function updateStats() {
-            const totalJobsElement = document.getElementById('totalJobs');
-            if (totalJobsElement) {
-                const uniqueJobs = new Set(allSalaryJobs.map(job => job.title)).size;
-                totalJobsElement.textContent = uniqueJobs;
-                
-                // אנימציה של מספרים
-                animateNumber(totalJobsElement, 0, uniqueJobs, 2000);
-            }
-        }
-
-        // אנימציה של מספרים בסטטיסטיקות
-        function animateNumber(element, start, end, duration) {
-            const startTime = performance.now();
-            
-            function update(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                
-                const current = Math.floor(start + (end - start) * progress);
-                element.textContent = current;
-                
-                if (progress < 1) {
-                    requestAnimationFrame(update);
-                }
-            }
-            
-            requestAnimationFrame(update);
-        }
-
-        // תפריט נייד
         function toggleMobileMenu() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            mobileMenu.classList.toggle('active');
+            // הוספת פונקציונליות תפריט מובייל במידת הצורך
+            console.log('תפריט מובייל נלחץ');
         }
 
-        // הוספת מאזיני אירועים
-        function attachEventListeners() {
-            // חיפוש בזמן אמת
-            const jobSearchInput = document.getElementById('jobSearch');
-            if (jobSearchInput) {
-                jobSearchInput.addEventListener('input', function() {
-                    clearTimeout(this.searchTimeout);
-                    this.searchTimeout = setTimeout(applyFilters, 300);
-                });
+        // טעינת נתוני משרות מהמערכת הראשית - אותם קישורים כמו בדף הראשי
+        async function loadJobsFromMainSystem() {
+            console.log('🔄 מנסה לטעון נתוני משרות מהמערכת הראשית...');
+            
+            const githubUrls = [
+                'https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/data/jobs.json',
+                'https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/jobs.json',
+                'https://raw.githubusercontent.com/kerenraf/mahyeshpo-website/main/data.js/jobs(1).json'
+            ];
+            
+            for (let i = 0; i < githubUrls.length; i++) {
+                try {
+                    console.log(`🔄 מנסה לטעון מ: ${githubUrls[i]}`);
+                    const response = await fetch(githubUrls[i]);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data && Array.isArray(data) && data.length > 0) {
+                        console.log(`✅ הצלחנו לטעון ${data.length} משרות מ-GitHub`);
+                        return data;
+                    }
+                } catch (error) {
+                    console.warn(`❌ טעינה נכשלה מ: ${githubUrls[i]} - ${error.message}`);
+                }
             }
             
-            // מסננים
-            const filters = ['categoryFilter', 'experienceFilter', 'salaryRangeFilter'];
-            filters.forEach(filterId => {
-                const element = document.getElementById(filterId);
-                if (element) {
-                    element.addEventListener('change', applyFilters);
-                }
-            });
-            
-            // Enter לחיפוש
-            document.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    applyFilters();
-                }
-            });
+            console.warn('⚠️ לא הצלחנו לטעון מאף מקור GitHub');
+            return null;
 
-            // סגירת תפריט נייד בלחיצה על קישור
-            document.addEventListener('click', function(event) {
-                const mobileMenu = document.getElementById('mobileMenu');
-                const toggleButton = document.querySelector('.mobile-menu-toggle');
-                
-                if (!mobileMenu.contains(event.target) && !toggleButton.contains(event.target)) {
-                    mobileMenu.classList.remove('active');
-                }
-            });
+        }
 
-            // מעקב אחר גלילה לאנליטיקס
-            let scrollTracked = false;
-            window.addEventListener('scroll', function() {
-                if (!scrollTracked && window.scrollY > 500) {
-                    scrollTracked = true;
-                    if (typeof gtag === 'function') {
-                        gtag('event', 'scroll_engagement', {
-                            'event_category': 'salary_ranges',
-                            'event_label': 'deep_scroll'
-                        });
+        // בדיקת localStorage
+        function loadJobsFromLocalStorage() {
+            try {
+                const storedJobs = localStorage.getItem('jobs');
+                if (storedJobs) {
+                    const data = JSON.parse(storedJobs);
+                    if (Array.isArray(data) && data.length > 0) {
+                        console.log(`✅ נמצאו ${data.length} משרות ב-localStorage`);
+                        return data;
                     }
                 }
+            } catch (error) {
+                console.warn('❌ שגיאה בטעינה מ-localStorage:', error);
+            }
+            return null;
+        }
+
+        // חילוץ קטגוריות מנתוני המשרות
+        function extractCategoriesFromJobs(jobs) {
+            const categoriesCount = {};
+            
+            jobs.forEach(job => {
+                if (job.category && job.category.trim()) {
+                    const category = job.category.trim();
+                    categoriesCount[category] = (categoriesCount[category] || 0) + 1;
+                }
             });
             
-            console.log('✅ מאזיני אירועים הוספו');
+            // מיון לפי כמות המשרות
+            const sortedCategories = Object.entries(categoriesCount)
+                .sort((a, b) => b[1] - a[1])
+                .map(([category, count]) => ({ category, count }));
+            
+            console.log('📊 קטגוריות שנמצאו:', sortedCategories);
+            return sortedCategories;
         }
 
-        // אתחול כשהדף נטען
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('💰 דף טווחי שכר נטען...');
-            
-            // Google Analytics - page view
-            if (typeof gtag === 'function') {
-                gtag('event', 'page_view', {
-                    'page_title': 'Salary Ranges',
-                    'page_location': window.location.href
-                });
+        // יצירת HTML לקטגוריה
+        function createCategoryHTML(category, jobCount) {
+            const categoryData = baseSalaryData[category] || baseSalaryData['default'];
+
+            return `
+                <div class="category-card" data-category="${category}">
+                    <div class="category-header">
+                        <div class="category-icon">${categoryData.icon}</div>
+                        <div class="category-title">
+                            <h3>${category}</h3>
+                            <span class="jobs-count">${jobCount} משרות פעילות</span>
+                        </div>
+                        <div class="avg-salary">${categoryData.avgSalary}</div>
+                    </div>
+                    
+                    <div class="category-content">
+                        <p class="category-description">${categoryData.description}</p>
+                        
+                        <div class="salary-details">
+                            <div class="salary-range">
+                                <span class="range-label">טווח שכר:</span>
+                                <span class="range-values">${categoryData.minRange} - ${categoryData.maxRange}</span>
+                            </div>
+                            <div class="salary-trend">
+                                <span class="trend-label">מגמה:</span>
+                                <span class="trend-value">${categoryData.trend}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="category-actions">
+                            <a href="javascript:void(0)" class="view-jobs-btn" onclick="searchJobsByCategory('${category}')">
+                                <i class="fas fa-search"></i>
+                                חפש משרות בתחום
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // חיפוש משרות לפי קטגוריה
+        function searchJobsByCategory(category) {
+            // שמירת הקטגוריה ב-localStorage למעבר לדף הראשי
+            try {
+                localStorage.setItem('searchCategory', category);
+                console.log(`🔍 שמרנו קטגוריה לחיפוש: ${category}`);
+            } catch (error) {
+                console.warn('⚠️ לא הצלחנו לשמור קטגוריה:', error);
             }
             
-            // המתנה קצרה לוודא שהכל נטען
-            setTimeout(initializePage, 100);
-        });
+            // ניתוב לדף הראשי עם פרמטר חיפוש
+            const searchUrl = `https://mayeshpo.co.il#search&category=${encodeURIComponent(category)}`;
+            console.log(`🔗 מעביר לחיפוש: ${searchUrl}`);
+            window.location.href = searchUrl;
+        }
 
-        // הפיכת פונקציות לגלובליות
-        window.applyFilters = applyFilters;
-        window.clearFilters = clearFilters;
-        window.toggleMobileMenu = toggleMobileMenu;
-        
-        // פונקציות שיתוף
-        function shareOnWhatsApp() {
-            const text = `💰 בדקתי את נתוני השכר במשק הישראלי באתר "מה יש פה?"
-            
-נתונים מעניינים ומעודכנים על טווחי שכר בכל התחומים!
-
-כנסו לבדוק: ${window.location.href}
-
-#שכר #עבודה #קריירה`;
-            
-            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-            window.open(whatsappUrl, '_blank');
-            
-            if (typeof gtag === 'function') {
-                gtag('event', 'share', {
-                    'method': 'whatsapp',
-                    'content_type': 'salary_ranges'
-                });
+        // עדכון רשימת הקטגוריות
+        function updateCategoriesList(categories) {
+            const categoriesListEl = document.getElementById('categoriesList');
+            if (categoriesListEl) {
+                categoriesListEl.innerHTML = categories
+                    .map(({ category, count }) => `
+                        <span class="category-item">${category} (${count})</span>
+                    `).join('');
             }
         }
 
-        function shareOnFacebook() {
-            const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
-            window.open(facebookUrl, '_blank', 'width=600,height=400');
-            
-            if (typeof gtag === 'function') {
-                gtag('event', 'share', {
-                    'method': 'facebook',
-                    'content_type': 'salary_ranges'
-                });
-            }
-        }
+        // יצירת תוכן דינמי
+        function createDynamicContent(categories) {
+            const container = document.getElementById('dynamicSalaryContainer');
+            if (!container) return;
 
-        function copyPageUrl() {
-            navigator.clipboard.writeText(window.location.href).then(function() {
-                // הצגת הודעה
-                showNotification('הקישור הועתק בהצלחה! 📋');
-            }).catch(function() {
-                // fallback לדפדפנים ישנים
-                const textArea = document.createElement('textarea');
-                textArea.value = window.location.href;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                showNotification('הקישור הועתק! 📋');
+            let html = '<div class="salary-categories-grid">';
+            
+            categories.forEach(({ category, count }) => {
+                html += createCategoryHTML(category, count);
             });
             
-            if (typeof gtag === 'function') {
-                gtag('event', 'share', {
-                    'method': 'copy_link',
-                    'content_type': 'salary_ranges'
-                });
+            html += '</div>';
+            
+            container.innerHTML = html;
+        }
+
+        // פונקציה ראשית לטעינת הנתונים - רק משרות אמיתיות
+        async function initializeSalaryRanges() {
+            console.log('🚀 מתחיל טעינת נתוני טווחי שכר...');
+            
+            try {
+                // ניסיון טעינה מהמערכת הראשית
+                let jobs = await loadJobsFromMainSystem();
+                
+                // אם לא הצליח מ-GitHub, ננסה localStorage
+                if (!jobs) {
+                    jobs = loadJobsFromLocalStorage();
+                }
+                
+                if (jobs && jobs.length > 0) {
+                    console.log(`✅ נטענו ${jobs.length} משרות בהצלחה`);
+                    
+                    // סינון משרות פעילות בלבד
+                    const activeJobs = jobs.filter(job => job.status === 'פעיל' || !job.status);
+                    console.log(`📋 ${activeJobs.length} משרות פעילות מתוך ${jobs.length}`);
+                    
+                    if (activeJobs.length === 0) {
+                        throw new Error('אין משרות פעילות במערכת');
+                    }
+                    
+                    // חילוץ קטגוריות
+                    const categories = extractCategoriesFromJobs(activeJobs);
+                    console.log(`🏷️ נמצאו ${categories.length} קטגוריות:`, categories.map(c => c.category));
+                    
+                    if (categories.length > 0) {
+                        // עדכון מספר המשרות
+                        const totalJobsEl = document.getElementById('totalJobsFound');
+                        if (totalJobsEl) {
+                            totalJobsEl.textContent = activeJobs.length;
+                        }
+                        
+                        // עדכון רשימת הקטגוריות
+                        updateCategoriesList(categories);
+                        
+                        // יצירת התוכן הדינמי
+                        createDynamicContent(categories);
+                        
+                        // הסתרת מסך הטעינה והצגת התוכן
+                        document.getElementById('loadingState').style.display = 'none';
+                        document.getElementById('dataSourceNotice').style.display = 'block';
+                        document.getElementById('dynamicSalaryContainer').style.display = 'block';
+                        
+                        console.log('✅ דף טווחי השכר נטען בהצלחה');
+                        console.log('📊 קטגוריות זמינות:', categories.map(c => `${c.category} (${c.count})`));
+                        
+                        // Google Analytics tracking
+                        if (typeof gtag === 'function') {
+                            gtag('event', 'salary_ranges_loaded', {
+                                'event_category': 'salary_ranges',
+                                'event_label': `${categories.length}_categories_${activeJobs.length}_jobs`
+                            });
+                        }
+                    } else {
+                        throw new Error('לא נמצאו קטגוריות במשרות הפעילות');
+                    }
+                } else {
+                    throw new Error('לא הצלחנו לטעון משרות מהמערכת');
+                }
+                
+            } catch (error) {
+                console.error('❌ שגיאה בטעינת נתוני השכר:', error);
+                
+                // הסתרת מסך הטעינה והצגת הודעת שגיאה
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('noDataMessage').style.display = 'block';
+                
+                // עדכון הודעת השגיאה
+                const noDataMsg = document.getElementById('noDataMessage');
+                if (noDataMsg) {
+                    noDataMsg.innerHTML = `
+                        <h3>📋 לא נמצאו נתוני משרות</h3>
+                        <p>לא הצלחנו לטעון את נתוני המשרות האמיתיות מהמערכת.</p>
+                        <p><strong>הסיבה:</strong> ${error.message}</p>
+                        <p style="margin-top: 15px; font-size: 0.9rem; color: #ccc;">
+                            אנא ודא שקובץ המשרות JSON זמין ובפורמט תקין במיקום:
+                            <br>• GitHub Repository
+                            <br>• localStorage של הדפדפן
+                        </p>
+                        <p style="margin-top: 20px;">
+                            <a href="https://mayeshpo.co.il" style="color: var(--gold-color); text-decoration: none; font-weight: bold;">
+                                ← חזרה ללוח המשרות הראשי
+                            </a>
+                        </p>
+                    `;
+                }
+                
+                // Google Analytics error tracking
+                if (typeof gtag === 'function') {
+                    gtag('event', 'salary_ranges_error', {
+                        'event_category': 'salary_ranges',
+                        'event_label': error.message
+                    });
+                }
             }
         }
 
-        // הצגת הודעות
+        // פונקציות נוספות לשיפור החוויה
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
             notification.style.cssText = `
@@ -2293,55 +1099,77 @@
             }, 3000);
         }
 
-        // פונקציות נוספות לשיפור החוויה
-        function getJobCategoryCount() {
-            const categories = {};
-            allSalaryJobs.forEach(job => {
-                categories[job.category] = (categories[job.category] || 0) + 1;
-            });
-            return categories;
+        // פונקציות שיתוף
+        function shareOnWhatsApp() {
+            const text = `💰 בדקתי את נתוני השכר במשק הישראלי באתר "מה יש פה?"
+            
+נתונים מעניינים ומעודכנים על טווחי שכר בכל התחומים!
+
+כנסו לבדוק: ${window.location.href}
+
+#שכר #עבודה #קריירה`;
+            
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(whatsappUrl, '_blank');
+            
+            if (typeof gtag === 'function') {
+                gtag('event', 'share', {
+                    'method': 'whatsapp',
+                    'content_type': 'salary_ranges'
+                });
+            }
         }
 
-        function getAverageSalaryByCategory() {
-            const categories = {};
-            allSalaryJobs.forEach(job => {
-                if (!categories[job.category]) {
-                    categories[job.category] = { total: 0, count: 0 };
-                }
-                categories[job.category].total += job.salaryData.avg;
-                categories[job.category].count++;
-            });
+        function shareOnFacebook() {
+            const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
+            window.open(facebookUrl, '_blank', 'width=600,height=400');
             
-            Object.keys(categories).forEach(category => {
-                categories[category] = Math.round(categories[category].total / categories[category].count);
-            });
-            
-            return categories;
+            if (typeof gtag === 'function') {
+                gtag('event', 'share', {
+                    'method': 'facebook',
+                    'content_type': 'salary_ranges'
+                });
+            }
         }
 
-        // הוספת כפתורי שיתוף לדף (אופציונלי)
-        function addShareButtons() {
-            const shareButtonsHtml = `
-                <div style="position: fixed; left: 20px; bottom: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px;">
-                    <button onclick="shareOnWhatsApp()" style="width: 50px; height: 50px; border-radius: 50%; background: #25D366; color: white; border: none; cursor: pointer; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-                        <i class="fab fa-whatsapp"></i>
-                    </button>
-                    <button onclick="shareOnFacebook()" style="width: 50px; height: 50px; border-radius: 50%; background: #3b5998; color: white; border: none; cursor: pointer; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-                        <i class="fab fa-facebook-f"></i>
-                    </button>
-                    <button onclick="copyPageUrl()" style="width: 50px; height: 50px; border-radius: 50%; background: #6c757d; color: white; border: none; cursor: pointer; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-                        <i class="fas fa-copy"></i>
-                    </button>
-                </div>
-            `;
+        // אתחול כשהדף נטען
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 דף טווחי שכר נטען - מתחיל אתחול');
             
-            document.body.insertAdjacentHTML('beforeend', shareButtonsHtml);
-        }
+            // Google Analytics - page view
+            if (typeof gtag === 'function') {
+                gtag('event', 'page_view', {
+                    'page_title': 'Salary Ranges',
+                    'page_location': window.location.href
+                });
+            }
+            
+            // בדיקת זמינות אלמנטים
+            const requiredElements = ['loadingState', 'dataSourceNotice', 'dynamicSalaryContainer', 'noDataMessage'];
+            const missingElements = requiredElements.filter(id => !document.getElementById(id));
+            
+            if (missingElements.length > 0) {
+                console.error('❌ אלמנטים חסרים:', missingElements);
+            } else {
+                console.log('✅ כל האלמנטים הנדרשים קיימים');
+            }
+            
+            // המתנה קצרה לוודא שהכל נטען
+            setTimeout(initializeSalaryRanges, 500);
+        });
 
-        // הוספת כפתורי שיתוף כשהדף נטען (אופציונלי)
-        // addShareButtons();
+        // מניעת שגיאות במקרה של בעיות חיצוניות
+        window.addEventListener('error', function(e) {
+            console.warn('⚠️ שגיאה בדף:', e.message);
+        });
 
-        console.log('💰 מערכת טווחי שכר מוכנה לשימוש מלא!');
+        // הפיכת פונקציות לגלובליות
+        window.searchJobsByCategory = searchJobsByCategory;
+        window.toggleMobileMenu = toggleMobileMenu;
+        window.shareOnWhatsApp = shareOnWhatsApp;
+        window.shareOnFacebook = shareOnFacebook;
+
+        console.log('💰 מערכת טווחי שכר דינמית מוכנה!');
     </script>
 </body>
 </html>
