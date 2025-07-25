@@ -1905,7 +1905,7 @@ padding-top: 20px;
             <div class="search-grid">
                 <div class="form-group">
                     <label class="form-label">חיפוש חופשי</label>
-                    <input type="text" class="form-control" id="searchInput" placeholder="הקלד מילות חיפוש...">
+<input type="text" class="form-control" id="searchInput" placeholder="הקלד מילות חיפוש..." autocomplete="off">
                 </div>
                 
                 <div class="form-group">
@@ -3771,10 +3771,10 @@ console.log('🚀 תכונת שיתוף האתר מוכנה!');
 <!-- טופס יצירת קשר -->
 <div id="contactForm" class="contact-form" style="display: none;">
     <h4>📞 בואו נעזור לך למצוא עבודה!</h4>
-    <input type="text" id="fullName" placeholder="שם מלא" required>
-    <input type="text" id="phone" placeholder="מספר טלפון" required>
-    <input type="text" id="jobTitle" placeholder="תפקיד מבוקש" required>
-    <input type="text" id="location" placeholder="אזור או ישוב" required>
+<input type="text" id="fullName" placeholder="שם מלא" required autocomplete="name">
+<input type="text" id="phone" placeholder="מספר טלפון" required autocomplete="tel">
+<input type="text" id="jobTitle" placeholder="תפקיד מבוקש" required autocomplete="organization-title">
+<input type="text" id="location" placeholder="אזור או ישוב" required autocomplete="address-level2">
     <button onclick="sendGuideWhatsApp()">שלח בוואטסאפ 📱</button>
     <button onclick="closeGuideContactForm()">ביטול</button>
 </div>
