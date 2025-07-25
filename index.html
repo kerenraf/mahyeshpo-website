@@ -190,7 +190,7 @@
         }
 
 .mobile-menu-toggle {
-    display: none !important;
+    display: none;  /* ✅ מוסתר רק במחשב, נראה במובייל */
     background: rgba(246, 152, 152, 0.2);
     border: none;
     border-radius: 8px;
@@ -198,8 +198,7 @@
     color: #F69898;
     cursor: pointer;
     font-size: 1.2rem;
-}
-        
+}        
         .mobile-menu {
             display: none;
             position: fixed;
@@ -226,17 +225,21 @@
             margin-bottom: 10px;
         }
 
-        .mobile-menu a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            text-align: center;
-            font-size: 1.1rem;
-        }
-
+.mobile-menu a, .mobile-menu button {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-align: center;
+    font-size: 1.1rem;
+    background: none;          /* ✅ הוספה */
+    border: none;             /* ✅ הוספה */
+    width: 100%;              /* ✅ הוספה */
+    cursor: pointer;          /* ✅ הוספה */
+    font-family: inherit;     /* ✅ הוספה */
+}
         .mobile-menu a:hover, .mobile-menu a.active {
             background: rgba(246, 152, 152, 0.2);
             color: #F69898;
@@ -1341,16 +1344,21 @@ padding-top: 20px;
     display: flex !important;
     visibility: visible !important;
 }
-        @media (max-width: 768px) {
-            .text-logo {
-                font-size: 1.4rem;
-            }
-            
-           @media (max-width: 768px) {
-    .search-buttons {
-        margin-top: 30px !important;
+@media (max-width: 768px) {
+    .text-logo {
+        font-size: 1.4rem;
     }
     
+    /* הסתר תפריט רגיל במובייל */
+    .main-nav {
+        display: none !important;  /* ✅ כפיית הסתרה */
+    }
+    
+    /* הצג כפתור תפריט מובייל */
+    .mobile-menu-toggle {
+        display: block !important;  /* ✅ כפיית הצגה */
+    }
+}    
     .search-grid {
         margin-bottom: 20px;
     }
@@ -2337,20 +2345,47 @@ padding-top: 20px;
         ];
 
         // פונקציות בסיסיות
-        function toggleMobileMenu() {
-            var mobileMenu = document.getElementById('mobileMenu');
-            mobileMenu.classList.toggle('active');
-        }
+function toggleMobileMenu() {
+    console.log('toggleMobileMenu called');  /* ✅ הוספת debug */
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileMenu) {  /* ✅ בדיקה שהאלמנט קיים */
+        mobileMenu.classList.toggle('active');
+        console.log('Menu toggled, active:', mobileMenu.classList.contains('active'));  /* ✅ debug נוסף */
+    }
+}
 
-        // סגירת תפריט מובייל בלחיצה על קישור
-        document.addEventListener('click', function(event) {
-            var mobileMenu = document.getElementById('mobileMenu');
-            var toggleButton = document.querySelector('.mobile-menu-toggle');
-            
-            if (!mobileMenu.contains(event.target) && !toggleButton.contains(event.target)) {
-                mobileMenu.classList.remove('active');
-            }
-        });
+// סגירת תפריט מובייל בלחיצה מחוץ לתפריט
+document.addEventListener('click', function(event) {
+    var mobileMenu = document.getElementById('mobileMenu');
+    var toggleButton = document.querySelector('.mobile-menu-toggle');
+    
+    // בדיקה שהאלמנטים קיימים ושהתפריט פתוח
+    if (!mobileMenu || !toggleButton || !mobileMenu.classList.contains('active')) {
+        return;
+    }
+    
+    // אם הלחיצה הייתה מחוץ לתפריט ומחוץ לכפתור - סגור את התפריט
+    if (!mobileMenu.contains(event.target) && !toggleButton.contains(event.target)) {
+        mobileMenu.classList.remove('active');
+    }
+});
+                
+// סגירת תפריט מובייל בלחיצה מחוץ לתפריט
+document.addEventListener('click', function(event) {
+    var mobileMenu = document.getElementById('mobileMenu');
+    var toggleButton = document.querySelector('.mobile-menu-toggle');
+    
+    // בדיקה שהאלמנטים קיימים ושהתפריט פתוח
+    if (!mobileMenu || !toggleButton || !mobileMenu.classList.contains('active')) {
+        return;
+    }
+    
+    // אם הלחיצה הייתה מחוץ לתפריט ומחוץ לכפתור - סגור את התפריט
+    if (!mobileMenu.contains(event.target) && !toggleButton.contains(event.target)) {
+        mobileMenu.classList.remove('active');
+    }
+});
+
 
         // אתחול כשהדף נטען
         document.addEventListener('DOMContentLoaded', function() {
