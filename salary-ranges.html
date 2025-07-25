@@ -1988,3 +1988,360 @@
                         <span class="salary-amount ${getSalaryClass(salaryData.avg)}">
                             ${formatSalary(salaryData.avg)}
                         </span>
+            </div>
+                    <div class="salary-row">
+                        <span class="salary-label">שכר מקסימום:</span>
+                        <span class="salary-amount ${getSalaryClass(salaryData.max)}">
+                            ${formatSalary(salaryData.max)}
+                        </span>
+                    </div>
+                    ${job.trend ? `
+                    <div class="trend-indicator">
+                        ${getTrendIcon(job.trend)}
+                        <span>מגמה: ${getTrendText(job.trend)}</span>
+                    </div>
+                    ` : ''}
+                </div>
+                
+                ${job.note ? `
+                <div class="salary-note">
+                    <i class="fas fa-info-circle"></i>
+                    ${job.note}
+                </div>
+                ` : ''}
+            `;
+            
+            return card;
+        }
+
+        // החלת מסננים
+        function applyFilters() {
+            const jobSearch = document.getElementById('jobSearch').value.toLowerCase().trim();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const experienceFilter = document.getElementById('experienceFilter').value;
+            const salaryRangeFilter = document.getElementById('salaryRangeFilter').value;
+            
+            filteredSalaryJobs = allSalaryJobs.filter(job => {
+                // מסנן חיפוש טקסט
+                if (jobSearch && !job.title.toLowerCase().includes(jobSearch) && 
+                    !job.category.toLowerCase().includes(jobSearch)) {
+                    return false;
+                }
+                
+                // מסנן קטגוריה
+                if (categoryFilter && job.category !== categoryFilter) {
+                    return false;
+                }
+                
+                // מסנן רמת ניסיון
+                if (experienceFilter && job.experienceLevel !== experienceFilter) {
+                    return false;
+                }
+                
+                // מסנן טווח שכר
+                if (salaryRangeFilter) {
+                    const avgSalary = job.salaryData.avg;
+                    switch (salaryRangeFilter) {
+                        case 'low':
+                            if (avgSalary < 5000 || avgSalary > 10000) return false;
+                            break;
+                        case 'medium':
+                            if (avgSalary < 10000 || avgSalary > 20000) return false;
+                            break;
+                        case 'high':
+                            if (avgSalary < 20000 || avgSalary > 35000) return false;
+                            break;
+                        case 'very-high':
+                            if (avgSalary < 35000) return false;
+                            break;
+                    }
+                }
+                
+                return true;
+            });
+            
+            displaySalaryJobs(filteredSalaryJobs);
+            
+            // Google Analytics tracking
+            if (typeof gtag === 'function') {
+                gtag('event', 'salary_search', {
+                    'event_category': 'salary_ranges',
+                    'event_label': jobSearch || categoryFilter || 'filter_applied'
+                });
+            }
+            
+            console.log(`🔍 נמצאו ${filteredSalaryJobs.length} תוצאות`);
+        }
+
+        // ניקוי מסננים
+        function clearFilters() {
+            document.getElementById('jobSearch').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('experienceFilter').value = '';
+            document.getElementById('salaryRangeFilter').value = '';
+            
+            filteredSalaryJobs = [...allSalaryJobs];
+            displaySalaryJobs(filteredSalaryJobs);
+            
+            console.log('🧹 מסננים נוקו');
+        }
+
+        // עדכון סטטיסטיקות
+        function updateStats() {
+            const totalJobsElement = document.getElementById('totalJobs');
+            if (totalJobsElement) {
+                const uniqueJobs = new Set(allSalaryJobs.map(job => job.title)).size;
+                totalJobsElement.textContent = uniqueJobs;
+                
+                // אנימציה של מספרים
+                animateNumber(totalJobsElement, 0, uniqueJobs, 2000);
+            }
+        }
+
+        // אנימציה של מספרים בסטטיסטיקות
+        function animateNumber(element, start, end, duration) {
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const current = Math.floor(start + (end - start) * progress);
+                element.textContent = current;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        // תפריט נייד
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
+
+        // הוספת מאזיני אירועים
+        function attachEventListeners() {
+            // חיפוש בזמן אמת
+            const jobSearchInput = document.getElementById('jobSearch');
+            if (jobSearchInput) {
+                jobSearchInput.addEventListener('input', function() {
+                    clearTimeout(this.searchTimeout);
+                    this.searchTimeout = setTimeout(applyFilters, 300);
+                });
+            }
+            
+            // מסננים
+            const filters = ['categoryFilter', 'experienceFilter', 'salaryRangeFilter'];
+            filters.forEach(filterId => {
+                const element = document.getElementById(filterId);
+                if (element) {
+                    element.addEventListener('change', applyFilters);
+                }
+            });
+            
+            // Enter לחיפוש
+            document.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    applyFilters();
+                }
+            });
+
+            // סגירת תפריט נייד בלחיצה על קישור
+            document.addEventListener('click', function(event) {
+                const mobileMenu = document.getElementById('mobileMenu');
+                const toggleButton = document.querySelector('.mobile-menu-toggle');
+                
+                if (!mobileMenu.contains(event.target) && !toggleButton.contains(event.target)) {
+                    mobileMenu.classList.remove('active');
+                }
+            });
+
+            // מעקב אחר גלילה לאנליטיקס
+            let scrollTracked = false;
+            window.addEventListener('scroll', function() {
+                if (!scrollTracked && window.scrollY > 500) {
+                    scrollTracked = true;
+                    if (typeof gtag === 'function') {
+                        gtag('event', 'scroll_engagement', {
+                            'event_category': 'salary_ranges',
+                            'event_label': 'deep_scroll'
+                        });
+                    }
+                }
+            });
+            
+            console.log('✅ מאזיני אירועים הוספו');
+        }
+
+        // אתחול כשהדף נטען
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('💰 דף טווחי שכר נטען...');
+            
+            // Google Analytics - page view
+            if (typeof gtag === 'function') {
+                gtag('event', 'page_view', {
+                    'page_title': 'Salary Ranges',
+                    'page_location': window.location.href
+                });
+            }
+            
+            // המתנה קצרה לוודא שהכל נטען
+            setTimeout(initializePage, 100);
+        });
+
+        // הפיכת פונקציות לגלובליות
+        window.applyFilters = applyFilters;
+        window.clearFilters = clearFilters;
+        window.toggleMobileMenu = toggleMobileMenu;
+        
+        // פונקציות שיתוף
+        function shareOnWhatsApp() {
+            const text = `💰 בדקתי את נתוני השכר במשק הישראלי באתר "מה יש פה?"
+            
+נתונים מעניינים ומעודכנים על טווחי שכר בכל התחומים!
+
+כנסו לבדוק: ${window.location.href}
+
+#שכר #עבודה #קריירה`;
+            
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(whatsappUrl, '_blank');
+            
+            if (typeof gtag === 'function') {
+                gtag('event', 'share', {
+                    'method': 'whatsapp',
+                    'content_type': 'salary_ranges'
+                });
+            }
+        }
+
+        function shareOnFacebook() {
+            const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
+            window.open(facebookUrl, '_blank', 'width=600,height=400');
+            
+            if (typeof gtag === 'function') {
+                gtag('event', 'share', {
+                    'method': 'facebook',
+                    'content_type': 'salary_ranges'
+                });
+            }
+        }
+
+        function copyPageUrl() {
+            navigator.clipboard.writeText(window.location.href).then(function() {
+                // הצגת הודעה
+                showNotification('הקישור הועתק בהצלחה! 📋');
+            }).catch(function() {
+                // fallback לדפדפנים ישנים
+                const textArea = document.createElement('textarea');
+                textArea.value = window.location.href;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('הקישור הועתק! 📋');
+            });
+            
+            if (typeof gtag === 'function') {
+                gtag('event', 'share', {
+                    'method': 'copy_link',
+                    'content_type': 'salary_ranges'
+                });
+            }
+        }
+
+        // הצגת הודעות
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'linear-gradient(135deg, #28a745, #20c997)' : 'linear-gradient(135deg, #dc3545, #e74c3c)'};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                z-index: 10000;
+                font-weight: bold;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                animation: slideInNotification 0.3s ease-out;
+                font-family: 'Assistant', sans-serif;
+            `;
+            notification.textContent = message;
+            
+            // הוספת CSS לאנימציה
+            if (!document.querySelector('#notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideInNotification {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(function() {
+                notification.remove();
+            }, 3000);
+        }
+
+        // פונקציות נוספות לשיפור החוויה
+        function getJobCategoryCount() {
+            const categories = {};
+            allSalaryJobs.forEach(job => {
+                categories[job.category] = (categories[job.category] || 0) + 1;
+            });
+            return categories;
+        }
+
+        function getAverageSalaryByCategory() {
+            const categories = {};
+            allSalaryJobs.forEach(job => {
+                if (!categories[job.category]) {
+                    categories[job.category] = { total: 0, count: 0 };
+                }
+                categories[job.category].total += job.salaryData.avg;
+                categories[job.category].count++;
+            });
+            
+            Object.keys(categories).forEach(category => {
+                categories[category] = Math.round(categories[category].total / categories[category].count);
+            });
+            
+            return categories;
+        }
+
+        // הוספת כפתורי שיתוף לדף (אופציונלי)
+        function addShareButtons() {
+            const shareButtonsHtml = `
+                <div style="position: fixed; left: 20px; bottom: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px;">
+                    <button onclick="shareOnWhatsApp()" style="width: 50px; height: 50px; border-radius: 50%; background: #25D366; color: white; border: none; cursor: pointer; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                        <i class="fab fa-whatsapp"></i>
+                    </button>
+                    <button onclick="shareOnFacebook()" style="width: 50px; height: 50px; border-radius: 50%; background: #3b5998; color: white; border: none; cursor: pointer; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                        <i class="fab fa-facebook-f"></i>
+                    </button>
+                    <button onclick="copyPageUrl()" style="width: 50px; height: 50px; border-radius: 50%; background: #6c757d; color: white; border: none; cursor: pointer; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', shareButtonsHtml);
+        }
+
+        // הוספת כפתורי שיתוף כשהדף נטען (אופציונלי)
+        // addShareButtons();
+
+        console.log('💰 מערכת טווחי שכר מוכנה לשימוש מלא!');
+    </script>
+</body>
+</html>
