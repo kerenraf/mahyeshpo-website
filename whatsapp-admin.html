@@ -829,6 +829,101 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 2000);
 });
 </script>
+    <!-- שליחה ממוקדת לפי מספר משרה -->
+<div class="admin-section">
+    <div class="section-header">
+        <h2 class="section-title"><i class="fas fa-search-plus"></i> שליחה ממוקדת לפי מספר משרה</h2>
+    </div>
+    
+    <div class="job-alert-form">
+        <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 15px; align-items: end;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label for="job-id-search">מספר זיהוי משרה</label>
+                <input type="text" id="job-id-search" placeholder="למשל: 12345, JOB-2024-001">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 0;">
+                <label for="manual-job-details">או הכנס פרטי משרה ידנית</label>
+                <input type="text" id="manual-job-details" placeholder="כותרת משרה, חברה, אזור...">
+            </div>
+            
+            <button class="btn btn-secondary" onclick="searchJobAndSendEnhanced()" style="height: fit-content;">
+                <i class="fas fa-search"></i> חפש ושלח
+            </button>
+        </div>
+        
+        <div id="job-match-results" style="display: none;">
+            <h4 style="color: #25D366; margin-bottom: 15px;">תוצאות חיפוש:</h4>
+            <div id="job-details-display"></div>
+            <div id="matching-subscribers"></div>
+            
+            <!-- תצוגה מקדימה -->
+            <div id="message-preview" style="display: none;">
+                <h5 style="color: #25D366; margin-bottom: 10px;">
+                    <i class="fas fa-eye"></i> תצוגה מקדימה - הודעת WhatsApp
+                </h5>
+                <div id="preview-content"></div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 15px;">
+                <button class="btn" onclick="showMessagePreview()">
+                    <i class="fas fa-eye"></i> תצוגה מקדימה
+                </button>
+                <button class="btn btn-secondary" onclick="sendToMatchingSubscribers()" id="send-btn" style="display: none; margin-right: 15px;">
+                    <i class="fab fa-whatsapp"></i> שלח למנויים המתאימים
+                </button>
+                <button class="btn btn-danger" onclick="hideJobMatchResults()" style="margin-right: 15px;">
+                    <i class="fas fa-times"></i> ביטול
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- שליחה ישירה למנוי ספציפי -->
+<div class="admin-section">
+    <div class="section-header">
+        <h2 class="section-title"><i class="fas fa-user-plus"></i> שליחה ישירה למנוי ספציפי</h2>
+    </div>
+    
+    <div class="job-alert-form">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="form-group">
+                <label for="specific-subscriber">בחר מנוי</label>
+                <select id="specific-subscriber">
+                    <option value="">בחר מנוי מהרשימה...</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="direct-job-details">פרטי המשרה</label>
+                <input type="text" id="direct-job-details" placeholder="כותרת משרה או מספר זיהוי">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="direct-message">הודעה נוספת (אופציונלי)</label>
+            <textarea id="direct-message" rows="3" placeholder="הודעה אישית למנוי..."></textarea>
+        </div>
+        
+        <!-- תצוגה מקדימה להודעה ישירה -->
+        <div id="direct-message-preview" style="display: none;">
+            <h5 style="color: #25D366; margin-bottom: 10px;">
+                <i class="fas fa-eye"></i> תצוגה מקדימה
+            </h5>
+            <div id="direct-preview-content"></div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 15px;">
+            <button class="btn" onclick="previewDirectMessage()">
+                <i class="fas fa-eye"></i> תצוגה מקדימה
+            </button>
+            <button class="btn btn-secondary" onclick="sendDirectToSubscriber()" id="direct-send-btn" style="display: none; margin-right: 10px;">
+                <i class="fas fa-paper-plane"></i> שלח ישירות
+            </button>
+        </div>
+    </div>
+</div>
         <!-- חיפוש וסינון -->
         <div class="section">
             <h2><i class="fas fa-search"></i> רשימת מנויים</h2>
@@ -2374,7 +2469,346 @@ ${message}
             e.target.style.display = 'none';
         }
     });
+// פונקציות נוספות לשליחה ממוקדת ושליחה ישירה
 
+// פונקציה משופרת לחיפוש משרה ושליחה
+function searchJobAndSendEnhanced() {
+    const jobId = document.getElementById('job-id-search').value.trim();
+    const manualDetails = document.getElementById('manual-job-details').value.trim();
+    
+    if (!jobId && !manualDetails) {
+        alert('אנא הכנס מספר זיהוי משרה או פרטי משרה ידנית');
+        return;
+    }
+    
+    let jobData = null;
+    
+    if (jobId) {
+        // חיפוש במשרות הקיימות
+        jobData = searchJobById(jobId);
+        
+        if (!jobData) {
+            // אם לא נמצא, נסה חיפוש חלקי
+            const allJobs = jobsManager.getAllJobs();
+            const partialMatch = allJobs.find(job => 
+                job.title.toLowerCase().includes(jobId.toLowerCase()) ||
+                (job.company && job.company.toLowerCase().includes(jobId.toLowerCase()))
+            );
+            
+            if (partialMatch) {
+                jobData = jobsManager.normalizeJob(partialMatch);
+            }
+        }
+    } else {
+        // יצירת משרה ידנית
+        jobData = parseManualJobDetails(manualDetails);
+    }
+    
+    if (!jobData) {
+        showJobNotFoundMessage(jobId);
+        return;
+    }
+    
+    currentJobData = jobData;
+    
+    // מציאת מנויים מתאימים עם הפונקציה המשופרת
+    matchingSubscribersForJob = findMatchingSubscribersForJob(jobData);
+    
+    // הצגת תוצאות משופרת
+    displayJobMatchResultsEnhanced(jobData, matchingSubscribersForJob);
+}
+
+// מציאת מנויים מתאימים למשרה
+function findMatchingSubscribersForJob(job) {
+    const subscribers = adminPanel.whatsappAlerts.getSubscribers();
+    
+    return subscribers.filter(subscriber => {
+        // בדיקת קטגוריה
+        const categoryMatch = subscriber.categories.some(cat => 
+            cat.toLowerCase().includes(job.category.toLowerCase()) || 
+            job.category.toLowerCase().includes(cat.toLowerCase()) ||
+            cat === 'אחר'
+        );
+        
+        // בדיקת אזור
+        const areaMatch = subscriber.areas.some(area => 
+            area.toLowerCase().includes(job.area.toLowerCase()) || 
+            job.area.toLowerCase().includes(area.toLowerCase()) ||
+            area === 'כל הארץ' ||
+            area === 'אחר'
+        );
+        
+        return categoryMatch && areaMatch;
+    });
+}
+
+// הצגת הודעת משרה לא נמצאה
+function showJobNotFoundMessage(jobId) {
+    document.getElementById('job-match-results').style.display = 'block';
+    document.getElementById('job-details-display').innerHTML = `
+        <div style="color: #dc3545; text-align: center; padding: 20px;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 10px;"></i>
+            <h4>משרה לא נמצאה</h4>
+            <p>לא נמצאה משרה עם המספר "${jobId}"</p>
+            <p>בדוק שמספר הזיהוי נכון או נסה חיפוש חלקי</p>
+            <p style="font-size: 0.9em; color: #666; margin-top: 15px;">
+                💡 טיפ: אפשר לחפש גם לפי שם החברה או חלק מכותרת המשרה
+            </p>
+        </div>
+    `;
+    document.getElementById('matching-subscribers').innerHTML = '';
+}
+
+// הצגת תוצאות משופרת
+function displayJobMatchResultsEnhanced(jobData, matchingSubscribers) {
+    const resultsDiv = document.getElementById('job-match-results');
+    const detailsDiv = document.getElementById('job-details-display');
+    const subscribersDiv = document.getElementById('matching-subscribers');
+    
+    // פרטי המשרה מעוצבים
+    detailsDiv.innerHTML = `
+        <div style="background: linear-gradient(135deg, #25D366, #128C7E); color: white; padding: 20px; border-radius: 10px;">
+            <h4 style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-briefcase"></i> ${jobData.title}
+            </h4>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                <div><strong>מספר זיהוי:</strong> ${jobData.jobNumber || jobData.id}</div>
+                ${jobData.company ? `<div><strong>חברה:</strong> ${jobData.company}</div>` : ''}
+                <div><strong>אזור:</strong> ${jobData.area}</div>
+                ${jobData.city ? `<div><strong>עיר:</strong> ${jobData.city}</div>` : ''}
+                <div><strong>קטגוריה:</strong> ${jobData.category}</div>
+                ${jobData.salary ? `<div><strong>שכר:</strong> ${jobData.salary}</div>` : ''}
+            </div>
+            
+            ${jobData.description ? `
+                <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                    <strong>תיאור:</strong> ${jobData.description}
+                </div>
+            ` : ''}
+            
+            ${jobData.requirements ? `
+                <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px;">
+                    <strong>דרישות:</strong> ${jobData.requirements}
+                </div>
+            ` : ''}
+        </div>
+    `;
+    
+    // מנויים מתאימים
+    if (matchingSubscribers.length > 0) {
+        subscribersDiv.innerHTML = `
+            <div style="background: linear-gradient(135deg, #F69898, #ff9e9e); color: white; padding: 20px; border-radius: 10px;">
+                <h4 style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-users"></i> נמצאו ${matchingSubscribers.length} מנויים מתאימים
+                </h4>
+                <div style="max-height: 200px; overflow-y: auto;">
+                    ${matchingSubscribers.map(sub => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; margin: 5px 0; background: rgba(255,255,255,0.1); border-radius: 5px;">
+                            <div>
+                                <strong>${sub.name}</strong> - ${sub.phone}
+                            </div>
+                            <div style="font-size: 0.9em;">
+                                ${sub.categories.slice(0, 2).join(', ')}${sub.categories.length > 2 ? '...' : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="margin-top: 15px; font-size: 0.9em; opacity: 0.9;">
+                    💡 ההתראה תישלח אוטומטית לכל המנויים הרלוונטיים
+                </div>
+            </div>
+        `;
+    } else {
+        subscribersDiv.innerHTML = `
+            <div style="color: #dc3545; text-align: center; padding: 20px; background: rgba(220, 53, 69, 0.1); border-radius: 10px;">
+                <i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                <h4>לא נמצאו מנויים מתאימים</h4>
+                <p>אין מנויים שרשומים לקטגוריה "${jobData.category}" באזור "${jobData.area}"</p>
+            </div>
+        `;
+    }
+    
+    resultsDiv.style.display = 'block';
+    resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// הצגת תצוגה מקדימה של ההודעה
+function showMessagePreview() {
+    if (!currentJobData) {
+        alert('אין נתוני משרה לתצוגה מקדימה');
+        return;
+    }
+    
+    // יצירת הודעה כמו שהמערכת תשלח
+    const message = adminPanel.whatsappAlerts.createJobMessage(currentJobData);
+    
+    // הצגת התצוגה המקדימה
+    document.getElementById('preview-content').textContent = message;
+    document.getElementById('message-preview').style.display = 'block';
+    document.getElementById('send-btn').style.display = 'inline-block';
+    
+    // גלילה לתצוגה המקדימה
+    document.getElementById('message-preview').scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+    });
+}
+
+// שליחה למנויים המתאימים
+function sendToMatchingSubscribers() {
+    if (!currentJobData || matchingSubscribersForJob.length === 0) {
+        alert('אין נתונים לשליחה');
+        return;
+    }
+    
+    const success = adminPanel.whatsappAlerts.sendJobAlert(currentJobData);
+    
+    if (success) {
+        // עדכון סטטיסטיקות
+        adminPanel.stats.totalAlerts += matchingSubscribersForJob.length;
+        localStorage.setItem('whatsapp_total_alerts', adminPanel.stats.totalAlerts.toString());
+        
+        adminPanel.showAlert(`נשלחו התראות ל-${matchingSubscribersForJob.length} מנויים!`, 'success');
+        adminPanel.updateStats();
+        hideJobMatchResults();
+    } else {
+        adminPanel.showAlert('שגיאה בשליחת ההתראות', 'error');
+    }
+}
+
+// הסתרת תוצאות
+function hideJobMatchResults() {
+    document.getElementById('job-match-results').style.display = 'none';
+    document.getElementById('message-preview').style.display = 'none';
+    document.getElementById('direct-message-preview').style.display = 'none';
+    document.getElementById('send-btn').style.display = 'none';
+    document.getElementById('direct-send-btn').style.display = 'none';
+    document.getElementById('job-id-search').value = '';
+    document.getElementById('manual-job-details').value = '';
+    currentJobData = null;
+    matchingSubscribersForJob = [];
+}
+
+// טעינת רשימת מנויים לבחירה
+function loadSubscribersToSelect() {
+    const select = document.getElementById('specific-subscriber');
+    if (!select) return;
+    
+    const subscribers = adminPanel.whatsappAlerts.getSubscribers();
+    
+    select.innerHTML = '<option value="">בחר מנוי מהרשימה...</option>';
+    
+    subscribers.forEach(subscriber => {
+        select.innerHTML += `
+            <option value="${subscriber.phone}">
+                ${subscriber.name} - ${subscriber.phone} (${subscriber.categories.slice(0, 2).join(', ')})
+            </option>
+        `;
+    });
+}
+
+// תצוגה מקדימה להודעה ישירה
+function previewDirectMessage() {
+    const subscriberPhone = document.getElementById('specific-subscriber').value;
+    const jobDetails = document.getElementById('direct-job-details').value.trim();
+    const additionalMessage = document.getElementById('direct-message').value.trim();
+    
+    if (!subscriberPhone) {
+        alert('אנא בחר מנוי מהרשימה');
+        return;
+    }
+    
+    if (!jobDetails) {
+        alert('אנא הכנס פרטי משרה');
+        return;
+    }
+    
+    // מציאת המנוי
+    const subscriber = adminPanel.whatsappAlerts.getSubscribers().find(sub => sub.phone === subscriberPhone);
+    if (!subscriber) {
+        alert('מנוי לא נמצא');
+        return;
+    }
+    
+    // יצירת הודעה מקדימה
+    let message = `🎯 משרה מותאמת אישית עבורך!\n\n`;
+    message += `💼 ${jobDetails}\n\n`;
+    
+    if (additionalMessage) {
+        message += `📝 ${additionalMessage}\n\n`;
+    }
+    
+    message += `📞 לפרטים נוספים: 055-550-4633\n`;
+    message += `🌐 כל המשרות: https://mayeshpo.co.il\n\n`;
+    message += `שלום ${subscriber.name}! 👋`;
+    
+    // הצגת התצוגה המקדימה
+    document.getElementById('direct-preview-content').textContent = message;
+    document.getElementById('direct-message-preview').style.display = 'block';
+    document.getElementById('direct-send-btn').style.display = 'inline-block';
+    
+    // גלילה לתצוגה המקדימה
+    document.getElementById('direct-message-preview').scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+    });
+}
+
+// שליחה ישירה למנוי ספציפי
+function sendDirectToSubscriber() {
+    const subscriberPhone = document.getElementById('specific-subscriber').value;
+    const jobDetails = document.getElementById('direct-job-details').value.trim();
+    const additionalMessage = document.getElementById('direct-message').value.trim();
+    
+    if (!subscriberPhone) {
+        alert('אנא בחר מנוי מהרשימה');
+        return;
+    }
+    
+    if (!jobDetails) {
+        alert('אנא הכנס פרטי משרה');
+        return;
+    }
+    
+    // מציאת המנוי
+    const subscriber = adminPanel.whatsappAlerts.getSubscribers().find(sub => sub.phone === subscriberPhone);
+    if (!subscriber) {
+        alert('מנוי לא נמצא');
+        return;
+    }
+    
+    // יצירת הודעה
+    let message = `🎯 משרה מותאמת אישית עבורך!\n\n`;
+    message += `💼 ${jobDetails}\n\n`;
+    
+    if (additionalMessage) {
+        message += `📝 ${additionalMessage}\n\n`;
+    }
+    
+    message += `📞 לפרטים נוספים: 055-550-4633\n`;
+    message += `🌐 כל המשרות: https://mayeshpo.co.il\n\n`;
+    message += `שלום ${subscriber.name}! 👋`;
+    
+    // שליחת הודעה
+    const phoneNumber = subscriberPhone.replace(/^0/, '972').replace(/\D/g, '');
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+    
+    // עדכון סטטיסטיקות
+    adminPanel.stats.totalAlerts += 1;
+    localStorage.setItem('whatsapp_total_alerts', adminPanel.stats.totalAlerts.toString());
+    adminPanel.updateStats();
+    
+    adminPanel.showAlert(`נשלחה הודעה ישירה ל-${subscriber.name}!`, 'success');
+    
+    // ניקוי טופס
+    document.getElementById('specific-subscriber').value = '';
+    document.getElementById('direct-job-details').value = '';
+    document.getElementById('direct-message').value = '';
+    document.getElementById('direct-message-preview').style.display = 'none';
+    document.getElementById('direct-send-btn').style.display = 'none';
+}
     // הוסף את הסגירה של הטאגים HTML הנדרשים
     </script>
 </body>
