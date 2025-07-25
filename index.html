@@ -4727,25 +4727,41 @@ setInterval(() => {
     console.log('🧙‍♀️ הגמדה החכמה הופעלה בהצלחה עם פונקציונליות מלאה!');
 </script>
     
-// הוסיפי את הקוד הזה ל-index.html במקום הקוד הקודם:
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        window.whatsappAlerts = new WhatsAppAlerts({
-            buttonText: 'התראות משרות',
-            position: 'bottom-left'
-        });
+        console.log('🔍 מתחיל לטעון את הקומפוננטה...');
         
-        // העלה את הכפתור קצת למעלה - מספר קטן יותר
-        setTimeout(() => {
-            const alertsBtn = document.getElementById('whatsapp-alerts-button');
-            if (alertsBtn) {
-                alertsBtn.style.bottom = '80px'; // רק 80px - לא יותר מדי גבוה
-                console.log('כפתור הועבר ל:', alertsBtn.style.bottom);
-            }
-        }, 1000); // יותר זמן להטעינה
+        // בדיקה אם הקבצים נטענו
+        if (typeof WhatsAppAlerts === 'undefined') {
+            console.error('❌ שגיאה: הקובץ whatsapp-alerts.js לא נטען!');
+            alert('שגיאה: הקובץ js/whatsapp-alerts.js לא נמצא');
+            return;
+        }
         
-        console.log('✅ קומפוננטת התראות הופעלה');
+        console.log('✅ WhatsAppAlerts class נטען בהצלחה');
+        
+        try {
+            window.whatsappAlerts = new WhatsAppAlerts({
+                buttonText: 'התראות משרות',
+                position: 'bottom-left'
+            });
+            console.log('✅ הקומפוננטה נוצרה בהצלחה');
+            
+            // בדיקה אם הכפתור נוצר
+            setTimeout(() => {
+                const alertsBtn = document.getElementById('whatsapp-alerts-button');
+                if (alertsBtn) {
+                    console.log('✅ הכפתור נמצא!', alertsBtn);
+                    console.log('מיקום הכפתור:', window.getComputedStyle(alertsBtn));
+                } else {
+                    console.error('❌ הכפתור לא נוצר!');
+                }
+            }, 1000);
+            
+        } catch (error) {
+            console.error('❌ שגיאה ביצירת הקומפוננטה:', error);
+            alert('שגיאה: ' + error.message);
+        }
     });
 </script>
 </body>
