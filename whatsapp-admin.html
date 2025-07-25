@@ -576,101 +576,259 @@
         </div>
 
         <!-- שליחה ממוקדת לפי מספר משרה -->
-        <div class="admin-section">
-            <div class="section-header">
-                <h2 class="section-title"><i class="fas fa-search-plus"></i> שליחה ממוקדת לפי מספר משרה</h2>
+<div class="admin-section">
+    <div class="section-header">
+        <h2 class="section-title">
+            <i class="fab fa-git-alt"></i> ניהול משרות מגיט
+        </h2>
+        <div style="font-size: 0.9em; color: #999; margin-top: 5px;">
+            <i class="fas fa-database"></i> מקור: data/jobs.json
+        </div>
+    </div>
+    
+    <div class="action-buttons">
+        <button class="btn btn-secondary" onclick="refreshJobsFromGit()">
+            <i class="fas fa-sync-alt"></i> רענן מגיט
+        </button>
+        <button class="btn" onclick="showJobsStats()">
+            <i class="fas fa-chart-line"></i> סטטיסטיקות משרות
+        </button>
+        <button class="btn btn-secondary" onclick="checkGitStatus()">
+            <i class="fas fa-wifi"></i> בדוק חיבור
+        </button>
+        <button class="btn" onclick="showRecentJobs()">
+            <i class="fas fa-clock"></i> משרות חדשות
+        </button>
+    </div>
+    
+    <!-- מחוון סטטוס חיבור -->
+    <div id="connection-status" style="margin: 15px 0; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div id="status-indicator" style="width: 10px; height: 10px; border-radius: 50%; background: #999;"></div>
+            <span id="status-text">בודק חיבור...</span>
+            <div style="margin-right: auto; font-size: 0.9em; color: #666;">
+                <span id="jobs-count">0</span> משרות טעונות
             </div>
-            
-            <div class="job-alert-form">
-                <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 15px; align-items: end;">
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label for="job-id-search">מספר זיהוי משרה</label>
-                        <input type="text" id="job-id-search" placeholder="למשל: 12345, JOB-2024-001">
+        </div>
+    </div>
+    
+    <div id="jobs-status" style="display: none;">
+        <h4 style="color: #25D366; margin-bottom: 15px;">
+            <i class="fas fa-info-circle"></i> סטטוס משרות מגיט
+        </h4>
+        <div id="jobs-info">טוען...</div>
+    </div>
+</div>
+
+<!-- סקציית משרות חדשות -->
+<div id="recent-jobs-section" class="admin-section" style="display: none;">
+    <div class="section-header">
+        <h2 class="section-title">
+            <i class="fas fa-clock"></i> משרות חדשות השבוע
+        </h2>
+    </div>
+    <div id="recent-jobs-list"></div>
+</div>
+
+<script>
+// פונקציות נוספות לממשק
+
+// עדכון מחוון הסטטוס
+async function updateConnectionStatus() {
+    const indicator = document.getElementById('status-indicator');
+    const statusText = document.getElementById('status-text');
+    const jobsCount = document.getElementById('jobs-count');
+    
+    try {
+        const isConnected = await jobsManager.checkGitConnection();
+        const stats = jobsManager.getStatistics();
+        
+        if (isConnected) {
+            indicator.style.background = '#25D366';
+            statusText.textContent = 'מחובר לגיט';
+        } else {
+            indicator.style.background = '#dc3545';
+            statusText.textContent = 'לא מחובר לגיט (משתמש בגיבוי)';
+        }
+        
+        jobsCount.textContent = stats.total;
+        
+    } catch (error) {
+        indicator.style.background = '#ffc107';
+        statusText.textContent = 'שגיאה בבדיקת חיבור';
+    }
+}
+
+// הצגת משרות חדשות
+function showRecentJobs() {
+    const newJobs = jobsManager.getNewJobs(7);
+    const section = document.getElementById('recent-jobs-section');
+    const list = document.getElementById('recent-jobs-list');
+    
+    if (newJobs.length === 0) {
+        list.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #666;">
+                <i class="fas fa-calendar-times" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                <h4>אין משרות חדשות השבוע</h4>
+                <p>כל המשרות נוספו לפני יותר משבוע</p>
+            </div>
+        `;
+    } else {
+        list.innerHTML = `
+            <div style="margin-bottom: 15px;">
+                <strong style="color: #25D366;">נמצאו ${newJobs.length} משרות חדשות השבוע!</strong>
+            </div>
+            <div style="display: grid; gap: 15px;">
+                ${newJobs.slice(0, 10).map(job => `
+                    <div style="background: rgba(37, 211, 102, 0.1); border: 1px solid rgba(37, 211, 102, 0.3); border-radius: 8px; padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                            <h5 style="color: #25D366; margin: 0;">${job.title}</h5>
+                            <span style="background: #25D366; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">
+                                חדש
+                            </span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; font-size: 0.9em;">
+                            ${job.company ? `<div><strong>חברה:</strong> ${job.company}</div>` : ''}
+                            <div><strong>אזור:</strong> ${job.area}</div>
+                            <div><strong>קטגוריה:</strong> ${job.category}</div>
+                            <div><strong>מספר:</strong> ${job.jobNumber}</div>
+                        </div>
+                        <div style="margin-top: 10px; text-align: left;">
+                            <button onclick="sendJobAlert('${job.id}')" class="btn btn-small btn-secondary">
+                                <i class="fas fa-paper-plane"></i> שלח התראה
+                            </button>
+                        </div>
                     </div>
-                    
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label for="manual-job-details">או הכנס פרטי משרה ידנית</label>
-                        <input type="text" id="manual-job-details" placeholder="כותרת משרה, חברה, אזור...">
-                    </div>
-                    
-                    <button class="btn btn-secondary" onclick="searchJobAndSend()" style="height: fit-content;">
-                        <i class="fas fa-search"></i> חפש ושלח
-                    </button>
+                `).join('')}
+            </div>
+            ${newJobs.length > 10 ? `
+                <div style="text-align: center; margin-top: 15px; color: #666;">
+                    מוצגות 10 מתוך ${newJobs.length} משרות חדשות
                 </div>
-                
-                <div id="job-match-results" style="display: none;">
-                    <h4 style="color: #25D366; margin-bottom: 15px;">תוצאות חיפוש:</h4>
-                    <div id="job-details-display"></div>
-                    <div id="matching-subscribers"></div>
-                    
-                    <!-- תצוגה מקדימה -->
-                    <div id="message-preview" style="display: none;">
-                        <h5 style="color: #25D366; margin-bottom: 10px;">
-                            <i class="fas fa-eye"></i> תצוגה מקדימה - הודעת WhatsApp
-                        </h5>
-                        <div id="preview-content"></div>
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 15px;">
-                        <button class="btn" onclick="showMessagePreview()">
-                            <i class="fas fa-eye"></i> תצוגה מקדימה
-                        </button>
-                        <button class="btn btn-secondary" onclick="sendToMatchingSubscribers()" id="send-btn" style="display: none; margin-right: 15px;">
-                            <i class="fab fa-whatsapp"></i> שלח למנויים המתאימים
-                        </button>
-                        <button class="btn btn-danger" onclick="hideJobMatchResults()" style="margin-right: 15px;">
-                            <i class="fas fa-times"></i> ביטול
-                        </button>
+            ` : ''}
+        `;
+    }
+    
+    section.style.display = 'block';
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// שליחת התראה למשרה ספציפית
+function sendJobAlert(jobId) {
+    // מילוי אוטומטי של שדה החיפוש
+    document.getElementById('job-id-search').value = jobId;
+    
+    // הפעלת החיפוש
+    searchJobAndSendEnhanced();
+    
+    // גלילה לסקציית השליחה
+    document.querySelector('[data-section="job-search"]')?.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+    });
+}
+
+// בדיקה מתקדמת של קובץ הגיט
+async function checkGitAdvanced() {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'block';
+    
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">בדיקת חיבור לגיט</h3>
+                <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+            </div>
+            <div style="padding: 20px;">
+                <div id="git-check-results">
+                    <div style="text-align: center;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #25D366;"></i>
+                        <p>בודק חיבור לקובץ data/jobs.json...</p>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- שליחה ישירה למנוי ספציפי -->
-        <div class="admin-section">
-            <div class="section-header">
-                <h2 class="section-title"><i class="fas fa-user-plus"></i> שליחה ישירה למנוי ספציפי</h2>
-            </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // ביצוע בדיקות
+    setTimeout(async () => {
+        const results = document.getElementById('git-check-results');
+        let html = '<h4>תוצאות בדיקה:</h4><div style="margin-top: 15px;">';
+        
+        try {
+            // בדיקת חיבור
+            const response = await fetch('data/jobs.json?' + Date.now());
+            const isConnected = response.ok;
             
-            <div class="job-alert-form">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div class="form-group">
-                        <label for="specific-subscriber">בחר מנוי</label>
-                        <select id="specific-subscriber">
-                            <option value="">בחר מנוי מהרשימה...</option>
-                        </select>
-                    </div>
+            html += `
+                <div style="display: flex; align-items: center; gap: 10px; padding: 10px; margin: 5px 0; border-radius: 5px; background: ${isConnected ? 'rgba(40, 167, 69, 0.1)' : 'rgba(220, 53, 69, 0.1)'};">
+                    <i class="fas fa-${isConnected ? 'check-circle' : 'times-circle'}" style="color: ${isConnected ? '#28a745' : '#dc3545'};"></i>
+                    <span>קובץ data/jobs.json ${isConnected ? 'נגיש' : 'לא נגיש'}</span>
+                </div>
+            `;
+            
+            if (isConnected) {
+                // בדיקת גודל ותוכן
+                const text = await response.text();
+                const size = (text.length / 1024).toFixed(1);
+                
+                try {
+                    const jobs = JSON.parse(text);
+                    const isValidArray = Array.isArray(jobs);
                     
-                    <div class="form-group">
-                        <label for="direct-job-details">פרטי המשרה</label>
-                        <input type="text" id="direct-job-details" placeholder="כותרת משרה או מספר זיהוי">
-                    </div>
+                    html += `
+                        <div style="display: flex; align-items: center; gap: 10px; padding: 10px; margin: 5px 0; border-radius: 5px; background: rgba(40, 167, 69, 0.1);">
+                            <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                            <span>גודל קובץ: ${size} KB</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; padding: 10px; margin: 5px 0; border-radius: 5px; background: ${isValidArray ? 'rgba(40, 167, 69, 0.1)' : 'rgba(220, 53, 69, 0.1)'};">
+                            <i class="fas fa-${isValidArray ? 'check-circle' : 'times-circle'}" style="color: ${isValidArray ? '#28a745' : '#dc3545'};"></i>
+                            <span>פורמט JSON ${isValidArray ? 'תקין' : 'שגוי'} - ${isValidArray ? jobs.length : 0} משרות</span>
+                        </div>
+                    `;
+                } catch (error) {
+                    html += `
+                        <div style="display: flex; align-items: center; gap: 10px; padding: 10px; margin: 5px 0; border-radius: 5px; background: rgba(220, 53, 69, 0.1);">
+                            <i class="fas fa-times-circle" style="color: #dc3545;"></i>
+                            <span>שגיאת JSON: ${error.message}</span>
+                        </div>
+                    `;
+                }
+            }
+            
+        } catch (error) {
+            html += `
+                <div style="display: flex; align-items: center; gap: 10px; padding: 10px; margin: 5px 0; border-radius: 5px; background: rgba(220, 53, 69, 0.1);">
+                    <i class="fas fa-times-circle" style="color: #dc3545;"></i>
+                    <span>שגיאת חיבור: ${error.message}</span>
                 </div>
-                
-                <div class="form-group">
-                    <label for="direct-message">הודעה נוספת (אופציונלי)</label>
-                    <textarea id="direct-message" rows="3" placeholder="הודעה אישית למנוי..."></textarea>
-                </div>
-                
-                <!-- תצוגה מקדימה להודעה ישירה -->
-                <div id="direct-message-preview" style="display: none;">
-                    <h5 style="color: #25D366; margin-bottom: 10px;">
-                        <i class="fas fa-eye"></i> תצוגה מקדימה
-                    </h5>
-                    <div id="direct-preview-content"></div>
-                </div>
-                
-                <div style="text-align: center; margin-top: 15px;">
-                    <button class="btn" onclick="previewDirectMessage()">
-                        <i class="fas fa-eye"></i> תצוגה מקדימה
-                    </button>
-                    <button class="btn btn-secondary" onclick="sendDirectToSubscriber()" id="direct-send-btn" style="display: none; margin-right: 10px;">
-                        <i class="fas fa-paper-plane"></i> שלח ישירות
-                    </button>
-                </div>
+            `;
+        }
+        
+        html += '</div>';
+        html += `
+            <div style="text-align: center; margin-top: 20px;">
+                <button onclick="this.closest('.modal').remove()" class="btn">סגור</button>
             </div>
-        </div>
+        `;
+        
+        results.innerHTML = html;
+    }, 1000);
+}
 
+// אתחול מחוון הסטטוס
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        updateConnectionStatus();
+        
+        // עדכון אוטומטי כל דקה
+        setInterval(updateConnectionStatus, 60000);
+    }, 2000);
+});
+</script>
         <!-- חיפוש וסינון -->
         <div class="section">
             <h2><i class="fas fa-search"></i> רשימת מנויים</h2>
@@ -784,6 +942,412 @@
     <!-- טעינת הקומפוננטה המקורית -->
     <script src="js/whatsapp-alerts.js"></script>    
     <script>
+        // מערכת ניהול משרות מ-Git - data/jobs.json
+class JobsManager {
+    constructor() {
+        this.jobs = [];
+        this.lastUpdate = null;
+        this.loadJobs();
+    }
+
+    // טעינת משרות מ-data/jobs.json
+    async loadJobs() {
+        try {
+            console.log('🔄 טוען משרות מ-data/jobs.json...');
+            
+            // טעינה מהנתיב הנכון בגיט
+            const response = await fetch('data/jobs.json?' + Date.now()); // הוספת timestamp למניעת cache
+            
+            if (response.ok) {
+                const jobsData = await response.json();
+                
+                // וידוא שזה מערך
+                if (Array.isArray(jobsData)) {
+                    this.jobs = jobsData.map(job => this.normalizeJob(job));
+                    this.lastUpdate = new Date();
+                    console.log(`✅ נטענו ${this.jobs.length} משרות מהגיט`);
+                    
+                    // שמירה ב-localStorage לגיבוי
+                    localStorage.setItem('jobs_backup', JSON.stringify({
+                        jobs: this.jobs,
+                        lastUpdate: this.lastUpdate.toISOString()
+                    }));
+                    
+                } else {
+                    throw new Error('קובץ jobs.json לא מכיל מערך תקין');
+                }
+            } else {
+                throw new Error(`שגיאה HTTP: ${response.status}`);
+            }
+        } catch (error) {
+            console.warn('⚠️ שגיאה בטעינה מהגיט:', error.message);
+            
+            // נסיון טעינה מגיבוי
+            const backup = this.loadFromBackup();
+            if (backup) {
+                console.log('✅ נטען מגיבוי מקומי');
+            } else {
+                console.log('🔄 טוען דוגמאות משרות');
+                this.loadSampleJobs();
+            }
+        }
+    }
+
+    // טעינה מגיבוי מקומי
+    loadFromBackup() {
+        try {
+            const backup = localStorage.getItem('jobs_backup');
+            if (backup) {
+                const data = JSON.parse(backup);
+                this.jobs = data.jobs || [];
+                this.lastUpdate = new Date(data.lastUpdate);
+                return this.jobs.length > 0;
+            }
+        } catch (error) {
+            console.warn('שגיאה בטעינת גיבוי:', error);
+        }
+        return false;
+    }
+
+    // דוגמאות משרות (גיבוי אם הגיט לא זמין)
+    loadSampleJobs() {
+        this.jobs = [
+            {
+                id: '12345',
+                jobNumber: '12345',
+                title: 'מפתח Full Stack',
+                company: 'חברת הייטק מובילה',
+                area: 'מרכז',
+                city: 'תל אביב',
+                category: 'פיתוח ותוכנה',
+                description: 'דרוש/ה מפתח/ת Full Stack עם ניסיון ב-React ו-Node.js',
+                requirements: 'ניסיון של 3+ שנים, JavaScript, React, Node.js',
+                salary: 'לפי ניסיון',
+                createdAt: new Date().toISOString(),
+                status: 'active'
+            },
+            {
+                id: 'JOB-2024-001',
+                jobNumber: 'JOB-2024-001',
+                title: 'מנהל/ת מכירות',
+                company: 'חברת השיווק הגדולה',
+                area: 'צפון',
+                city: 'חיפה',
+                category: 'מכירות ושיווק',
+                description: 'דרוש/ה מנהל/ת מכירות עם ניסיון מוכח',
+                requirements: 'ניסיון של 2+ שנים בניהול צוות מכירות',
+                salary: '15,000-20,000 ש"ח',
+                createdAt: new Date().toISOString(),
+                status: 'active'
+            },
+            {
+                id: '67890',
+                jobNumber: '67890',
+                title: 'מורה להנדסה',
+                company: 'מכללה טכנולוגית',
+                area: 'ירושלים והסביבה',
+                city: 'ירושלים',
+                category: 'חינוך והוראה',
+                description: 'דרוש/ה מורה להנדסה עם תואר שני',
+                requirements: 'תואר שני בהנדסה, ניסיון הוראה',
+                salary: 'לפי סולם משכורות',
+                createdAt: new Date().toISOString(),
+                status: 'active'
+            }
+        ];
+        this.lastUpdate = new Date();
+    }
+
+    // רענון משרות מהגיט
+    async refreshFromGit() {
+        console.log('🔄 מרענן משרות מהגיט...');
+        await this.loadJobs();
+        return this.jobs.length;
+    }
+
+    // חיפוש משרה לפי מספר זיהוי
+    findJobById(jobId) {
+        if (!jobId) return null;
+        
+        const searchTerm = jobId.toString().toLowerCase();
+        
+        return this.jobs.find(job => 
+            job.id?.toString().toLowerCase() === searchTerm ||
+            job.jobNumber?.toString().toLowerCase() === searchTerm ||
+            job.title?.toLowerCase().includes(searchTerm) ||
+            job.company?.toLowerCase().includes(searchTerm)
+        );
+    }
+
+    // חיפוש משרות לפי קטגוריה ואזור
+    findJobsByFilter(category = null, area = null, status = 'active') {
+        return this.jobs.filter(job => {
+            // סינון לפי סטטוס
+            const statusMatch = !status || job.status === status;
+            
+            // סינון לפי קטגוריה
+            const categoryMatch = !category || 
+                job.category?.toLowerCase().includes(category.toLowerCase());
+            
+            // סינון לפי אזור
+            const areaMatch = !area || 
+                job.area?.toLowerCase().includes(area.toLowerCase());
+            
+            return statusMatch && categoryMatch && areaMatch;
+        });
+    }
+
+    // קבלת כל המשרות הפעילות
+    getAllJobs() {
+        return this.jobs.filter(job => job.status !== 'inactive');
+    }
+
+    // קבלת משרות חדשות (מהשבוע האחרון)
+    getNewJobs(days = 7) {
+        const cutoffDate = new Date();
+        cutoffDate.setDate(cutoffDate.getDate() - days);
+        
+        return this.jobs.filter(job => {
+            const jobDate = new Date(job.createdAt);
+            return jobDate > cutoffDate && job.status === 'active';
+        });
+    }
+
+    // המרת מפתחות מקובץ לפורמט סטנדרטי
+    normalizeJob(job) {
+        return {
+            id: job.id || job.jobId || job.jobNumber || job._id || Date.now().toString(),
+            jobNumber: job.jobNumber || job.id || job.jobId || job.number,
+            title: job.title || job.jobTitle || job.position || job.name,
+            company: job.company || job.companyName || job.employer || job.organization,
+            area: job.area || job.region || job.location || job.zone,
+            city: job.city || job.cityName || job.town,
+            category: job.category || job.field || job.department || job.type,
+            description: job.description || job.jobDescription || job.details || job.summary,
+            requirements: job.requirements || job.jobRequirements || job.qualifications,
+            salary: job.salary || job.salaryRange || job.wage || job.compensation,
+            createdAt: job.createdAt || job.dateCreated || job.publishDate || new Date().toISOString(),
+            updatedAt: job.updatedAt || job.dateUpdated || job.modifiedDate,
+            status: job.status || job.state || 'active',
+            contactInfo: job.contactInfo || job.contact || job.phone,
+            email: job.email || job.contactEmail,
+            url: job.url || job.link || job.jobUrl,
+            tags: job.tags || job.keywords || [],
+            priority: job.priority || job.urgency || 'normal'
+        };
+    }
+
+    // קבלת סטטיסטיקות משרות
+    getStatistics() {
+        const jobs = this.getAllJobs();
+        
+        // ספירה לפי קטגוריות
+        const categoryStats = {};
+        const areaStats = {};
+        const companyStats = {};
+        
+        jobs.forEach(job => {
+            // קטגוריות
+            if (job.category) {
+                categoryStats[job.category] = (categoryStats[job.category] || 0) + 1;
+            }
+            
+            // אזורים
+            if (job.area) {
+                areaStats[job.area] = (areaStats[job.area] || 0) + 1;
+            }
+            
+            // חברות
+            if (job.company) {
+                companyStats[job.company] = (companyStats[job.company] || 0) + 1;
+            }
+        });
+        
+        return {
+            total: jobs.length,
+            newThisWeek: this.getNewJobs(7).length,
+            categories: categoryStats,
+            areas: areaStats,
+            companies: companyStats,
+            lastUpdate: this.lastUpdate
+        };
+    }
+
+    // בדיקת חיבור לגיט
+    async checkGitConnection() {
+        try {
+            const response = await fetch('data/jobs.json', { method: 'HEAD' });
+            return response.ok;
+        } catch (error) {
+            return false;
+        }
+    }
+}
+
+// יצירת מנהל משרות גלובלי
+const jobsManager = new JobsManager();
+
+// עדכון הפונקציה הקיימת לחיפוש משרה
+function searchJobById(jobId) {
+    const job = jobsManager.findJobById(jobId);
+    return job ? jobsManager.normalizeJob(job) : null;
+}
+
+// פונקציה לרענון משרות מהגיט
+async function refreshJobsFromGit() {
+    const loadingBtn = event.target;
+    const originalText = loadingBtn.innerHTML;
+    
+    loadingBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> מרענן...';
+    loadingBtn.disabled = true;
+    
+    try {
+        const count = await jobsManager.refreshFromGit();
+        updateJobStats();
+        showJobsStats();
+        
+        adminPanel?.showAlert(`✅ רוענן! נטענו ${count} משרות מהגיט`, 'success');
+    } catch (error) {
+        adminPanel?.showAlert('❌ שגיאה ברענון: ' + error.message, 'error');
+    } finally {
+        loadingBtn.innerHTML = originalText;
+        loadingBtn.disabled = false;
+    }
+}
+
+// פונקציה לבדיקת סטטוס חיבור
+async function checkGitStatus() {
+    const isConnected = await jobsManager.checkGitConnection();
+    const stats = jobsManager.getStatistics();
+    
+    const statusDiv = document.getElementById('git-status');
+    if (statusDiv) {
+        statusDiv.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="color: ${isConnected ? '#25D366' : '#dc3545'};">
+                    <i class="fas fa-${isConnected ? 'check-circle' : 'exclamation-triangle'}"></i>
+                    ${isConnected ? 'מחובר לגיט' : 'לא מחובר לגיט'}
+                </div>
+                <div style="color: #666;">
+                    עדכון אחרון: ${stats.lastUpdate ? stats.lastUpdate.toLocaleString('he-IL') : 'לא ידוע'}
+                </div>
+            </div>
+        `;
+    }
+    
+    return isConnected;
+}
+
+// פונקציה לעדכון סטטיסטיקות משרות
+function updateJobStats() {
+    const stats = jobsManager.getStatistics();
+    
+    console.log('📊 סטטיסטיקות משרות מהגיט:');
+    console.log('סה"כ משרות:', stats.total);
+    console.log('משרות חדשות השבוע:', stats.newThisWeek);
+    console.log('לפי קטגוריות:', stats.categories);
+    console.log('לפי אזורים:', stats.areas);
+    
+    // עדכון תצוגה אם קיימת
+    const totalElement = document.getElementById('total-jobs-count');
+    if (totalElement) {
+        totalElement.textContent = stats.total;
+    }
+}
+
+// פונקציה משופרת להצגת סטטיסטיקות משרות
+function showJobsStats() {
+    const stats = jobsManager.getStatistics();
+    const statusDiv = document.getElementById('jobs-status');
+    const infoDiv = document.getElementById('jobs-info');
+    
+    if (!statusDiv || !infoDiv) return;
+    
+    if (stats.total === 0) {
+        infoDiv.innerHTML = `
+            <div style="color: #dc3545; text-align: center; padding: 20px;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                <h4>אין משרות טעונות</h4>
+                <p>בדוק שהקובץ data/jobs.json קיים ונגיש</p>
+                <button onclick="refreshJobsFromGit()" class="btn btn-secondary" style="margin-top: 10px;">
+                    <i class="fas fa-sync-alt"></i> נסה שוב
+                </button>
+            </div>
+        `;
+    } else {
+        const topCategories = Object.entries(stats.categories)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+            
+        const topAreas = Object.entries(stats.areas)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+        
+        infoDiv.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+                <div>
+                    <h5 style="color: #25D366; margin-bottom: 10px;">
+                        <i class="fas fa-briefcase"></i> סה"כ משרות: ${stats.total}
+                    </h5>
+                    <div style="color: #F69898;">
+                        <i class="fas fa-star"></i> חדשות השבוע: ${stats.newThisWeek}
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.9em; color: #999;">
+                        עדכון: ${stats.lastUpdate ? stats.lastUpdate.toLocaleString('he-IL') : 'לא ידוע'}
+                    </div>
+                </div>
+                
+                <div>
+                    <h6 style="color: #F69898; margin-bottom: 8px;">קטגוריות מובילות:</h6>
+                    ${topCategories.map(([cat, count]) => 
+                        `<div style="font-size: 0.9em;">• ${cat}: ${count}</div>`
+                    ).join('')}
+                </div>
+                
+                <div>
+                    <h6 style="color: #F69898; margin-bottom: 8px;">אזורים מובילים:</h6>
+                    ${topAreas.map(([area, count]) => 
+                        `<div style="font-size: 0.9em;">• ${area}: ${count}</div>`
+                    ).join('')}
+                </div>
+            </div>
+            
+            <div style="margin-top: 15px; text-align: center;">
+                <button onclick="refreshJobsFromGit()" class="btn btn-secondary">
+                    <i class="fas fa-sync-alt"></i> רענן מהגיט
+                </button>
+                <div id="git-status" style="margin-top: 10px; font-size: 0.9em;"></div>
+            </div>
+        `;
+        
+        // בדיקת סטטוס חיבור
+        checkGitStatus();
+    }
+    
+    statusDiv.style.display = 'block';
+}
+
+// אתחול אוטומטי
+document.addEventListener('DOMContentLoaded', function() {
+    // המתן שהמערכת תיטען
+    setTimeout(async () => {
+        console.log('🚀 מערכת משרות מגיט מוכנה!');
+        
+        // עדכון סטטיסטיקות
+        updateJobStats();
+        
+        // רענון אוטומטי כל 5 דקות
+        setInterval(async () => {
+            console.log('🔄 רענון אוטומטי מהגיט...');
+            await jobsManager.refreshFromGit();
+            updateJobStats();
+        }, 5 * 60 * 1000); // 5 דקות
+        
+    }, 1000);
+});
+
+// החלפת הפונקציה הקיימת
+window.searchJobAndSend = searchJobAndSendEnhanced;
         // מערכת ניהול מנויים
         class AdminPanel {
             constructor() {
