@@ -4727,18 +4727,24 @@ setInterval(() => {
     console.log('🧙‍♀️ הגמדה החכמה הופעלה בהצלחה עם פונקציונליות מלאה!');
 </script>
     
-    <!-- קומפוננטת התראות WhatsApp -->
-    <link rel="stylesheet" href="css/whatsapp-alerts.css">
-    <script src="js/whatsapp-alerts.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            window.whatsappAlerts = new WhatsAppAlerts({
-                buttonText: 'התראות משרות',
-                position: 'bottom-left'  // ← הוחלף ל-right!
-            });
-            
-            console.log('✅ קומפוננטת התראות הופעלה');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        window.whatsappAlerts = new WhatsAppAlerts({
+            buttonText: 'התראות משרות',
+            position: 'bottom-left'
         });
-    </script>
+        
+        // העלה את הכפתור למעלה כדי שלא יתנגש עם כפתור הנגישות
+        setTimeout(() => {
+            const alertsBtn = document.getElementById('whatsapp-alerts-button');
+            if (alertsBtn) {
+                alertsBtn.style.bottom = '120px'; // 120px מהתחתית במקום 30px
+                alertsBtn.style.left = '30px';   // ודא שהוא בצד שמאל
+            }
+        }, 500);
+        
+        console.log('✅ קומפוננטת התראות הופעלה');
+    });
+</script>
 </body>
 </html>
