@@ -1,0 +1,578 @@
+/**
+ * עיצוב קומפוננטת התראות WhatsApp
+ * @author מה יש פה?
+ * @version 1.0.0
+ */
+
+/* כפתור התראות צף */
+.whatsapp-alerts-button {
+    position: fixed;
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    font-family: 'Assistant', Arial, sans-serif;
+    font-size: 16px;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+    transition: all 0.3s ease;
+    animation: whatsapp-alerts-pulse 3s infinite;
+    user-select: none;
+}
+
+.whatsapp-alerts-button:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6);
+    animation-play-state: paused;
+}
+
+.whatsapp-alerts-button:active {
+    transform: scale(0.98);
+}
+
+/* מיקומים שונים לכפתור */
+.whatsapp-alerts-button.bottom-left {
+    bottom: 30px;
+    left: 30px;
+}
+
+.whatsapp-alerts-button.bottom-right {
+    bottom: 30px;
+    right: 30px;
+}
+
+.whatsapp-alerts-button.top-left {
+    top: 30px;
+    left: 30px;
+}
+
+.whatsapp-alerts-button.top-right {
+    top: 30px;
+    right: 30px;
+}
+
+/* אנימציית הכפתור */
+@keyframes whatsapp-alerts-pulse {
+    0%, 100% { 
+        box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4); 
+    }
+    50% { 
+        box-shadow: 0 4px 30px rgba(37, 211, 102, 0.8), 
+                    0 0 20px rgba(37, 211, 102, 0.3); 
+    }
+}
+
+/* רקע המודל */
+.whatsapp-alerts-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    direction: rtl;
+    font-family: 'Assistant', Arial, sans-serif;
+}
+
+/* תוכן המודל */
+.whatsapp-alerts-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #222222;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 550px;
+    max-height: 85vh;
+    overflow-y: auto;
+    border: 3px solid #25D366;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    animation: whatsapp-alerts-modal-appear 0.4s ease-out;
+}
+
+@keyframes whatsapp-alerts-modal-appear {
+    from { 
+        opacity: 0; 
+        transform: translate(-50%, -60%); 
+        scale: 0.9; 
+    }
+    to { 
+        opacity: 1; 
+        transform: translate(-50%, -50%); 
+        scale: 1; 
+    }
+}
+
+/* כותרת המודל */
+.whatsapp-alerts-modal-header {
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    color: white;
+    padding: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 17px 17px 0 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.whatsapp-alerts-modal-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.whatsapp-alerts-close {
+    cursor: pointer;
+    font-size: 28px;
+    font-weight: bold;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    line-height: 1;
+}
+
+.whatsapp-alerts-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+/* גוף המודל */
+.whatsapp-alerts-modal-body {
+    padding: 30px;
+    color: white;
+}
+
+/* הקדמה */
+.whatsapp-alerts-intro {
+    background: linear-gradient(135deg, rgba(37, 211, 102, 0.1), rgba(18, 140, 126, 0.1));
+    border: 1px solid rgba(37, 211, 102, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.whatsapp-alerts-intro p {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+}
+
+.whatsapp-alerts-intro small {
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+/* קבוצת שדות */
+.whatsapp-alerts-form-group {
+    margin-bottom: 25px;
+}
+
+.whatsapp-alerts-form-group label {
+    display: block;
+    margin-bottom: 10px;
+    color: #ddd;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* שדות קלט */
+.whatsapp-alerts-form-group input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #555;
+    border-radius: 10px;
+    background: #333;
+    color: white;
+    font-size: 16px;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-alerts-form-group input:focus {
+    border-color: #25D366;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.3);
+    background: #3a3a3a;
+}
+
+.whatsapp-alerts-form-group input::placeholder {
+    color: #aaa;
+}
+
+/* תיבות סימון */
+.whatsapp-alerts-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
+.whatsapp-alerts-checkboxes::-webkit-scrollbar {
+    width: 8px;
+}
+
+.whatsapp-alerts-checkboxes::-webkit-scrollbar-track {
+    background: #333;
+    border-radius: 4px;
+}
+
+.whatsapp-alerts-checkboxes::-webkit-scrollbar-thumb {
+    background: #25D366;
+    border-radius: 4px;
+}
+
+.whatsapp-alerts-checkboxes::-webkit-scrollbar-thumb:hover {
+    background: #128C7E;
+}
+
+.whatsapp-alerts-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.whatsapp-alerts-checkbox-item:hover {
+    background: rgba(37, 211, 102, 0.1);
+    border-color: rgba(37, 211, 102, 0.3);
+    transform: translateY(-1px);
+}
+
+.whatsapp-alerts-checkbox-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: #25D366;
+    cursor: pointer;
+}
+
+.whatsapp-alerts-checkbox-item label {
+    flex: 1;
+    cursor: pointer;
+    margin: 0;
+    font-weight: normal;
+    font-size: 0.95rem;
+    line-height: 1.3;
+}
+
+/* כפתור הרשמה */
+.whatsapp-alerts-submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    color: white;
+    border: none;
+    padding: 18px 25px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 10px;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+.whatsapp-alerts-submit-btn:hover {
+    background: linear-gradient(135deg, #128C7E, #0f6b5c);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+.whatsapp-alerts-submit-btn:active {
+    transform: translateY(0);
+}
+
+.whatsapp-alerts-submit-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* הודעות */
+.whatsapp-alerts-message {
+    margin-top: 20px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1rem;
+    display: none;
+    animation: whatsapp-alerts-message-appear 0.3s ease-out;
+}
+
+@keyframes whatsapp-alerts-message-appear {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.whatsapp-alerts-message.success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border: 1px solid #1e7e34;
+}
+
+.whatsapp-alerts-message.error {
+    background: linear-gradient(135deg, #dc3545, #e74c3c);
+    color: white;
+    border: 1px solid #bd2130;
+}
+
+.whatsapp-alerts-message.info {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: white;
+    border: 1px solid #117a8b;
+}
+
+/* כותרת תחתונה */
+.whatsapp-alerts-footer {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #444;
+    text-align: center;
+}
+
+.whatsapp-alerts-footer p {
+    margin: 5px 0;
+    color: #aaa;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+/* רספונסיבי - מובייל */
+@media (max-width: 768px) {
+    .whatsapp-alerts-button {
+        padding: 12px 18px;
+        font-size: 14px;
+        border-radius: 25px;
+    }
+    
+    .whatsapp-alerts-button.bottom-left,
+    .whatsapp-alerts-button.bottom-right {
+        bottom: 120px; /* מעל הגמדה החכמה */
+    }
+    
+    .whatsapp-alerts-button.bottom-left {
+        left: 20px;
+    }
+    
+    .whatsapp-alerts-button.bottom-right {
+        right: 20px;
+    }
+
+    .whatsapp-alerts-modal-content {
+        width: 95%;
+        max-height: 90vh;
+        border-radius: 15px;
+        border-width: 2px;
+    }
+
+    .whatsapp-alerts-modal-header {
+        padding: 20px;
+        border-radius: 13px 13px 0 0;
+    }
+
+    .whatsapp-alerts-modal-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .whatsapp-alerts-modal-body {
+        padding: 20px;
+    }
+
+    .whatsapp-alerts-checkboxes {
+        grid-template-columns: 1fr;
+        max-height: 180px;
+        padding: 12px;
+    }
+
+    .whatsapp-alerts-checkbox-item {
+        padding: 10px;
+    }
+
+    .whatsapp-alerts-submit-btn {
+        padding: 16px 20px;
+        font-size: 1.1rem;
+    }
+
+    .whatsapp-alerts-intro {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .whatsapp-alerts-intro p {
+        font-size: 1rem;
+    }
+
+    .whatsapp-alerts-form-group input {
+        padding: 14px;
+        font-size: 16px; /* מונע זום במובייל */
+    }
+}
+
+@media (max-width: 480px) {
+    .whatsapp-alerts-button {
+        padding: 10px 15px;
+        font-size: 13px;
+        gap: 8px;
+    }
+    
+    .whatsapp-alerts-button span {
+        display: none; /* הסתר טקסט במסכים קטנים מאוד */
+    }
+
+    .whatsapp-alerts-modal-content {
+        width: 98%;
+        margin: 10px;
+    }
+
+    .whatsapp-alerts-modal-header {
+        padding: 15px;
+    }
+
+    .whatsapp-alerts-modal-body {
+        padding: 15px;
+    }
+
+    .whatsapp-alerts-checkboxes {
+        max-height: 150px;
+        padding: 10px;
+    }
+}
+
+/* תמיכה בנגישות */
+@media (prefers-reduced-motion: reduce) {
+    .whatsapp-alerts-button {
+        animation: none;
+    }
+    
+    .whatsapp-alerts-modal-content {
+        animation: none;
+    }
+    
+    .whatsapp-alerts-message {
+        animation: none;
+    }
+    
+    * {
+        transition-duration: 0.01s !important;
+    }
+}
+
+/* תמיכה במצב כהה */
+@media (prefers-color-scheme: dark) {
+    .whatsapp-alerts-modal-content {
+        background: #1a1a1a;
+        border-color: #25D366;
+    }
+    
+    .whatsapp-alerts-form-group input {
+        background: #2a2a2a;
+        border-color: #444;
+    }
+    
+    .whatsapp-alerts-checkboxes {
+        background: rgba(0, 0, 0, 0.5);
+        border-color: #333;
+    }
+}
+
+/* מיקוד נגיש */
+.whatsapp-alerts-button:focus,
+.whatsapp-alerts-form-group input:focus,
+.whatsapp-alerts-submit-btn:focus,
+.whatsapp-alerts-close:focus,
+.whatsapp-alerts-checkbox-item:focus-within {
+    outline: 3px solid #FFD700;
+    outline-offset: 2px;
+}
+
+/* הוברים נוספים */
+.whatsapp-alerts-checkbox-item:focus-within {
+    background: rgba(37, 211, 102, 0.15);
+    border-color: rgba(37, 211, 102, 0.5);
+}
+
+/* אפקטים מיוחדים */
+.whatsapp-alerts-button::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #25D366, #128C7E, #25D366);
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.whatsapp-alerts-button:hover::before {
+    opacity: 0.3;
+}
+
+/* סגנון נטעון (loading) */
+.whatsapp-alerts-submit-btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.whatsapp-alerts-submit-btn.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: whatsapp-alerts-spin 1s linear infinite;
+}
+
+@keyframes whatsapp-alerts-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* הדפסה */
+@media print {
+    .whatsapp-alerts-button,
+    .whatsapp-alerts-modal {
+        display: none !important;
+    }
+}
