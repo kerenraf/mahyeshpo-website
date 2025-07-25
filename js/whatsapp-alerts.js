@@ -1,7 +1,7 @@
 /**
- * קומפוננטת התראות WhatsApp
+ * קומפוננטת התראות WhatsApp - מעודכן עם קטגוריות דינמיות
  * @author מה יש פה?
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 class WhatsAppAlerts {
@@ -14,12 +14,13 @@ class WhatsAppAlerts {
                 'פיתוח ותוכנה', 'מכירות ושיווק', 'חינוך והוראה',
                 'מזון ומסעדנות', 'בריאות ורפואה', 'בנייה והנדסה',
                 'עיצוב ויצירה', 'אבטחה ושמירה', 'ניהול וכספים',
-                'שירות לקוחות', 'אחר'
+                'שירות לקוחות', 'משאבי אנוש', 'מדע הנדסה מחקר ופיתוח',
+                'פיננסים וכלכלה', 'סחר וקמעונאות', 'אחר'
             ],
             areas: [
                 'מרכז', 'צפון', 'דרום', 'ירושלים והסביבה',
                 'חיפה קריות והצפון', 'שרון', 'שפלה', 'גליל',
-                'נגב', 'עבודה מהבית'
+                'נגב', 'כל הארץ', 'עבודה מהבית', 'אחר'
             ],
             ...options
         };
@@ -98,12 +99,18 @@ class WhatsAppAlerts {
                             <div class="whatsapp-alerts-checkboxes" id="whatsapp-alerts-categories">
                                 ${this.getCategoriesHTML()}
                             </div>
+                            <div id="custom-category-container" style="display: none; margin-top: 10px;">
+                                <input type="text" id="custom-category" placeholder="איזה תחום מעניין אותך?" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
                         </div>
                         
                         <div class="whatsapp-alerts-form-group">
                             <label>אזורים מועדפים * (בחר לפחות אחד)</label>
                             <div class="whatsapp-alerts-checkboxes" id="whatsapp-alerts-areas">
                                 ${this.getAreasHTML()}
+                            </div>
+                            <div id="custom-area-container" style="display: none; margin-top: 10px;">
+                                <input type="text" id="custom-area" placeholder="איזה אזור מעניין אותך?" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                             </div>
                         </div>
                         
@@ -127,7 +134,7 @@ class WhatsAppAlerts {
     getCategoriesHTML() {
         return this.options.categories.map(category => `
             <div class="whatsapp-alerts-checkbox-item">
-                <input type="checkbox" id="cat_${category}" value="${category}">
+                <input type="checkbox" id="cat_${category}" value="${category}" onchange="window.whatsappAlerts.handleCategoryChange('${category}')">
                 <label for="cat_${category}">${category}</label>
             </div>
         `).join('');
@@ -137,10 +144,38 @@ class WhatsAppAlerts {
     getAreasHTML() {
         return this.options.areas.map(area => `
             <div class="whatsapp-alerts-checkbox-item">
-                <input type="checkbox" id="area_${area}" value="${area}">
+                <input type="checkbox" id="area_${area}" value="${area}" onchange="window.whatsappAlerts.handleAreaChange('${area}')">
                 <label for="area_${area}">${area}</label>
             </div>
         `).join('');
+    }
+
+    // טיפול בשינוי קטגוריה
+    handleCategoryChange(category) {
+        const customContainer = document.getElementById('custom-category-container');
+        const otherCheckbox = document.getElementById('cat_אחר');
+        
+        if (category === 'אחר' && otherCheckbox.checked) {
+            customContainer.style.display = 'block';
+            document.getElementById('custom-category').focus();
+        } else if (category === 'אחר' && !otherCheckbox.checked) {
+            customContainer.style.display = 'none';
+            document.getElementById('custom-category').value = '';
+        }
+    }
+
+    // טיפול בשינוי אזור
+    handleAreaChange(area) {
+        const customContainer = document.getElementById('custom-area-container');
+        const otherCheckbox = document.getElementById('area_אחר');
+        
+        if (area === 'אחר' && otherCheckbox.checked) {
+            customContainer.style.display = 'block';
+            document.getElementById('custom-area').focus();
+        } else if (area === 'אחר' && !otherCheckbox.checked) {
+            customContainer.style.display = 'none';
+            document.getElementById('custom-area').value = '';
+        }
     }
 
     // מאזיני אירועים
@@ -209,6 +244,9 @@ class WhatsAppAlerts {
         if (form) {
             form.reset();
             this.hideMessage();
+            // הסתרת שדות מותאמים אישית
+            document.getElementById('custom-category-container').style.display = 'none';
+            document.getElementById('custom-area-container').style.display = 'none';
         }
     }
 
@@ -231,13 +269,39 @@ class WhatsAppAlerts {
         const name = document.getElementById('whatsapp-alerts-name').value.trim();
         const phone = document.getElementById('whatsapp-alerts-phone').value.trim();
         
-        const selectedCategories = Array.from(
+        let selectedCategories = Array.from(
             document.querySelectorAll('#whatsapp-alerts-categories input:checked')
         ).map(input => input.value);
         
-        const selectedAreas = Array.from(
+        let selectedAreas = Array.from(
             document.querySelectorAll('#whatsapp-alerts-areas input:checked')
         ).map(input => input.value);
+
+        // טיפול בקטגוריה מותאמת אישית
+        const otherCategoryChecked = document.getElementById('cat_אחר')?.checked;
+        const customCategory = document.getElementById('custom-category').value.trim();
+        
+        if (otherCategoryChecked && customCategory) {
+            // החלף "אחר" בקטגוריה המותאמת אישית
+            selectedCategories = selectedCategories.filter(cat => cat !== 'אחר');
+            selectedCategories.push(customCategory);
+        } else if (otherCategoryChecked && !customCategory) {
+            this.showMessage('אנא ציין את התחום שמעניין אותך', 'error');
+            return;
+        }
+
+        // טיפול באזור מותאם אישית
+        const otherAreaChecked = document.getElementById('area_אחר')?.checked;
+        const customArea = document.getElementById('custom-area').value.trim();
+        
+        if (otherAreaChecked && customArea) {
+            // החלף "אחר" באזור המותאם אישית
+            selectedAreas = selectedAreas.filter(area => area !== 'אחר');
+            selectedAreas.push(customArea);
+        } else if (otherAreaChecked && !customArea) {
+            this.showMessage('אנא ציין את האזור שמעניין אותך', 'error');
+            return;
+        }
 
         // ולידציה
         if (!name || !phone) {
@@ -344,11 +408,17 @@ class WhatsAppAlerts {
             return false;
         }
 
-        // מציאת מנויים רלוונטיים
-        const relevantSubscribers = this.subscribers.filter(subscriber => 
-            subscriber.categories.includes(jobData.category) && 
-            subscriber.areas.includes(jobData.area)
-        );
+        // מציאת מנויים רלוונטיים (כולל התאמות חלקיות)
+        const relevantSubscribers = this.subscribers.filter(subscriber => {
+            const categoryMatch = subscriber.categories.some(cat => 
+                cat.includes(jobData.category) || jobData.category.includes(cat)
+            );
+            const areaMatch = subscriber.areas.some(area => 
+                area.includes(jobData.area) || jobData.area.includes(area) || 
+                area === 'כל הארץ' || jobData.area === 'כל הארץ'
+            );
+            return categoryMatch && areaMatch;
+        });
 
         if (relevantSubscribers.length === 0) {
             console.log('לא נמצאו מנויים רלוונטיים');
