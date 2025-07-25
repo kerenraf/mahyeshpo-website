@@ -4727,6 +4727,8 @@ setInterval(() => {
     console.log('🧙‍♀️ הגמדה החכמה הופעלה בהצלחה עם פונקציונליות מלאה!');
 </script>
     
+// הוסיפי את הקוד הזה ל-index.html במקום הקוד הקודם:
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         window.whatsappAlerts = new WhatsAppAlerts({
@@ -4734,14 +4736,14 @@ setInterval(() => {
             position: 'bottom-left'
         });
         
-        // העלה את הכפתור למעלה כדי שלא יתנגש עם כפתור הנגישות
+        // העלה את הכפתור קצת למעלה - מספר קטן יותר
         setTimeout(() => {
             const alertsBtn = document.getElementById('whatsapp-alerts-button');
             if (alertsBtn) {
-                alertsBtn.style.bottom = '120px'; // 120px מהתחתית במקום 30px
-                alertsBtn.style.left = '30px';   // ודא שהוא בצד שמאל
+                alertsBtn.style.bottom = '80px'; // רק 80px - לא יותר מדי גבוה
+                console.log('כפתור הועבר ל:', alertsBtn.style.bottom);
             }
-        }, 500);
+        }, 1000); // יותר זמן להטעינה
         
         console.log('✅ קומפוננטת התראות הופעלה');
     });
