@@ -2299,21 +2299,82 @@ ${message}
     }
 
     // טעינת רשימת מנויים לבחירה
-    function loadSubscribersToSelect() {
-        const select = document.getElementById('specific-subscriber');
-        const subscribers = adminPanel.whatsappAlerts.getSubscribers();
-        
-        select.innerHTML = '<option value="">בחר מנוי מהרשימה...</option>';
-        
-        subscribers.forEach(subscriber => {
-            select.innerHTML += `
-                <option value="${subscriber.phone}">
-                    ${subscriber.name} - ${subscriber.phone} (${subscriber.categories.slice(0, 2).join(', ')})
-                </option>
-            `;
-        });
+// החלפי את הפונקציה loadSubscribersToSelect עם זו:
+function loadSubscribersToSelect() {
+    console.log('🔄 טוען רשימת מנויים...');
+    
+    const select = document.getElementById('specific-subscriber');
+    if (!select) {
+        console.error('❌ לא נמצא אלמנט specific-subscriber');
+        return;
     }
+    
+    // וידוא שהמערכת טעונה
+    if (!adminPanel || !adminPanel.whatsappAlerts) {
+        console.error('❌ המערכת לא טעונה עדיין');
+        setTimeout(loadSubscribersToSelect, 1000); // נסה שוב אחרי שנייה
+        return;
+    }
+    
+    const subscribers = adminPanel.whatsappAlerts.getSubscribers();
+    console.log('📋 נמצאו מנויים:', subscribers.length);
+    
+    select.innerHTML = '<option value="">בחר מנוי מהרשימה...</option>';
+    
+    if (subscribers.length === 0) {
+        select.innerHTML += '<option value="" disabled>אין מנויים עדיין</option>';
+        console.log('⚠️ אין מנויים במערכת');
+        return;
+    }
+    
+    subscribers.forEach((subscriber, index) => {
+        select.innerHTML += `
+            <option value="${subscriber.phone}">
+                ${subscriber.name} - ${subscriber.phone} (${subscriber.categories.slice(0, 2).join(', ')})
+            </option>
+        `;
+        console.log(`✅ נוסף מנוי ${index + 1}:`, subscriber.name);
+    });
+    
+    console.log('✅ רשימת מנויים נטענה בהצלחה');
+}
 
+// פונקציה לרענון המנויים ידנית
+function refreshSubscribersList() {
+    console.log('🔄 מרענן רשימת מנויים...');
+    
+    // עדכון הטבלה
+    if (adminPanel) {
+        adminPanel.renderSubscribers();
+        adminPanel.updateStats();
+    }
+    
+    // עדכון הרשימה הנפתחת
+    loadSubscribersToSelect();
+    
+    alert('✅ רשימת המנויים רועננה!');
+}
+
+// בדיקה מפורטת של המערכת
+function debugSubscribers() {
+    console.log('🔍 בדיקת מנויים מפורטת:');
+    console.log('1. adminPanel קיים:', !!adminPanel);
+    console.log('2. whatsappAlerts קיים:', !!adminPanel?.whatsappAlerts);
+    console.log('3. getSubscribers פונקציה:', typeof adminPanel?.whatsappAlerts?.getSubscribers);
+    
+    if (adminPanel?.whatsappAlerts?.getSubscribers) {
+        const subs = adminPanel.whatsappAlerts.getSubscribers();
+        console.log('4. מספר מנויים:', subs.length);
+        console.log('5. מנויים:', subs);
+    }
+    
+    const fromStorage = localStorage.getItem('whatsapp_alerts_subscribers');
+    console.log('6. מ-LocalStorage:', fromStorage);
+    
+    const selectElement = document.getElementById('specific-subscriber');
+    console.log('7. select element קיים:', !!selectElement);
+    console.log('8. select options:', selectElement?.options.length);
+}
     // תצוגה מקדימה להודעה ישירה
     function previewDirectMessage() {
         const subscriberPhone = document.getElementById('specific-subscriber').value;
