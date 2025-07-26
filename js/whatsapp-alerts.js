@@ -1,7 +1,7 @@
 /**
- * קומפוננטת התראות WhatsApp - מעודכן עם קטגוריות דינמיות
+ * קומפוננטת התראות WhatsApp - מעודכן עם קטגוריות דינמיות וחיבור לשרת
  * @author מה יש פה?
- * @version 2.0.0
+ * @version 3.0.0
  */
 
 class WhatsAppAlerts {
@@ -11,11 +11,12 @@ class WhatsAppAlerts {
             position: 'bottom-left', // bottom-left, bottom-right, top-left, top-right
             autoShow: true,
             categories: [
-                'פיתוח ותוכנה', 'מכירות ושיווק', 'חינוך והוראה',
-                'מזון ומסעדנות', 'בריאות ורפואה', 'בנייה והנדסה',
-                'עיצוב ויצירה', 'אבטחה ושמירה', 'ניהול וכספים',
-                'שירות לקוחות', 'משאבי אנוש', 'מדע הנדסה מחקר ופיתוח',
-                'פיננסים וכלכלה', 'סחר וקמעונאות', 'אחר'
+                'לוגיסטיקה, מחסנים, שילוח ורכש', 'פיתוח ותוכנה', 'מכירות ושיווק', 
+                'חינוך והוראה', 'מזון ומסעדנות', 'בריאות ורפואה', 'בנייה והנדסה',
+                'עיצוב ויצירה', 'אבטחה ושמירה', 'ניהול וכספים', 'שירות לקוחות', 
+                'משאבי אנוש', 'מדע הנדסה מחקר ופיתוח', 'פיננסים וכלכלה', 
+                'סחר וקמעונאות', 'תיירות ופנאי', 'תקשורת ומדיא', 'חקלאות וסביבה', 
+                'תחבורה ונהיגה', 'אחר'
             ],
             areas: [
                 'מרכז', 'צפון', 'דרום', 'ירושלים והסביבה',
@@ -25,7 +26,10 @@ class WhatsAppAlerts {
             ...options
         };
 
-        this.subscribers = this.loadSubscribers();
+        // הוספת הגדרות שרת
+        this.apiUrl = '/api/subscribers.php';
+        this.useServerSync = true;
+        this.subscribers = [];
         this.isModalOpen = false;
         
         if (this.options.autoShow) {
@@ -34,11 +38,40 @@ class WhatsAppAlerts {
     }
 
     // אתחול הקומפוננטה
-    init() {
+    async init() {
+        // טעינת מנויים מהשרת קודם
+        const serverLoaded = await this.loadSubscribersFromServer();
+        
+        if (!serverLoaded) {
+            // גיבוי: טעינה מקומית
+            this.loadSubscribers();
+        }
+        
         this.createButton();
         this.createModal();
         this.attachEvents();
-        console.log('✅ קומפוננטת התראות WhatsApp אותחלה בהצלחה');
+        console.log('✅ קומפוננטת התראות WhatsApp אותחלה בהצלחה עם סינכרון שרת');
+    }
+
+    // טעינת מנויים מהשרת
+    async loadSubscribersFromServer() {
+        if (!this.useServerSync) return false;
+        
+        try {
+            const response = await fetch(this.apiUrl + '?' + Date.now());
+            const data = await response.json();
+            
+            if (data.success && data.subscribers) {
+                this.subscribers = data.subscribers;
+                this.saveSubscribers(); // גיבוי מקומי
+                console.log(`✅ נטענו ${data.count} מנויים מהשרת`);
+                return true;
+            }
+        } catch (error) {
+            console.warn('⚠️ שגיאה בטעינה מהשרת, טוען מקומית:', error);
+            this.loadSubscribers(); // גיבוי מקומי
+        }
+        return false;
     }
 
     // יצירת הכפתור הצף
@@ -155,10 +188,10 @@ class WhatsAppAlerts {
         const customContainer = document.getElementById('custom-category-container');
         const otherCheckbox = document.getElementById('cat_אחר');
         
-        if (category === 'אחר' && otherCheckbox.checked) {
+        if (category === 'אחר' && otherCheckbox && otherCheckbox.checked) {
             customContainer.style.display = 'block';
             document.getElementById('custom-category').focus();
-        } else if (category === 'אחר' && !otherCheckbox.checked) {
+        } else if (category === 'אחר' && otherCheckbox && !otherCheckbox.checked) {
             customContainer.style.display = 'none';
             document.getElementById('custom-category').value = '';
         }
@@ -169,10 +202,10 @@ class WhatsAppAlerts {
         const customContainer = document.getElementById('custom-area-container');
         const otherCheckbox = document.getElementById('area_אחר');
         
-        if (area === 'אחר' && otherCheckbox.checked) {
+        if (area === 'אחר' && otherCheckbox && otherCheckbox.checked) {
             customContainer.style.display = 'block';
             document.getElementById('custom-area').focus();
-        } else if (area === 'אחר' && !otherCheckbox.checked) {
+        } else if (area === 'אחר' && otherCheckbox && !otherCheckbox.checked) {
             customContainer.style.display = 'none';
             document.getElementById('custom-area').value = '';
         }
@@ -245,8 +278,10 @@ class WhatsAppAlerts {
             form.reset();
             this.hideMessage();
             // הסתרת שדות מותאמים אישית
-            document.getElementById('custom-category-container').style.display = 'none';
-            document.getElementById('custom-area-container').style.display = 'none';
+            const customCategoryContainer = document.getElementById('custom-category-container');
+            const customAreaContainer = document.getElementById('custom-area-container');
+            if (customCategoryContainer) customCategoryContainer.style.display = 'none';
+            if (customAreaContainer) customAreaContainer.style.display = 'none';
         }
     }
 
@@ -264,8 +299,8 @@ class WhatsAppAlerts {
         e.target.value = value;
     }
 
-    // טיפול ברשמה
-    handleSubscription() {
+    // טיפול ברשמה - עדכון עם חיבור לשרת
+    async handleSubscription() {
         const name = document.getElementById('whatsapp-alerts-name').value.trim();
         const phone = document.getElementById('whatsapp-alerts-phone').value.trim();
         
@@ -278,27 +313,25 @@ class WhatsAppAlerts {
         ).map(input => input.value);
 
         // טיפול בקטגוריה מותאמת אישית
-        const otherCategoryChecked = document.getElementById('cat_אחר')?.checked;
+        const otherCategoryCheckbox = document.getElementById('cat_אחר');
         const customCategory = document.getElementById('custom-category').value.trim();
         
-        if (otherCategoryChecked && customCategory) {
-            // החלף "אחר" בקטגוריה המותאמת אישית
+        if (otherCategoryCheckbox && otherCategoryCheckbox.checked && customCategory) {
             selectedCategories = selectedCategories.filter(cat => cat !== 'אחר');
             selectedCategories.push(customCategory);
-        } else if (otherCategoryChecked && !customCategory) {
+        } else if (otherCategoryCheckbox && otherCategoryCheckbox.checked && !customCategory) {
             this.showMessage('אנא ציין את התחום שמעניין אותך', 'error');
             return;
         }
 
         // טיפול באזור מותאם אישית
-        const otherAreaChecked = document.getElementById('area_אחר')?.checked;
+        const otherAreaCheckbox = document.getElementById('area_אחר');
         const customArea = document.getElementById('custom-area').value.trim();
         
-        if (otherAreaChecked && customArea) {
-            // החלף "אחר" באזור המותאם אישית
+        if (otherAreaCheckbox && otherAreaCheckbox.checked && customArea) {
             selectedAreas = selectedAreas.filter(area => area !== 'אחר');
             selectedAreas.push(customArea);
-        } else if (otherAreaChecked && !customArea) {
+        } else if (otherAreaCheckbox && otherAreaCheckbox.checked && !customArea) {
             this.showMessage('אנא ציין את האזור שמעניין אותך', 'error');
             return;
         }
@@ -319,39 +352,93 @@ class WhatsAppAlerts {
             return;
         }
 
-        // בדיקת טלפון קיים
-        if (this.subscribers.find(sub => sub.phone === phone)) {
-            this.showMessage('מספר הטלפון כבר רשום במערכת', 'error');
-            return;
-        }
-
-        // הוספת מנוי חדש
+        // יצירת אובייקט מנוי
         const subscriber = {
-            id: Date.now(),
             name,
             phone,
             categories: selectedCategories,
             areas: selectedAreas,
-            createdAt: new Date().toISOString(),
             source: 'website'
         };
 
-        this.subscribers.push(subscriber);
-        this.saveSubscribers();
+        // הוספת המנוי עם חיבור לשרת
+        const success = await this.addSubscriber(subscriber);
+        
+        if (success) {
+            // סגירה אוטומטית
+            setTimeout(() => {
+                this.closeModal();
+            }, 3000);
 
-        // הודעת הצלחה
-        this.showMessage(
-            `🎉 מעולה ${name}! נרשמת בהצלחה להתראות משרות. נתחיל לשלוח לך משרות רלוונטיות!`, 
-            'success'
-        );
+            // טריגר לאירוע מותאם אישית
+            this.triggerEvent('subscriber-added', subscriber);
+        }
+    }
 
-        // סגירה אוטומטית
-        setTimeout(() => {
-            this.closeModal();
-        }, 3000);
+    // הוספת מנוי חדש עם חיבור לשרת
+    async addSubscriber(subscriber) {
+        // וידוא שהמנוי תקין
+        if (!subscriber.phone || !subscriber.name) {
+            this.showMessage('אנא מלא את כל הפרטים הנדרשים', 'error');
+            return false;
+        }
 
-        // טריגר לאירוע מותאם אישית
-        this.triggerEvent('subscriber-added', subscriber);
+        if (this.useServerSync) {
+            try {
+                // שליחה לשרת
+                const response = await fetch(this.apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ subscriber: subscriber })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // הצלחה - עדכון מקומי
+                    subscriber.id = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    subscriber.registrationDate = new Date().toISOString();
+                    subscriber.active = true;
+                    
+                    this.subscribers.push(subscriber);
+                    this.saveSubscribers();
+                    this.showMessage(result.message, 'success');
+                    return true;
+                } else {
+                    // כשלון - הצגת שגיאה
+                    this.showMessage(result.message, 'error');
+                    return false;
+                }
+            } catch (error) {
+                console.error('שגיאה בהוספת מנוי לשרת:', error);
+                // גיבוי - שמירה מקומית
+                this.fallbackToLocal(subscriber);
+                return true;
+            }
+        } else {
+            // שמירה מקומית בלבד
+            this.fallbackToLocal(subscriber);
+            return true;
+        }
+    }
+
+    // פונקציית גיבוי - שמירה מקומית
+    fallbackToLocal(subscriber) {
+        // בדיקה שהמספר לא קיים
+        const exists = this.subscribers.find(sub => sub.phone === subscriber.phone);
+        
+        if (!exists) {
+            subscriber.id = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            subscriber.registrationDate = new Date().toISOString();
+            subscriber.active = true;
+            subscriber.source = 'website_local';
+            
+            this.subscribers.push(subscriber);
+            this.saveSubscribers();
+            this.showMessage(`🎉 מעולה ${subscriber.name}! נרשמת בהצלחה להתראות משרות. נתחיל לשלוח לך משרות רלוונטיות!`, 'success');
+        } else {
+            this.showMessage('מספר הטלפון כבר רשום במערכת', 'error');
+        }
     }
 
     // הצגת הודעה
@@ -390,13 +477,15 @@ class WhatsAppAlerts {
         }
     }
 
-    // טעינת מנויים
+    // טעינת מנויים (גיבוי מקומי)
     loadSubscribers() {
         try {
             const saved = localStorage.getItem('whatsapp_alerts_subscribers');
-            return saved ? JSON.parse(saved) : [];
+            this.subscribers = saved ? JSON.parse(saved) : [];
+            return this.subscribers;
         } catch (error) {
             console.error('שגיאה בטעינת מנויים:', error);
+            this.subscribers = [];
             return [];
         }
     }
@@ -411,10 +500,12 @@ class WhatsAppAlerts {
         // מציאת מנויים רלוונטיים (כולל התאמות חלקיות)
         const relevantSubscribers = this.subscribers.filter(subscriber => {
             const categoryMatch = subscriber.categories.some(cat => 
-                cat.includes(jobData.category) || jobData.category.includes(cat)
+                cat.toLowerCase().includes(jobData.category.toLowerCase()) || 
+                jobData.category.toLowerCase().includes(cat.toLowerCase())
             );
             const areaMatch = subscriber.areas.some(area => 
-                area.includes(jobData.area) || jobData.area.includes(area) || 
+                area.toLowerCase().includes(jobData.area.toLowerCase()) || 
+                jobData.area.toLowerCase().includes(area.toLowerCase()) || 
                 area === 'כל הארץ' || jobData.area === 'כל הארץ'
             );
             return categoryMatch && areaMatch;
@@ -475,10 +566,33 @@ class WhatsAppAlerts {
         return this.subscribers.length;
     }
 
-    removeSubscriber(phone) {
+    async removeSubscriber(phone) {
+        if (this.useServerSync) {
+            try {
+                const response = await fetch(this.apiUrl, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: phone })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    this.subscribers = this.subscribers.filter(sub => sub.phone !== phone);
+                    this.saveSubscribers();
+                    this.triggerEvent('subscriber-removed', { phone });
+                    return true;
+                }
+            } catch (error) {
+                console.error('שגיאה בהסרת מנוי מהשרת:', error);
+            }
+        }
+        
+        // גיבוי מקומי
         this.subscribers = this.subscribers.filter(sub => sub.phone !== phone);
         this.saveSubscribers();
         this.triggerEvent('subscriber-removed', { phone });
+        return true;
     }
 
     // הסתרת/הצגת הכפתור
@@ -490,6 +604,28 @@ class WhatsAppAlerts {
     showButton() {
         const button = document.getElementById('whatsapp-alerts-button');
         if (button) button.style.display = 'flex';
+    }
+
+    // כיבוי/הפעלת סינכרון שרת
+    enableServerSync() {
+        this.useServerSync = true;
+        console.log('✅ סינכרון שרת הופעל');
+    }
+
+    disableServerSync() {
+        this.useServerSync = false;
+        console.log('⚠️ סינכרון שרת כובה - עובד במצב מקומי');
+    }
+
+    // בדיקת חיבור לשרת
+    async testServerConnection() {
+        try {
+            const response = await fetch(this.apiUrl, { method: 'GET' });
+            const data = await response.json();
+            return data.success === true;
+        } catch (error) {
+            return false;
+        }
     }
 
     // הרס הקומפוננטה
@@ -510,4 +646,9 @@ class WhatsAppAlerts {
 // ייצוא לשימוש גלובלי
 if (typeof window !== 'undefined') {
     window.WhatsAppAlerts = WhatsAppAlerts;
+    
+    // יצירת אינסטנס גלובלי אם לא קיים
+    if (!window.whatsappAlerts) {
+        window.whatsappAlerts = new WhatsAppAlerts();
+    }
 }
