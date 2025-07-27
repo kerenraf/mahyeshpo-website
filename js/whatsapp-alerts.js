@@ -1,7 +1,7 @@
 /**
- * קומפוננטת התראות WhatsApp - גרסת Google Forms מלאה
+ * קומפוננטת התראות WhatsApp - שליחת התראות לבעלת האתר
  * @author מה יש פה?
- * @version 5.0.0 - Google Forms Integration Complete
+ * @version 6.0.0 - גרסה פשוטה ויעילה
  */
 class WhatsAppAlerts {
     constructor(options = {}) {
@@ -9,15 +9,10 @@ class WhatsAppAlerts {
             buttonText: 'התראות משרות',
             position: 'bottom-left',
             autoShow: true,
-            // כתובת Google Form - מעודכן עם הכתובת שלך
-            googleFormUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeajdMe14COlT3kUptdxx1MRqp-sOfl2aXo_ntywcAxtTKPw/formResponse',
-            // השדות של Google Form - מעודכן עם שמות העמודות מ-Sheets
-            formFields: {
-                name: 'entry.1834569080',      // שם מלא - עמודה B
-                phone: 'entry.1495004933',     // מספר WhatsApp - עמודה C  
-                categories: 'entry.1984888068', // תחומי עניין - עמודה D
-                areas: 'entry.1797304799'       // אזורי עניין - עמודה E
-            },
+            // מספר הטלפון שלך - עדכני למספר הנכון
+            ownerPhone: '972501234567', // שני ל-972 + מספר בלי אפס בהתחלה
+            // כתובת מייל לקבלת העתק - אופציונלי
+            ownerEmail: 'kcs@kerencs.com',
             // ברירת מחדל - יתעדכן דינמית מקובץ המשרות
             categories: ['טוען קטגוריות...'],
             areas: ['טוען אזורים...'],
@@ -34,7 +29,7 @@ class WhatsAppAlerts {
 
     // אתחול המערכת
     async init() {
-        console.log('🚀 מאתחל מערכת התראות WhatsApp עם Google Forms...');
+        console.log('🚀 מאתחל מערכת התראות WhatsApp פשוטה...');
         
         // טעינת נתוני משרות לקטגוריות ואזורים דינמיים
         await this.loadJobsData();
@@ -43,7 +38,7 @@ class WhatsAppAlerts {
         this.createModal();
         this.attachEvents();
         
-        console.log('✅ קומפוננטת התראות WhatsApp אותחלה (גרסת Google Forms)');
+        console.log('✅ קומפוננטת התראות WhatsApp אותחלה (גרסה פשוטה)');
     }
 
     // טעינת נתוני משרות לקבלת קטגוריות ואזורים דינמיים
@@ -110,35 +105,66 @@ class WhatsAppAlerts {
         }
     }
 
-    // שליחה ל-Google Forms
-    async submitToGoogleForms(formData) {
+    // פתיחת WhatsApp עם פרטי המנוי
+    openWhatsAppWithSubscriberDetails(formData) {
         try {
-            console.log('📤 שולח ל-Google Forms:', formData);
+            console.log('📱 פותח WhatsApp עם פרטי מנוי:', formData);
             
-            // יצירת FormData
-            const data = new FormData();
+            // יצירת הודעה מפורטת עם כל פרטי המנוי
+            const message = `
+🔔 *מנוי חדש להתראות משרות*
+
+👤 *שם*: ${formData.name}
+📱 *טלפון*: ${formData.phone}
+💼 *תחומי עניין*: ${formData.categories.join(', ')}
+📍 *אזורי עניין*: ${formData.areas.join(', ')}
+🕒 *תאריך*: ${new Date().toLocaleString('he-IL')}
+
+מנוי זה נרשם דרך האתר "מה יש פה" לקבלת התראות משרות.
+            `.trim();
             
-            // הוספת הנתונים לפי שמות השדות של Google Forms
-            data.append(this.options.formFields.name, formData.name);
-            data.append(this.options.formFields.phone, formData.phone);
-            data.append(this.options.formFields.categories, formData.categories.join(', '));
-            data.append(this.options.formFields.areas, formData.areas.join(', '));
-
-            // שליחה ל-Google Forms
-            const response = await fetch(this.options.googleFormUrl, {
-                method: 'POST',
-                mode: 'no-cors', // חשוב! Google Forms דורש את זה
-                body: data
-            });
-
-            // Google Forms תמיד מחזיר opaque response עם no-cors
-            // אז אנחנו מניחים שהשליחה הצליחה אם לא היתה שגיאה
-            console.log('✅ נשלח ל-Google Forms בהצלחה');
+            // קידוד ההודעה ל-URL
+            const encodedMessage = encodeURIComponent(message);
+            
+            // יצירת קישור WhatsApp עם ההודעה
+            const whatsappUrl = `https://wa.me/${this.options.ownerPhone}?text=${encodedMessage}`;
+            
+            // פתיחת חלון חדש עם WhatsApp
+            window.open(whatsappUrl, '_blank');
+            
+            // שליחת עותק במייל (אם יש כתובת מייל)
+            if (this.options.ownerEmail) {
+                this.sendEmailCopy(formData);
+            }
+            
             return true;
-
         } catch (error) {
-            console.error('❌ שגיאה בשליחה ל-Google Forms:', error);
+            console.error('❌ שגיאה בפתיחת WhatsApp:', error);
             return false;
+        }
+    }
+    
+    // שליחת עותק במייל
+    sendEmailCopy(formData) {
+        try {
+            const subject = `מנוי חדש - ${formData.name}`;
+            const body = `
+מנוי חדש נרשם להתראות:
+
+שם: ${formData.name}
+טלפון: ${formData.phone}
+תחומי עניין: ${formData.categories.join(', ')}
+אזורי עניין: ${formData.areas.join(', ')}
+תאריך: ${new Date().toLocaleString('he-IL')}
+
+הפרטים נשלחו גם בהודעת WhatsApp.
+            `.trim();
+            
+            // פתיחת תוכנת מייל עם ההודעה
+            const mailtoUrl = `mailto:${this.options.ownerEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.open(mailtoUrl, '_blank');
+        } catch (error) {
+            console.warn('⚠️ שגיאה בשליחת מייל:', error);
         }
     }
 
@@ -534,16 +560,40 @@ class WhatsAppAlerts {
             areas
         };
 
-        // שליחה ל-Google Forms
-        const success = await this.submitToGoogleForms(formData);
+        // פתיחת WhatsApp עם פרטי המנוי
+        const success = this.openWhatsAppWithSubscriberDetails(formData);
         
         if (success) {
+            // שמירה ב-LocalStorage למקרה שתרצי לראות את הרשימה בעצמך
+            this.saveToLocalStorage(formData);
+            
             this.showMessage(`🎉 מעולה ${name}! נרשמת בהצלחה להתראות משרות.`, 'success');
             setTimeout(() => {
                 this.closeModal();
             }, 2000);
         } else {
             this.showMessage('שגיאה בהרשמה. אנא נסה שוב.', 'error');
+        }
+    }
+
+    // שמירה ב-LocalStorage (גיבוי מקומי)
+    saveToLocalStorage(formData) {
+        try {
+            // קבלת רשימת מנויים קיימת
+            let subscribers = JSON.parse(localStorage.getItem('whatsapp-alerts-subscribers') || '[]');
+            
+            // הוספת המנוי החדש עם תאריך ומזהה ייחודי
+            formData.id = Date.now();
+            formData.date = new Date().toISOString();
+            
+            subscribers.push(formData);
+            
+            // שמירה בחזרה ל-LocalStorage
+            localStorage.setItem('whatsapp-alerts-subscribers', JSON.stringify(subscribers));
+            
+            console.log('✅ מנוי נשמר ב-LocalStorage:', formData);
+        } catch (error) {
+            console.warn('⚠️ שגיאה בשמירה ל-LocalStorage:', error);
         }
     }
 
@@ -603,6 +653,16 @@ class WhatsAppAlerts {
 
     getAreas() {
         return this.options.areas;
+    }
+    
+    // קבלת מנויים מקומיים (לשימוש פנימי)
+    getLocalSubscribers() {
+        try {
+            return JSON.parse(localStorage.getItem('whatsapp-alerts-subscribers') || '[]');
+        } catch (error) {
+            console.warn('⚠️ שגיאה בקריאת מנויים מקומיים:', error);
+            return [];
+        }
     }
 }
 
