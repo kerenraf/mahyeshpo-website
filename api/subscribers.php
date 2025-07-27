@@ -1,115 +1,145 @@
-<?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, DELETE');
-header('Access-Control-Allow-Headers: Content-Type');
+import { promises as fs } from 'fs';
+import path from 'path';
 
-$dataFile = '../data/subscribers.json';
+const dataFilePath = path.join(process.cwd(), 'data', 'subscribers.json');
 
-function loadSubscribers() {
-    global $dataFile;
-    if (file_exists($dataFile)) {
-        $content = file_get_contents($dataFile);
-        $data = json_decode($content, true);
-        return $data ?: [];
+// ודא שהתיקייה קיימת
+async function ensureDataDir() {
+    const dataDir = path.dirname(dataFilePath);
+    try {
+        await fs.access(dataDir);
+    } catch {
+        await fs.mkdir(dataDir, { recursive: true });
     }
-    return [];
 }
 
-function saveSubscribers($subscribers) {
-    global $dataFile;
-    
-    // וידוא שהתיקייה קיימת
-    $dir = dirname($dataFile);
-    if (!is_dir($dir)) {
-        mkdir($dir, 0755, true);
+// טען מנויים
+async function loadSubscribers() {
+    try {
+        await ensureDataDir();
+        const data = await fs.readFile(dataFilePath, 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        // אם הקובץ לא קיים, החזר מערך ריק
+        return [];
     }
-    
-    $json = json_encode($subscribers, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    return file_put_contents($dataFile, $json) !== false;
 }
 
-switch ($_SERVER['REQUEST_METHOD']) {
-    case 'GET':
-        // קבלת כל המנויים
-        echo json_encode([
-            'success' => true,
-            'subscribers' => loadSubscribers(),
-            'count' => count(loadSubscribers())
-        ]);
-        break;
-        
-    case 'POST':
-        $input = json_decode(file_get_contents('php://input'), true);
-        
-        if (isset($input['subscribers'])) {
-            // שמירת כל המנויים (מפאנל ניהול)
-            $success = saveSubscribers($input['subscribers']);
-            echo json_encode([
-                'success' => $success,
-                'message' => $success ? 'כל המנויים נשמרו' : 'שגיאה בשמירה'
-            ]);
-            
-        } elseif (isset($input['subscriber'])) {
-            // הוספת מנוי חדש (מהאתר)
-            $subscribers = loadSubscribers();
-            $newSubscriber = $input['subscriber'];
-            
-            // הוספת נתונים אוטומטיים
-            $newSubscriber['id'] = time() . '_' . rand(1000, 9999);
-            $newSubscriber['registrationDate'] = date('c');
-            $newSubscriber['active'] = true;
-            $newSubscriber['source'] = 'website';
-            
-            // בדיקה שהמספר לא קיים
-            $phoneExists = false;
-            foreach ($subscribers as $sub) {
-                if ($sub['phone'] === $newSubscriber['phone']) {
-                    $phoneExists = true;
-                    break;
-                }
-            }
-            
-            if (!$phoneExists) {
-                $subscribers[] = $newSubscriber;
-                $success = saveSubscribers($subscribers);
-                echo json_encode([
-                    'success' => $success,
-                    'message' => $success ? 'נרשמת בהצלחה להתראות!' : 'שגיאה בהרשמה'
-                ]);
-            } else {
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'מספר הטלפון כבר רשום במערכת'
-                ]);
-            }
-        }
-        break;
-        
-    case 'DELETE':
-        $input = json_decode(file_get_contents('php://input'), true);
-        if (isset($input['phone'])) {
-            $subscribers = loadSubscribers();
-            $beforeCount = count($subscribers);
-            
-            $subscribers = array_filter($subscribers, function($sub) use ($input) {
-                return $sub['phone'] !== $input['phone'];
+// שמור מנויים
+async function saveSubscribers(subscribers) {
+    try {
+        await ensureDataDir();
+        await fs.writeFile(dataFilePath, JSON.stringify(subscribers, null, 2), 'utf8');
+        return true;
+    } catch (error) {
+        console.error('שגיאה בשמירת מנויים:', error);
+        return false;
+    }
+}
+
+// API Handler
+export default async function handler(req, res) {
+    // הגדרת CORS
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
+    }
+
+    try {
+        if (req.method === 'GET') {
+            // קבלת כל המנויים
+            const subscribers = await loadSubscribers();
+            res.status(200).json({
+                success: true,
+                subscribers: subscribers,
+                count: subscribers.length
             });
-            
-            $afterCount = count($subscribers);
-            $success = saveSubscribers(array_values($subscribers));
-            
-            echo json_encode([
-                'success' => $success && ($beforeCount > $afterCount),
-                'message' => $success ? 'מנוי הוסר בהצלחה' : 'שגיאה בהסרת מנוי'
-            ]);
+
+        } else if (req.method === 'POST') {
+            const subscribers = await loadSubscribers();
+
+            if (req.body.subscribers) {
+                // שמירת כל המנויים (מפאנל ניהול)
+                const success = await saveSubscribers(req.body.subscribers);
+                res.status(200).json({
+                    success: success,
+                    message: success ? 'כל המנויים נשמרו' : 'שגיאה בשמירה'
+                });
+
+            } else if (req.body.subscriber) {
+                // הוספת מנוי חדש (מהאתר)
+                const newSubscriber = req.body.subscriber;
+                
+                // הוספת נתונים אוטומטיים
+                newSubscriber.id = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                newSubscriber.registrationDate = new Date().toISOString();
+                newSubscriber.active = true;
+                newSubscriber.source = 'website';
+
+                // בדיקה שהמספר לא קיים
+                const phoneExists = subscribers.some(sub => sub.phone === newSubscriber.phone);
+
+                if (!phoneExists) {
+                    subscribers.push(newSubscriber);
+                    const success = await saveSubscribers(subscribers);
+                    
+                    res.status(200).json({
+                        success: success,
+                        message: success ? 'נרשמת בהצלחה להתראות!' : 'שגיאה בהרשמה'
+                    });
+                } else {
+                    res.status(400).json({
+                        success: false,
+                        message: 'מספר הטלפון כבר רשום במערכת'
+                    });
+                }
+            } else {
+                res.status(400).json({
+                    success: false,
+                    message: 'נתונים לא תקינים'
+                });
+            }
+
+        } else if (req.method === 'DELETE') {
+            // הסרת מנוי
+            const { phone } = req.body;
+            if (phone) {
+                const subscribers = await loadSubscribers();
+                const beforeCount = subscribers.length;
+                
+                const filteredSubscribers = subscribers.filter(sub => sub.phone !== phone);
+                const afterCount = filteredSubscribers.length;
+                
+                const success = await saveSubscribers(filteredSubscribers);
+                
+                res.status(200).json({
+                    success: success && (beforeCount > afterCount),
+                    message: success ? 'מנוי הוסר בהצלחה' : 'שגיאה בהסרת מנוי'
+                });
+            } else {
+                res.status(400).json({
+                    success: false,
+                    message: 'מספר טלפון נדרש'
+                });
+            }
+
+        } else {
+            res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
+            res.status(405).json({
+                success: false,
+                error: 'Method not allowed'
+            });
         }
-        break;
-        
-    default:
-        http_response_code(405);
-        echo json_encode(['success' => false, 'error' => 'Method not allowed']);
+
+    } catch (error) {
+        console.error('שגיאה ב-API:', error);
+        res.status(500).json({
+            success: false,
+            error: 'שגיאה בשרת'
+        });
+    }
 }
-?>
