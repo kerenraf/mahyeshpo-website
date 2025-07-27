@@ -1,7 +1,7 @@
 /**
- * קומפוננטת התראות WhatsApp - גרסת Google Forms
+ * קומפוננטת התראות WhatsApp - גרסת Google Forms מלאה
  * @author מה יש פה?
- * @version 5.0.0 - Google Forms Integration
+ * @version 5.0.0 - Google Forms Integration Complete
  */
 class WhatsAppAlerts {
     constructor(options = {}) {
@@ -86,6 +86,9 @@ class WhatsAppAlerts {
             
             console.log(`✅ נטענו ${this.options.categories.length} קטגוריות ו-${this.options.areas.length} אזורים מקובץ המשרות`);
             
+            // עדכון המודל אם הוא כבר קיים
+            this.updateModalContent();
+            
         } catch (error) {
             console.warn('⚠️ שגיאה בטעינת נתוני משרות, משתמש בברירת מחדל:', error);
             
@@ -110,6 +113,8 @@ class WhatsAppAlerts {
     // שליחה ל-Google Forms
     async submitToGoogleForms(formData) {
         try {
+            console.log('📤 שולח ל-Google Forms:', formData);
+            
             // יצירת FormData
             const data = new FormData();
             
@@ -128,7 +133,7 @@ class WhatsAppAlerts {
 
             // Google Forms תמיד מחזיר opaque response עם no-cors
             // אז אנחנו מניחים שהשליחה הצליחה אם לא היתה שגיאה
-            console.log('📤 נשלח ל-Google Forms בהצלחה');
+            console.log('✅ נשלח ל-Google Forms בהצלחה');
             return true;
 
         } catch (error) {
@@ -406,3 +411,212 @@ class WhatsAppAlerts {
         // עדכון האירועים אחרי יצירת התוכן החדש
         this.attachEvents();
     }
+
+    // חיבור אירועים
+    attachEvents() {
+        // כפתור פתיחת מודל
+        const button = document.getElementById('whatsapp-alerts-btn');
+        if (button) {
+            button.addEventListener('click', () => this.openModal());
+        }
+
+        // כפתור סגירת מודל
+        const closeBtn = document.getElementById('whatsapp-close-btn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => this.closeModal());
+        }
+
+        // סגירה בלחיצה על הרקע
+        const modal = document.getElementById('whatsapp-alerts-modal');
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    this.closeModal();
+                }
+            });
+        }
+
+        // טופס רישום
+        const form = document.getElementById('whatsapp-alerts-form');
+        if (form) {
+            form.addEventListener('submit', (e) => this.handleSubmit(e));
+        }
+
+        // הגבלת בחירת קטגוריות
+        this.limitCheckboxes('categories', 3);
+        this.limitCheckboxes('areas', 3);
+
+        // מקלדת
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.closeModal();
+            }
+        });
+    }
+
+    // הגבלת בחירת צ'קבוקסים
+    limitCheckboxes(name, max) {
+        const checkboxes = document.querySelectorAll(`input[name="${name}"]`);
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
+                if (checked.length >= max) {
+                    checkboxes.forEach(cb => {
+                        if (!cb.checked) cb.disabled = true;
+                    });
+                } else {
+                    checkboxes.forEach(cb => cb.disabled = false);
+                }
+            });
+        });
+    }
+
+    // פתיחת מודל
+    openModal() {
+        const modal = document.getElementById('whatsapp-alerts-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            this.isModalOpen = true;
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    // סגירת מודל
+    closeModal() {
+        const modal = document.getElementById('whatsapp-alerts-modal');
+        if (modal) {
+            modal.style.display = 'none';
+            this.isModalOpen = false;
+            document.body.style.overflow = '';
+            this.resetForm();
+        }
+    }
+
+    // איפוס טופס
+    resetForm() {
+        const form = document.getElementById('whatsapp-alerts-form');
+        if (form) {
+            form.reset();
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.disabled = false);
+        }
+    }
+
+    // טיפול בשליחת טופס
+    async handleSubmit(e) {
+        e.preventDefault();
+
+        const name = document.getElementById('subscriber-name').value.trim();
+        const phone = document.getElementById('subscriber-phone').value.trim();
+        const categories = Array.from(document.querySelectorAll('input[name="categories"]:checked')).map(cb => cb.value);
+        const areas = Array.from(document.querySelectorAll('input[name="areas"]:checked')).map(cb => cb.value);
+
+        // ולידציה
+        if (!name || !phone) {
+            this.showMessage('אנא מלא את כל הפרטים הנדרשים', 'error');
+            return;
+        }
+
+        if (categories.length === 0) {
+            this.showMessage('אנא בחר לפחות תחום עניין אחד', 'error');
+            return;
+        }
+
+        if (areas.length === 0) {
+            this.showMessage('אנא בחר לפחות אזור אחד', 'error');
+            return;
+        }
+
+        // יצירת אובייקט מנוי
+        const formData = {
+            name,
+            phone: this.cleanPhoneNumber(phone),
+            categories,
+            areas
+        };
+
+        // שליחה ל-Google Forms
+        const success = await this.submitToGoogleForms(formData);
+        
+        if (success) {
+            this.showMessage(`🎉 מעולה ${name}! נרשמת בהצלחה להתראות משרות.`, 'success');
+            setTimeout(() => {
+                this.closeModal();
+            }, 2000);
+        } else {
+            this.showMessage('שגיאה בהרשמה. אנא נסה שוב.', 'error');
+        }
+    }
+
+    // הצגת הודעות למשתמש
+    showMessage(message, type = 'info') {
+        // הסרת הודעות קודמות
+        const existing = document.getElementById('whatsapp-message');
+        if (existing) existing.remove();
+
+        const messageDiv = document.createElement('div');
+        messageDiv.id = 'whatsapp-message';
+        
+        const bgColor = type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3';
+        
+        messageDiv.innerHTML = `
+            <div style="
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${bgColor};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10001;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+                font-size: 14px;
+                max-width: 300px;
+                animation: slideIn 0.3s ease;
+            ">
+                ${message}
+            </div>
+            <style>
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            </style>
+        `;
+
+        document.body.appendChild(messageDiv);
+
+        // הסרה אוטומטית אחרי 5 שניות
+        setTimeout(() => {
+            if (messageDiv) messageDiv.remove();
+        }, 5000);
+    }
+
+    // API נוסף לשימוש חיצוני
+    getJobsData() {
+        return this.jobsData;
+    }
+
+    getCategories() {
+        return this.options.categories;
+    }
+
+    getAreas() {
+        return this.options.areas;
+    }
+}
+
+// ייצוא לשימוש גלובלי
+if (typeof window !== 'undefined') {
+    window.WhatsAppAlerts = WhatsAppAlerts;
+    
+    // אתחול אוטומטי
+    if (!window.whatsappAlerts) {
+        window.whatsappAlerts = new WhatsAppAlerts();
+    }
+}
+
+// תמיכה ב-Node.js (אם נדרש)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = WhatsAppAlerts;
+}
