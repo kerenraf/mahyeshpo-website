@@ -1,7 +1,7 @@
 /**
- * קומפוננטת התראות WhatsApp - שליחת התראות לבעלת האתר
+ * קומפוננטת התראות WhatsApp - משולבת עם מערכת הניהול הקיימת
  * @author מה יש פה?
- * @version 6.0.0 - גרסה פשוטה ויעילה
+ * @version 7.0.0 - גרסה משולבת ומשופרת
  */
 class WhatsAppAlerts {
     constructor(options = {}) {
@@ -21,6 +21,10 @@ class WhatsAppAlerts {
 
         this.isModalOpen = false;
         this.jobsData = [];
+        this.subscribers = [];
+        
+        // טעינת מנויים קיימים מLocalStorage
+        this.loadSubscribers();
         
         if (this.options.autoShow) {
             this.init();
@@ -29,7 +33,7 @@ class WhatsAppAlerts {
 
     // אתחול המערכת
     async init() {
-        console.log('🚀 מאתחל מערכת התראות WhatsApp פשוטה...');
+        console.log('🚀 מאתחל מערכת התראות WhatsApp משולבת...');
         
         // טעינת נתוני משרות לקטגוריות ואזורים דינמיים
         await this.loadJobsData();
@@ -38,7 +42,63 @@ class WhatsAppAlerts {
         this.createModal();
         this.attachEvents();
         
-        console.log('✅ קומפוננטת התראות WhatsApp אותחלה (גרסה פשוטה)');
+        console.log('✅ קומפוננטת התראות WhatsApp אותחלה (גרסה משולבת)');
+    }
+
+    // טעינת מנויים מקומיים
+    loadSubscribers() {
+        try {
+            const storedData = localStorage.getItem('whatsapp_alerts_subscribers');
+            if (storedData) {
+                this.subscribers = JSON.parse(storedData);
+                console.log(`✅ נטענו ${this.subscribers.length} מנויים מקומיים`);
+            } else {
+                console.log('ℹ️ לא נמצאו מנויים מקומיים');
+                this.subscribers = [];
+            }
+        } catch (error) {
+            console.error('❌ שגיאה בטעינת מנויים:', error);
+            this.subscribers = [];
+        }
+    }
+
+    // שמירת מנויים
+    saveSubscribers() {
+        try {
+            localStorage.setItem('whatsapp_alerts_subscribers', JSON.stringify(this.subscribers));
+            console.log(`✅ נשמרו ${this.subscribers.length} מנויים`);
+            return true;
+        } catch (error) {
+            console.error('❌ שגיאה בשמירת מנויים:', error);
+            return false;
+        }
+    }
+
+    // קבלת כל המנויים
+    getSubscribers() {
+        return this.subscribers || [];
+    }
+
+    // הוספת מנוי חדש
+    addSubscriber(subscriber) {
+        // הוספת מזהה ייחודי ותאריך רישום אם חסרים
+        subscriber.id = subscriber.id || Date.now();
+        subscriber.registrationDate = subscriber.registrationDate || new Date().toISOString();
+        subscriber.active = subscriber.active !== false;
+        subscriber.source = subscriber.source || 'website';
+        
+        // בדיקה אם מספר הטלפון כבר קיים
+        const exists = this.subscribers.some(sub => sub.phone === subscriber.phone);
+        
+        if (!exists) {
+            this.subscribers.push(subscriber);
+            this.saveSubscribers();
+            console.log(`✅ נוסף מנוי חדש: ${subscriber.name} (${subscriber.phone})`);
+            return true;
+        } else {
+            console.log(`ℹ️ המנוי ${subscriber.phone} כבר קיים במערכת`);
+            return false;
+        }
     }
 
     // טעינת נתוני משרות לקבלת קטגוריות ואזורים דינמיים
@@ -157,7 +217,7 @@ class WhatsAppAlerts {
 אזורי עניין: ${formData.areas.join(', ')}
 תאריך: ${new Date().toLocaleString('he-IL')}
 
-הפרטים נשלחו גם בהודעת WhatsApp.
+הפרטים נשמרו במערכת המקומית.
             `.trim();
             
             // פתיחת תוכנת מייל עם ההודעה
@@ -166,6 +226,120 @@ class WhatsAppAlerts {
         } catch (error) {
             console.warn('⚠️ שגיאה בשליחת מייל:', error);
         }
+    }
+
+    // התאמת משרה למנויים
+    findMatchingSubscribers(jobData) {
+        if (!jobData || !this.subscribers) return [];
+
+        return this.subscribers.filter(subscriber => {
+            // התאמת קטגוריה 
+            const categoryMatch = this.matchCategory(jobData.category, subscriber.categories);
+            
+            // התאמת אזור
+            const areaMatch = this.matchArea(jobData.region || jobData.area, subscriber.areas);
+            
+            return categoryMatch && areaMatch;
+        });
+    }
+
+    // התאמת קטגוריה משופרת
+    matchCategory(jobCategory, subscriberCategories) {
+        if (!jobCategory || !subscriberCategories) return false;
+        
+        const jobCat = jobCategory.toLowerCase();
+        
+        return subscriberCategories.some(subCat => {
+            const subCatLower = subCat.toLowerCase();
+            
+            // התאמה מדויקת
+            if (jobCat === subCatLower) return true;
+            
+            // התאמה חלקית
+            if (jobCat.includes(subCatLower) || subCatLower.includes(jobCat)) return true;
+            
+            // התאמה לפי מילות מפתח
+            return this.matchByKeywords(jobCat, subCatLower);
+        });
+    }
+
+    // התאמת מילות מפתח
+    matchByKeywords(jobCategory, subscriberCategory) {
+        const keywordMap = {
+            'לוגיסטיקה': ['נהג', 'נהיגה', 'משאית', 'מנוף', 'הובלה', 'מחסן', 'שילוח'],
+            'נהיגה': ['לוגיסטיקה', 'משאית', 'מנוף', 'הובלה', 'תחבורה'],
+            'פיתוח': ['מפתח', 'תכנות', 'תוכנה', 'programmer', 'developer'],
+            'מכירות': ['שיווק', 'marketing', 'sales', 'מוכר'],
+            'חינוך': ['מורה', 'הוראה', 'מחנך', 'גננת']
+        };
+
+        for (const [key, keywords] of Object.entries(keywordMap)) {
+            if (jobCategory.includes(key) && keywords.some(k => subscriberCategory.includes(k))) {
+                return true;
+            }
+            if (subscriberCategory.includes(key) && keywords.some(k => jobCategory.includes(k))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // התאמת אזור
+    matchArea(jobArea, subscriberAreas) {
+        if (!jobArea || !subscriberAreas) return false;
+        
+        const jobAreaLower = jobArea.toLowerCase();
+        
+        return subscriberAreas.some(subArea => {
+            const subAreaLower = subArea.toLowerCase();
+            
+            return (
+                jobAreaLower === subAreaLower ||
+                jobAreaLower.includes(subAreaLower) ||
+                subAreaLower.includes(jobAreaLower) ||
+                subAreaLower === 'כל הארץ' ||
+                subAreaLower === 'אחר'
+            );
+        });
+    }
+
+    // יצירת הודעת משרה
+    createJobMessage(jobData) {
+        return `🔥 משרה חדשה!
+
+📋 ${jobData.title}
+📍 ${jobData.region || jobData.area || 'לא צוין'}
+🎯 ${jobData.category || 'לא צוין'}
+
+${jobData.description ? `💬 ${jobData.description}\n\n` : ''}לפרטים נוספים: https://www.mayeshpo.co.il
+
+בהצלחה! 💪`;
+    }
+
+    // שליחת התראה על משרה
+    sendJobAlert(jobData) {
+        const matchingSubscribers = this.findMatchingSubscribers(jobData);
+        
+        if (matchingSubscribers.length === 0) {
+            console.log('❌ אין מנויים מתאימים למשרה זו');
+            return false;
+        }
+
+        const message = this.createJobMessage(jobData);
+        
+        matchingSubscribers.forEach(subscriber => {
+            const phoneNumber = subscriber.phone.replace(/^0/, '972').replace(/\D/g, '');
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            console.log(`📱 שולח ל-${subscriber.phone}:`, whatsappUrl);
+            // כאן יהיה קוד שליחה אמיתי בעתיד
+        });
+        
+        // עדכון מונה התראות
+        const currentAlerts = parseInt(localStorage.getItem('whatsapp_total_alerts') || '0');
+        localStorage.setItem('whatsapp_total_alerts', (currentAlerts + matchingSubscribers.length).toString());
+        
+        return true;
     }
 
     // ניקוי מספר טלפון
@@ -194,14 +368,14 @@ class WhatsAppAlerts {
                 position: fixed;
                 ${this.options.position.includes('bottom') ? 'bottom: 80px;' : 'top: 20px;'}
                 ${this.options.position.includes('left') ? 'left: 20px;' : 'right: 20px;'}
-                background: linear-gradient(135deg, #25D366, #128C7E);
+                background: linear-gradient(135deg, #F69898, #ffb6c1);
                 color: white;
                 padding: 12px 20px;
                 border-radius: 30px;
                 cursor: pointer;
                 font-size: 14px;
                 font-weight: bold;
-                box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+                box-shadow: 0 4px 15px rgba(246, 152, 152, 0.3);
                 z-index: 9999;
                 display: flex;
                 align-items: center;
@@ -209,8 +383,8 @@ class WhatsAppAlerts {
                 transition: all 0.3s ease;
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
                 animation: pulse 2s infinite;
-            " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 20px rgba(37, 211, 102, 0.4)';" 
-               onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(37, 211, 102, 0.3)';">
+            " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 20px rgba(246, 152, 152, 0.4)';" 
+               onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(246, 152, 152, 0.3)';">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.588z"/>
                 </svg>
@@ -218,9 +392,9 @@ class WhatsAppAlerts {
             </div>
             <style>
                 @keyframes pulse {
-                    0% { box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
-                    50% { box-shadow: 0 4px 20px rgba(37, 211, 102, 0.5); }
-                    100% { box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
+                    0% { box-shadow: 0 4px 15px rgba(246, 152, 152, 0.3); }
+                    50% { box-shadow: 0 4px 20px rgba(246, 152, 152, 0.5); }
+                    100% { box-shadow: 0 4px 15px rgba(246, 152, 152, 0.3); }
                 }
             </style>
         `;
@@ -265,9 +439,10 @@ class WhatsAppAlerts {
                 align-items: center;
                 padding: 20px;
                 box-sizing: border-box;
+                backdrop-filter: blur(5px);
             ">
                 <div style="
-                    background: white;
+                    background-color: #000;
                     border-radius: 15px;
                     max-width: 500px;
                     width: 100%;
@@ -276,6 +451,8 @@ class WhatsAppAlerts {
                     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
                     position: relative;
+                    border: 2px solid #F69898;
+                    color: white;
                 ">
                     <!-- כפתור סגירה -->
                     <button id="whatsapp-close-btn" style="
@@ -286,13 +463,13 @@ class WhatsAppAlerts {
                         border: none;
                         font-size: 24px;
                         cursor: pointer;
-                        color: #666;
+                        color: #F69898;
                         z-index: 1;
                     ">×</button>
 
                     <!-- כותרת -->
                     <div style="
-                        background: linear-gradient(135deg, #25D366, #128C7E);
+                        background: linear-gradient(135deg, #F69898, #ffb6c1);
                         color: white;
                         padding: 25px;
                         border-radius: 15px 15px 0 0;
@@ -311,48 +488,53 @@ class WhatsAppAlerts {
                         <form id="whatsapp-alerts-form">
                             <!-- שם -->
                             <div style="margin-bottom: 20px;">
-                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #F69898;">
                                     👤 שם מלא *
                                 </label>
                                 <input type="text" id="subscriber-name" required style="
                                     width: 100%;
                                     padding: 12px;
-                                    border: 2px solid #e0e0e0;
+                                    border: 2px solid rgba(246, 152, 152, 0.3);
                                     border-radius: 8px;
                                     font-size: 16px;
                                     box-sizing: border-box;
                                     transition: border-color 0.3s;
+                                    background: rgba(255, 255, 255, 0.1);
+                                    color: white;
                                 " placeholder="הכנס את שמך המלא">
                             </div>
 
                             <!-- טלפון -->
                             <div style="margin-bottom: 20px;">
-                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #F69898;">
                                     📱 מספר וטסאפ *
                                 </label>
                                 <input type="tel" id="subscriber-phone" required style="
                                     width: 100%;
                                     padding: 12px;
-                                    border: 2px solid #e0e0e0;
+                                    border: 2px solid rgba(246, 152, 152, 0.3);
                                     border-radius: 8px;
                                     font-size: 16px;
                                     box-sizing: border-box;
                                     transition: border-color 0.3s;
+                                    background: rgba(255, 255, 255, 0.1);
+                                    color: white;
                                 " placeholder="050-1234567">
                             </div>
 
                             <!-- קטגוריות דינמיות -->
                             <div style="margin-bottom: 20px;">
-                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #F69898;">
                                     💼 תחומי עניין (בחר עד 3)
-                                    <small style="color: #666; font-weight: normal;">- מבוסס על משרות קיימות</small>
+                                    <small style="color: #cccccc; font-weight: normal;">- מבוסס על משרות קיימות</small>
                                 </label>
                                 <div id="categories-container" style="
                                     max-height: 200px;
                                     overflow-y: auto;
-                                    border: 2px solid #e0e0e0;
+                                    border: 2px solid rgba(246, 152, 152, 0.3);
                                     border-radius: 8px;
                                     padding: 10px;
+                                    background: rgba(255, 255, 255, 0.05);
                                 ">
                                     ${this.options.categories.map(cat => `
                                         <label style="
@@ -362,7 +544,8 @@ class WhatsAppAlerts {
                                             padding: 5px;
                                             border-radius: 5px;
                                             transition: background-color 0.2s;
-                                        " onmouseover="this.style.backgroundColor='#f5f5f5';" onmouseout="this.style.backgroundColor='transparent';">
+                                            color: white;
+                                        " onmouseover="this.style.backgroundColor='rgba(246, 152, 152, 0.1)';" onmouseout="this.style.backgroundColor='transparent';">
                                             <input type="checkbox" name="categories" value="${cat}" style="margin-left: 8px;">
                                             ${cat}
                                         </label>
@@ -372,16 +555,17 @@ class WhatsAppAlerts {
 
                             <!-- אזורים דינמיים -->
                             <div style="margin-bottom: 25px;">
-                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #F69898;">
                                     📍 אזורי עניין (בחר עד 3)
-                                    <small style="color: #666; font-weight: normal;">- מבוסס על משרות קיימות</small>
+                                    <small style="color: #cccccc; font-weight: normal;">- מבוסס על משרות קיימות</small>
                                 </label>
                                 <div id="areas-container" style="
                                     max-height: 150px;
                                     overflow-y: auto;
-                                    border: 2px solid #e0e0e0;
+                                    border: 2px solid rgba(246, 152, 152, 0.3);
                                     border-radius: 8px;
                                     padding: 10px;
+                                    background: rgba(255, 255, 255, 0.05);
                                 ">
                                     ${this.options.areas.map(area => `
                                         <label style="
@@ -391,7 +575,8 @@ class WhatsAppAlerts {
                                             padding: 5px;
                                             border-radius: 5px;
                                             transition: background-color 0.2s;
-                                        " onmouseover="this.style.backgroundColor='#f5f5f5';" onmouseout="this.style.backgroundColor='transparent';">
+                                            color: white;
+                                        " onmouseover="this.style.backgroundColor='rgba(246, 152, 152, 0.1)';" onmouseout="this.style.backgroundColor='transparent';">
                                             <input type="checkbox" name="areas" value="${area}" style="margin-left: 8px;">
                                             ${area}
                                         </label>
@@ -402,7 +587,7 @@ class WhatsAppAlerts {
                             <!-- כפתור הרשמה -->
                             <button type="submit" style="
                                 width: 100%;
-                                background: linear-gradient(135deg, #25D366, #128C7E);
+                                background: linear-gradient(135deg, #F69898, #ffb6c1);
                                 color: white;
                                 border: none;
                                 padding: 15px;
@@ -411,7 +596,7 @@ class WhatsAppAlerts {
                                 font-weight: bold;
                                 cursor: pointer;
                                 transition: all 0.3s;
-                            " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(37, 211, 102, 0.3)';" 
+                            " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(246, 152, 152, 0.4)';" 
                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                                 🚀 הירשם להתראות
                             </button>
@@ -420,7 +605,7 @@ class WhatsAppAlerts {
                             <p style="
                                 text-align: center;
                                 font-size: 12px;
-                                color: #666;
+                                color: #cccccc;
                                 margin-top: 15px;
                                 line-height: 1.4;
                             ">
@@ -456,7 +641,8 @@ class WhatsAppAlerts {
         const modal = document.getElementById('whatsapp-alerts-modal');
         if (modal) {
             modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
+                if (e.target.closest('.modal-content')) return;
+                if (e.target === modal.firstElementChild) {
                     this.closeModal();
                 }
             });
@@ -552,48 +738,31 @@ class WhatsAppAlerts {
             return;
         }
 
-        // יצירת אובייקט מנוי
-        const formData = {
-            name,
+        // יצירת אובייקט מנוי בפורמט התואם למערכת הניהול
+        const subscriber = {
+            id: Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            name: name,
             phone: this.cleanPhoneNumber(phone),
-            categories,
-            areas
+            categories: categories,
+            areas: areas,
+            registrationDate: new Date().toISOString(),
+            active: true,
+            source: 'website_popup'
         };
 
-        // פתיחת WhatsApp עם פרטי המנוי
-        const success = this.openWhatsAppWithSubscriberDetails(formData);
+        // הוספת המנוי למערכת
+        const added = this.addSubscriber(subscriber);
         
-        if (success) {
-            // שמירה ב-LocalStorage למקרה שתרצי לראות את הרשימה בעצמך
-            this.saveToLocalStorage(formData);
-            
+        // פתיחת WhatsApp עם פרטי המנוי
+        const whatsappOpened = this.openWhatsAppWithSubscriberDetails(subscriber);
+        
+        if (added) {
             this.showMessage(`🎉 מעולה ${name}! נרשמת בהצלחה להתראות משרות.`, 'success');
             setTimeout(() => {
                 this.closeModal();
             }, 2000);
         } else {
-            this.showMessage('שגיאה בהרשמה. אנא נסה שוב.', 'error');
-        }
-    }
-
-    // שמירה ב-LocalStorage (גיבוי מקומי)
-    saveToLocalStorage(formData) {
-        try {
-            // קבלת רשימת מנויים קיימת
-            let subscribers = JSON.parse(localStorage.getItem('whatsapp-alerts-subscribers') || '[]');
-            
-            // הוספת המנוי החדש עם תאריך ומזהה ייחודי
-            formData.id = Date.now();
-            formData.date = new Date().toISOString();
-            
-            subscribers.push(formData);
-            
-            // שמירה בחזרה ל-LocalStorage
-            localStorage.setItem('whatsapp-alerts-subscribers', JSON.stringify(subscribers));
-            
-            console.log('✅ מנוי נשמר ב-LocalStorage:', formData);
-        } catch (error) {
-            console.warn('⚠️ שגיאה בשמירה ל-LocalStorage:', error);
+            this.showMessage('מספר הטלפון כבר רשום במערכת', 'warning');
         }
     }
 
@@ -606,7 +775,9 @@ class WhatsAppAlerts {
         const messageDiv = document.createElement('div');
         messageDiv.id = 'whatsapp-message';
         
-        const bgColor = type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3';
+        const bgColor = type === 'success' ? '#4CAF50' : 
+                       type === 'error' ? '#f44336' : 
+                       type === 'warning' ? '#ff9800' : '#2196F3';
         
         messageDiv.innerHTML = `
             <div style="
@@ -642,27 +813,121 @@ class WhatsAppAlerts {
         }, 5000);
     }
 
-    // API נוסף לשימוש חיצוני
-    getJobsData() {
-        return this.jobsData;
-    }
+    // מציאת משרה לפי מספר
+    findJobById(jobId) {
+        if (!jobId || !this.jobsData) return null;
 
-    getCategories() {
-        return this.options.categories;
-    }
+        // ניקוי מספר המשרה
+        const cleanJobId = jobId.toString().trim();
+        
+        // חיפוש במספר השדות הרלוונטיים
+        const job = this.jobsData.find(job => {
+            if (!job) return false;
+            
+            // חיפוש לפי jobNumber (השדה הנכון!)
+            if (job.jobNumber && job.jobNumber.toString().trim() === cleanJobId) {
+                return true;
+            }
+            
+            // חיפוש לפי id כגיבוי
+            if (job.id && job.id.toString().trim() === cleanJobId) {
+                return true;
+            }
+            
+            // חיפוש חלקי בכותרת
+            if (cleanJobId.length > 3) {
+                if (job.title && job.title.includes(cleanJobId)) return true;
+            }
+            
+            return false;
+        });
 
-    getAreas() {
-        return this.options.areas;
-    }
-    
-    // קבלת מנויים מקומיים (לשימוש פנימי)
-    getLocalSubscribers() {
-        try {
-            return JSON.parse(localStorage.getItem('whatsapp-alerts-subscribers') || '[]');
-        } catch (error) {
-            console.warn('⚠️ שגיאה בקריאת מנויים מקומיים:', error);
-            return [];
+        if (job) {
+            console.log(`✅ נמצאה משרה: ${job.jobNumber} - ${job.title}`);
+        } else {
+            console.log(`❌ לא נמצאה משרה עם המספר: ${cleanJobId}`);
         }
+
+        return job;
+    }
+
+    // המרת משרה לפורמט תקני
+    normalizeJob(job) {
+        if (!job) return null;
+
+        return {
+            id: job.jobNumber || job.id || 'unknown',
+            jobNumber: job.jobNumber || job.id || 'unknown', 
+            title: job.title || 'ללא כותרת',
+            area: job.region || job.area || 'לא צוין',
+            region: job.region || job.area || 'לא צוין',
+            city: job.city || 'לא צוין',
+            category: job.category || 'אחר',
+            description: job.description || '',
+            requirements: job.requirements || '',
+            status: job.status || 'unknown',
+            featured: job.featured || false,
+            createdAt: job.createdAt || new Date().toISOString()
+        };
+    }
+
+    // סקירת המשרות
+    analyzeJobs() {
+        if (!this.jobsData || this.jobsData.length === 0) return null;
+
+        // ספירת קטגוריות
+        const categoryCounts = {};
+        this.jobsData.forEach(job => {
+            if (job.category) {
+                categoryCounts[job.category] = (categoryCounts[job.category] || 0) + 1;
+            }
+        });
+
+        // ספירת אזורים
+        const areaCounts = {};
+        this.jobsData.forEach(job => {
+            const area = job.region || job.area;
+            if (area) {
+                areaCounts[area] = (areaCounts[area] || 0) + 1;
+            }
+        });
+
+        // מציאת משרות פופולריות
+        const popularCategories = Object.entries(categoryCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+            
+        const popularAreas = Object.entries(areaCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+
+        // סקירת התאמה למנויים
+        const subscriberMatchAnalysis = this.subscribers.map(subscriber => {
+            const matchingJobs = this.jobsData.filter(job => 
+                this.matchCategory(job.category, subscriber.categories) &&
+                this.matchArea(job.region || job.area, subscriber.areas)
+            );
+            
+            return {
+                subscriber: `${subscriber.name} (${subscriber.phone})`,
+                totalMatches: matchingJobs.length,
+                matchPercentage: Math.round((matchingJobs.length / this.jobsData.length) * 100),
+                topCategories: subscriber.categories,
+                topAreas: subscriber.areas
+            };
+        });
+
+        return {
+            totalJobs: this.jobsData.length,
+            activeJobs: this.jobsData.filter(job => job.status === 'פעיל').length,
+            featuredJobs: this.jobsData.filter(job => job.featured).length,
+            categoriesCount: Object.keys(categoryCounts).length,
+            areasCount: Object.keys(areaCounts).length,
+            popularCategories,
+            popularAreas,
+            subscriberMatchAnalysis,
+            lastUpdated: new Date().toISOString()
+        };
     }
 }
 
@@ -672,7 +937,10 @@ if (typeof window !== 'undefined') {
     
     // אתחול אוטומטי
     if (!window.whatsappAlerts) {
-        window.whatsappAlerts = new WhatsAppAlerts();
+        window.whatsappAlerts = new WhatsAppAlerts({
+            ownerPhone: '972501234567', // עדכן למספר הנכון
+            ownerEmail: 'kcs@kerencs.com' // עדכן לאימייל הנכון
+        });
     }
 }
 
