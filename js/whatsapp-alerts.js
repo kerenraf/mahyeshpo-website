@@ -11,12 +11,12 @@ class WhatsAppAlerts {
             autoShow: true,
             // כתובת Google Form - מעודכן עם הכתובת שלך
             googleFormUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeajdMe14COlT3kUptdxx1MRqp-sOfl2aXo_ntywcAxtTKPw/formResponse',
-            // השדות של Google Form - נחשה מחוכמת לפי מבנה סטנדרטי
+            // השדות של Google Form - מעודכן עם שמות העמודות מ-Sheets
             formFields: {
-                name: 'entry.2005620554',      // שם מלא
-                phone: 'entry.1045781291',     // מספר WhatsApp  
-                categories: 'entry.839299703', // תחומי עניין
-                areas: 'entry.292906491'       // אזורי עניין
+                name: 'entry.1834569080',      // שם מלא - עמודה B
+                phone: 'entry.1495004933',     // מספר WhatsApp - עמודה C  
+                categories: 'entry.1984888068', // תחומי עניין - עמודה D
+                areas: 'entry.1797304799'       // אזורי עניין - עמודה E
             },
             // ברירת מחדל - יתעדכן דינמית מקובץ המשרות
             categories: ['טוען קטגוריות...'],
@@ -166,7 +166,7 @@ class WhatsAppAlerts {
         button.innerHTML = `
             <div style="
                 position: fixed;
-                ${this.options.position.includes('bottom') ? 'bottom: 20px;' : 'top: 20px;'}
+                ${this.options.position.includes('bottom') ? 'bottom: 80px;' : 'top: 20px;'}
                 ${this.options.position.includes('left') ? 'left: 20px;' : 'right: 20px;'}
                 background: linear-gradient(135deg, #25D366, #128C7E);
                 color: white;
