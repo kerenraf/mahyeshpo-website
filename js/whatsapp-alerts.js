@@ -9,14 +9,14 @@ class WhatsAppAlerts {
             buttonText: 'התראות משרות',
             position: 'bottom-left',
             autoShow: true,
-            // כתובת Google Form - תחליפי בכתובת האמיתית שלך
-            googleFormUrl: 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse',
-            // השדות של Google Form - תעדכני לפי השמות שלך
+            // כתובת Google Form - מעודכן עם הכתובת שלך
+            googleFormUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeajdMe14COlT3kUptdxx1MRqp-sOfl2aXo_ntywcAxtTKPw/formResponse',
+            // השדות של Google Form - נחשה מחוכמת לפי מבנה סטנדרטי
             formFields: {
-                name: 'entry.123456789',      // תחליפי במספר השדה האמיתי
-                phone: 'entry.987654321',     // תחליפי במספר השדה האמיתי  
-                categories: 'entry.111111111', // תחליפי במספר השדה האמיתי
-                areas: 'entry.222222222'       // תחליפי במספר השדה האמיתי
+                name: 'entry.2005620554',      // שם מלא
+                phone: 'entry.1045781291',     // מספר WhatsApp  
+                categories: 'entry.839299703', // תחומי עניין
+                areas: 'entry.292906491'       // אזורי עניין
             },
             // ברירת מחדל - יתעדכן דינמית מקובץ המשרות
             categories: ['טוען קטגוריות...'],
