@@ -1,7 +1,7 @@
 /**
- * קומפוננטת התראות WhatsApp - מעודכן עם Vercel API
+ * קומפוננטת התראות WhatsApp - פתרון סופי שעובד על כל שרת
  * @author מה יש פה?
- * @version 3.0.0 - Vercel Edition
+ * @version 4.0.0 - Final Solution
  */
 class WhatsAppAlerts {
     constructor(options = {}) {
@@ -25,9 +25,6 @@ class WhatsAppAlerts {
             ...options
         };
 
-        // הגדרות Vercel API
-        this.apiUrl = '/api/subscribers';
-        this.useServerSync = true;
         this.subscribers = [];
         this.isModalOpen = false;
         
@@ -38,53 +35,22 @@ class WhatsAppAlerts {
 
     // אתחול המערכת
     async init() {
-        console.log('🚀 מאתחל מערכת התראות WhatsApp עם Vercel...');
+        console.log('🚀 מאתחל מערכת התראות WhatsApp...');
         
-        // טעינת מנויים מהשרת קודם
-        const serverLoaded = await this.loadSubscribersFromServer();
-        
-        if (!serverLoaded) {
-            // גיבוי: טעינה מקומית
-            this.loadSubscribers();
-            console.log('📱 נטענו נתונים מקומיים כגיבוי');
-        }
+        // טעינת מנויים מקומית
+        this.loadSubscribers();
         
         this.createButton();
         this.createModal();
         this.attachEvents();
-        console.log('✅ קומפוננטת התראות WhatsApp אותחלה (מצב Vercel)');
-    }
-
-    // טעינת מנויים מהשרת
-    async loadSubscribersFromServer() {
-        if (!this.useServerSync) return false;
         
-        try {
-            console.log('📥 טוען מנויים מ-Vercel API...');
-            const response = await fetch(this.apiUrl + '?t=' + Date.now());
-            
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-            
-            const data = await response.json();
-            
-            if (data.success && Array.isArray(data.subscribers)) {
-                this.subscribers = data.subscribers;
-                this.saveSubscribers(); // גיבוי מקומי
-                console.log(`✅ נטענו ${data.count} מנויים מ-Vercel API`);
-                return true;
-            } else {
-                console.warn('⚠️ תגובה לא תקינה מהשרת:', data);
-                return false;
-            }
-        } catch (error) {
-            console.warn('⚠️ שגיאה בטעינה מ-Vercel, טוען מקומית:', error.message);
-            return false;
-        }
+        // שליחת עדכון למייל האדמין (אופציונלי)
+        this.setupEmailNotifications();
+        
+        console.log('✅ קומפוננטת התראות WhatsApp אותחלה בהצלחה');
     }
 
-    // הוספת מנוי חדש עם Vercel API
+    // הוספת מנוי חדש
     async addSubscriber(subscriber) {
         // ולידציה
         if (!subscriber.phone || !subscriber.name) {
@@ -95,80 +61,123 @@ class WhatsAppAlerts {
         // ניקוי מספר טלפון
         subscriber.phone = this.cleanPhoneNumber(subscriber.phone);
 
-        if (this.useServerSync) {
-            try {
-                console.log('📤 שולח מנוי חדש ל-Vercel API...');
-                
-                const response = await fetch(this.apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ subscriber: subscriber })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    // הצלחה - עדכון מקומי
-                    subscriber.id = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                    subscriber.registrationDate = new Date().toISOString();
-                    subscriber.active = true;
-                    subscriber.source = 'website_vercel';
-                    
-                    this.subscribers.push(subscriber);
-                    this.saveSubscribers();
-                    this.showMessage(result.message || 'נרשמת בהצלחה להתראות!', 'success');
-                    return true;
-                } else {
-                    // כשלון - הצגת שגיאה
-                    this.showMessage(result.message || 'שגיאה בהרשמה', 'error');
-                    return false;
-                }
-            } catch (error) {
-                console.error('❌ שגיאה בהוספת מנוי ל-Vercel:', error);
-                // גיבוי - שמירה מקומית
-                this.fallbackToLocal(subscriber);
-                return true;
-            }
-        } else {
-            // שמירה מקומית בלבד
-            this.fallbackToLocal(subscriber);
-            return true;
-        }
-    }
-
-    // פונקציית גיבוי - שמירה מקומית
-    fallbackToLocal(subscriber) {
-        console.log('💾 עובר למצב גיבוי מקומי...');
-        
+        // בדיקה שהמספר לא קיים
         const exists = this.subscribers.find(sub => sub.phone === subscriber.phone);
         
         if (!exists) {
             subscriber.id = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             subscriber.registrationDate = new Date().toISOString();
             subscriber.active = true;
-            subscriber.source = 'website_local';
+            subscriber.source = 'website';
             
             this.subscribers.push(subscriber);
             this.saveSubscribers();
+            
+            // שליחת עדכון למייל (אופציונלי)
+            this.notifyNewSubscriber(subscriber);
+            
             this.showMessage(`🎉 מעולה ${subscriber.name}! נרשמת בהצלחה להתראות משרות.`, 'success');
+            return true;
         } else {
             this.showMessage('מספר הטלפון כבר רשום במערכת', 'error');
+            return false;
         }
+    }
+
+    // שליחת עדכון למייל האדמין על מנוי חדש
+    notifyNewSubscriber(subscriber) {
+        // שליחת מייל פשוט דרך mailto (המשתמש יצטרך ללחוץ אישור)
+        const subject = `מנוי חדש - ${subscriber.name}`;
+        const body = `מנוי חדש נרשם להתראות:
+
+שם: ${subscriber.name}
+טלפון: ${subscriber.phone}
+קטגוריות: ${subscriber.categories.join(', ')}
+אזורים: ${subscriber.areas.join(', ')}
+תאריך: ${new Date().toLocaleString('he-IL')}
+
+הפרטים נשמרו במערכת המקומית.`;
+
+        // יצירת קישור מייל
+        const mailtoLink = `mailto:kcs@kerencs.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        
+        // שליחה אוטומטית (בדפדפנים מסוימים)
+        try {
+            const link = document.createElement('a');
+            link.href = mailtoLink;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.log('ניסיון שליחת מייל:', error);
+        }
+    }
+
+    // הגדרת התראות מייל
+    setupEmailNotifications() {
+        // יצירת כפתור לשליחת כל המנויים במייל
+        const emailButton = document.createElement('div');
+        emailButton.style.cssText = `
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            background: #dc3545;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 9998;
+            box-shadow: 0 2px 10px rgba(220, 53, 69, 0.3);
+            transition: all 0.3s ease;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+        `;
+        emailButton.innerHTML = '📧 שלח דוח';
+        emailButton.title = 'שלח דוח מנויים במייל';
+        
+        emailButton.addEventListener('click', () => this.sendSubscribersReport());
+        emailButton.addEventListener('mouseover', () => {
+            emailButton.style.transform = 'scale(1.05)';
+        });
+        emailButton.addEventListener('mouseout', () => {
+            emailButton.style.transform = 'scale(1)';
+        });
+        
+        document.body.appendChild(emailButton);
+    }
+
+    // שליחת דוח מנויים במייל
+    sendSubscribersReport() {
+        if (this.subscribers.length === 0) {
+            alert('אין מנויים לשליחה');
+            return;
+        }
+
+        const subject = `דוח מנויים - ${new Date().toLocaleDateString('he-IL')}`;
+        let body = `דוח מנויי התראות WhatsApp - ${new Date().toLocaleString('he-IL')}\n`;
+        body += `סה"כ מנויים: ${this.subscribers.length}\n\n`;
+        
+        this.subscribers.forEach((subscriber, index) => {
+            body += `${index + 1}. ${subscriber.name}\n`;
+            body += `   טלפון: ${subscriber.phone}\n`;
+            body += `   קטגוריות: ${subscriber.categories.join(', ')}\n`;
+            body += `   אזורים: ${subscriber.areas.join(', ')}\n`;
+            body += `   תאריך הרשמה: ${new Date(subscriber.registrationDate).toLocaleDateString('he-IL')}\n\n`;
+        });
+
+        const mailtoLink = `mailto:kcs@kerencs.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.open(mailtoLink);
     }
 
     // ניקוי מספר טלפון
     cleanPhoneNumber(phone) {
-        // הסרת רווחים ותווים מיוחדים
         let cleaned = phone.replace(/[^\d+]/g, '');
         
-        // אם מתחיל ב-0, החלף ל-+972
         if (cleaned.startsWith('0')) {
             cleaned = '+972' + cleaned.substring(1);
         }
         
-        // אם לא מתחיל ב-+, הוסף +972
         if (!cleaned.startsWith('+')) {
             cleaned = '+972' + cleaned;
         }
@@ -176,17 +185,59 @@ class WhatsAppAlerts {
         return cleaned;
     }
 
-    // שמירת מנויים (גיבוי מקומי)
+    // שמירת מנויים מקומית + יצירת גיבוי JSON
     saveSubscribers() {
         try {
+            // שמירה מקומית
             localStorage.setItem('whatsapp_alerts_subscribers', JSON.stringify(this.subscribers));
-            console.log(`💾 נשמרו ${this.subscribers.length} מנויים מקומית`);
+            
+            // יצירת גיבוי JSON אוטומטי
+            this.createBackupFile();
+            
+            console.log(`💾 נשמרו ${this.subscribers.length} מנויים`);
         } catch (error) {
             console.error('❌ שגיאה בשמירת מנויים:', error);
         }
     }
 
-    // טעינת מנויים (גיבוי מקומי)
+    // יצירת קובץ גיבוי JSON אוטומטי
+    createBackupFile() {
+        try {
+            const dataStr = JSON.stringify(this.subscribers, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            // שמירת ה-URL לגיבוי
+            if (this.backupUrl) {
+                URL.revokeObjectURL(this.backupUrl);
+            }
+            this.backupUrl = URL.createObjectURL(dataBlob);
+            
+            // יצירת כפתור הורדה נסתר (למקרה חירום)
+            if (!document.getElementById('hidden-backup-download')) {
+                const hiddenDownload = document.createElement('a');
+                hiddenDownload.id = 'hidden-backup-download';
+                hiddenDownload.style.display = 'none';
+                document.body.appendChild(hiddenDownload);
+            }
+            
+            const hiddenDownload = document.getElementById('hidden-backup-download');
+            hiddenDownload.href = this.backupUrl;
+            hiddenDownload.download = `whatsapp_subscribers_backup_${new Date().toISOString().split('T')[0]}.json`;
+            
+        } catch (error) {
+            console.error('שגיאה ביצירת גיבוי:', error);
+        }
+    }
+
+    // הורדת גיבוי ידנית
+    downloadBackup() {
+        const hiddenDownload = document.getElementById('hidden-backup-download');
+        if (hiddenDownload) {
+            hiddenDownload.click();
+        }
+    }
+
+    // טעינת מנויים מקומית
     loadSubscribers() {
         try {
             const saved = localStorage.getItem('whatsapp_alerts_subscribers');
@@ -469,6 +520,13 @@ class WhatsAppAlerts {
         // הגבלת בחירת קטגוריות
         this.limitCheckboxes('categories', 3);
         this.limitCheckboxes('areas', 3);
+
+        // מקלדת
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.closeModal();
+            }
+        });
     }
 
     // הגבלת בחירת צ'קבוקסים
@@ -514,7 +572,6 @@ class WhatsAppAlerts {
         const form = document.getElementById('whatsapp-alerts-form');
         if (form) {
             form.reset();
-            // איפוס מגבלות צ'קבוקסים
             document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.disabled = false);
         }
     }
@@ -626,6 +683,92 @@ class WhatsAppAlerts {
         return this.subscribers.filter(sub => 
             sub.areas && sub.areas.includes(area)
         );
+    }
+
+    // יצירת הודעת משרה
+    createJobMessage(jobData) {
+        return `🔥 משרה חדשה!
+
+📋 ${jobData.title}
+🏢 ${jobData.company || 'לא צוין'}
+📍 ${jobData.area || jobData.region}
+🎯 ${jobData.category}
+
+${jobData.description ? `💬 ${jobData.description}\n\n` : ''}לפרטים נוספים: https://www.mayeshpo.co.il
+
+בהצלחה! 💪`;
+    }
+
+    // שליחת התראת משרה
+    sendJobAlert(jobData) {
+        // מציאת מנויים מתאימים
+        const matchingSubscribers = this.subscribers.filter(subscriber => {
+            const categoryMatch = subscriber.categories && subscriber.categories.some(cat => 
+                cat.toLowerCase().includes(jobData.category.toLowerCase()) ||
+                jobData.category.toLowerCase().includes(cat.toLowerCase())
+            );
+            
+            const areaMatch = subscriber.areas && subscriber.areas.some(area => 
+                area.toLowerCase().includes(jobData.area.toLowerCase()) ||
+                jobData.area.toLowerCase().includes(area.toLowerCase()) ||
+                area === 'כל הארץ'
+            );
+            
+            return categoryMatch && areaMatch;
+        });
+
+        if (matchingSubscribers.length === 0) {
+            console.log('❌ אין מנויים מתאימים');
+            return false;
+        }
+
+        const message = this.createJobMessage(jobData);
+        
+        // פתיחת חלונות WhatsApp
+        matchingSubscribers.forEach(subscriber => {
+            const phoneNumber = subscriber.phone.replace(/^0/, '972').replace(/\D/g, '');
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            
+            // פתיחה בחלון חדש
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+            }, 500); // השהיה קטנה בין חלונות
+        });
+        
+        console.log(`📱 נפתחו ${matchingSubscribers.length} חלונות WhatsApp`);
+        return true;
+    }
+
+    // פונקציות ניהול
+    exportSubscribers() {
+        if (this.subscribers.length === 0) {
+            alert('אין מנויים לייצוא');
+            return;
+        }
+
+        const dataStr = JSON.stringify(this.subscribers, null, 2);
+        const dataBlob = new Blob([dataStr], {type: 'application/json'});
+        
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(dataBlob);
+        link.download = `whatsapp_subscribers_${new Date().toISOString().split('T')[0]}.json`;
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    removeSubscriber(phone) {
+        this.subscribers = this.subscribers.filter(sub => sub.phone !== phone);
+        this.saveSubscribers();
+    }
+
+    clearAllSubscribers() {
+        if (confirm('האם אתה בטוח שברצונך למחוק את כל המנויים?')) {
+            this.subscribers = [];
+            this.saveSubscribers();
+            localStorage.removeItem('whatsapp_alerts_subscribers');
+        }
     }
 }
 
