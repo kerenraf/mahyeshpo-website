@@ -1,14 +1,11 @@
-/**
- * קומפוננטת התראות WhatsApp - מעודכן עם קטגוריות דינמיות וחיבור לשרת
- * @author מה יש פה?
- * @version 3.0.0
- */
+// פתרון בלי PHP - עדכון whatsapp-alerts.js
+// החליפי את הקוד הקיים בזה:
 
 class WhatsAppAlerts {
     constructor(options = {}) {
         this.options = {
             buttonText: 'התראות משרות',
-            position: 'bottom-left', // bottom-left, bottom-right, top-left, top-right
+            position: 'bottom-left',
             autoShow: true,
             categories: [
                 'לוגיסטיקה, מחסנים, שילוח ורכש', 'פיתוח ותוכנה', 'מכירות ושיווק', 
@@ -26,9 +23,9 @@ class WhatsAppAlerts {
             ...options
         };
 
-        // הוספת הגדרות שרת
-        this.apiUrl = '/api/subscribers.php';
-        this.useServerSync = true;
+        // השבתת שרת - עובד מקומית בלבד
+        this.useServerSync = false;
+        this.jsonBackupFile = 'data/subscribers.json';
         this.subscribers = [];
         this.isModalOpen = false;
         
@@ -37,39 +34,39 @@ class WhatsAppAlerts {
         }
     }
 
-    // אתחול הקומפוננטה
+    // אתחול
     async init() {
-        // טעינת מנויים מהשרת קודם
-        const serverLoaded = await this.loadSubscribersFromServer();
+        // ניסיון טעינה מ-JSON קודם
+        await this.loadFromJsonFile();
         
-        if (!serverLoaded) {
-            // גיבוי: טעינה מקומית
+        // אם לא הצליח, טען מקומית
+        if (this.subscribers.length === 0) {
             this.loadSubscribers();
         }
         
         this.createButton();
         this.createModal();
         this.attachEvents();
-        console.log('✅ קומפוננטת התראות WhatsApp אותחלה בהצלחה עם סינכרון שרת');
+        console.log('✅ קומפוננטת התראות WhatsApp אותחלה (מצב JSON)');
     }
 
-    // טעינת מנויים מהשרת
-    async loadSubscribersFromServer() {
-        if (!this.useServerSync) return false;
-        
+    // טעינה מקובץ JSON
+    async loadFromJsonFile() {
         try {
-            const response = await fetch(this.apiUrl + '?' + Date.now());
-            const data = await response.json();
+            const response = await fetch(this.jsonBackupFile + '?' + Date.now());
             
-            if (data.success && data.subscribers) {
-                this.subscribers = data.subscribers;
-                this.saveSubscribers(); // גיבוי מקומי
-                console.log(`✅ נטענו ${data.count} מנויים מהשרת`);
-                return true;
+            if (response.ok) {
+                const data = await response.json();
+                
+                if (Array.isArray(data) && data.length > 0) {
+                    this.subscribers = data;
+                    this.saveSubscribers(); // גיבוי מקומי
+                    console.log(`✅ נטענו ${data.length} מנויים מקובץ JSON`);
+                    return true;
+                }
             }
         } catch (error) {
-            console.warn('⚠️ שגיאה בטעינה מהשרת, טוען מקומית:', error);
-            this.loadSubscribers(); // גיבוי מקומי
+            console.warn('⚠️ לא ניתן לטעון מקובץ JSON, טוען מקומית:', error);
         }
         return false;
     }
@@ -252,7 +249,6 @@ class WhatsAppAlerts {
             this.isModalOpen = true;
             document.body.style.overflow = 'hidden';
             
-            // פוקוס על השדה הראשון
             setTimeout(() => {
                 const nameInput = document.getElementById('whatsapp-alerts-name');
                 if (nameInput) nameInput.focus();
@@ -277,7 +273,6 @@ class WhatsAppAlerts {
         if (form) {
             form.reset();
             this.hideMessage();
-            // הסתרת שדות מותאמים אישית
             const customCategoryContainer = document.getElementById('custom-category-container');
             const customAreaContainer = document.getElementById('custom-area-container');
             if (customCategoryContainer) customCategoryContainer.style.display = 'none';
@@ -299,7 +294,7 @@ class WhatsAppAlerts {
         e.target.value = value;
     }
 
-    // טיפול ברשמה - עדכון עם חיבור לשרת
+    // טיפול ברשמה
     async handleSubscription() {
         const name = document.getElementById('whatsapp-alerts-name').value.trim();
         const phone = document.getElementById('whatsapp-alerts-phone').value.trim();
@@ -352,92 +347,68 @@ class WhatsAppAlerts {
             return;
         }
 
-        // יצירת אובייקט מנוי
+        // בדיקת טלפון קיים
+        if (this.subscribers.find(sub => sub.phone === phone)) {
+            this.showMessage('מספר הטלפון כבר רשום במערכת', 'error');
+            return;
+        }
+
+        // הוספת מנוי חדש
         const subscriber = {
+            id: Date.now() + '_' + Math.random().toString(36).substr(2, 9),
             name,
             phone,
             categories: selectedCategories,
             areas: selectedAreas,
-            source: 'website'
+            registrationDate: new Date().toISOString(),
+            active: true,
+            source: 'website_json'
         };
 
-        // הוספת המנוי עם חיבור לשרת
-        const success = await this.addSubscriber(subscriber);
-        
-        if (success) {
-            // סגירה אוטומטית
-            setTimeout(() => {
-                this.closeModal();
-            }, 3000);
+        this.subscribers.push(subscriber);
+        this.saveSubscribers();
 
-            // טריגר לאירוע מותאם אישית
-            this.triggerEvent('subscriber-added', subscriber);
-        }
+        // ניסיון שמירה בקובץ JSON גם כן
+        this.saveToJsonFile();
+
+        // הודעת הצלחה
+        this.showMessage(
+            `🎉 מעולה ${name}! נרשמת בהצלחה להתראות משרות. נתחיל לשלוח לך משרות רלוונטיות!`, 
+            'success'
+        );
+
+        // סגירה אוטומטית
+        setTimeout(() => {
+            this.closeModal();
+        }, 3000);
+
+        // טריגר לאירוע מותאם אישית
+        this.triggerEvent('subscriber-added', subscriber);
     }
 
-    // הוספת מנוי חדש עם חיבור לשרת
-    async addSubscriber(subscriber) {
-        // וידוא שהמנוי תקין
-        if (!subscriber.phone || !subscriber.name) {
-            this.showMessage('אנא מלא את כל הפרטים הנדרשים', 'error');
-            return false;
-        }
-
-        if (this.useServerSync) {
-            try {
-                // שליחה לשרת
-                const response = await fetch(this.apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ subscriber: subscriber })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    // הצלחה - עדכון מקומי
-                    subscriber.id = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                    subscriber.registrationDate = new Date().toISOString();
-                    subscriber.active = true;
-                    
-                    this.subscribers.push(subscriber);
-                    this.saveSubscribers();
-                    this.showMessage(result.message, 'success');
-                    return true;
-                } else {
-                    // כשלון - הצגת שגיאה
-                    this.showMessage(result.message, 'error');
-                    return false;
-                }
-            } catch (error) {
-                console.error('שגיאה בהוספת מנוי לשרת:', error);
-                // גיבוי - שמירה מקומית
-                this.fallbackToLocal(subscriber);
-                return true;
-            }
-        } else {
-            // שמירה מקומית בלבד
-            this.fallbackToLocal(subscriber);
-            return true;
-        }
-    }
-
-    // פונקציית גיבוי - שמירה מקומית
-    fallbackToLocal(subscriber) {
-        // בדיקה שהמספר לא קיים
-        const exists = this.subscribers.find(sub => sub.phone === subscriber.phone);
-        
-        if (!exists) {
-            subscriber.id = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            subscriber.registrationDate = new Date().toISOString();
-            subscriber.active = true;
-            subscriber.source = 'website_local';
+    // שמירה בקובץ JSON (יצירת גיבוי להורדה)
+    async saveToJsonFile() {
+        try {
+            // יצירת קובץ להורדה
+            const blob = new Blob([JSON.stringify(this.subscribers, null, 2)], 
+                                 {type: 'application/json'});
             
-            this.subscribers.push(subscriber);
-            this.saveSubscribers();
-            this.showMessage(`🎉 מעולה ${subscriber.name}! נרשמת בהצלחה להתראות משרות. נתחיל לשלוח לך משרות רלוונטיות!`, 'success');
-        } else {
-            this.showMessage('מספר הטלפון כבר רשום במערכת', 'error');
+            // שמירה אוטומטית (אתה יכולה להוסיף את זה לגיט ידנית)
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `subscribers_backup_${new Date().toISOString().split('T')[0]}.json`;
+            
+            // הוספה חבויה ללא הורדה אוטומטית (את תוכלי להוריד ידנית)
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            // a.click(); // בטל הערה אם רוצה הורדה אוטומטית
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            console.log('📁 גיבוי JSON מוכן להורדה');
+        } catch (error) {
+            console.log('💾 שמירה מקומית בלבד');
         }
     }
 
@@ -471,23 +442,44 @@ class WhatsAppAlerts {
     saveSubscribers() {
         try {
             localStorage.setItem('whatsapp_alerts_subscribers', JSON.stringify(this.subscribers));
-            console.log(`💾 נשמרו ${this.subscribers.length} מנויים`);
+            console.log(`💾 נשמרו ${this.subscribers.length} מנויים מקומית`);
         } catch (error) {
             console.error('שגיאה בשמירת מנויים:', error);
         }
     }
 
-    // טעינת מנויים (גיבוי מקומי)
+    // טעינת מנויים
     loadSubscribers() {
         try {
             const saved = localStorage.getItem('whatsapp_alerts_subscribers');
             this.subscribers = saved ? JSON.parse(saved) : [];
+            console.log(`📱 נטענו ${this.subscribers.length} מנויים מקומית`);
             return this.subscribers;
         } catch (error) {
             console.error('שגיאה בטעינת מנויים:', error);
             this.subscribers = [];
             return [];
         }
+    }
+
+    // יצירת הודעת משרה
+    createJobMessage(jobData) {
+        let message = `🎯 משרה חדשה!\n\n`;
+        message += `💼 ${jobData.title}\n`;
+        
+        if (jobData.company) message += `🏢 ${jobData.company}\n`;
+        if (jobData.city) message += `📍 ${jobData.city}, ${jobData.area}\n`;
+        else message += `📍 ${jobData.area}\n`;
+        
+        message += `🏷️ ${jobData.category}\n`;
+        
+        if (jobData.jobNumber) message += `🔢 מספר משרה: ${jobData.jobNumber}\n`;
+        if (jobData.description) message += `\n📋 ${jobData.description}\n`;
+        
+        message += `\n📞 לפרטים נוספים: 055-550-4633`;
+        message += `\n🌐 כל המשרות: https://mayeshpo.co.il`;
+        
+        return message;
     }
 
     // שליחת התראה חדשה (למנהלים)
@@ -497,7 +489,7 @@ class WhatsAppAlerts {
             return false;
         }
 
-        // מציאת מנויים רלוונטיים (כולל התאמות חלקיות)
+        // מציאת מנויים רלוונטיים
         const relevantSubscribers = this.subscribers.filter(subscriber => {
             const categoryMatch = subscriber.categories.some(cat => 
                 cat.toLowerCase().includes(jobData.category.toLowerCase()) || 
@@ -526,26 +518,6 @@ class WhatsAppAlerts {
         return true;
     }
 
-    // יצירת הודעת משרה
-    createJobMessage(jobData) {
-        let message = `🎯 משרה חדשה!\n\n`;
-        message += `💼 ${jobData.title}\n`;
-        
-        if (jobData.company) message += `🏢 ${jobData.company}\n`;
-        if (jobData.city) message += `📍 ${jobData.city}, ${jobData.area}\n`;
-        else message += `📍 ${jobData.area}\n`;
-        
-        message += `🏷️ ${jobData.category}\n`;
-        
-        if (jobData.jobNumber) message += `🔢 מספר משרה: ${jobData.jobNumber}\n`;
-        if (jobData.description) message += `\n📋 ${jobData.description}\n`;
-        
-        message += `\n📞 לפרטים נוספים: 055-550-4633`;
-        message += `\n🌐 כל המשרות: https://mayeshpo.co.il`;
-        
-        return message;
-    }
-
     // שליחת הודעות WhatsApp
     sendWhatsAppMessages(subscribers, message) {
         subscribers.forEach((subscriber, index) => {
@@ -553,7 +525,7 @@ class WhatsAppAlerts {
                 const phoneNumber = subscriber.phone.replace(/^0/, '972').replace(/\D/g, '');
                 const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
                 window.open(whatsappUrl, '_blank');
-            }, index * 1000); // השהיה של שנייה בין כל הודעה
+            }, index * 1000);
         });
     }
 
@@ -566,33 +538,10 @@ class WhatsAppAlerts {
         return this.subscribers.length;
     }
 
-    async removeSubscriber(phone) {
-        if (this.useServerSync) {
-            try {
-                const response = await fetch(this.apiUrl, {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone: phone })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    this.subscribers = this.subscribers.filter(sub => sub.phone !== phone);
-                    this.saveSubscribers();
-                    this.triggerEvent('subscriber-removed', { phone });
-                    return true;
-                }
-            } catch (error) {
-                console.error('שגיאה בהסרת מנוי מהשרת:', error);
-            }
-        }
-        
-        // גיבוי מקומי
+    removeSubscriber(phone) {
         this.subscribers = this.subscribers.filter(sub => sub.phone !== phone);
         this.saveSubscribers();
         this.triggerEvent('subscriber-removed', { phone });
-        return true;
     }
 
     // הסתרת/הצגת הכפתור
@@ -604,28 +553,6 @@ class WhatsAppAlerts {
     showButton() {
         const button = document.getElementById('whatsapp-alerts-button');
         if (button) button.style.display = 'flex';
-    }
-
-    // כיבוי/הפעלת סינכרון שרת
-    enableServerSync() {
-        this.useServerSync = true;
-        console.log('✅ סינכרון שרת הופעל');
-    }
-
-    disableServerSync() {
-        this.useServerSync = false;
-        console.log('⚠️ סינכרון שרת כובה - עובד במצב מקומי');
-    }
-
-    // בדיקת חיבור לשרת
-    async testServerConnection() {
-        try {
-            const response = await fetch(this.apiUrl, { method: 'GET' });
-            const data = await response.json();
-            return data.success === true;
-        } catch (error) {
-            return false;
-        }
     }
 
     // הרס הקומפוננטה
@@ -647,7 +574,7 @@ class WhatsAppAlerts {
 if (typeof window !== 'undefined') {
     window.WhatsAppAlerts = WhatsAppAlerts;
     
-    // יצירת אינסטנס גלובלי אם לא קיים
+    // יצירת אינסטנס גלובלי
     if (!window.whatsappAlerts) {
         window.whatsappAlerts = new WhatsAppAlerts();
     }
