@@ -126,9 +126,6 @@ class WhatsAppAlerts {
                 } else if (job.area) {
                     areasSet.add(job.area.trim());
                 }
-                if (job.city) {
-                    areasSet.add(job.city.trim());
-                }
             });
 
             // המרה למערכים ממוינים
