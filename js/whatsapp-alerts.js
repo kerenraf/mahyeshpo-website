@@ -10,7 +10,7 @@ class WhatsAppAlerts {
             position: 'bottom-left',
             autoShow: true,
             // מספר הטלפון שלך - עדכני למספר הנכון
-            ownerPhone: '972501234567', // שני ל-972 + מספר בלי אפס בהתחלה
+ownerPhone: '972555504633', // המספר הנכון שלך
             // כתובת מייל לקבלת העתק - אופציונלי
             ownerEmail: 'kcs@kerencs.com',
             // ברירת מחדל - יתעדכן דינמית מקובץ המשרות
@@ -935,7 +935,7 @@ if (typeof window !== 'undefined') {
     // אתחול אוטומטי
     if (!window.whatsappAlerts) {
         window.whatsappAlerts = new WhatsAppAlerts({
-            ownerPhone: '972501234567', // עדכן למספר הנכון
+        ownerPhone: '972555504633', // המספר שלך
             ownerEmail: 'kcs@kerencs.com' // עדכן לאימייל הנכון
         });
     }
