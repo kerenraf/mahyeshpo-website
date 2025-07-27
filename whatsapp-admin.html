@@ -691,7 +691,57 @@
                 </button>
             </div>
         </div>
+<!-- הוספת יכולת הוספת מנוי חדש למערכת הניהול -->
+<!-- הוסף את הקוד הבא אחרי כלי הניהול, לפני החלק של "שליחה ממוקדת לפי מספר משרה" -->
 
+<!-- סקציית הוספת מנוי חדש -->
+<div class="admin-section">
+    <div class="section-header">
+        <h2 class="section-title"><i class="fas fa-user-plus"></i> הוספת מנוי חדש</h2>
+    </div>
+    
+    <div class="form-group">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+            <div>
+                <label for="newSubscriberName" style="display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary-color);">שם מלא *</label>
+                <input type="text" id="newSubscriberName" style="width: 100%; padding: 12px; border: 2px solid rgba(246, 152, 152, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.1); color: white;" placeholder="הכנס שם מלא" required>
+            </div>
+            <div>
+                <label for="newSubscriberPhone" style="display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary-color);">מספר טלפון *</label>
+                <input type="tel" id="newSubscriberPhone" style="width: 100%; padding: 12px; border: 2px solid rgba(246, 152, 152, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.1); color: white;" placeholder="050-1234567" required>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label style="display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary-color);">תחומי עניין *</label>
+        <div style="max-height: 200px; overflow-y: auto; border: 2px solid rgba(246, 152, 152, 0.3); border-radius: 8px; padding: 10px; background: rgba(255, 255, 255, 0.05);">
+            <div id="newSubscriberCategories" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                <!-- קטגוריות יתווספו כאן דינמית -->
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label style="display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary-color);">אזורי עניין *</label>
+        <div style="max-height: 150px; overflow-y: auto; border: 2px solid rgba(246, 152, 152, 0.3); border-radius: 8px; padding: 10px; background: rgba(255, 255, 255, 0.05);">
+            <div id="newSubscriberAreas" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                <!-- אזורים יתווספו כאן דינמית -->
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn" onclick="addNewSubscriber()">
+            <i class="fas fa-user-plus"></i> הוסף מנוי חדש
+        </button>
+        <button class="btn btn-outline" onclick="resetNewSubscriberForm()">
+            <i class="fas fa-undo"></i> נקה טופס
+        </button>
+    </div>
+</div>
+
+        
         <!-- ניהול משרות מגיט -->
         <div class="admin-section">
             <div class="section-header">
@@ -2666,5 +2716,200 @@ ${jobData.description ? `💬 ${jobData.description}\n\n` : ''}לפרטים נו
         }
     });
     </script>
+    // יצירת טופס הוספת מנוי חדש
+function createNewSubscriberForm() {
+    // טעינת קטגוריות
+    const categoriesContainer = document.getElementById('newSubscriberCategories');
+    if (categoriesContainer) {
+        const categories = adminPanel?.whatsappAlerts?.options?.categories || updatedJobCategories;
+        categoriesContainer.innerHTML = '';
+        
+        categories.forEach(category => {
+            const label = document.createElement('label');
+            label.style.display = 'block';
+            label.style.margin = '5px';
+            label.style.cursor = 'pointer';
+            label.style.padding = '5px';
+            label.style.borderRadius = '5px';
+            label.style.transition = 'background-color 0.2s';
+            label.style.color = 'white';
+            
+            label.onmouseover = function() { this.style.backgroundColor = 'rgba(246, 152, 152, 0.1)'; };
+            label.onmouseout = function() { this.style.backgroundColor = 'transparent'; };
+            
+            label.innerHTML = `
+                <input type="checkbox" name="newCategories" value="${category}" style="margin-left: 8px;">
+                ${category}
+            `;
+            
+            categoriesContainer.appendChild(label);
+        });
+    }
+    
+    // טעינת אזורים
+    const areasContainer = document.getElementById('newSubscriberAreas');
+    if (areasContainer) {
+        const areas = adminPanel?.whatsappAlerts?.options?.areas || updatedJobAreas;
+        areasContainer.innerHTML = '';
+        
+        areas.forEach(area => {
+            const label = document.createElement('label');
+            label.style.display = 'block';
+            label.style.margin = '5px';
+            label.style.cursor = 'pointer';
+            label.style.padding = '5px';
+            label.style.borderRadius = '5px';
+            label.style.transition = 'background-color 0.2s';
+            label.style.color = 'white';
+            
+            label.onmouseover = function() { this.style.backgroundColor = 'rgba(246, 152, 152, 0.1)'; };
+            label.onmouseout = function() { this.style.backgroundColor = 'transparent'; };
+            
+            label.innerHTML = `
+                <input type="checkbox" name="newAreas" value="${area}" style="margin-left: 8px;">
+                ${area}
+            `;
+            
+            areasContainer.appendChild(label);
+        });
+    }
+    
+    // הגבלת בחירת קטגוריות ואזורים
+    limitCheckboxesSelection('newCategories', 3);
+    limitCheckboxesSelection('newAreas', 3);
+}
+
+// הגבלת בחירת צ'קבוקסים
+function limitCheckboxesSelection(name, max) {
+    const checkboxes = document.querySelectorAll(`input[name="${name}"]`);
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
+            if (checked.length >= max) {
+                checkboxes.forEach(cb => {
+                    if (!cb.checked) cb.disabled = true;
+                });
+            } else {
+                checkboxes.forEach(cb => cb.disabled = false);
+            }
+        });
+    });
+}
+
+// הוספת מנוי חדש
+function addNewSubscriber() {
+    const name = document.getElementById('newSubscriberName').value.trim();
+    const phone = document.getElementById('newSubscriberPhone').value.trim();
+    const categories = Array.from(document.querySelectorAll('input[name="newCategories"]:checked')).map(cb => cb.value);
+    const areas = Array.from(document.querySelectorAll('input[name="newAreas"]:checked')).map(cb => cb.value);
+    
+    // ולידציה
+    if (!name) {
+        adminPanel?.showAlert('אנא הכנס שם מלא', 'error');
+        return;
+    }
+    
+    if (!phone) {
+        adminPanel?.showAlert('אנא הכנס מספר טלפון', 'error');
+        return;
+    }
+    
+    if (categories.length === 0) {
+        adminPanel?.showAlert('אנא בחר לפחות תחום עניין אחד', 'error');
+        return;
+    }
+    
+    if (areas.length === 0) {
+        adminPanel?.showAlert('אנא בחר לפחות אזור אחד', 'error');
+        return;
+    }
+    
+    // ניקוי מספר טלפון
+    let cleanPhone = phone.replace(/[^\d+]/g, '');
+    if (cleanPhone.startsWith('0')) {
+        cleanPhone = '+972' + cleanPhone.substring(1);
+    }
+    if (!cleanPhone.startsWith('+')) {
+        cleanPhone = '+972' + cleanPhone;
+    }
+    
+    // יצירת אובייקט מנוי חדש
+    const newSubscriber = {
+        id: Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        name: name,
+        phone: cleanPhone,
+        categories: categories,
+        areas: areas,
+        registrationDate: new Date().toISOString(),
+        active: true,
+        source: 'admin_panel'
+    };
+    
+    // בדיקה אם המנוי כבר קיים
+    const subscribers = adminPanel?.whatsappAlerts?.getSubscribers() || [];
+    const exists = subscribers.some(sub => sub.phone === cleanPhone);
+    
+    if (exists) {
+        if (!confirm(`מנוי עם מספר ${cleanPhone} כבר קיים במערכת. האם לעדכן את הפרטים?`)) {
+            return;
+        }
+        
+        // עדכון מנוי קיים
+        const index = subscribers.findIndex(sub => sub.phone === cleanPhone);
+        if (index !== -1) {
+            subscribers[index] = {
+                ...subscribers[index],
+                name: name,
+                categories: categories,
+                areas: areas,
+                updatedAt: new Date().toISOString()
+            };
+            
+            // שמירת העדכון
+            adminPanel.whatsappAlerts.subscribers = subscribers;
+            adminPanel.saveSubscribers();
+            
+            adminPanel?.showAlert(`המנוי ${name} עודכן בהצלחה!`, 'success');
+        }
+    } else {
+        // הוספת מנוי חדש
+        adminPanel.whatsappAlerts.addSubscriber(newSubscriber);
+        adminPanel?.showAlert(`המנוי ${name} נוסף בהצלחה!`, 'success');
+    }
+    
+    // רענון התצוגה
+    adminPanel.renderSubscribers();
+    adminPanel.updateStats();
+    adminPanel.loadSubscriberSelect();
+    
+    // ניקוי הטופס
+    resetNewSubscriberForm();
+}
+
+// ניקוי טופס הוספת מנוי
+function resetNewSubscriberForm() {
+    document.getElementById('newSubscriberName').value = '';
+    document.getElementById('newSubscriberPhone').value = '';
+    
+    // איפוס תיבות הסימון
+    document.querySelectorAll('input[name="newCategories"]').forEach(cb => {
+        cb.checked = false;
+        cb.disabled = false;
+    });
+    
+    document.querySelectorAll('input[name="newAreas"]').forEach(cb => {
+        cb.checked = false;
+        cb.disabled = false;
+    });
+}
+
+// הוספת האירוע ליצירת הטופס בטעינת העמוד
+document.addEventListener('DOMContentLoaded', function() {
+    // המתן לטעינת המערכת
+    setTimeout(() => {
+        createNewSubscriberForm();
+    }, 1500);
+});
+</script>
 </body>
 </html>
