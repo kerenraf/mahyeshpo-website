@@ -1,7 +1,7 @@
 /**
- * קומפוננטת התראות WhatsApp - פתרון סופי שעובד על כל שרת
+ * קומפוננטת התראות WhatsApp - גרסת Google Forms
  * @author מה יש פה?
- * @version 4.0.0 - Final Solution
+ * @version 5.0.0 - Google Forms Integration
  */
 class WhatsAppAlerts {
     constructor(options = {}) {
@@ -9,24 +9,23 @@ class WhatsAppAlerts {
             buttonText: 'התראות משרות',
             position: 'bottom-left',
             autoShow: true,
-            categories: [
-                'לוגיסטיקה, מחסנים, שילוח ורכש', 'פיתוח ותוכנה', 'מכירות ושיווק', 
-                'חינוך והוראה', 'מזון ומסעדנות', 'בריאות ורפואה', 'בנייה והנדסה',
-                'עיצוב ויצירה', 'אבטחה ושמירה', 'ניהול וכספים', 'שירות לקוחות', 
-                'משאבי אנוש', 'מדע הנדסה מחקר ופיתוח', 'פיננסים וכלכלה', 
-                'סחר וקמעונאות', 'תיירות ופנאי', 'תקשורת ומדיא', 'חקלאות וסביבה', 
-                'תחבורה ונהיגה', 'אחר'
-            ],
-            areas: [
-                'מרכז', 'צפון', 'דרום', 'ירושלים והסביבה',
-                'חיפה קריות והצפון', 'שרון', 'שפלה', 'גליל',
-                'נגב', 'כל הארץ', 'עבודה מהבית', 'אחר'
-            ],
+            // כתובת Google Form - תחליפי בכתובת האמיתית שלך
+            googleFormUrl: 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse',
+            // השדות של Google Form - תעדכני לפי השמות שלך
+            formFields: {
+                name: 'entry.123456789',      // תחליפי במספר השדה האמיתי
+                phone: 'entry.987654321',     // תחליפי במספר השדה האמיתי  
+                categories: 'entry.111111111', // תחליפי במספר השדה האמיתי
+                areas: 'entry.222222222'       // תחליפי במספר השדה האמיתי
+            },
+            // ברירת מחדל - יתעדכן דינמית מקובץ המשרות
+            categories: ['טוען קטגוריות...'],
+            areas: ['טוען אזורים...'],
             ...options
         };
 
-        this.subscribers = [];
         this.isModalOpen = false;
+        this.jobsData = [];
         
         if (this.options.autoShow) {
             this.init();
@@ -35,139 +34,107 @@ class WhatsAppAlerts {
 
     // אתחול המערכת
     async init() {
-        console.log('🚀 מאתחל מערכת התראות WhatsApp...');
+        console.log('🚀 מאתחל מערכת התראות WhatsApp עם Google Forms...');
         
-        // טעינת מנויים מקומית
-        this.loadSubscribers();
+        // טעינת נתוני משרות לקטגוריות ואזורים דינמיים
+        await this.loadJobsData();
         
         this.createButton();
         this.createModal();
         this.attachEvents();
         
-        // שליחת עדכון למייל האדמין (אופציונלי)
-        this.setupEmailNotifications();
-        
-        console.log('✅ קומפוננטת התראות WhatsApp אותחלה בהצלחה');
+        console.log('✅ קומפוננטת התראות WhatsApp אותחלה (גרסת Google Forms)');
     }
 
-    // הוספת מנוי חדש
-    async addSubscriber(subscriber) {
-        // ולידציה
-        if (!subscriber.phone || !subscriber.name) {
-            this.showMessage('אנא מלא את כל הפרטים הנדרשים', 'error');
-            return false;
-        }
-
-        // ניקוי מספר טלפון
-        subscriber.phone = this.cleanPhoneNumber(subscriber.phone);
-
-        // בדיקה שהמספר לא קיים
-        const exists = this.subscribers.find(sub => sub.phone === subscriber.phone);
-        
-        if (!exists) {
-            subscriber.id = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            subscriber.registrationDate = new Date().toISOString();
-            subscriber.active = true;
-            subscriber.source = 'website';
-            
-            this.subscribers.push(subscriber);
-            this.saveSubscribers();
-            
-            // שליחת עדכון למייל (אופציונלי)
-            this.notifyNewSubscriber(subscriber);
-            
-            this.showMessage(`🎉 מעולה ${subscriber.name}! נרשמת בהצלחה להתראות משרות.`, 'success');
-            return true;
-        } else {
-            this.showMessage('מספר הטלפון כבר רשום במערכת', 'error');
-            return false;
-        }
-    }
-
-    // שליחת עדכון למייל האדמין על מנוי חדש
-    notifyNewSubscriber(subscriber) {
-        // שליחת מייל פשוט דרך mailto (המשתמש יצטרך ללחוץ אישור)
-        const subject = `מנוי חדש - ${subscriber.name}`;
-        const body = `מנוי חדש נרשם להתראות:
-
-שם: ${subscriber.name}
-טלפון: ${subscriber.phone}
-קטגוריות: ${subscriber.categories.join(', ')}
-אזורים: ${subscriber.areas.join(', ')}
-תאריך: ${new Date().toLocaleString('he-IL')}
-
-הפרטים נשמרו במערכת המקומית.`;
-
-        // יצירת קישור מייל
-        const mailtoLink = `mailto:kcs@kerencs.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        
-        // שליחה אוטומטית (בדפדפנים מסוימים)
+    // טעינת נתוני משרות לקבלת קטגוריות ואזורים דינמיים
+    async loadJobsData() {
         try {
-            const link = document.createElement('a');
-            link.href = mailtoLink;
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            console.log('📥 טוען נתוני משרות לקטגוריות ואזורים...');
+            
+            const response = await fetch('data/jobs.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            this.jobsData = await response.json();
+            
+            // חילוץ קטגוריות ואזורים ייחודיים
+            const categoriesSet = new Set();
+            const areasSet = new Set();
+            
+            this.jobsData.forEach(job => {
+                if (job.category) {
+                    categoriesSet.add(job.category.trim());
+                }
+                if (job.region) {
+                    areasSet.add(job.region.trim());
+                } else if (job.area) {
+                    areasSet.add(job.area.trim());
+                }
+                if (job.city) {
+                    areasSet.add(job.city.trim());
+                }
+            });
+
+            // המרה למערכים ממוינים
+            this.options.categories = Array.from(categoriesSet).sort();
+            this.options.areas = Array.from(areasSet).sort();
+            
+            // הוספת אפשרויות כלליות
+            this.options.areas.push('כל הארץ', 'עבודה מהבית');
+            this.options.categories.push('אחר');
+            
+            console.log(`✅ נטענו ${this.options.categories.length} קטגוריות ו-${this.options.areas.length} אזורים מקובץ המשרות`);
+            
         } catch (error) {
-            console.log('ניסיון שליחת מייל:', error);
+            console.warn('⚠️ שגיאה בטעינת נתוני משרות, משתמש בברירת מחדל:', error);
+            
+            // ברירת מחדל אם יש בעיה בטעינה
+            this.options.categories = [
+                'לוגיסטיקה, מחסנים, שילוח ורכש', 'פיתוח ותוכנה', 'מכירות ושיווק', 
+                'חינוך והוראה', 'מזון ומסעדנות', 'בריאות ורפואה', 'בנייה והנדסה',
+                'עיצוב ויצירה', 'אבטחה ושמירה', 'ניהול וכספים', 'שירות לקוחות', 
+                'משאבי אנוש', 'מדע הנדסה מחקר ופיתוח', 'פיננסים וכלכלה', 
+                'סחר וקמעונאות', 'תיירות ופנאי', 'תקשורת ומדיא', 'חקלאות וסביבה', 
+                'תחבורה ונהיגה', 'אחר'
+            ];
+            
+            this.options.areas = [
+                'מרכז', 'צפון', 'דרום', 'ירושלים והסביבה',
+                'חיפה קריות והצפון', 'שרון', 'שפלה', 'גליל',
+                'נגב', 'כל הארץ', 'עבודה מהבית', 'אחר'
+            ];
         }
     }
 
-    // הגדרת התראות מייל
-    setupEmailNotifications() {
-        // יצירת כפתור לשליחת כל המנויים במייל
-        const emailButton = document.createElement('div');
-        emailButton.style.cssText = `
-            position: fixed;
-            bottom: 80px;
-            left: 20px;
-            background: #dc3545;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 12px;
-            z-index: 9998;
-            box-shadow: 0 2px 10px rgba(220, 53, 69, 0.3);
-            transition: all 0.3s ease;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-        `;
-        emailButton.innerHTML = '📧 שלח דוח';
-        emailButton.title = 'שלח דוח מנויים במייל';
-        
-        emailButton.addEventListener('click', () => this.sendSubscribersReport());
-        emailButton.addEventListener('mouseover', () => {
-            emailButton.style.transform = 'scale(1.05)';
-        });
-        emailButton.addEventListener('mouseout', () => {
-            emailButton.style.transform = 'scale(1)';
-        });
-        
-        document.body.appendChild(emailButton);
-    }
+    // שליחה ל-Google Forms
+    async submitToGoogleForms(formData) {
+        try {
+            // יצירת FormData
+            const data = new FormData();
+            
+            // הוספת הנתונים לפי שמות השדות של Google Forms
+            data.append(this.options.formFields.name, formData.name);
+            data.append(this.options.formFields.phone, formData.phone);
+            data.append(this.options.formFields.categories, formData.categories.join(', '));
+            data.append(this.options.formFields.areas, formData.areas.join(', '));
 
-    // שליחת דוח מנויים במייל
-    sendSubscribersReport() {
-        if (this.subscribers.length === 0) {
-            alert('אין מנויים לשליחה');
-            return;
+            // שליחה ל-Google Forms
+            const response = await fetch(this.options.googleFormUrl, {
+                method: 'POST',
+                mode: 'no-cors', // חשוב! Google Forms דורש את זה
+                body: data
+            });
+
+            // Google Forms תמיד מחזיר opaque response עם no-cors
+            // אז אנחנו מניחים שהשליחה הצליחה אם לא היתה שגיאה
+            console.log('📤 נשלח ל-Google Forms בהצלחה');
+            return true;
+
+        } catch (error) {
+            console.error('❌ שגיאה בשליחה ל-Google Forms:', error);
+            return false;
         }
-
-        const subject = `דוח מנויים - ${new Date().toLocaleDateString('he-IL')}`;
-        let body = `דוח מנויי התראות WhatsApp - ${new Date().toLocaleString('he-IL')}\n`;
-        body += `סה"כ מנויים: ${this.subscribers.length}\n\n`;
-        
-        this.subscribers.forEach((subscriber, index) => {
-            body += `${index + 1}. ${subscriber.name}\n`;
-            body += `   טלפון: ${subscriber.phone}\n`;
-            body += `   קטגוריות: ${subscriber.categories.join(', ')}\n`;
-            body += `   אזורים: ${subscriber.areas.join(', ')}\n`;
-            body += `   תאריך הרשמה: ${new Date(subscriber.registrationDate).toLocaleDateString('he-IL')}\n\n`;
-        });
-
-        const mailtoLink = `mailto:kcs@kerencs.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        window.open(mailtoLink);
     }
 
     // ניקוי מספר טלפון
@@ -183,72 +150,6 @@ class WhatsAppAlerts {
         }
         
         return cleaned;
-    }
-
-    // שמירת מנויים מקומית + יצירת גיבוי JSON
-    saveSubscribers() {
-        try {
-            // שמירה מקומית
-            localStorage.setItem('whatsapp_alerts_subscribers', JSON.stringify(this.subscribers));
-            
-            // יצירת גיבוי JSON אוטומטי
-            this.createBackupFile();
-            
-            console.log(`💾 נשמרו ${this.subscribers.length} מנויים`);
-        } catch (error) {
-            console.error('❌ שגיאה בשמירת מנויים:', error);
-        }
-    }
-
-    // יצירת קובץ גיבוי JSON אוטומטי
-    createBackupFile() {
-        try {
-            const dataStr = JSON.stringify(this.subscribers, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            
-            // שמירת ה-URL לגיבוי
-            if (this.backupUrl) {
-                URL.revokeObjectURL(this.backupUrl);
-            }
-            this.backupUrl = URL.createObjectURL(dataBlob);
-            
-            // יצירת כפתור הורדה נסתר (למקרה חירום)
-            if (!document.getElementById('hidden-backup-download')) {
-                const hiddenDownload = document.createElement('a');
-                hiddenDownload.id = 'hidden-backup-download';
-                hiddenDownload.style.display = 'none';
-                document.body.appendChild(hiddenDownload);
-            }
-            
-            const hiddenDownload = document.getElementById('hidden-backup-download');
-            hiddenDownload.href = this.backupUrl;
-            hiddenDownload.download = `whatsapp_subscribers_backup_${new Date().toISOString().split('T')[0]}.json`;
-            
-        } catch (error) {
-            console.error('שגיאה ביצירת גיבוי:', error);
-        }
-    }
-
-    // הורדת גיבוי ידנית
-    downloadBackup() {
-        const hiddenDownload = document.getElementById('hidden-backup-download');
-        if (hiddenDownload) {
-            hiddenDownload.click();
-        }
-    }
-
-    // טעינת מנויים מקומית
-    loadSubscribers() {
-        try {
-            const saved = localStorage.getItem('whatsapp_alerts_subscribers');
-            this.subscribers = saved ? JSON.parse(saved) : [];
-            console.log(`📱 נטענו ${this.subscribers.length} מנויים מקומית`);
-            return this.subscribers;
-        } catch (error) {
-            console.error('❌ שגיאה בטעינת מנויים:', error);
-            this.subscribers = [];
-            return [];
-        }
     }
 
     // יצירת כפתור התראות
@@ -296,13 +197,29 @@ class WhatsAppAlerts {
         document.body.appendChild(button);
     }
 
-    // יצירת מודל רישום
+    // יצירת מודל רישום (מתעדכן אחרי טעינת הנתונים)
     createModal() {
-        if (document.getElementById('whatsapp-alerts-modal')) return;
+        if (document.getElementById('whatsapp-alerts-modal')) {
+            // אם המודל כבר קיים, מעדכן אותו עם הנתונים החדשים
+            this.updateModalContent();
+            return;
+        }
 
         const modal = document.createElement('div');
         modal.id = 'whatsapp-alerts-modal';
         modal.style.display = 'none';
+        
+        this.updateModalContent(modal);
+        document.body.appendChild(modal);
+    }
+
+    // עדכון תוכן המודל עם קטגוריות ואזורים דינמיים
+    updateModalContent(modal = null) {
+        if (!modal) {
+            modal = document.getElementById('whatsapp-alerts-modal');
+        }
+        if (!modal) return;
+
         modal.innerHTML = `
             <div style="
                 position: fixed;
@@ -393,10 +310,11 @@ class WhatsAppAlerts {
                                 " placeholder="050-1234567">
                             </div>
 
-                            <!-- קטגוריות -->
+                            <!-- קטגוריות דינמיות -->
                             <div style="margin-bottom: 20px;">
                                 <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
                                     💼 תחומי עניין (בחר עד 3)
+                                    <small style="color: #666; font-weight: normal;">- מבוסס על משרות קיימות</small>
                                 </label>
                                 <div id="categories-container" style="
                                     max-height: 200px;
@@ -421,10 +339,11 @@ class WhatsAppAlerts {
                                 </div>
                             </div>
 
-                            <!-- אזורים -->
+                            <!-- אזורים דינמיים -->
                             <div style="margin-bottom: 25px;">
                                 <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
                                     📍 אזורי עניין (בחר עד 3)
+                                    <small style="color: #666; font-weight: normal;">- מבוסס על משרות קיימות</small>
                                 </label>
                                 <div id="areas-container" style="
                                     max-height: 150px;
@@ -484,305 +403,6 @@ class WhatsAppAlerts {
             </div>
         `;
 
-        document.body.appendChild(modal);
+        // עדכון האירועים אחרי יצירת התוכן החדש
+        this.attachEvents();
     }
-
-    // חיבור אירועים
-    attachEvents() {
-        // כפתור פתיחת מודל
-        const button = document.getElementById('whatsapp-alerts-btn');
-        if (button) {
-            button.addEventListener('click', () => this.openModal());
-        }
-
-        // כפתור סגירת מודל
-        const closeBtn = document.getElementById('whatsapp-close-btn');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => this.closeModal());
-        }
-
-        // סגירה בלחיצה על הרקע
-        const modal = document.getElementById('whatsapp-alerts-modal');
-        if (modal) {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    this.closeModal();
-                }
-            });
-        }
-
-        // טופס רישום
-        const form = document.getElementById('whatsapp-alerts-form');
-        if (form) {
-            form.addEventListener('submit', (e) => this.handleSubmit(e));
-        }
-
-        // הגבלת בחירת קטגוריות
-        this.limitCheckboxes('categories', 3);
-        this.limitCheckboxes('areas', 3);
-
-        // מקלדת
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.closeModal();
-            }
-        });
-    }
-
-    // הגבלת בחירת צ'קבוקסים
-    limitCheckboxes(name, max) {
-        const checkboxes = document.querySelectorAll(`input[name="${name}"]`);
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
-                const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
-                if (checked.length >= max) {
-                    checkboxes.forEach(cb => {
-                        if (!cb.checked) cb.disabled = true;
-                    });
-                } else {
-                    checkboxes.forEach(cb => cb.disabled = false);
-                }
-            });
-        });
-    }
-
-    // פתיחת מודל
-    openModal() {
-        const modal = document.getElementById('whatsapp-alerts-modal');
-        if (modal) {
-            modal.style.display = 'flex';
-            this.isModalOpen = true;
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    // סגירת מודל
-    closeModal() {
-        const modal = document.getElementById('whatsapp-alerts-modal');
-        if (modal) {
-            modal.style.display = 'none';
-            this.isModalOpen = false;
-            document.body.style.overflow = '';
-            this.resetForm();
-        }
-    }
-
-    // איפוס טופס
-    resetForm() {
-        const form = document.getElementById('whatsapp-alerts-form');
-        if (form) {
-            form.reset();
-            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.disabled = false);
-        }
-    }
-
-    // טיפול בשליחת טופס
-    async handleSubmit(e) {
-        e.preventDefault();
-
-        const name = document.getElementById('subscriber-name').value.trim();
-        const phone = document.getElementById('subscriber-phone').value.trim();
-        const categories = Array.from(document.querySelectorAll('input[name="categories"]:checked')).map(cb => cb.value);
-        const areas = Array.from(document.querySelectorAll('input[name="areas"]:checked')).map(cb => cb.value);
-
-        // ולידציה
-        if (!name || !phone) {
-            this.showMessage('אנא מלא את כל הפרטים הנדרשים', 'error');
-            return;
-        }
-
-        if (categories.length === 0) {
-            this.showMessage('אנא בחר לפחות תחום עניין אחד', 'error');
-            return;
-        }
-
-        if (areas.length === 0) {
-            this.showMessage('אנא בחר לפחות אזור אחד', 'error');
-            return;
-        }
-
-        // יצירת אובייקט מנוי
-        const subscriber = {
-            name,
-            phone,
-            categories,
-            areas,
-            preferences: {
-                categories,
-                areas
-            }
-        };
-
-        // שליחה למערכת
-        const success = await this.addSubscriber(subscriber);
-        
-        if (success) {
-            setTimeout(() => {
-                this.closeModal();
-            }, 2000);
-        }
-    }
-
-    // הצגת הודעות למשתמש
-    showMessage(message, type = 'info') {
-        // הסרת הודעות קודמות
-        const existing = document.getElementById('whatsapp-message');
-        if (existing) existing.remove();
-
-        const messageDiv = document.createElement('div');
-        messageDiv.id = 'whatsapp-message';
-        
-        const bgColor = type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3';
-        
-        messageDiv.innerHTML = `
-            <div style="
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${bgColor};
-                color: white;
-                padding: 15px 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                z-index: 10001;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-                font-size: 14px;
-                max-width: 300px;
-                animation: slideIn 0.3s ease;
-            ">
-                ${message}
-            </div>
-            <style>
-                @keyframes slideIn {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-            </style>
-        `;
-
-        document.body.appendChild(messageDiv);
-
-        // הסרה אוטומטית אחרי 5 שניות
-        setTimeout(() => {
-            if (messageDiv) messageDiv.remove();
-        }, 5000);
-    }
-
-    // API נוסף לשימוש חיצוני
-    getSubscribers() {
-        return this.subscribers;
-    }
-
-    getSubscribersByCategory(category) {
-        return this.subscribers.filter(sub => 
-            sub.categories && sub.categories.includes(category)
-        );
-    }
-
-    getSubscribersByArea(area) {
-        return this.subscribers.filter(sub => 
-            sub.areas && sub.areas.includes(area)
-        );
-    }
-
-    // יצירת הודעת משרה
-    createJobMessage(jobData) {
-        return `🔥 משרה חדשה!
-
-📋 ${jobData.title}
-🏢 ${jobData.company || 'לא צוין'}
-📍 ${jobData.area || jobData.region}
-🎯 ${jobData.category}
-
-${jobData.description ? `💬 ${jobData.description}\n\n` : ''}לפרטים נוספים: https://www.mayeshpo.co.il
-
-בהצלחה! 💪`;
-    }
-
-    // שליחת התראת משרה
-    sendJobAlert(jobData) {
-        // מציאת מנויים מתאימים
-        const matchingSubscribers = this.subscribers.filter(subscriber => {
-            const categoryMatch = subscriber.categories && subscriber.categories.some(cat => 
-                cat.toLowerCase().includes(jobData.category.toLowerCase()) ||
-                jobData.category.toLowerCase().includes(cat.toLowerCase())
-            );
-            
-            const areaMatch = subscriber.areas && subscriber.areas.some(area => 
-                area.toLowerCase().includes(jobData.area.toLowerCase()) ||
-                jobData.area.toLowerCase().includes(area.toLowerCase()) ||
-                area === 'כל הארץ'
-            );
-            
-            return categoryMatch && areaMatch;
-        });
-
-        if (matchingSubscribers.length === 0) {
-            console.log('❌ אין מנויים מתאימים');
-            return false;
-        }
-
-        const message = this.createJobMessage(jobData);
-        
-        // פתיחת חלונות WhatsApp
-        matchingSubscribers.forEach(subscriber => {
-            const phoneNumber = subscriber.phone.replace(/^0/, '972').replace(/\D/g, '');
-            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            
-            // פתיחה בחלון חדש
-            setTimeout(() => {
-                window.open(whatsappUrl, '_blank');
-            }, 500); // השהיה קטנה בין חלונות
-        });
-        
-        console.log(`📱 נפתחו ${matchingSubscribers.length} חלונות WhatsApp`);
-        return true;
-    }
-
-    // פונקציות ניהול
-    exportSubscribers() {
-        if (this.subscribers.length === 0) {
-            alert('אין מנויים לייצוא');
-            return;
-        }
-
-        const dataStr = JSON.stringify(this.subscribers, null, 2);
-        const dataBlob = new Blob([dataStr], {type: 'application/json'});
-        
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(dataBlob);
-        link.download = `whatsapp_subscribers_${new Date().toISOString().split('T')[0]}.json`;
-        
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    removeSubscriber(phone) {
-        this.subscribers = this.subscribers.filter(sub => sub.phone !== phone);
-        this.saveSubscribers();
-    }
-
-    clearAllSubscribers() {
-        if (confirm('האם אתה בטוח שברצונך למחוק את כל המנויים?')) {
-            this.subscribers = [];
-            this.saveSubscribers();
-            localStorage.removeItem('whatsapp_alerts_subscribers');
-        }
-    }
-}
-
-// ייצוא לשימוש גלובלי
-if (typeof window !== 'undefined') {
-    window.WhatsAppAlerts = WhatsAppAlerts;
-    
-    // אתחול אוטומטי
-    if (!window.whatsappAlerts) {
-        window.whatsappAlerts = new WhatsAppAlerts();
-    }
-}
-
-// תמיכה ב-Node.js (אם נדרש)
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = WhatsAppAlerts;
-}
