@@ -651,7 +651,7 @@
                 try {
                     console.log('🔄 טוען משרות...');
                     
-                    // ניסיון טעינה מ-GitHub
+// ניסיון טעינה מקובץ המשרות
                     try {
 const response = await fetch('data/jobs.json?t=' + Date.now());
                         
@@ -667,7 +667,7 @@ console.log(`✅ נטענו ${this.jobs.length} משרות מקובץ המשרו
                             }
                         }
                     } catch (error) {
-                        console.log('⚠️ לא ניתן לטעון מ-GitHub, עובר לנתונים מובנים...');
+console.log('⚠️ לא ניתן לטעון מקובץ המשרות, עובר לנתונים מובנים...');
                     }
                     
                     // טעינת נתונים מובנים
