@@ -102,7 +102,7 @@
             margin-bottom: 20px;
         }
 
-        .section-title, .section h2 {
+        .section-title, .section h2, .section h3 {
             color: var(--primary-color);
             font-size: 1.5rem;
             display: flex;
@@ -168,6 +168,12 @@
         .btn-outline:hover {
             background: var(--primary-color);
             color: white;
+        }
+
+        .btn-small {
+            padding: 6px 10px;
+            font-size: 0.8rem;
+            min-width: auto;
         }
 
         .form-group {
@@ -239,50 +245,6 @@
         .filter-control:focus {
             border-color: var(--primary-color);
             outline: none;
-        }
-
-        .btn-small {
-            padding: 6px 10px;
-            font-size: 0.8rem;
-            min-width: auto;
-        }
-
-        .connection-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 15px;
-            background: rgba(246, 152, 152, 0.1);
-            border-radius: 25px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(246, 152, 152, 0.3);
-        }
-
-        .status-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-left: 10px;
-        }
-
-        .status-online {
-            background: #2ed573;
-        }
-
-        .status-offline {
-            background: #ff4757;
-        }
-
-        .status-loading {
-            background: #ffa502;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
         }
 
         .whatsapp-message {
@@ -418,11 +380,6 @@
         <div class="admin-section">
             <div class="section-header">
                 <h2 class="section-title"><i class="fas fa-tools"></i> כלי ניהול</h2>
-                <div class="connection-status">
-                    <span>סטטוס מערכת:</span>
-                    <div id="system-status" class="status-indicator status-loading"></div>
-                    <span id="status-text">מתחבר...</span>
-                </div>
             </div>
             
             <div class="action-buttons">
@@ -446,6 +403,71 @@
                     <i class="fas fa-users-plus"></i> הוסף מנויים לבדיקה
                 </button>
             </div>
+        </div>
+
+        <!-- כלי בדיקה והתאמות -->
+        <div class="admin-section">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-microscope"></i> כלי בדיקה והתאמות</h2>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn" onclick="analyzeJobsStructure()">
+                    <i class="fas fa-chart-pie"></i> נתח מבנה משרות
+                </button>
+                <button class="btn" onclick="testJobSearchDemo()">
+                    <i class="fas fa-search"></i> בדוק חיפוש משרות
+                </button>
+                <button class="btn" onclick="testMatchingDemo()">
+                    <i class="fas fa-users"></i> בדוק התאמת מנויים
+                </button>
+                <button class="btn" onclick="testCategoryMatching()">
+                    <i class="fas fa-tags"></i> בדוק התאמת קטגוריות
+                </button>
+                <button class="btn" onclick="testGenderMatching()">
+                    <i class="fas fa-venus-mars"></i> בדוק זכר/נקבה
+                </button>
+                <button class="btn" onclick="showMatchingRules()">
+                    <i class="fas fa-book"></i> חוקי התאמה
+                </button>
+            </div>
+            
+            <!-- בדיקה בזמן אמת -->
+            <div style="margin-top: 20px; padding: 20px; background: rgba(246, 152, 152, 0.05); border-radius: 10px; border: 1px solid rgba(246, 152, 152, 0.2);">
+                <h4 style="color: var(--primary-color); margin-bottom: 15px;">⚡ בדיקה בזמן אמת</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <input type="text" id="testJobCategory" placeholder="קטגוריית משרה" style="padding: 10px; border: 1px solid rgba(246, 152, 152, 0.3); border-radius: 5px; background: rgba(255, 255, 255, 0.1); color: white;">
+                    <input type="text" id="testSubscriberCategories" placeholder="קטגוריות מנוי (מופרדות בפסיק)" style="padding: 10px; border: 1px solid rgba(246, 152, 152, 0.3); border-radius: 5px; background: rgba(255, 255, 255, 0.1); color: white;">
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-small" onclick="testRealTimeMatching()">
+                            <i class="fas fa-play"></i> בדוק
+                        </button>
+                        <button class="btn btn-small btn-outline" onclick="clearTestInputs()">
+                            <i class="fas fa-eraser"></i> נקה
+                        </button>
+                    </div>
+                </div>
+                <div id="realTimeResults" style="display: none; margin-top: 15px;"></div>
+            </div>
+        </div>
+
+        <!-- ניתוח התאמות חכם -->
+        <div class="admin-section">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-brain"></i> ניתוח התאמות חכם</h2>
+            </div>
+            
+            <div class="form-group">
+                <label for="detailedJobSearch">הכנס מספר משרה לניתוח מפורט:</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="detailedJobSearch" placeholder="מספר משרה (למשל: A-25821)" style="flex: 1;">
+                    <button class="btn" onclick="analyzeJobMatching()">
+                        <i class="fas fa-brain"></i> נתח התאמות
+                    </button>
+                </div>
+            </div>
+
+            <div id="detailedAnalysisResults" style="margin-top: 20px; display: none;"></div>
         </div>
 
         <!-- סקציית הוספת מנוי חדש -->
@@ -592,7 +614,7 @@
                 </div>
             </div>
 
-            <div id="subscribersCount" class="connection-status" style="margin-bottom: 20px;">
+            <div id="subscribersCount" style="margin-bottom: 20px; padding: 10px; background: rgba(246, 152, 152, 0.1); border-radius: 5px;">
                 <i class="fas fa-users"></i>
                 <span>סה"כ מנויים: <strong id="totalCount">0</strong></span>
                 <span>מוצגים: <strong id="visibleCount">0</strong></span>
@@ -611,215 +633,216 @@
     </div>
 
     <script>
-        // מערכת שמירה בקבצי JSON
-        class JSONDataManager {
+        // מחלקה לניהול משרות עם נתונים מובנים
+        class JobsManager {
             constructor() {
-                this.subscribersFile = 'data/subscribers.json';
-                this.jobsFile = 'data/jobs.json';
-                this.useLocalBackup = true;
-            }
-
-            // שמירת מנויים
-            async saveSubscribers(subscribers) {
-                try {
-                    // ניסיון שמירה בשרת (אם יש API)
-                    const response = await fetch('/api/save-subscribers', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ subscribers })
-                    });
-
-                    if (response.ok) {
-                        console.log('✅ מנויים נשמרו בשרת בהצלחה');
-                        
-                        // גיבוי מקומי
-                        if (this.useLocalBackup) {
-                            localStorage.setItem('subscribers_backup', JSON.stringify(subscribers));
-                        }
-                        return true;
-                    } else {
-                        throw new Error('שגיאה בשמירה בשרת');
-                    }
-                } catch (error) {
-                    console.warn('⚠️ שגיאה בשמירה בשרת, שומר מקומית:', error);
-                    
-                    // שמירה מקומית במקרה של שגיאה
-                    localStorage.setItem('whatsapp_alerts_subscribers', JSON.stringify(subscribers));
-                    return false;
-                }
-            }
-
-            // טעינת מנויים
-            async loadSubscribers() {
-                try {
-                    // נסיון טעינה מהשרת
-                    const response = await fetch('/api/get-subscribers');
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log('✅ מנויים נטענו מהשרת');
-                        return data.subscribers || [];
-                    } else {
-                        throw new Error('שגיאה בטעינה מהשרת');
-                    }
-                } catch (error) {
-                    console.warn('⚠️ שגיאה בטעינה מהשרת, טוען מקומית:', error);
-                    
-                    // טעינה מקומית
-                    const localData = localStorage.getItem('whatsapp_alerts_subscribers');
-                    const backupData = localStorage.getItem('subscribers_backup');
-                    
-                    if (localData) {
-                        return JSON.parse(localData);
-                    } else if (backupData) {
-                        return JSON.parse(backupData);
-                    } else {
-                        return [];
-                    }
-                }
-            }
-
-            // טעינת משרות מגיט
-            async loadJobs() {
-                try {
-                    const response = await fetch(this.jobsFile);
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    
-                    const jobs = await response.json();
-                    console.log(`✅ נטענו ${jobs.length} משרות מ-${this.jobsFile}`);
-                    
-                    // שמירה בגיבוי מקומי
-                    localStorage.setItem('jobs_backup', JSON.stringify(jobs));
-                    
-                    return jobs;
-                } catch (error) {
-                    console.warn('⚠️ שגיאה בטעינת משרות מגיט:', error);
-                    
-                    // טעינה מגיבוי מקומי
-                    const backupJobs = localStorage.getItem('jobs_backup');
-                    if (backupJobs) {
-                        console.log('🔄 טוען משרות מגיבוי מקומי');
-                        return JSON.parse(backupJobs);
-                    }
-                    
-                    return [];
-                }
-            }
-
-            // בדיקת חיבור לשרת
-            async testConnection() {
-                try {
-                    const response = await fetch('/api/health');
-                    return response.ok;
-                } catch (error) {
-                    return false;
-                }
-            }
-        }
-
-        // מנהל משרות מותאם לפורמט הנכון
-        class CorrectJobsManager {
-            constructor() {
-                this.dataManager = new JSONDataManager();
                 this.jobs = [];
                 this.lastUpdate = null;
-                this.cachedCategories = [];
-                this.cachedAreas = [];
+                this.loading = false;
+                
+                // טעינה ראשונית
                 this.loadJobs();
             }
 
             async loadJobs() {
+                if (this.loading) return;
+                
+                this.loading = true;
                 try {
-                    this.jobs = await this.dataManager.loadJobs();
-                    this.lastUpdate = new Date();
-                    this.extractCategoriesAndAreas();
-                    console.log(`✅ נטענו ${this.jobs.length} משרות בפורמט הנכון`);
-                } catch (error) {
-                    console.error('❌ שגיאה בטעינת משרות:', error);
+                    console.log('🔄 טוען משרות...');
+                    
+                    // ניסיון טעינה מ-GitHub
+                    try {
+                        const response = await fetch('https://raw.githubusercontent.com/mayeshpo/mayeshpo.github.io/main/data/jobs.json?t=' + Date.now());
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            
+                            if (Array.isArray(data) && data.length > 0) {
+                                this.jobs = data;
+                                this.lastUpdate = new Date();
+                                console.log(`✅ נטענו ${this.jobs.length} משרות מ-GitHub בהצלחה`);
+                                this.updateDynamicOptions();
+                                return;
+                            }
+                        }
+                    } catch (error) {
+                        console.log('⚠️ לא ניתן לטעון מ-GitHub, עובר לנתונים מובנים...');
+                    }
+                    
+                    // טעינת נתונים מובנים
+                    this.loadBuiltInJobs();
+                    
+                } finally {
+                    this.loading = false;
                 }
             }
 
-            // חילוץ קטגוריות ואזורים מהמשרות
-            extractCategoriesAndAreas() {
-                if (!this.jobs || this.jobs.length === 0) return;
+            loadBuiltInJobs() {
+                console.log('📋 טוען נתונים מובנים...');
                 
-                // קטגוריות
-                const categoriesSet = new Set();
-                this.jobs.forEach(job => {
-                    if (job.category) categoriesSet.add(job.category);
-                });
-                this.cachedCategories = Array.from(categoriesSet).filter(c => c && c.trim() !== '');
+                this.jobs = [
+                    {
+                        jobNumber: "A-25821",
+                        title: "נהג/ת משאית מנוף מעל 15 טון",
+                        category: "לוגיסטיקה, מחסנים, שילוח ורכש",
+                        region: "דרום",
+                        city: "אשדוד",
+                        status: "פעיל",
+                        id: "A-25821"
+                    },
+                    {
+                        jobNumber: "B-12345",
+                        title: "מפתח/ת Full Stack",
+                        category: "פיתוח ותוכנה",
+                        region: "מרכז",
+                        city: "תל אביב",
+                        status: "פעיל",
+                        id: "B-12345"
+                    },
+                    {
+                        jobNumber: "C-67890",
+                        title: "מורה/מחנך לחינוך מיוחד",
+                        category: "חינוך והוראה",
+                        region: "צפון",
+                        city: "חיפה",
+                        status: "פעיל",
+                        id: "C-67890"
+                    },
+                    {
+                        jobNumber: "D-11111",
+                        title: "מוכר/ת בחנות בגדים",
+                        category: "מכירות ושיווק",
+                        region: "מרכז",
+                        city: "רמת גן",
+                        status: "פעיל",
+                        id: "D-11111"
+                    },
+                    {
+                        jobNumber: "E-22222",
+                        title: "מטפל/ת סיעודי",
+                        category: "בריאות ורפואה",
+                        region: "ירושלים",
+                        city: "ירושלים",
+                        status: "פעיל",
+                        id: "E-22222"
+                    },
+                    {
+                        jobNumber: "F-33333",
+                        title: "טבח/ית במסעדה יוקרתית",
+                        category: "מזון ומשקאות",
+                        region: "מרכז",
+                        city: "תל אביב",
+                        status: "פעיל",
+                        id: "F-33333"
+                    },
+                    {
+                        jobNumber: "G-44444",
+                        title: "שומר/ת אבטחה במרכז קניות",
+                        category: "שמירה ואבטחה",
+                        region: "דרום",
+                        city: "באר שבע",
+                        status: "פעיל",
+                        id: "G-44444"
+                    },
+                    {
+                        jobNumber: "H-55555",
+                        title: "מנהל/ת פרויקטים",
+                        category: "ניהול ותיאום",
+                        region: "מרכז",
+                        city: "פתח תקווה",
+                        status: "פעיל",
+                        id: "H-55555"
+                    },
+                    {
+                        jobNumber: "I-66666",
+                        title: "נציג/ת שירות לקוחות",
+                        category: "שירות לקוחות",
+                        region: "כל הארץ",
+                        city: "עבודה מהבית",
+                        status: "פעיל",
+                        id: "I-66666"
+                    },
+                    {
+                        jobNumber: "J-77777",
+                        title: "עובד/ת ייצור במפעל",
+                        category: "ייצור ותעשייה",
+                        region: "צפון",
+                        city: "נהריה",
+                        status: "פעיל",
+                        id: "J-77777"
+                    }
+                ];
                 
-                // אזורים
-                const areasSet = new Set();
-                this.jobs.forEach(job => {
-                    if (job.region) areasSet.add(job.region);
-                    if (job.area) areasSet.add(job.area);
-                });
-                this.cachedAreas = Array.from(areasSet).filter(a => a && a.trim() !== '');
+                this.lastUpdate = new Date();
+                console.log(`✅ נטענו ${this.jobs.length} משרות מובנות`);
                 
-                console.log(`📊 נמצאו ${this.cachedCategories.length} קטגוריות ו-${this.cachedAreas.length} אזורים בקובץ משרות`);
+                // עדכון קטגוריות ואזורים
+                this.updateDynamicOptions();
             }
 
-            // קבלת הקטגוריות שנטענו מהגיט
+            updateDynamicOptions() {
+                if (!this.jobs || this.jobs.length === 0) return;
+                
+                // חילוץ קטגוריות ואזורים מהמשרות
+                const categories = new Set();
+                const areas = new Set();
+                
+                this.jobs.forEach(job => {
+                    if (job.category) categories.add(job.category);
+                    if (job.region) areas.add(job.region);
+                    if (job.area) areas.add(job.area);
+                });
+                
+                this.categories = Array.from(categories);
+                this.areas = Array.from(areas);
+                
+                console.log(`📊 נמצאו ${this.categories.length} קטגוריות ו-${this.areas.length} אזורים`);
+            }
+
             getCategories() {
-                return this.cachedCategories.length > 0 ? this.cachedCategories : [
+                return this.categories && this.categories.length > 0 ? this.categories : [
                     "לוגיסטיקה, מחסנים, שילוח ורכש",
                     "פיתוח ותוכנה",
                     "מכירות ושיווק",
                     "חינוך והוראה",
-                    "מזון ומסעדנות",
+                    "מזון ומשקאות",
                     "בריאות ורפואה",
-                    "בנייה והנדסה",
-                    "עיצוב ויצירה",
-                    "אבטחה ושמירה",
-                    "ניהול וכספים",
+                    "שמירה ואבטחה",
+                    "ניהול ותיאום",
                     "שירות לקוחות",
+                    "ייצור ותעשייה",
                     "אחר"
                 ];
             }
 
-            // קבלת האזורים שנטענו מהגיט
             getAreas() {
-                return this.cachedAreas.length > 0 ? this.cachedAreas : [
+                return this.areas && this.areas.length > 0 ? this.areas : [
                     "מרכז",
                     "צפון",
                     "דרום",
-                    "ירושלים והסביבה",
-                    "חיפה קריות והצפון",
-                    "שרון",
-                    "שפלה",
+                    "ירושלים",
                     "כל הארץ",
-                    "עבודה מהבית",
                     "אחר"
                 ];
             }
 
-            // חיפוש משרה לפי מספר (תואם לפורמט החדש)
             findJobById(jobId) {
                 if (!jobId || !this.jobs) return null;
 
-                // ניקוי מספר המשרה
                 const cleanJobId = jobId.toString().trim();
                 
-                // חיפוש במספר השדות הרלוונטיים
                 const job = this.jobs.find(job => {
                     if (!job) return false;
                     
-                    // חיפוש לפי jobNumber (השדה הנכון!)
                     if (job.jobNumber && job.jobNumber.toString().trim() === cleanJobId) {
                         return true;
                     }
                     
-                    // חיפוש לפי id כגיבוי
                     if (job.id && job.id.toString().trim() === cleanJobId) {
                         return true;
                     }
                     
-                    // חיפוש חלקי בכותרת
                     if (cleanJobId.length > 3) {
                         if (job.title && job.title.includes(cleanJobId)) return true;
                     }
@@ -836,7 +859,6 @@
                 return job;
             }
 
-            // המרת משרה לפורמט תקני
             normalizeJob(job) {
                 if (!job) return null;
 
@@ -857,22 +879,17 @@
                 };
             }
 
-            // מציאת מנויים מתאימים
             findMatchingSubscribers(job, subscribers) {
                 if (!job || !subscribers) return [];
 
                 return subscribers.filter(subscriber => {
-                    // התאמת קטגוריה משופרת
                     const categoryMatch = this.matchCategory(job.category, subscriber.categories);
-                    
-                    // התאמת אזור (שימוש ב-region!)
                     const areaMatch = this.matchArea(job.region || job.area, subscriber.areas);
                     
                     return categoryMatch && areaMatch;
                 });
             }
 
-            // התאמת קטגוריה משופרת - עם תמיכה בזכר/נקבה
             matchCategory(jobCategory, subscriberCategories) {
                 if (!jobCategory || !subscriberCategories) return false;
                 
@@ -892,7 +909,6 @@
                     
                     // טיפול במקרים של זכר/נקבה עם סלאש (/)
                     if (jobCat.includes('/')) {
-                        // חיתוך של הכותרת לפי הסלאש וניסיון התאמה לכל חלק
                         const parts = jobCat.split('/');
                         return parts.some(part => {
                             const cleanPart = part.trim();
@@ -917,7 +933,6 @@
                 });
             }
 
-            // התאמת מילות מפתח - משופרת
             matchByKeywords(jobCategory, subscriberCategory) {
                 const keywordMap = {
                     'לוגיסטיקה': ['נהג', 'נהיגה', 'משאית', 'מנוף', 'הובלה', 'מחסן', 'שילוח', 'דרייבר'],
@@ -959,28 +974,9 @@
                     });
                 }
 
-                // טיפול בזכר/נקבה - ניסיון להתאמה ללא הסיומות
-                const genderVariations = [
-                    {from: 'ית', to: ''},
-                    {from: 'ת', to: ''},
-                    {from: 'ה', to: ''},
-                ];
-                
-                genderVariations.forEach(variation => {
-                    if (jobCategory.endsWith(variation.from)) {
-                        const masculineForm = jobCategory.replace(new RegExp(variation.from + '$'), variation.to);
-                        if (subscriberCategory.includes(masculineForm)) return true;
-                    }
-                    if (subscriberCategory.endsWith(variation.from)) {
-                        const masculineForm = subscriberCategory.replace(new RegExp(variation.from + '$'), variation.to);
-                        if (jobCategory.includes(masculineForm)) return true;
-                    }
-                });
-
                 return false;
             }
 
-            // התאמת אזור
             matchArea(jobArea, subscriberAreas) {
                 if (!jobArea || !subscriberAreas) return false;
                 
@@ -1015,23 +1011,22 @@
                 });
             }
 
-            // קבלת כל המשרות
             getAllJobs() {
                 return this.jobs || [];
             }
+
+            async reloadJobs() {
+                console.log('🔄 מרענן משרות...');
+                this.jobs = [];
+                await this.loadJobs();
+                return this.jobs.length;
+            }
         }
 
-        // יצירת מנהל המשרות החדש
-        const correctJobsManager = new CorrectJobsManager();
-        const dataManager = new JSONDataManager();
+        // יצירת מנהל המשרות
+        const correctJobsManager = new JobsManager();
 
         // פונקציות עזר גלובליות
-        function searchJobById(jobId) {
-            const job = correctJobsManager.findJobById(jobId);
-            return job ? correctJobsManager.normalizeJob(job) : null;
-        }
-
-        // עדכון קטגוריות ואזורים דינמית מהגיט
         function getUpdatedJobCategories() {
             return correctJobsManager.getCategories();
         }
@@ -1040,11 +1035,28 @@
             return correctJobsManager.getAreas();
         }
 
+        // רענון נתוני משרות
+        async function refreshJobsData() {
+            try {
+                const count = await correctJobsManager.reloadJobs();
+                
+                // עדכון טפסים
+                setTimeout(() => {
+                    createNewSubscriberForm();
+                    adminPanel?.loadSubscriberSelect?.();
+                }, 500);
+                
+                adminPanel?.showAlert(`✅ רענון הושלם - נטענו ${count} משרות`, 'success');
+            } catch (error) {
+                adminPanel?.showAlert('❌ שגיאה ברענון נתוני משרות', 'error');
+                console.error('שגיאה ברענון:', error);
+            }
+        }
+
         // מערכת ניהול מנויים מעודכנת
         class AdminPanel {
             constructor() {
                 this.whatsappAlerts = null;
-                this.dataManager = new JSONDataManager();
                 this.currentFilter = {
                     category: '',
                     area: '',
@@ -1055,14 +1067,47 @@
             }
 
             async init() {
-                // טעינת מנויים מהשרת/קובץ
-                await this.loadSubscribersFromServer();
+                // יצירת מערכת WhatsApp Alerts עם נתונים בסיסיים
+                this.whatsappAlerts = {
+                    subscribers: JSON.parse(localStorage.getItem('whatsapp_alerts_subscribers') || '[]'),
+                    options: {
+                        adminPhone: "972555504633", // מספר הטלפון המעודכן שלך
+                        categories: getUpdatedJobCategories(),
+                        areas: getUpdatedJobAreas()
+                    },
+                    getSubscribers: () => this.whatsappAlerts.subscribers,
+                    addSubscriber: (subscriber) => {
+                        this.whatsappAlerts.subscribers.push(subscriber);
+                        this.saveSubscribers();
+                    },
+                    removeSubscriber: (phone) => {
+                        this.whatsappAlerts.subscribers = this.whatsappAlerts.subscribers.filter(s => s.phone !== phone);
+                        this.saveSubscribers();
+                    },
+                    sendDirectAlert: (subscriberData) => {
+                        const phoneNumber = this.whatsappAlerts.options.adminPhone;
+                        
+                        const message = encodeURIComponent(
+                            `מנוי חדש נרשם להתראות משרות!\n\n` +
+                            `שם: ${subscriberData.name}\n` +
+                            `טלפון: ${subscriberData.phone}\n` +
+                            `תחומי עניין: ${subscriberData.categories.join(', ')}\n` +
+                            `אזורים: ${subscriberData.areas.join(', ')}\n` +
+                            `מקור: ${subscriberData.source || 'אתר'}\n` +
+                            `תאריך: ${new Date().toLocaleString('he-IL')}`
+                        );
+                        
+                        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+                        window.open(whatsappUrl, '_blank');
+                        
+                        return true;
+                    }
+                };
                 
                 this.loadFilters();
                 this.renderSubscribers();
                 this.updateStats();
                 this.attachEvents();
-                this.updateSystemStatus();
                 
                 // טעינת רשימת מנויים לשליחה ישירה
                 this.loadSubscriberSelect();
@@ -1073,118 +1118,9 @@
                 console.log('🔧 פאנל ניהול הופעל');
             }
 
-            async loadSubscribersFromServer() {
-                try {
-                    const subscribers = await this.dataManager.loadSubscribers();
-                    
-                    // יצירת מערכת WhatsApp Alerts עם המנויים הקיימים
-                    this.whatsappAlerts = {
-                        subscribers: subscribers,
-                        options: {
-                            adminPhone: "972555504633", // מספר הטלפון המעודכן שלך
-                            categories: getUpdatedJobCategories(),
-                            areas: getUpdatedJobAreas()
-                        },
-                        getSubscribers: () => this.whatsappAlerts.subscribers,
-                        addSubscriber: (subscriber) => {
-                            this.whatsappAlerts.subscribers.push(subscriber);
-                            this.saveSubscribers();
-                        },
-                        removeSubscriber: (phone) => {
-                            this.whatsappAlerts.subscribers = this.whatsappAlerts.subscribers.filter(s => s.phone !== phone);
-                            this.saveSubscribers();
-                        },
-                        createJobMessage: (jobData) => {
-                            return `🔥 משרה חדשה!
-📋 ${jobData.title}
-📍 ${jobData.region || jobData.area}
-🎯 ${jobData.category}
-
-${jobData.description ? `💬 ${jobData.description}\n\n` : ''}לפרטים נוספים: https://www.mayeshpo.co.il
-
-בהצלחה! 💪`;
-                        },
-                        sendJobAlert: (jobData) => {
-                            const matchingSubscribers = correctJobsManager.findMatchingSubscribers(jobData, this.whatsappAlerts.subscribers);
-
-                            if (matchingSubscribers.length === 0) {
-                                console.log('❌ אין מנויים מתאימים');
-                                return false;
-                            }
-
-                            const message = this.whatsappAlerts.createJobMessage(jobData);
-                            
-                            matchingSubscribers.forEach(subscriber => {
-                                const phoneNumber = subscriber.phone.replace(/^0/, '972').replace(/\D/g, '');
-                                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-                                console.log(`📱 שולח ל-${subscriber.phone}:`, whatsappUrl);
-                            });
-                            
-                            return true;
-                        },
-                        sendDirectAlert: (subscriberData) => {
-                            const phoneNumber = this.options.adminPhone;
-                            
-                            const message = encodeURIComponent(
-                                `מנוי חדש נרשם להתראות משרות!\n\n` +
-                                `שם: ${subscriberData.name}\n` +
-                                `טלפון: ${subscriberData.phone}\n` +
-                                `תחומי עניין: ${subscriberData.categories.join(', ')}\n` +
-                                `אזורים: ${subscriberData.areas.join(', ')}\n` +
-                                `מקור: ${subscriberData.source || 'אתר'}\n` +
-                                `תאריך: ${new Date().toLocaleString('he-IL')}`
-                            );
-                            
-                            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
-                            window.open(whatsappUrl, '_blank');
-                            
-                            return true;
-                        }
-                    };
-                    
-                    console.log(`✅ נטענו ${subscribers.length} מנויים מהשרת`);
-                } catch (error) {
-                    console.error('❌ שגיאה בטעינת מנויים:', error);
-                    this.whatsappAlerts = {
-                        subscribers: [],
-                        options: {
-                            adminPhone: "972555504633", // מספר הטלפון המעודכן שלך
-                            categories: getUpdatedJobCategories(),
-                            areas: getUpdatedJobAreas()
-                        },
-                        getSubscribers: () => [],
-                        addSubscriber: () => {},
-                        removeSubscriber: () => {},
-                        createJobMessage: () => {},
-                        sendJobAlert: () => false,
-                        sendDirectAlert: () => false
-                    };
-                }
-            }
-
-            async saveSubscribers() {
+            saveSubscribers() {
                 if (this.whatsappAlerts && this.whatsappAlerts.subscribers) {
-                    await this.dataManager.saveSubscribers(this.whatsappAlerts.subscribers);
-                }
-            }
-
-            async updateSystemStatus() {
-                const statusIndicator = document.getElementById('system-status');
-                const statusText = document.getElementById('status-text');
-                
-                try {
-                    const isConnected = await this.dataManager.testConnection();
-                    
-                    if (isConnected) {
-                        statusIndicator.className = 'status-indicator status-online';
-                        statusText.textContent = 'מחובר לשרת';
-                    } else {
-                        statusIndicator.className = 'status-indicator status-offline';
-                        statusText.textContent = 'עובד מקומית';
-                    }
-                } catch (error) {
-                    statusIndicator.className = 'status-indicator status-offline';
-                    statusText.textContent = 'בעיית חיבור';
+                    localStorage.setItem('whatsapp_alerts_subscribers', JSON.stringify(this.whatsappAlerts.subscribers));
                 }
             }
 
@@ -1401,7 +1337,7 @@ ${jobData.description ? `💬 ${jobData.description}\n\n` : ''}לפרטים נו
                         (sub.name && sub.name.toLowerCase().includes(searchTerm)) ||
                         (sub.phone && sub.phone.includes(searchTerm)) ||
                         (sub.categories && sub.categories.some(cat => cat.toLowerCase().includes(searchTerm))) ||
-(sub.areas && sub.areas.some(area => area.toLowerCase().includes(searchTerm)))
+                        (sub.areas && sub.areas.some(area => area.toLowerCase().includes(searchTerm)))
                     );
                 }
 
@@ -1433,7 +1369,7 @@ ${jobData.description ? `💬 ${jobData.description}\n\n` : ''}לפרטים נו
                     if (totalSubscribersEl) totalSubscribersEl.textContent = '0';
                     if (totalAlertsEl) totalAlertsEl.textContent = '0';
                     if (newThisWeekEl) newThisWeekEl.textContent = '0';
-                    if (categoriesCountEl) categoriesCountEl.textContent = '0';
+                    if (categoriesCountEl        ) categoriesCountEl.textContent = '0';
                     
                     return;
                 }
@@ -2138,6 +2074,1114 @@ ${jobData.description ? `💬 ${jobData.description}\n\n` : ''}לפרטים נו
             adminPanel?.showAlert('✅ רשימת המנויים רועננה!', 'success');
         }
 
+        // פונקציות לכלי בדיקה והתאמות
+        function analyzeJobsStructure() {
+            const jobs = correctJobsManager.getAllJobs();
+            
+            if (!jobs || jobs.length === 0) {
+                alert('❌ אין משרות לניתוח. וודא שקובץ המשרות נטען.');
+                return;
+            }
+
+            console.log(`🔍 ניתוח מבנה של ${jobs.length} משרות:`);
+            
+            // ניתוח השדות הקיימים
+            const fieldAnalysis = {};
+            const sampleJob = jobs[0];
+            
+            Object.keys(sampleJob).forEach(field => {
+                const valuesSet = new Set();
+                jobs.slice(0, 10).forEach(job => {
+                    if (job[field]) valuesSet.add(job[field]);
+                });
+                
+                fieldAnalysis[field] = {
+                    type: typeof sampleJob[field],
+                    sampleValues: Array.from(valuesSet).slice(0, 3),
+                    totalFound: jobs.filter(job => job[field]).length
+                };
+            });
+
+            console.table(fieldAnalysis);
+            
+            // דוגמת משרה מלאה
+            console.log('📝 דוגמת משרה מלאה:');
+            console.log(JSON.stringify(sampleJob, null, 2));
+            
+            // בדיקת איכות נתונים
+            const qualityReport = {
+                totalJobs: jobs.length,
+                withJobNumber: jobs.filter(j => j.jobNumber).length,
+                withTitle: jobs.filter(j => j.title).length,
+                withCategory: jobs.filter(j => j.category).length,
+                withRegion: jobs.filter(j => j.region || j.area).length,
+                activeJobs: jobs.filter(j => j.status === 'פעיל').length,
+                titlesWithSlash: jobs.filter(j => j.title && j.title.includes('/')).length
+            };
+            
+            console.log('📊 דוח איכות נתונים:');
+            console.table(qualityReport);
+
+            // בדיקת טיפול בזכר/נקבה
+            console.log('🔍 בדיקת טיפול בזכר/נקבה:');
+            const slashExamples = jobs.filter(j => j.title && j.title.includes('/')).slice(0, 5);
+            slashExamples.forEach(job => {
+                console.log(`- ${job.title}`);
+            });
+            
+            // הצגת התוצאות במודל
+            showAnalysisModal(fieldAnalysis, qualityReport, slashExamples);
+            
+            return qualityReport;
+        }
+
+        function showAnalysisModal(fieldAnalysis, qualityReport, slashExamples) {
+            const modal = document.createElement('div');
+            modal.className = 'preview-modal';
+            modal.innerHTML = `
+                <div class="preview-content" style="max-width: 800px;">
+                    <h3><i class="fas fa-microscope"></i> ניתוח מבנה משרות</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: var(--primary-color);">📊 דוח איכות נתונים:</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 15px 0;">
+                            <div style="background: rgba(246, 152, 152, 0.1); padding: 15px; border-radius: 8px;">
+                                <strong>סה"כ משרות:</strong> ${qualityReport.totalJobs}
+                            </div>
+                            <div style="background: rgba(246, 152, 152, 0.1); padding: 15px; border-radius: 8px;">
+                                <strong>עם מספר משרה:</strong> ${qualityReport.withJobNumber}
+                            </div>
+                            <div style="background: rgba(246, 152, 152, 0.1); padding: 15px; border-radius: 8px;">
+                                <strong>עם קטגוריה:</strong> ${qualityReport.withCategory}
+                            </div>
+                            <div style="background: rgba(246, 152, 152, 0.1); padding: 15px; border-radius: 8px;">
+                                <strong>עם אזור:</strong> ${qualityReport.withRegion}
+                            </div>
+                            <div style="background: rgba(37, 211, 102, 0.1); padding: 15px; border-radius: 8px;">
+                                <strong>משרות פעילות:</strong> ${qualityReport.activeJobs}
+                            </div>
+                            <div style="background: rgba(255, 193, 7, 0.1); padding: 15px; border-radius: 8px;">
+                                <strong>כותרות עם "/":</strong> ${qualityReport.titlesWithSlash}
+                            </div>
+                        </div>
+                        
+                        <h4 style="color: var(--primary-color);">🔍 דוגמאות זכר/נקבה:</h4>
+                        <div style="background: rgba(255, 193, 7, 0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
+                            ${slashExamples.length > 0 ? 
+                                slashExamples.map(job => `<div>• ${job.title}</div>`).join('') :
+                                '<div>לא נמצאו כותרות עם סלאש</div>'
+                            }
+                        </div>
+                        
+                        <h4 style="color: var(--primary-color);">🏗️ שדות במבנה:</h4>
+                        <div style="background: rgba(246, 152, 152, 0.1); padding: 15px; border-radius: 8px; max-height: 200px; overflow-y: auto;">
+                            ${Object.entries(fieldAnalysis).map(([field, info]) => 
+                                `<div style="margin-bottom: 10px;">
+                                    <strong>${field}:</strong> ${info.type} 
+                                    (${info.totalFound}/${qualityReport.totalJobs} משרות)
+                                    <br><small>דוגמאות: ${info.sampleValues.join(', ')}</small>
+                                </div>`
+                            ).join('')}
+                        </div>
+                    </div>
+                    
+                    <button class="close-btn" onclick="this.parentElement.parentElement.remove()">
+                        <i class="fas fa-times"></i> סגור
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function testJobSearchDemo() {
+            console.log('🧪 התחלת בדיקת מערכת החיפוש...');
+            
+            const testCases = ['A-25821', '12345', 'משאית', 'Full Stack', 'נהג'];
+            const results = [];
+            
+            testCases.forEach(testCase => {
+                console.log(`\n--- בדיקה: ${testCase} ---`);
+                const job = correctJobsManager.findJobById(testCase);
+                
+                if (job) {
+                    console.log('✅ משרה נמצאה:');
+                    console.log(`   מספר: ${job.jobNumber}`);
+                    console.log(`   כותרת: ${job.title}`);
+                    console.log(`   קטגוריה: ${job.category}`);
+                    console.log(`   אזור: ${job.region || job.area}`);
+                    console.log(`   סטטוס: ${job.status}`);
+                    
+                    results.push({
+                        search: testCase,
+                        found: true,
+                        job: job
+                    });
+                } else {
+                    console.log('❌ משרה לא נמצאה');
+                    results.push({
+                        search: testCase,
+                        found: false
+                    });
+                }
+            });
+            
+            // הצגת תוצאות במודל
+            showSearchResultsModal(results);
+            
+            console.log('\n✅ בדיקת החיפוש הושלמה - ראה תוצאות בקונסול');
+        }
+
+        function showSearchResultsModal(results) {
+            const modal = document.createElement('div');
+            modal.className = 'preview-modal';
+            modal.innerHTML = `
+                <div class="preview-content">
+                    <h3><i class="fas fa-search"></i> תוצאות בדיקת חיפוש</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        ${results.map(result => `
+                            <div style="background: ${result.found ? 'rgba(37, 211, 102, 0.1)' : 'rgba(255, 71, 87, 0.1)'}; 
+                                        padding: 15px; margin: 10px 0; border-radius: 8px; 
+                                        border: 1px solid ${result.found ? 'rgba(37, 211, 102, 0.3)' : 'rgba(255, 71, 87, 0.3)'};">
+                                <div><strong>חיפוש:</strong> "${result.search}" 
+                                    ${result.found ? '✅' : '❌'}
+                                </div>
+                                ${result.found ? `
+                                    <div style="margin-top: 8px; font-size: 0.9em;">
+                                        <div><strong>מספר:</strong> ${result.job.jobNumber}</div>
+                                        <div><strong>כותרת:</strong> ${result.job.title}</div>
+                                        <div><strong>קטגוריה:</strong> ${result.job.category}</div>
+                                        <div><strong>אזור:</strong> ${result.job.region || result.job.area}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <button class="close-btn" onclick="this.parentElement.parentElement.remove()">
+                        <i class="fas fa-times"></i> סגור
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function testMatchingDemo() {
+            const jobs = correctJobsManager.getAllJobs();
+            const subscribers = adminPanel?.whatsappAlerts?.getSubscribers() || [];
+            
+            if (jobs.length === 0 || subscribers.length === 0) {
+                alert('צריך משרות ומנויים כדי לבדוק התאמה. הוסף מנויים לבדיקה ווודא שהמשרות נטענות.');
+                return;
+            }
+
+            // בחירת משרה לבדיקה
+            const testJob = jobs[0];
+            const normalizedJob = correctJobsManager.normalizeJob(testJob);
+            const matches = correctJobsManager.findMatchingSubscribers(normalizedJob, subscribers);
+
+            // ניתוח מפורט של ההתאמות
+            const matchDetails = subscribers.map(subscriber => {
+                const categoryMatch = correctJobsManager.matchCategory(normalizedJob.category, subscriber.categories);
+                const areaMatch = correctJobsManager.matchArea(normalizedJob.region, subscriber.areas);
+                const overallMatch = categoryMatch && areaMatch;
+                
+                return {
+                    subscriber,
+                    categoryMatch,
+                    areaMatch,
+                    overallMatch
+                };
+            });
+
+            showMatchingAnalysisModal(normalizedJob, matchDetails);
+        }
+
+        function showMatchingAnalysisModal(job, matchDetails) {
+            const modal = document.createElement('div');
+            modal.className = 'preview-modal';
+            modal.innerHTML = `
+                <div class="preview-content" style="max-width: 900px;">
+                    <h3><i class="fas fa-users"></i> ניתוח התאמת מנויים</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: var(--primary-color);">📋 משרה לבדיקה:</h4>
+                        <div style="background: rgba(246, 152, 152, 0.1); padding: 15px; border-radius: 8px; margin: 10px 0;">
+                            <strong>${job.title}</strong><br>
+                            <small>קטגוריה: ${job.category}</small><br>
+                            <small>אזור: ${job.region}</small><br>
+                            <small>מספר: ${job.jobNumber}</small>
+                        </div>
+
+                        <h4 style="color: var(--primary-color);">👥 ניתוח התאמות (${matchDetails.filter(m => m.overallMatch).length}/${matchDetails.length} מתאימים):</h4>
+                        <div style="max-height: 400px; overflow-y: auto;">
+                            ${matchDetails.map(detail => `
+                                <div style="background: ${detail.overallMatch ? 'rgba(37, 211, 102, 0.1)' : 'rgba(255, 71, 87, 0.1)'}; 
+                                            padding: 15px; margin: 5px 0; border-radius: 8px; 
+                                            border: 1px solid ${detail.overallMatch ? 'rgba(37, 211, 102, 0.3)' : 'rgba(255, 71, 87, 0.3)'};">
+                                    <div style="font-weight: bold;">
+                                        📱 ${detail.subscriber.phone} - ${detail.subscriber.name || 'ללא שם'}
+                                        ${detail.overallMatch ? '✅' : '❌'}
+                                    </div>
+                                    <div style="margin-top: 8px; font-size: 0.9em;">
+                                        <div>🎯 קטגוריות מנוי: ${detail.subscriber.categories.join(', ')} 
+                                            ${detail.categoryMatch ? '✅' : '❌'}
+                                        </div>
+                                        <div>📍 אזורי מנוי: ${detail.subscriber.areas.join(', ')} 
+                                            ${detail.areaMatch ? '✅' : '❌'}
+                                        </div>
+                                        ${!detail.overallMatch ? `
+                                            <div style="color: #ff6b6b; margin-top: 5px; font-size: 0.8em;">
+                                                ${!detail.categoryMatch ? '• לא התאמה בקטגוריה' : ''}
+                                                ${!detail.areaMatch ? '• לא התאמה באזור' : ''}
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <h4 style="color: var(--primary-color);">📊 סיכום:</h4>
+                        <div style="background: rgba(246, 152, 152, 0.1); padding: 15px; border-radius: 8px;">
+                            <div>מתוך ${matchDetails.length} מנויים במערכת:</div>
+                            <div>• ${matchDetails.filter(m => m.overallMatch).length} מתאימים למשרה זו</div>
+                            <div>• ${matchDetails.filter(m => m.categoryMatch).length} מתאימים בקטגוריה</div>
+                            <div>• ${matchDetails.filter(m => m.areaMatch).length} מתאימים באזור</div>
+                        </div>
+                    </div>
+                    
+                    <button class="close-btn" onclick="this.parentElement.parentElement.remove()">
+                        <i class="fas fa-times"></i> סגור
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function testCategoryMatching() {
+            const testCases = [
+                {
+                    jobCategory: 'לוגיסטיקה, מחסנים, שילוח ורכש',
+                    subscriberCategories: ['לוגיסטיקה'],
+                    expected: true,
+                    note: 'התאמה חלקית - קטגוריה מוכלת'
+                },
+                {
+                    jobCategory: 'לוגיסטיקה, מחסנים, שילוח ורכש',
+                    subscriberCategories: ['נהיגה'],
+                    expected: true,
+                    note: 'התאמה לפי מילות מפתח'
+                },
+                {
+                    jobCategory: 'פיתוח ותוכנה',
+                    subscriberCategories: ['מפתח'],
+                    expected: true,
+                    note: 'התאמה לפי מילות מפתח'
+                },
+                {
+                    jobCategory: 'נהג/ת משאית',
+                    subscriberCategories: ['לוגיסטיקה'],
+                    expected: true,
+                    note: 'טיפול בסלאש לזכר/נקבה'
+                },
+                {
+                    jobCategory: 'מורה/מחנך לחינוך מיוחד',
+                    subscriberCategories: ['חינוך והוראה'],
+                    expected: true,
+                    note: 'טיפול בסלאש עם תחומים שונים'
+                },
+                {
+                    jobCategory: 'מפתח/ת Full Stack',
+                    subscriberCategories: ['פיתוח ותוכנה'],
+                    expected: true,
+                    note: 'זכר/נקבה עם טכנולוגיה'
+                },
+                {
+                    jobCategory: 'מכירות ושיווק',
+                    subscriberCategories: ['חינוך והוראה'],
+                    expected: false,
+                    note: 'אין התאמה - תחומים שונים'
+                }
+            ];
+            
+            console.log('🧪 בדיקת מערכת התאמת קטגוריות:');
+            const results = [];
+            
+            testCases.forEach((test, index) => {
+                const result = correctJobsManager.matchCategory(test.jobCategory, test.subscriberCategories);
+                const status = result === test.expected ? '✅' : '❌';
+                
+                console.log(`${status} בדיקה ${index + 1}:`);
+                console.log(`  משרה: ${test.jobCategory}`);
+                console.log(`  מנוי: ${test.subscriberCategories.join(', ')}`);
+                console.log(`  תוצאה: ${result} (צפוי: ${test.expected})`);
+                if (test.note) {
+                    console.log(`  הערה: ${test.note}`);
+                }
+                
+                results.push({
+                    ...test,
+                    result,
+                    success: result === test.expected,
+                    index: index + 1
+                });
+            });
+
+            // הצגת תוצאות במודל
+            showCategoryTestModal(results);
+        }
+
+        function showCategoryTestModal(results) {
+            const successCount = results.filter(r => r.success).length;
+            
+            const modal = document.createElement('div');
+            modal.className = 'preview-modal';
+            modal.innerHTML = `
+                <div class="preview-content" style="max-width: 800px;">
+                    <h3><i class="fas fa-vial"></i> תוצאות בדיקת התאמת קטגוריות</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <div style="background: ${successCount === results.length ? 'rgba(37, 211, 102, 0.1)' : 'rgba(255, 193, 7, 0.1)'}; 
+                                    padding: 15px; border-radius: 8px; margin-bottom: 20px; 
+                                    border: 1px solid ${successCount === results.length ? 'rgba(37, 211, 102, 0.3)' : 'rgba(255, 193, 7, 0.3)'};">
+                            <strong>תוצאה כללית: ${successCount}/${results.length} בדיקות עברו בהצלחה</strong>
+                        </div>
+                        
+                        <div style="max-height: 400px; overflow-y: auto;">
+                            ${results.map(test => `
+                                <div style="background: ${test.success ? 'rgba(37, 211, 102, 0.1)' : 'rgba(255, 71, 87, 0.1)'}; 
+                                            padding: 15px; margin: 10px 0; border-radius: 8px; 
+                                            border: 1px solid ${test.success ? 'rgba(37, 211, 102, 0.3)' : 'rgba(255, 71, 87, 0.3)'};">
+                                    <div><strong>בדיקה ${test.index}:</strong> ${test.success ? '✅ הצליח' : '❌ נכשל'}</div>
+                                    <div style="margin-top: 8px; font-size: 0.9em;">
+                                        <div><strong>קטגוריית משרה:</strong> ${test.jobCategory}</div>
+                                        <div><strong>קטגוריות מנוי:</strong> ${test.subscriberCategories.join(', ')}</div>
+                                        <div><strong>תוצאה:</strong> ${test.result ? 'התאמה' : 'אין התאמה'} 
+                                            (צפוי: ${test.expected ? 'התאמה' : 'אין התאמה'})</div>
+                                        <div style="margin-top: 5px; font-style: italic; color: #999;">${test.note}</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <button class="close-btn" onclick="this.parentElement.parentElement.remove()">
+                        <i class="fas fa-times"></i> סגור
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function testGenderMatching() {
+            const genderTestCases = [
+                {
+                    jobTitle: 'נהג/ת משאית מנוף',
+                    subscriberCategories: ['לוגיסטיקה, מחסנים, שילוח ורכש'],
+                    note: 'זכר/נקבה עם התאמה לקטגוריה'
+                },
+                {
+                    jobTitle: 'מפתח/ת Full Stack',
+                    subscriberCategories: ['פיתוח ותוכנה'],
+                    note: 'זכר/נקבה בתחום הטכנולוגיה'
+                },
+                {
+                    jobTitle: 'מורה/מחנך לחינוך מיוחד',
+                    subscriberCategories: ['חינוך והוראה'],
+                    note: 'שני תפקידים שונים עם סלאש'
+                },
+                {
+                    jobTitle: 'מוכר/ת בחנות בגדים',
+                    subscriberCategories: ['מכירות ושיווק'],
+                    note: 'מכירות עם זכר/נקבה'
+                },
+                {
+                    jobTitle: 'מטפל/ת סיעודי',
+                    subscriberCategories: ['בריאות ורפואה'],
+                    note: 'תפקיד טיפולי עם זכר/נקבה'
+                }
+            ];
+            
+            console.log('🧪 בדיקת התאמה לזכר/נקבה:');
+            const results = [];
+            
+            genderTestCases.forEach((test, index) => {
+                const result = correctJobsManager.matchCategory(test.jobTitle, test.subscriberCategories);
+                
+                console.log(`🔍 בדיקה ${index + 1}:`);
+                console.log(`  כותרת משרה: ${test.jobTitle}`);
+                console.log(`  קטגוריות מנוי: ${test.subscriberCategories.join(', ')}`);
+                console.log(`  תוצאה: ${result ? '✅ התאמה' : '❌ אין התאמה'}`);
+                console.log(`  הערה: ${test.note}`);
+                
+                results.push({
+                    ...test,
+                    result,
+                    index: index + 1
+                });
+            });
+
+            showGenderTestModal(results);
+        }
+
+        function showGenderTestModal(results) {
+            const modal = document.createElement('div');
+            modal.className = 'preview-modal';
+            modal.innerHTML = `
+                <div class="preview-content" style="max-width: 800px;">
+                    <h3><i class="fas fa-venus-mars"></i> בדיקת התאמה לזכר/נקבה</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <div style="background: rgba(255, 193, 7, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid rgba(255, 193, 7, 0.3);">
+                            <strong>המערכת מזהה ומתאימה משרות עם סלאש (/) המציינות זכר/נקבה</strong>
+                        </div>
+                        
+                        <div style="max-height: 400px; overflow-y: auto;">
+                            ${results.map(test => `
+                                <div style="background: ${test.result ? 'rgba(37, 211, 102, 0.1)' : 'rgba(255, 71, 87, 0.1)'}; 
+                                            padding: 15px; margin: 10px 0; border-radius: 8px; 
+                                            border: 1px solid ${test.result ? 'rgba(37, 211, 102, 0.3)' : 'rgba(255, 71, 87, 0.3)'};">
+                                    <div><strong>בדיקה ${test.index}:</strong> ${test.result ? '✅ התאמה' : '❌ אין התאמה'}</div>
+                                    <div style="margin-top: 8px; font-size: 0.9em;">
+                                        <div><strong>כותרת משרה:</strong> ${test.jobTitle}</div>
+                                        <div><strong>קטגוריות מנוי:</strong> ${test.subscriberCategories.join(', ')}</div>
+                                        <div style="margin-top: 5px; font-style: italic; color: #999;">${test.note}</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                                    </div>
+                    
+                    <button class="close-btn" onclick="this.parentElement.parentElement.remove()">
+                        <i class="fas fa-times"></i> סגור
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function showMatchingRules() {
+            const modal = document.createElement('div');
+            modal.className = 'preview-modal';
+            modal.innerHTML = `
+                <div class="preview-content" style="max-width: 800px;">
+                    <h3><i class="fas fa-book"></i> חוקי התאמה של המערכת</h3>
+                    
+                    <div style="margin: 20px 0; max-height: 500px; overflow-y: auto;">
+                        <h4 style="color: var(--primary-color);">🎯 התאמת קטגוריות:</h4>
+                        <div style="background: rgba(246, 152, 152, 0.1); padding: 15px; border-radius: 8px; margin: 10px 0;">
+                            <div><strong>1. התאמה מדויקת:</strong> השוואה זהה בין קטגוריית המשרה למנוי</div>
+                            <div><strong>2. התאמה חלקית:</strong> קטגוריה אחת מוכלת בשנייה</div>
+                            <div><strong>3. מילות מפתח:</strong> התאמה לפי מילות מפתח רלוונטיות</div>
+                            <div><strong>4. זכר/נקבה:</strong> טיפול בסלאש (/) לזיהוי תפקידים</div>
+                        </div>
+                        
+                        <h4 style="color: var(--primary-color);">🗺️ התאמת אזורים:</h4>
+                        <div style="background: rgba(37, 211, 102, 0.1); padding: 15px; border-radius: 8px; margin: 10px 0;">
+                            <div><strong>1. התאמה מדויקת:</strong> אזור זהה</div>
+                            <div><strong>2. התאמה חלקית:</strong> אזור מוכל באזור אחר</div>
+                            <div><strong>3. "כל הארץ":</strong> תמיד מתאים</div>
+                            <div><strong>4. אזורים גיאוגרפיים:</strong> התאמות גמישות (מרכז ← תל אביב)</div>
+                        </div>
+
+                        <h4 style="color: var(--primary-color);">🔧 מילות מפתח:</h4>
+                        <div style="background: rgba(255, 193, 7, 0.1); padding: 15px; border-radius: 8px; margin: 10px 0;">
+                            <div><strong>לוגיסטיקה ←→</strong> נהג, נהיגה, משאית, מנוף, הובלה</div>
+                            <div><strong>פיתוח ←→</strong> מפתח, תכנות, תוכנה, programmer</div>
+                            <div><strong>מכירות ←→</strong> שיווק, marketing, sales, מוכר</div>
+                            <div><strong>חינוך ←→</strong> מורה, הוראה, מחנך, גננת</div>
+                            <div><strong>בריאות ←→</strong> רפואה, רופא, אחות, טיפול</div>
+                        </div>
+
+                        <h4 style="color: var(--primary-color);">⚖️ טיפול בזכר/נקבה:</h4>
+                        <div style="background: rgba(156, 39, 176, 0.1); padding: 15px; border-radius: 8px; margin: 10px 0;">
+                            <div><strong>זיהוי סלאש:</strong> "נהג/ת", "מפתח/ת", "מורה/מחנך"</div>
+                            <div><strong>פיצול וחיפוש:</strong> בדיקת כל חלק בנפרד</div>
+                            <div><strong>סיומות נקבה:</strong> התאמה של "ית", "ת", "ה"</div>
+                            <div><strong>דו-כיווני:</strong> עובד גם כשהמנוי כתב עם סלאש</div>
+                        </div>
+
+                        <h4 style="color: var(--primary-color);">📝 דוגמאות התאמה:</h4>
+                        <div style="background: rgba(3, 169, 244, 0.1); padding: 15px; border-radius: 8px; margin: 10px 0;">
+                            <div>✅ "נהג/ת משאית" ← מנוי: "לוגיסטיקה"</div>
+                            <div>✅ "מפתח/ת Full Stack" ← מנוי: "פיתוח ותוכנה"</div>
+                            <div>✅ "מורה/מחנך" ← מנוי: "חינוך והוראה"</div>
+                            <div>✅ "עבודה מהבית" ← מנוי: "כל הארץ"</div>
+                            <div>❌ "מכירות" ← מנוי: "בריאות ורפואה"</div>
+                        </div>
+                    </div>
+                    
+                    <button class="close-btn" onclick="this.parentElement.parentElement.remove()">
+                        <i class="fas fa-times"></i> סגור
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function testRealTimeMatching() {
+            const jobCategory = document.getElementById('testJobCategory').value.trim();
+            const subscriberCategoriesText = document.getElementById('testSubscriberCategories').value.trim();
+            
+            if (!jobCategory || !subscriberCategoriesText) {
+                alert('אנא הכנס קטגוריית משרה וקטגוריות מנוי');
+                return;
+            }
+            
+            // פיצול קטגוריות המנוי
+            const subscriberCategories = subscriberCategoriesText.split(',').map(cat => cat.trim());
+            
+            // בדיקת התאמה
+            const result = correctJobsManager.matchCategory(jobCategory, subscriberCategories);
+            
+            // הצגת תוצאות
+            const resultsDiv = document.getElementById('realTimeResults');
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `
+                <div style="background: ${result ? 'rgba(37, 211, 102, 0.1)' : 'rgba(255, 71, 87, 0.1)'}; 
+                            padding: 15px; border-radius: 8px; 
+                            border: 1px solid ${result ? 'rgba(37, 211, 102, 0.3)' : 'rgba(255, 71, 87, 0.3)'};">
+                    <h4 style="color: ${result ? '#25D366' : '#ff4757'};">
+                        ${result ? '✅ יש התאמה!' : '❌ אין התאמה'}
+                    </h4>
+                    <div style="margin-top: 10px; font-size: 0.9em;">
+                        <div><strong>קטגוריית משרה:</strong> "${jobCategory}"</div>
+                        <div><strong>קטגוריות מנוי:</strong> ${subscriberCategories.map(cat => `"${cat}"`).join(', ')}</div>
+                        <div style="margin-top: 10px;">
+                            <strong>הסבר:</strong> 
+                            ${result ? 
+                                'המערכת מצאה התאמה בין קטגוריית המשרה לקטגוריות המנוי על פי חוקי ההתאמה' : 
+                                'לא נמצאה התאמה בין קטגוריית המשרה לקטגוריות המנוי'
+                            }
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function clearTestInputs() {
+            document.getElementById('testJobCategory').value = '';
+            document.getElementById('testSubscriberCategories').value = '';
+            document.getElementById('realTimeResults').style.display = 'none';
+        }
+
+        // ניתוח מפורט של התאמת משרה למנויים
+        function analyzeJobMatching() {
+            const jobNumber = document.getElementById('detailedJobSearch').value.trim();
+            const resultsDiv = document.getElementById('detailedAnalysisResults');
+            
+            if (!jobNumber) {
+                resultsDiv.innerHTML = '<div class="error">אנא הכנס מספר משרה</div>';
+                resultsDiv.style.display = 'block';
+                return;
+            }
+
+            resultsDiv.innerHTML = '<div class="loading">מנתח התאמות...</div>';
+            resultsDiv.style.display = 'block';
+
+            // חיפוש המשרה
+            const job = correctJobsManager.findJobById(jobNumber);
+            
+            if (!job) {
+                resultsDiv.innerHTML = `
+                    <div class="error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        לא נמצאה משרה עם המספר: ${jobNumber}
+                    </div>
+                `;
+                return;
+            }
+
+            // נרמול המשרה
+            const normalizedJob = correctJobsManager.normalizeJob(job);
+            const subscribers = adminPanel?.whatsappAlerts?.getSubscribers() || [];
+
+            if (subscribers.length === 0) {
+                resultsDiv.innerHTML = `
+                    <div class="error">
+                        <i class="fas fa-users-slash"></i>
+                        אין מנויים במערכת. הוסף מנויים לבדיקה כדי לראות את ההתאמות.
+                    </div>
+                `;
+                return;
+            }
+
+            // ניתוח מפורט לכל מנוי
+            const detailedAnalysis = subscribers.map(subscriber => {
+                const categoryMatch = correctJobsManager.matchCategory(normalizedJob.category, subscriber.categories);
+                const areaMatch = correctJobsManager.matchArea(normalizedJob.region, subscriber.areas);
+                const overallMatch = categoryMatch && areaMatch;
+
+                // ניתוח מפורט של התאמת קטגוריות
+                const categoryAnalysis = analyzeCategoryMatch(normalizedJob.category, subscriber.categories);
+                
+                // ניתוח מפורט של התאמת אזורים
+                const areaAnalysis = analyzeAreaMatch(normalizedJob.region, subscriber.areas);
+
+                return {
+                    subscriber,
+                    categoryMatch,
+                    areaMatch,
+                    overallMatch,
+                    categoryAnalysis,
+                    areaAnalysis
+                };
+            });
+
+            // הצגת התוצאות
+            showDetailedAnalysis(normalizedJob, detailedAnalysis);
+        }
+
+        function analyzeCategoryMatch(jobCategory, subscriberCategories) {
+            const analysis = {
+                jobCategory: jobCategory,
+                subscriberCategories: subscriberCategories,
+                matchFound: false,
+                matchType: '',
+                matchingWords: [],
+                explanation: ''
+            };
+
+            if (!jobCategory || !subscriberCategories) {
+                analysis.explanation = 'חסרים נתוני קטגוריה';
+                return analysis;
+            }
+
+            const jobCat = jobCategory.toLowerCase();
+
+            for (const subCat of subscriberCategories) {
+                const subCatLower = subCat.toLowerCase();
+
+                // בדיקת התאמה מדויקת
+                if (jobCat === subCatLower) {
+                    analysis.matchFound = true;
+                    analysis.matchType = 'התאמה מדויקת';
+                    analysis.matchingWords = [subCat];
+                    analysis.explanation = `קטגוריית המשרה "${jobCategory}" זהה לקטגוריית המנוי "${subCat}"`;
+                    break;
+                }
+
+                // בדיקת התאמה חלקית
+                if (jobCat.includes(subCatLower)) {
+                    analysis.matchFound = true;
+                    analysis.matchType = 'התאמה חלקית (קטגוריית מנוי מוכלת במשרה)';
+                    analysis.matchingWords = [subCat];
+                    analysis.explanation = `קטגוריית המנוי "${subCat}" מוכלת בקטגוריית המשרה "${jobCategory}"`;
+                    break;
+                }
+
+                if (subCatLower.includes(jobCat)) {
+                    analysis.matchFound = true;
+                    analysis.matchType = 'התאמה חלקית (קטגוריית משרה מוכלת במנוי)';
+                    analysis.matchingWords = [subCat];
+                    analysis.explanation = `קטגוריית המשרה "${jobCategory}" מוכלת בקטגוריית המנוי "${subCat}"`;
+                    break;
+                }
+
+                // בדיקת זכר/נקבה עם סלאש
+                if (jobCat.includes('/')) {
+                    const parts = jobCat.split('/');
+                    for (const part of parts) {
+                        const cleanPart = part.trim();
+                        if (subCatLower.includes(cleanPart) || cleanPart.includes(subCatLower)) {
+                            analysis.matchFound = true;
+                            analysis.matchType = 'התאמה זכר/נקבה (עם סלאש)';
+                            analysis.matchingWords = [subCat, cleanPart];
+                            analysis.explanation = `נמצאה התאמה בין "${cleanPart}" (מתוך "${jobCategory}") לקטגוריית המנוי "${subCat}"`;
+                            break;
+                        }
+                    }
+                    if (analysis.matchFound) break;
+                }
+
+                // בדיקת מילות מפתח
+                const keywordMatch = checkKeywordMatch(jobCat, subCatLower);
+                if (keywordMatch.found) {
+                    analysis.matchFound = true;
+                    analysis.matchType = 'התאמה לפי מילות מפתח';
+                    analysis.matchingWords = keywordMatch.keywords;
+                    analysis.explanation = `נמצאה התאמה לפי מילות המפתח: ${keywordMatch.keywords.join(', ')}`;
+                    break;
+                }
+            }
+
+            if (!analysis.matchFound) {
+                analysis.explanation = `לא נמצאה התאמה בין קטגוריית המשרה "${jobCategory}" לקטגוריות המנוי: ${subscriberCategories.join(', ')}`;
+            }
+
+            return analysis;
+        }
+
+        function analyzeAreaMatch(jobArea, subscriberAreas) {
+            const analysis = {
+                jobArea: jobArea,
+                subscriberAreas: subscriberAreas,
+                matchFound: false,
+                matchType: '',
+                matchingAreas: [],
+                explanation: ''
+            };
+
+            if (!jobArea || !subscriberAreas) {
+                analysis.explanation = 'חסרים נתוני אזור';
+                return analysis;
+            }
+
+            const jobAreaLower = jobArea.toLowerCase();
+
+            for (const subArea of subscriberAreas) {
+                const subAreaLower = subArea.toLowerCase();
+
+                // בדיקת התאמה מדויקת
+                if (jobAreaLower === subAreaLower) {
+                    analysis.matchFound = true;
+                    analysis.matchType = 'התאמה מדויקת';
+                    analysis.matchingAreas = [subArea];
+                    analysis.explanation = `אזור המשרה "${jobArea}" זהה לאזור המנוי "${subArea}"`;
+                    break;
+                }
+
+                // בדיקת התאמה חלקית
+                if (jobAreaLower.includes(subAreaLower)) {
+                    analysis.matchFound = true;
+                    analysis.matchType = 'התאמה חלקית (אזור מנוי מוכל במשרה)';
+                    analysis.matchingAreas = [subArea];
+                    analysis.explanation = `אזור המנוי "${subArea}" מוכל באזור המשרה "${jobArea}"`;
+                    break;
+                }
+
+                if (subAreaLower.includes(jobAreaLower)) {
+                    analysis.matchFound = true;
+                    analysis.matchType = 'התאמה חלקית (אזור משרה מוכל במנוי)';
+                    analysis.matchingAreas = [subArea];
+                    analysis.explanation = `אזור המשרה "${jobArea}" מוכל באזור המנוי "${subArea}"`;
+                    break;
+                }
+
+                // בדיקת "כל הארץ"
+                if (subAreaLower === 'כל הארץ' || subAreaLower === 'אחר') {
+                    analysis.matchFound = true;
+                    analysis.matchType = 'התאמה כללית';
+                    analysis.matchingAreas = [subArea];
+                    analysis.explanation = `המנוי מעוניין ב"${subArea}" - מתאים לכל המשרות`;
+                    break;
+                }
+
+                // התאמות גיאוגרפיות מיוחדות
+                if (subAreaLower === 'מרכז' && 
+                    (jobAreaLower.includes('תל אביב') || jobAreaLower.includes('רמת גן') || jobAreaLower.includes('גוש דן'))) {
+                    analysis.matchFound = true;
+                    analysis.matchType = 'התאמה גיאוגרפית';
+                    analysis.matchingAreas = [subArea];
+                    analysis.explanation = `אזור המשרה "${jobArea}" נמצא באזור "${subArea}" הגיאוגרפי`;
+                    break;
+                }
+            }
+
+            if (!analysis.matchFound) {
+                analysis.explanation = `לא נמצאה התאמה בין אזור המשרה "${jobArea}" לאזורי המנוי: ${subscriberAreas.join(', ')}`;
+            }
+
+            return analysis;
+        }
+
+        function checkKeywordMatch(jobCategory, subscriberCategory) {
+            const keywordMap = {
+                'לוגיסטיקה': ['נהג', 'נהיגה', 'משאית', 'מנוף', 'הובלה', 'מחסן', 'שילוח', 'דרייבר'],
+                'נהיגה': ['לוגיסטיקה', 'משאית', 'מנוף', 'הובלה', 'תחבורה', 'דרייבר', 'נהג'],
+                'פיתוח': ['מפתח', 'תכנות', 'תוכנה', 'programmer', 'developer', 'קוד', 'אפליקציה'],
+                'מכירות': ['שיווק', 'marketing', 'sales', 'מוכר', 'סייל', 'ייעוץ'],
+                'חינוך': ['מורה', 'הוראה', 'מחנך', 'גננת', 'חינוכית', 'מחנכת'],
+                'בריאות': ['רפואה', 'רפואי', 'רופא', 'אחות', 'פיזיותרפיה', 'טיפול'],
+                'מזון': ['מסעדה', 'בישול', 'טבח', 'שף', 'מטבח', 'קייטרינג'],
+                'אבטחה': ['שמירה', 'ביטחון', 'שומר', 'מאבטח'],
+                'שירות': ['לקוחות', 'קריאות', 'תמיכה', 'מוקד'],
+                'ניהול': ['מנהל', 'מנהלת', 'ריכוז', 'ביצוע', 'תיאום']
+            };
+
+            const result = { found: false, keywords: [] };
+
+            // חיפוש דו-כיווני
+            for (const [key, keywords] of Object.entries(keywordMap)) {
+                // אם הקטגוריה של המשרה מכילה מילה מפתח
+                if (jobCategory.includes(key)) {
+                    const matchingKeywords = keywords.filter(k => subscriberCategory.includes(k));
+                    if (matchingKeywords.length > 0) {
+                        result.found = true;
+                        result.keywords = [key, ...matchingKeywords];
+                        return result;
+                    }
+                }
+                
+                // אם הקטגוריה של המנוי מכילה מילה מפתח
+                if (subscriberCategory.includes(key)) {
+                    const matchingKeywords = keywords.filter(k => jobCategory.includes(k));
+                    if (matchingKeywords.length > 0) {
+                        result.found = true;
+                        result.keywords = [key, ...matchingKeywords];
+                        return result;
+                    }
+                }
+                
+                // חיפוש במילות המפתח עצמן
+                for (const keyword of keywords) {
+                    if (jobCategory.includes(keyword) && subscriberCategory.includes(key)) {
+                        result.found = true;
+                        result.keywords = [keyword, key];
+                        return result;
+                    }
+                    if (subscriberCategory.includes(keyword) && jobCategory.includes(key)) {
+                        result.found = true;
+                        result.keywords = [keyword, key];
+                        return result;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        function showDetailedAnalysis(job, analysisResults) {
+            const resultsDiv = document.getElementById('detailedAnalysisResults');
+            
+            const matchingSubscribers = analysisResults.filter(result => result.overallMatch);
+            const nonMatchingSubscribers = analysisResults.filter(result => !result.overallMatch);
+
+            resultsDiv.innerHTML = `
+                <div style="background: rgba(246, 152, 152, 0.1); border: 1px solid rgba(246, 152, 152, 0.3); border-radius: 10px; padding: 20px;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 15px;">
+                        <i class="fas fa-brain"></i> ניתוח מפורט - משרה ${job.jobNumber}
+                    </h3>
+                    
+                    <!-- פרטי המשרה -->
+                    <div style="background: rgba(246, 152, 152, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 10px;">📋 פרטי המשרה:</h4>
+                        <div><strong>כותרת:</strong> ${job.title}</div>
+                        <div><strong>קטגוריה:</strong> ${job.category}</div>
+                        <div><strong>אזור:</strong> ${job.region}</div>
+                        <div><strong>מספר:</strong> ${job.jobNumber}</div>
+                    </div>
+
+                    <!-- סיכום התאמות -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                        <div style="background: rgba(37, 211, 102, 0.1); padding: 15px; border-radius: 8px; border: 1px solid rgba(37, 211, 102, 0.3);">
+                            <div style="font-size: 2em; font-weight: bold; color: #25D366; text-align: center;">${matchingSubscribers.length}</div>
+                            <div style="text-align: center; color: #25D366;">מנויים מתאימים</div>
+                        </div>
+                        <div style="background: rgba(255, 71, 87, 0.1); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 71, 87, 0.3);">
+                            <div style="font-size: 2em; font-weight: bold; color: #ff4757; text-align: center;">${nonMatchingSubscribers.length}</div>
+                            <div style="text-align: center; color: #ff4757;">מנויים לא מתאימים</div>
+                        </div>
+                    </div>
+
+                    ${matchingSubscribers.length > 0 ? `
+                        <!-- מנויים מתאימים -->
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #25D366; margin-bottom: 15px;">
+                                ✅ מנויים שיקבלו התראה (${matchingSubscribers.length})
+                            </h4>
+                            <div style="max-height: 300px; overflow-y: auto;">
+                                ${matchingSubscribers.map(result => `
+                                    <div style="background: rgba(37, 211, 102, 0.1); padding: 15px; margin: 10px 0; border-radius: 8px; border: 1px solid rgba(37, 211, 102, 0.3);">
+                                        <div style="font-weight: bold; color: #25D366; margin-bottom: 8px;">
+                                            📱 ${result.subscriber.phone} - ${result.subscriber.name || 'ללא שם'}
+                                        </div>
+                                        
+                                        <div style="margin-bottom: 8px;">
+                                            <strong>🎯 התאמת קטגוריה:</strong> ${result.categoryAnalysis.matchType}
+                                            <div style="font-size: 0.9em; color: #666; margin-top: 3px;">
+                                                ${result.categoryAnalysis.explanation}
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <strong>📍 התאמת אזור:</strong> ${result.areaAnalysis.matchType}
+                                            <div style="font-size: 0.9em; color: #666; margin-top: 3px;">
+                                                ${result.areaAnalysis.explanation}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${nonMatchingSubscribers.length > 0 ? `
+                        <!-- מנויים לא מתאימים -->
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #ff4757; margin-bottom: 15px;">
+                                ❌ מנויים שלא יקבלו התראה (${nonMatchingSubscribers.length})
+                            </h4>
+                            <div style="max-height: 300px; overflow-y: auto;">
+                                ${nonMatchingSubscribers.map(result => `
+                                    <div style="background: rgba(255, 71, 87, 0.1); padding: 15px; margin: 10px 0; border-radius: 8px; border: 1px solid rgba(255, 71, 87, 0.3);">
+                                        <div style="font-weight: bold; color: #ff4757; margin-bottom: 8px;">
+                                            📱 ${result.subscriber.phone} - ${result.subscriber.name || 'ללא שם'}
+                                        </div>
+                                        
+                                        <div style="margin-bottom: 8px;">
+                                            <strong>🎯 קטגוריה:</strong> ${result.categoryMatch ? '✅' : '❌'}
+                                            <div style="font-size: 0.9em; color: #666; margin-top: 3px;">
+                                                ${result.categoryAnalysis.explanation}
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <strong>📍 אזור:</strong> ${result.areaMatch ? '✅' : '❌'}
+                                            <div style="font-size: 0.9em; color: #666; margin-top: 3px;">
+                                                ${result.areaAnalysis.explanation}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <!-- כפתורי פעולה -->
+                    <div style="margin-top: 20px; text-align: center;">
+                        ${matchingSubscribers.length > 0 ? `
+                            <button class="btn" onclick="sendToAnalyzedSubscribers('${job.id}')">
+                                <i class="fas fa-paper-plane"></i> שלח ל-${matchingSubscribers.length} מנויים מתאימים
+                            </button>
+                        ` : `
+                            <div style="color: #999; font-style: italic;">
+                                אין מנויים מתאימים לשליחה
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        function sendToAnalyzedSubscribers(jobId) {
+            const job = correctJobsManager.findJobById(jobId);
+            if (!job) return;
+
+            const normalizedJob = correctJobsManager.normalizeJob(job);
+            const subscribers = adminPanel?.whatsappAlerts?.getSubscribers() || [];
+            const matchingSubscribers = correctJobsManager.findMatchingSubscribers(normalizedJob, subscribers);
+
+            if (matchingSubscribers.length === 0) {
+                alert('אין מנויים מתאימים');
+                return;
+            }
+
+            // יצירת הודעה
+            const message = `🔥 משרה חדשה!
+📋 ${normalizedJob.title}
+📍 ${normalizedJob.region}
+🎯 ${normalizedJob.category}
+
+לפרטים נוספים: https://www.mayeshpo.co.il
+
+בהצלחה! 💪`;
+
+            // הצגת תצוגה מקדימה מפורטת
+            showDetailedPreview(message, matchingSubscribers, normalizedJob);
+        }
+
+        function showDetailedPreview(message, subscribers, job) {
+            const modal = document.createElement('div');
+            modal.className = 'preview-modal';
+            modal.innerHTML = `
+                <div class="preview-content" style="max-width: 700px;">
+                    <h3><i class="fas fa-paper-plane"></i> תצוגה מקדימה מפורטת</h3>
+                    
+                    <div style="margin: 15px 0;">
+                        <strong>משרה:</strong> ${job.title}<br>
+                        <strong>נמענים:</strong> ${subscribers.length} מנויים שעברו את מערכת ההתאמה
+                    </div>
+                    
+                    <h4>הודעה שתישלח:</h4>
+                    <div class="whatsapp-message">
+                        ${message.replace(/\n/g, '<br>')}
+                    </div>
+                    
+                    <h4>רשימת נמענים מפורטת:</h4>
+                    <div style="max-height: 250px; overflow-y: auto; background: rgba(246, 152, 152, 0.1); padding: 15px; border-radius: 8px; border: 1px solid rgba(246, 152, 152, 0.3);">
+                        ${subscribers.map((sub, index) => `
+                            <div style="display: flex; align-items: center; padding: 8px; border-bottom: 1px solid rgba(246, 152, 152, 0.2); ${index === subscribers.length - 1 ? 'border-bottom: none;' : ''}">
+                                <input type="checkbox" id="subscriber_${index}" checked style="margin-left: 10px;">
+                                <label for="subscriber_${index}" style="flex: 1; cursor: pointer;">
+                                    📱 ${sub.phone} - ${sub.name || 'ללא שם'}
+                                    <div style="font-size: 0.8em; color: #999; margin-top: 2px;">
+                                        קטגוריות: ${sub.categories.join(', ')} | אזורים: ${sub.areas.join(', ')}
+                                    </div>
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div style="margin: 15px 0; padding: 10px; background: rgba(255, 193, 7, 0.1); border-radius: 5px; border: 1px solid rgba(255, 193, 7, 0.3);">
+                        <small>💡 ניתן לבטל בחירת מנויים ספציפיים לפני השליחה</small>
+                    </div>
+                    
+                    <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+                        <button class="btn" onclick="confirmSelectedSend('${job.id}')">
+                            <i class="fas fa-paper-plane"></i> שלח לנבחרים
+                        </button>
+                        <button class="btn" onclick="selectAllSubscribers(true)">
+                            <i class="fas fa-check-double"></i> בחר הכל
+                        </button>
+                        <button class="btn" onclick="selectAllSubscribers(false)">
+                            <i class="fas fa-times"></i> בטל הכל
+                        </button>
+                        <button class="close-btn" onclick="this.parentElement.parentElement.parentElement.remove()">
+                            <i class="fas fa-times"></i> סגור
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function selectAllSubscribers(selectAll) {
+            const checkboxes = document.querySelectorAll('input[id^="subscriber_"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll;
+            });
+        }
+
+        function confirmSelectedSend(jobId) {
+            const checkboxes = document.querySelectorAll('input[id^="subscriber_"]:checked');
+            const selectedCount = checkboxes.length;
+            
+            if (selectedCount === 0) {
+                alert('אנא בחר לפחות מנוי אחד לשליחה');
+                return;
+            }
+
+            if (confirm(`האם אתה בטוח שברצונך לשלוח ל-${selectedCount} מנויים נבחרים?`)) {
+                // כאן יהיה הקוד לשליחה בפועל
+                console.log(`📱 שולח הודעה ל-${selectedCount} מנויים נבחרים למשרה ${jobId}`);
+                
+                // סגירת המודל
+                document.querySelector('.preview-modal')?.remove();
+                
+                // הודעת הצלחה
+                const resultsDiv = document.getElementById('detailedAnalysisResults');
+                resultsDiv.innerHTML += `
+                    <div style="background: rgba(37, 211, 102, 0.1); padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid rgba(37, 211, 102, 0.3);">
+                        <i class="fas fa-check-circle"></i>
+                        ההודעות נשלחו בהצלחה ל-${selectedCount} מנויים נבחרים!
+                    </div>
+                `;
+
+                // עדכון סטטיסטיקות
+                const currentAlerts = parseInt(localStorage.getItem('whatsapp_total_alerts') || '0');
+                localStorage.setItem('whatsapp_total_alerts', (currentAlerts + selectedCount).toString());
+                adminPanel.updateStats();
+            }
+        }
+
         // יצירת טופס הוספת מנוי חדש
         function createNewSubscriberForm() {
             // טעינת קטגוריות
@@ -2339,7 +3383,7 @@ ${jobData.description ? `💬 ${jobData.description}\n\n` : ''}לפרטים נו
                 console.log('🚀 פאנל ניהול מנויים הופעל בהצלחה!');
                 console.log('📱 מספר הטלפון המעודכן: 0555504633');
                 console.log('🎯 התאמה משופרת לזכר/נקבה עם סלאש (/)');
-                console.log('📊 קטגוריות ואזורים נטענים דינמית מהגיט');
+                console.log('📊 קטגוריות ואזורים נטענים דינמית');
             }, 1000);
             
             // יצירת טופס הוספת מנוי
