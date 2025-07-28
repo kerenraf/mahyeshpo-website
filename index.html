@@ -3151,7 +3151,6 @@ if (hasActiveSearch) {
         }
 
 // פונקציית שיתוף משופרת
-// פונקציית שיתוף משופרת
 function shareJob(index) {
     var job = currentDisplayedJobs[index];
     if (!job) return;
@@ -3174,7 +3173,6 @@ function shareJob(index) {
         '\n📞 לפרטים נוספים: 055-550-4633' +
         '\n📱 לחצו לפרטים נוספים:' +
         '\n' + jobUrl;
-    }
         }).catch(function(err) { 
             console.log('שגיאה בשיתוף:', err);
             fallbackShare(job, shareText, jobUrl, shareTitle);
