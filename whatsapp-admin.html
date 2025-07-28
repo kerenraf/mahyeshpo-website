@@ -415,6 +415,9 @@
                 <button class="btn" onclick="analyzeJobsStructure()">
                     <i class="fas fa-chart-pie"></i> נתח מבנה משרות
                 </button>
+                <button class="btn" onclick="showAllImportedJobs()">
+    <i class="fas fa-list"></i> צפה בכל המשרות המיובאות
+</button>
                 <button class="btn" onclick="testJobSearchDemo()">
                     <i class="fas fa-search"></i> בדוק חיפוש משרות
                 </button>
@@ -3293,7 +3296,7 @@ function scanAllJobsForAllSubscribers() {
         }
     });
 
-    // הצגת תוצאות
+    // הצגת תוצאות - הסרת .slice(0, 10) ועכשיו מציג הכל
     const resultsDiv = document.getElementById('jobScanResults');
     resultsDiv.style.display = 'block';
     resultsDiv.innerHTML = `
@@ -3310,11 +3313,10 @@ function scanAllJobsForAllSubscribers() {
             </div>
 
             ${matchResults.length > 0 ? `
-                <h4 style="color: #25D366; margin-bottom: 10px;">💼 המשרות המתאימות ביותר:</h4>
-                <div style="max-height: 300px; overflow-y: auto;">
+                <h4 style="color: #25D366; margin-bottom: 10px;">💼 כל המשרות המתאימות (${matchResults.length}):</h4>
+                <div style="max-height: 600px; overflow-y: auto;">
                     ${matchResults
                         .sort((a, b) => b.matches - a.matches)
-                        .slice(0, 10)
                         .map(result => `
                             <div style="background: rgba(246, 152, 152, 0.1); padding: 15px; margin: 10px 0; border-radius: 8px;">
                                 <div style="font-weight: bold; color: var(--primary-color);">
@@ -3323,18 +3325,18 @@ function scanAllJobsForAllSubscribers() {
                                 <div style="font-size: 0.9em; margin-top: 5px;">
                                     📍 ${result.job.region} | 🎯 ${result.job.category}
                                 </div>
-<div style="color: #25D366; margin-top: 5px;">
-    ✅ ${result.matches} מנויים מתאימים
-</div>
-<div style="margin-top: 10px;">
-    <button class="btn btn-small" onclick="sendJobFromScanResults('${result.job.id}')">
-        <i class="fas fa-paper-plane"></i> שלח ל-${result.matches} מנויים
-    </button>
-    <button class="btn btn-small btn-outline" onclick="previewJobFromScan('${result.job.id}')">
-        <i class="fas fa-eye"></i> תצוגה מקדימה
-    </button>
-</div>
-</div>
+                                <div style="color: #25D366; margin-top: 5px;">
+                                    ✅ ${result.matches} מנויים מתאימים
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <button class="btn btn-small" onclick="sendJobFromScanResults('${result.job.id}')">
+                                        <i class="fas fa-paper-plane"></i> שלח ל-${result.matches} מנויים
+                                    </button>
+                                    <button class="btn btn-small btn-outline" onclick="previewJobFromScan('${result.job.id}')">
+                                        <i class="fas fa-eye"></i> תצוגה מקדימה
+                                    </button>
+                                </div>
+                            </div>
                         `).join('')}
                 </div>
             ` : '<div style="color: #999;">לא נמצאו התאמות</div>'}
@@ -3345,9 +3347,18 @@ function scanAllJobsForAllSubscribers() {
 }
 
 function scanNewJobsOnly() {
-    // סימולציה של משרות חדשות (במציאות זה יהיה חיפוש לפי תאריך)
     const jobs = correctJobsManager.getAllJobs();
-    const newJobs = jobs.slice(0, 3); // נניח ש-3 הראשונות הן חדשות
+    // במקום .slice(0, 3) - בואו נניח שמשרות חדשות הן אלה מהשבוע האחרון או שיש להן תאריך יצירה חדש
+    const newJobs = jobs.filter(job => {
+        // אם יש תאריך יצירה, בדוק אם זה חדש
+        if (job.createdAt) {
+            const jobDate = new Date(job.createdAt);
+            const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+            return jobDate >= weekAgo;
+        }
+        // אם אין תאריך יצירה, קח את ה-20% הראשונים כ"חדשים"
+        return jobs.indexOf(job) < Math.ceil(jobs.length * 0.2);
+    });
     
     const subscribers = adminPanel?.whatsappAlerts?.getSubscribers() || [];
     
@@ -3649,6 +3660,72 @@ ${jobUrl}
     `;
     
     document.body.appendChild(modal);
+}
+        // פונקציה לצפייה בכל המשרות המיובאות
+function showAllImportedJobs() {
+    const jobs = correctJobsManager.getAllJobs();
+    
+    if (jobs.length === 0) {
+        alert('❌ אין משרות במערכת. ודא שקובץ jobs.json נטען כראוי.');
+        return;
+    }
+    
+    const modal = document.createElement('div');
+    modal.className = 'preview-modal';
+    modal.innerHTML = `
+        <div class="preview-content" style="max-width: 900px;">
+            <h3><i class="fas fa-list"></i> כל המשרות המיובאות (${jobs.length})</h3>
+            
+            <div style="margin: 20px 0;">
+                <div style="background: rgba(37, 211, 102, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <strong>סטטיסטיקות:</strong><br>
+                    📊 סה"כ משרות: ${jobs.length}<br>
+                    📅 עדכון אחרון: ${correctJobsManager.lastUpdate ? correctJobsManager.lastUpdate.toLocaleString('he-IL') : 'לא ידוע'}
+                </div>
+                
+                <div style="max-height: 600px; overflow-y: auto;">
+                    ${jobs.map((job, index) => `
+                        <div style="background: rgba(246, 152, 152, 0.1); padding: 15px; margin: 10px 0; border-radius: 8px; border: 1px solid rgba(246, 152, 152, 0.3);">
+                            <div style="font-weight: bold; color: var(--primary-color);">
+                                ${index + 1}. ${job.title || 'ללא כותרת'} 
+                                (${job.jobNumber || job.id || 'ללא מספר'})
+                            </div>
+                            <div style="font-size: 0.9em; margin-top: 5px; color: #ccc;">
+                                📍 ${job.region || job.area || 'לא צוין'} | 
+                                🎯 ${job.category || 'לא צוין'} | 
+                                🏢 ${job.city || 'לא צוין'}
+                            </div>
+                            <div style="margin-top: 10px;">
+                                <button class="btn btn-small" onclick="searchAndAnalyzeImportedJob('${job.jobNumber || job.id}'); this.closest('.preview-modal').remove();">
+                                    <i class="fas fa-search"></i> נתח משרה
+                                </button>
+                                <button class="btn btn-small btn-outline" onclick="searchJobById('${job.jobNumber || job.id}');">
+                                    <i class="fas fa-paper-plane"></i> שלח למנויים
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            
+            <button class="close-btn" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i> סגור
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+// פונקציות עזר
+function searchAndAnalyzeImportedJob(jobNumber) {
+    document.getElementById('detailedJobSearch').value = jobNumber;
+    analyzeJobMatching();
+}
+
+function searchJobById(jobNumber) {
+    document.getElementById('jobSearchInput').value = jobNumber;
+    searchJobAndSend();
 }
     </script>
 </body>
