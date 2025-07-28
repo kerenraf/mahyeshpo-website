@@ -2883,11 +2883,12 @@ function filterJobs() {
         
 // =============== החלפת הפונקציה jobMatchesSearch ===============
 
+// 1. תיקון הפונקציה jobMatchesSearch
 function jobMatchesSearch(job, searchText) {
     // נרמול טקסט החיפוש
     const normalizedSearchText = normalizeSearchText(searchText);
     
-    // שדות לחיפוש - כולל jobNumber!
+    // שדות לחיפוש
     const searchFields = [
         job.title,
         job.company, 
@@ -2896,7 +2897,7 @@ function jobMatchesSearch(job, searchText) {
         job.city,
         job.region,
         job.category,
-        job.jobNumber    // ✅ זה השדה הנכון!
+        job.jobNumber
     ];
     
     // חיפוש בכל השדות
@@ -2905,14 +2906,19 @@ function jobMatchesSearch(job, searchText) {
         
         const normalizedField = normalizeSearchText(field);
         
-        // חיפוש מדויק במספר משרה
+        // חיפוש במספר משרה - תיקון השגיאה!
         if (field === job.jobNumber) {
             return normalizedField.includes(normalizedSearchText) || 
-                   normalizedSearchText.includes(normalizedField);
+                   normalizedSearchText.includes(normalizedField); // ✅ תוקן!
         }
         
-        // חיפוש רגיל בשאר השדות
+        // חיפוש רגיל + חיפוש במילים נפרדות
         if (normalizedField.includes(normalizedSearchText)) {
+            return true;
+        }
+        
+        // חיפוש במילים נפרדות (חדש!)
+        if (searchInWords(normalizedField, normalizedSearchText)) {
             return true;
         }
         
@@ -2920,6 +2926,7 @@ function jobMatchesSearch(job, searchText) {
         return checkGenderVariations(normalizedField, normalizedSearchText);
     });
 }
+
 // גם תוסיף את הפונקציה הזו לבדיקה מה השם המדויק של השדה:
 function debugJobFields() {
     if (window.allJobs && window.allJobs.length > 0) {
