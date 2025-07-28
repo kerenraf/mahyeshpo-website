@@ -1660,6 +1660,7 @@ const jobUrl = `https://www.mayeshpo.co.il/job/${normalizedJob.id || normalizedJ
 // יצירת קישור ישיר למשרה
 const jobUrl = `https://www.mayeshpo.co.il/job/${normalizedJob.id || normalizedJob.jobNumber}`;
 
+
 // יצירת קישור ישיר למשרה
 const jobUrl = `https://www.mayeshpo.co.il/job/${normalizedJob.id || normalizedJob.jobNumber}`;
 
@@ -3260,14 +3261,18 @@ ${jobUrl}
                 return;
             }
 
-            const message = `🔥 משרה חדשה מתאימה עבורך!
+// יצירת קישור ישיר למשרה
+const jobUrl = `https://www.mayeshpo.co.il/job/${normalizedJob.id || normalizedJob.jobNumber}`;
+
+const message = `🔥 משרה חדשה מתאימה עבורך!
 
 📋 ${normalizedJob.title}
 📍 ${normalizedJob.region}
 🎯 ${normalizedJob.category}
 🆔 מספר משרה: ${normalizedJob.jobNumber}
 
-לפרטים נוספים: https://www.mayeshpo.co.il
+🔗 לפרטים מלאים ולהגשת מועמדות:
+${jobUrl}
 
 בהצלחה! 💪`;
 
