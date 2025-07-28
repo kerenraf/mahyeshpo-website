@@ -2409,7 +2409,7 @@ padding-top: 20px;
             <div class="search-buttons">
                 <button class="btn" id="searchButton">חיפוש</button>
                 <button class="btn btn-secondary" id="clearButton">נקה חיפוש</button>
-                <button class="btn alerts-btn" id="alertsButton" onclick="openJobAlertsModal()">🔔 התראות משרות</button>
+                <button class="btn alerts-btn" id="alertsButton" type="button">🔔 התראות משרות</button>
             </div>
         </div>
     </section>
@@ -4326,7 +4326,21 @@ function toggleAlert(alertId) {
 function deleteAlert(alertId) {
     if (!confirm('האם אתה בטוח שברצונך למחוק את ההתראה?')) {
         return;
-        function getFrequencyText(frequency) {
+    }
+    
+    var savedAlerts = JSON.parse(localStorage.getItem('jobAlerts') || '[]');
+    savedAlerts = savedAlerts.filter(function(alert) {
+        return alert.id !== alertId;
+    });
+    
+    localStorage.setItem('jobAlerts', JSON.stringify(savedAlerts));
+    showNotification('ההתראה נמחקה');
+    
+    // עדכון התצוגה
+    loadUserAlerts();
+}
+
+function getFrequencyText(frequency) {
     switch (frequency) {
         case 'daily': return 'יומי';
         case 'weekly': return 'שבועי';
@@ -5033,6 +5047,15 @@ window.performGuideSearch = performGuideSearch;
                     createJobAlert();
                 });
             }
+
+            // וידוא שכפתור ההתראות עובד
+            var alertsButton = document.getElementById('alertsButton');
+            if (alertsButton) {
+                alertsButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openJobAlertsModal();
+                });
+            }
             
             console.log('✅ מאזיני אירועים הוספו');
         }
@@ -5097,22 +5120,35 @@ window.performGuideSearch = performGuideSearch;
         
         console.log('✅ הסקריפט נטען בהצלחה!');
         console.log('🧙‍♀️ הגמדה החכמה מוכנה לפעולה עם נתונים דינמיים!');
+
+        // ======================== וידוא שכל הפונקציות זמינות ========================
+        
+        // רשימת כל הפונקציות הגלובליות
+        const globalFunctions = [
+            'openJobModal', 'closeJobModal', 'openAboutModal', 'closeAboutModal',
+            'selectCategory', 'filterJobs', 'clearFilters', 'toggleMobileMenu',
+            'openAdminLogin', 'closeAdminLogin', 'checkAdminAccess', 'shareJob',
+            'toggleAccessibilityPanel', 'toggleAccessibilityFeature', 'changeFontSize', 'resetAccessibility',
+            'scrollToSearch', 'openJobAlertsModal', 'closeJobAlertsModal', 'switchAlertsTab',
+            'createJobAlert', 'loadUserAlerts', 'toggleAlert', 'deleteAlert',
+            'openWebsiteShareModal', 'closeWebsiteShareModal', 'shareWebsiteViaEmail',
+            'copyWebsiteUrl', 'copyWebsiteShareText', 'openSmartGuide', 'closeSmartGuide',
+            'startGuideJobSearch', 'selectGuideCategory', 'selectGuideLocation',
+            'guideBackToSearch', 'guideScrollToTop', 'startGuideOver',
+            'showGuideContactForm', 'hideGuideContactForm', 'submitGuideContact', 'performGuideSearch'
+        ];
+        
+        // בדיקה שכל הפונקציות קיימות
+        globalFunctions.forEach(function(funcName) {
+            if (typeof window[funcName] !== 'function') {
+                console.warn('⚠️ פונקציה חסרה:', funcName);
+            }
+        });
+        
+        console.log('📋 ' + globalFunctions.filter(f => typeof window[f] === 'function').length + ' מתוך ' + globalFunctions.length + ' פונקציות זמינות');
+        
+        // ======================== סיום ========================
     </script>
 
 </body>
 </html>
-    }
-    
-    var savedAlerts = JSON.parse(localStorage.getItem('jobAlerts') || '[]');
-    savedAlerts = savedAlerts.filter(function(alert) {
-        return alert.id !== alertId;
-    });
-    
-    localStorage.setItem('jobAlerts', JSON.stringify(savedAlerts));
-    showNotification('ההתראה נמחקה');
-    
-    // עדכון התצוגה
-    loadUserAlerts();
-}
-
-function getFrequencyText
