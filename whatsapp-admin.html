@@ -1259,8 +1259,13 @@
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                             <div>
                                 <div style="font-weight: bold; color: var(--primary-color);">${subscriber.name || 'ללא שם'}</div>
-                                <div style="font-family: monospace; background: rgba(246, 152, 152, 0.2); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 5px;">${subscriber.phone}</div>
-                            </div>
+<div style="font-family: monospace; background: rgba(246, 152, 152, 0.2); padding: 5px 10px; border-radius: 4px; display: inline-flex; align-items: center; margin-top: 5px;">
+    <button onclick="copyToClipboard('${subscriber.phone}')" 
+            style="background: #25D366; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin-left: 5px; cursor: pointer; font-size: 12px;" 
+            title="העתק מספר לווטסאפ">📋 העתק</button>
+    <span>${subscriber.phone}</span>
+</div>
+</div>
                             <div style="display: flex; gap: 5px;">
                                 <button class="btn btn-small btn-secondary" onclick="contactSubscriber('${subscriber.phone}')" title="שלח הודעה">
                                     <i class="fab fa-whatsapp"></i>
@@ -1648,16 +1653,21 @@
                 return;
             }
 
-            // יצירת הודעה
-            const message = `🔥 משרה חדשה!
+// יצירת קישור ישיר למשרה
+const jobUrl = `https://www.mayeshpo.co.il/job/${normalizedJob.id || normalizedJob.jobNumber}`;
+
+// יצירת הודעה עם קישור ישיר
+const message = `🔥 משרה חדשה מתאימה עבורך!
+
 📋 ${normalizedJob.title}
 📍 ${normalizedJob.region}
 🎯 ${normalizedJob.category}
+🆔 מספר משרה: ${normalizedJob.jobNumber}
 
-לפרטים נוספים: https://www.mayeshpo.co.il
+🔗 לפרטים מלאים ולהגשת מועמדות:
+${jobUrl}
 
 בהצלחה! 💪`;
-
             // הצגת תצוגה מקדימה
             showPreview(message, matchingSubscribers, normalizedJob);
         }
