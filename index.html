@@ -1937,11 +1937,14 @@ padding-top: 20px;
             <h3 class="search-title">חיפוש משרות</h3>
             
             <div class="search-grid">
-                <div class="form-group">
-                    <label class="form-label">חיפוש חופשי</label>
-<input type="text" class="form-control" id="searchInput" placeholder="הקלד מילות חיפוש..." autocomplete="off">
-                </div>
-                
+<div class="form-group">
+    <label class="form-label">חיפוש חופשי</label>
+    <div class="search-input-container">
+        <input type="text" class="form-control" id="searchInput" placeholder="הקלד מילות חיפוש..." autocomplete="off">
+        <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
+    </div>
+</div>
+               
                 <div class="form-group">
                     <label class="form-label">קטגוריה</label>
                     <select class="form-control" id="categoryFilter">
@@ -4262,7 +4265,140 @@ console.log('🚀 תכונת שיתוף האתר מוכנה!');
         grid-template-columns: 1fr;
     }
 }
+
+    /* =============== סטיילים להקלדה דינמית =============== */
+.search-input-container {
+    position: relative;
+}
+
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #333333;
+    border: 2px solid #F69898;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.autocomplete-dropdown::-webkit-scrollbar {
+    width: 8px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-track {
+    background: #444;
+    border-radius: 4px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-thumb {
+    background: #F69898;
+    border-radius: 4px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-thumb:hover {
+    background: #e58080;
+}
+
+.autocomplete-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #444444;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 45px;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.selected {
+    background: rgba(246, 152, 152, 0.15);
+    color: #F69898;
+    font-weight: 500;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-main-text {
+    flex: 1;
+    font-size: 1rem;
+}
+
+.match-highlight {
+    background: rgba(246, 152, 152, 0.6);
+    color: white;
+    font-weight: bold;
+    border-radius: 3px;
+    padding: 1px 4px;
+}
+
+.item-type {
+    font-size: 0.8rem;
+    color: #aaa;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 12px;
+    white-space: nowrap;
+    margin-right: 10px;
+}
+
+/* עיצוב מיוחד לסוגי פריטים שונים */
+.item-type.job-number { 
+    background: rgba(255, 193, 7, 0.2); 
+    color: #FFC107; 
+}
+
+.item-type.job-title { 
+    background: rgba(76, 175, 80, 0.2); 
+    color: #4CAF50; 
+}
+
+.item-type.company { 
+    background: rgba(33, 150, 243, 0.2); 
+    color: #2196F3; 
+}
+
+.item-type.location { 
+    background: rgba(156, 39, 176, 0.2); 
+    color: #9C27B0; 
+}
+
+.item-type.category { 
+    background: rgba(255, 87, 34, 0.2); 
+    color: #FF5722; 
+}
+
+/* רספונסיבי */
+@media (max-width: 768px) {
+    .autocomplete-dropdown {
+        max-height: 250px;
+        font-size: 0.9rem;
+    }
+    
+    .autocomplete-item {
+        padding: 10px 12px;
+        min-height: 40px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .item-type {
+        font-size: 0.7rem;
+        margin-right: 0;
+        align-self: flex-end;
+    }
+}
 </style>
+    
 
 <script>
 // הגמדה החכמה - קוד JavaScript מתוקן ודינמי
@@ -4750,6 +4886,365 @@ setInterval(() => {
             }
         }, 1000);
     });
+    // =============== מערכת הקלדה דינמית חכמה ===============
+
+class SmartAutocomplete {
+    constructor(inputElement, searchInputId = 'searchInput') {
+        this.input = inputElement || document.getElementById(searchInputId);
+        this.dropdown = null;
+        this.selectedIndex = -1;
+        this.suggestions = [];
+        this.currentValue = '';
+        
+        this.init();
+    }
+    
+    init() {
+        if (!this.input) {
+            console.warn('🔍 שדה החיפוש לא נמצא');
+            return;
+        }
+        
+        // מציאת הדרופדאון הקיים
+        this.dropdown = document.getElementById('autocompleteDropdown');
+        if (!this.dropdown) {
+            console.warn('🔍 רשימת הצעות לא נמצאה');
+            return;
+        }
+        
+        // הוספת מאזיני אירועים
+        this.attachEvents();
+        
+        console.log('✅ הקלדה דינמית מוכנה');
+    }
+    
+    attachEvents() {
+        // הקלדה
+        this.input.addEventListener('input', (e) => {
+            this.handleInput(e.target.value);
+        });
+        
+        // מקלדת
+        this.input.addEventListener('keydown', (e) => {
+            this.handleKeydown(e);
+        });
+        
+        // איבוד פוקוס
+        this.input.addEventListener('blur', () => {
+            setTimeout(() => this.hideDropdown(), 150);
+        });
+        
+        // פוקוס
+        this.input.addEventListener('focus', () => {
+            if (this.input.value.trim()) {
+                this.handleInput(this.input.value);
+            }
+        });
+        
+        // לחיצה מחוץ לאלמנט
+        document.addEventListener('click', (e) => {
+            if (!this.input.parentElement.contains(e.target)) {
+                this.hideDropdown();
+            }
+        });
+    }
+    
+    handleInput(value) {
+        this.currentValue = value.trim();
+        
+        if (this.currentValue.length < 1) {
+            this.hideDropdown();
+            return;
+        }
+        
+        // יצירת הצעות
+        this.suggestions = this.generateSuggestions(this.currentValue);
+        
+        if (this.suggestions.length > 0) {
+            this.showSuggestions();
+        } else {
+            this.hideDropdown();
+        }
+    }
+    
+    generateSuggestions(query) {
+        const suggestions = [];
+        const queryLower = query.toLowerCase();
+        const seenSuggestions = new Set();
+        
+        if (!window.allJobs || !Array.isArray(window.allJobs)) {
+            return suggestions;
+        }
+        
+        // סינון משרות פעילות
+        const activeJobs = window.allJobs.filter(job => job.status === 'פעיל');
+        
+        activeJobs.forEach(job => {
+            // מספר משרה (עדיפות גבוהה)
+            if (job.jobNumber && job.jobNumber.toLowerCase().includes(queryLower)) {
+                const key = `job-${job.jobNumber}`;
+                if (!seenSuggestions.has(key)) {
+                    suggestions.push({
+                        text: job.jobNumber,
+                        fullText: `${job.jobNumber} - ${job.title}`,
+                        type: 'job-number',
+                        typeLabel: 'מספר',
+                        value: job.jobNumber,
+                        priority: 10
+                    });
+                    seenSuggestions.add(key);
+                }
+            }
+            
+            // כותרת משרה
+            if (job.title && job.title.toLowerCase().includes(queryLower)) {
+                const key = `title-${job.title}`;
+                if (!seenSuggestions.has(key)) {
+                    suggestions.push({
+                        text: job.title,
+                        fullText: job.title,
+                        type: 'job-title',
+                        typeLabel: 'משרה',
+                        value: job.title,
+                        priority: 8
+                    });
+                    seenSuggestions.add(key);
+                }
+            }
+            
+            // שם חברה
+            if (job.company && job.company.toLowerCase().includes(queryLower)) {
+                const key = `company-${job.company}`;
+                if (!seenSuggestions.has(key)) {
+                    suggestions.push({
+                        text: job.company,
+                        fullText: job.company,
+                        type: 'company',
+                        typeLabel: 'חברה',
+                        value: job.company,
+                        priority: 6
+                    });
+                    seenSuggestions.add(key);
+                }
+            }
+            
+            // מיקום (עיר)
+            if (job.city && job.city.toLowerCase().includes(queryLower)) {
+                const key = `city-${job.city}`;
+                if (!seenSuggestions.has(key)) {
+                    suggestions.push({
+                        text: job.city,
+                        fullText: job.city,
+                        type: 'location',
+                        typeLabel: 'עיר',
+                        value: job.city,
+                        priority: 5
+                    });
+                    seenSuggestions.add(key);
+                }
+            }
+            
+            // אזור
+            if (job.region && job.region.toLowerCase().includes(queryLower)) {
+                const key = `region-${job.region}`;
+                if (!seenSuggestions.has(key)) {
+                    suggestions.push({
+                        text: job.region,
+                        fullText: job.region,
+                        type: 'location',
+                        typeLabel: 'אזור',
+                        value: job.region,
+                        priority: 4
+                    });
+                    seenSuggestions.add(key);
+                }
+            }
+            
+            // קטגוריה
+            if (job.category && job.category.toLowerCase().includes(queryLower)) {
+                const key = `category-${job.category}`;
+                if (!seenSuggestions.has(key)) {
+                    suggestions.push({
+                        text: job.category,
+                        fullText: job.category,
+                        type: 'category',
+                        typeLabel: 'תחום',
+                        value: job.category,
+                        priority: 3
+                    });
+                    seenSuggestions.add(key);
+                }
+            }
+        });
+        
+        // מיון לפי עדיפות ומגבלה של 8 תוצאות
+        return suggestions
+            .sort((a, b) => b.priority - a.priority)
+            .slice(0, 8);
+    }
+    
+    showSuggestions() {
+        this.dropdown.innerHTML = '';
+        this.selectedIndex = -1;
+        
+        this.suggestions.forEach((suggestion, index) => {
+            const item = document.createElement('div');
+            item.className = 'autocomplete-item';
+            item.dataset.index = index;
+            
+            const highlightedText = this.highlightMatch(suggestion.fullText, this.currentValue);
+            
+            item.innerHTML = `
+                <div class="autocomplete-main-text">${highlightedText}</div>
+                <div class="item-type ${suggestion.type}">${suggestion.typeLabel}</div>
+            `;
+            
+            item.addEventListener('click', () => {
+                this.selectSuggestion(suggestion);
+            });
+            
+            this.dropdown.appendChild(item);
+        });
+        
+        this.dropdown.style.display = 'block';
+    }
+    
+    highlightMatch(text, query) {
+        if (!query) return text;
+        
+        const regex = new RegExp(`(${query})`, 'gi');
+        return text.replace(regex, '<span class="match-highlight">$1</span>');
+    }
+    
+    hideDropdown() {
+        if (this.dropdown) {
+            this.dropdown.style.display = 'none';
+        }
+        this.selectedIndex = -1;
+    }
+    
+    handleKeydown(e) {
+        if (this.dropdown.style.display === 'none') return;
+        
+        const items = this.dropdown.querySelectorAll('.autocomplete-item');
+        
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                this.selectedIndex = Math.min(this.selectedIndex + 1, items.length - 1);
+                this.updateSelection(items);
+                break;
+                
+            case 'ArrowUp':
+                e.preventDefault();
+                this.selectedIndex = Math.max(this.selectedIndex - 1, -1);
+                this.updateSelection(items);
+                break;
+                
+            case 'Enter':
+                e.preventDefault();
+                if (this.selectedIndex >= 0 && this.selectedIndex < this.suggestions.length) {
+                    this.selectSuggestion(this.suggestions[this.selectedIndex]);
+                } else {
+                    // ביצוע חיפוש עם הטקסט הנוכחי
+                    this.hideDropdown();
+                    if (typeof filterJobs === 'function') {
+                        filterJobs();
+                    }
+                }
+                break;
+                
+            case 'Escape':
+                this.hideDropdown();
+                break;
+        }
+    }
+    
+    updateSelection(items) {
+        items.forEach((item, index) => {
+            if (index === this.selectedIndex) {
+                item.classList.add('selected');
+                item.scrollIntoView({ block: 'nearest' });
+            } else {
+                item.classList.remove('selected');
+            }
+        });
+    }
+    
+    selectSuggestion(suggestion) {
+        this.input.value = suggestion.value;
+        this.hideDropdown();
+        
+        // מילוי שדות מתאימים בהתבסס על סוג ההצעה
+        this.fillRelevantFilters(suggestion);
+        
+        // ביצוע חיפוש
+        setTimeout(() => {
+            if (typeof filterJobs === 'function') {
+                filterJobs();
+            }
+        }, 100);
+    }
+    
+    fillRelevantFilters(suggestion) {
+        // איפוס שדות אחרים קודם
+        const categoryFilter = document.getElementById('categoryFilter');
+        const regionFilter = document.getElementById('regionFilter');
+        const areaFilter = document.getElementById('areaFilter');
+        
+        if (categoryFilter) categoryFilter.value = '';
+        if (regionFilter) regionFilter.value = '';
+        if (areaFilter) areaFilter.value = '';
+        
+        // מילוי השדה המתאים
+        switch (suggestion.type) {
+            case 'category':
+                if (categoryFilter) {
+                    categoryFilter.value = suggestion.value;
+                }
+                break;
+                
+            case 'location':
+                // בדיקה אם זה עיר או אזור
+                if (regionFilter) {
+                    // נסה למצוא בערים
+                    for (let i = 0; i < regionFilter.options.length; i++) {
+                        if (regionFilter.options[i].value === suggestion.value) {
+                            regionFilter.value = suggestion.value;
+                            return;
+                        }
+                    }
+                }
+                if (areaFilter) {
+                    // אם לא נמצא בערים, נסה באזורים  
+                    for (let i = 0; i < areaFilter.options.length; i++) {
+                        if (areaFilter.options[i].value === suggestion.value) {
+                            areaFilter.value = suggestion.value;
+                            return;
+                        }
+                    }
+                }
+                break;
+        }
+    }
+}
+
+// =============== אתחול ההקלדה הדינמית ===============
+document.addEventListener('DOMContentLoaded', function() {
+    // המתן לטעינת המשרות ואז אתחל
+    const initAutocomplete = () => {
+        if (window.allJobs && window.allJobs.length > 0) {
+            window.searchAutocomplete = new SmartAutocomplete();
+            console.log('🎯 הקלדה דינמית מופעלת עם', window.allJobs.length, 'משרות');
+        } else {
+            // נסה שוב אחרי שנייה
+            setTimeout(initAutocomplete, 1000);
+        }
+    };
+    
+    // התחל אתחול אחרי 2 שניות כדי לוודא שהמשרות נטענו
+    setTimeout(initAutocomplete, 2000);
+});
 </script>
 </body>
 </html>
