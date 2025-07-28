@@ -4886,7 +4886,7 @@ setInterval(() => {
             }
         }, 1000);
     });
-    // =============== מערכת הקלדה דינמית חכמה ===============
+// =============== מערכת הקלדה דינמית מתוקנת ===============
 
 class SmartAutocomplete {
     constructor(inputElement, searchInputId = 'searchInput') {
@@ -4931,7 +4931,7 @@ class SmartAutocomplete {
         
         // איבוד פוקוס
         this.input.addEventListener('blur', () => {
-            setTimeout(() => this.hideDropdown(), 150);
+            setTimeout(() => this.hideDropdown(), 200);
         });
         
         // פוקוס
@@ -4973,14 +4973,16 @@ class SmartAutocomplete {
         const seenSuggestions = new Set();
         
         if (!window.allJobs || !Array.isArray(window.allJobs)) {
+            console.log('🔍 אין משרות זמינות עדיין');
             return suggestions;
         }
         
         // סינון משרות פעילות
         const activeJobs = window.allJobs.filter(job => job.status === 'פעיל');
+        console.log('🔍 חיפוש ב-' + activeJobs.length + ' משרות פעילות');
         
         activeJobs.forEach(job => {
-            // מספר משרה (עדיפות גבוהה)
+            // מספר משרה (עדיפות גבוהה) - פתיחה ישירה של המשרה
             if (job.jobNumber && job.jobNumber.toLowerCase().includes(queryLower)) {
                 const key = `job-${job.jobNumber}`;
                 if (!seenSuggestions.has(key)) {
@@ -4990,13 +4992,15 @@ class SmartAutocomplete {
                         type: 'job-number',
                         typeLabel: 'מספר',
                         value: job.jobNumber,
-                        priority: 10
+                        priority: 10,
+                        jobData: job, // ✅ הוספנו את נתוני המשרה
+                        action: 'openJob' // ✅ פעולה מיוחדת
                     });
                     seenSuggestions.add(key);
                 }
             }
             
-            // כותרת משרה
+            // כותרת משרה - חיפוש רגיל
             if (job.title && job.title.toLowerCase().includes(queryLower)) {
                 const key = `title-${job.title}`;
                 if (!seenSuggestions.has(key)) {
@@ -5006,13 +5010,14 @@ class SmartAutocomplete {
                         type: 'job-title',
                         typeLabel: 'משרה',
                         value: job.title,
-                        priority: 8
+                        priority: 8,
+                        action: 'search' // ✅ חיפוש רגיל
                     });
                     seenSuggestions.add(key);
                 }
             }
             
-            // שם חברה
+            // שם חברה - חיפוש רגיל
             if (job.company && job.company.toLowerCase().includes(queryLower)) {
                 const key = `company-${job.company}`;
                 if (!seenSuggestions.has(key)) {
@@ -5022,13 +5027,14 @@ class SmartAutocomplete {
                         type: 'company',
                         typeLabel: 'חברה',
                         value: job.company,
-                        priority: 6
+                        priority: 6,
+                        action: 'search'
                     });
                     seenSuggestions.add(key);
                 }
             }
             
-            // מיקום (עיר)
+            // מיקום (עיר) - מילוי מסנן
             if (job.city && job.city.toLowerCase().includes(queryLower)) {
                 const key = `city-${job.city}`;
                 if (!seenSuggestions.has(key)) {
@@ -5038,13 +5044,14 @@ class SmartAutocomplete {
                         type: 'location',
                         typeLabel: 'עיר',
                         value: job.city,
-                        priority: 5
+                        priority: 5,
+                        action: 'filter'
                     });
                     seenSuggestions.add(key);
                 }
             }
             
-            // אזור
+            // אזור - מילוי מסנן
             if (job.region && job.region.toLowerCase().includes(queryLower)) {
                 const key = `region-${job.region}`;
                 if (!seenSuggestions.has(key)) {
@@ -5054,13 +5061,14 @@ class SmartAutocomplete {
                         type: 'location',
                         typeLabel: 'אזור',
                         value: job.region,
-                        priority: 4
+                        priority: 4,
+                        action: 'filter'
                     });
                     seenSuggestions.add(key);
                 }
             }
             
-            // קטגוריה
+            // קטגוריה - מילוי מסנן
             if (job.category && job.category.toLowerCase().includes(queryLower)) {
                 const key = `category-${job.category}`;
                 if (!seenSuggestions.has(key)) {
@@ -5070,12 +5078,15 @@ class SmartAutocomplete {
                         type: 'category',
                         typeLabel: 'תחום',
                         value: job.category,
-                        priority: 3
+                        priority: 3,
+                        action: 'filter'
                     });
                     seenSuggestions.add(key);
                 }
             }
         });
+        
+        console.log('🔍 נמצאו ' + suggestions.length + ' הצעות');
         
         // מיון לפי עדיפות ומגבלה של 8 תוצאות
         return suggestions
@@ -5094,8 +5105,11 @@ class SmartAutocomplete {
             
             const highlightedText = this.highlightMatch(suggestion.fullText, this.currentValue);
             
+            // אייקון מיוחד למספר משרה
+            const icon = suggestion.type === 'job-number' ? '🎯 ' : '';
+            
             item.innerHTML = `
-                <div class="autocomplete-main-text">${highlightedText}</div>
+                <div class="autocomplete-main-text">${icon}${highlightedText}</div>
                 <div class="item-type ${suggestion.type}">${suggestion.typeLabel}</div>
             `;
             
@@ -5112,8 +5126,12 @@ class SmartAutocomplete {
     highlightMatch(text, query) {
         if (!query) return text;
         
-        const regex = new RegExp(`(${query})`, 'gi');
+        const regex = new RegExp(`(${this.escapeRegex(query)})`, 'gi');
         return text.replace(regex, '<span class="match-highlight">$1</span>');
+    }
+    
+    escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
     
     hideDropdown() {
@@ -5148,9 +5166,7 @@ class SmartAutocomplete {
                 } else {
                     // ביצוע חיפוש עם הטקסט הנוכחי
                     this.hideDropdown();
-                    if (typeof filterJobs === 'function') {
-                        filterJobs();
-                    }
+                    this.performSearch();
                 }
                 break;
                 
@@ -5172,18 +5188,63 @@ class SmartAutocomplete {
     }
     
     selectSuggestion(suggestion) {
+        console.log('✅ נבחרה הצעה:', suggestion);
+        
+        // הוספת ההצעה לשדה החיפוש
         this.input.value = suggestion.value;
         this.hideDropdown();
         
-        // מילוי שדות מתאימים בהתבסס על סוג ההצעה
-        this.fillRelevantFilters(suggestion);
+        // ביצוע הפעולה לפי סוג ההצעה
+        switch (suggestion.action) {
+            case 'openJob':
+                // פתיחת משרה ספציפית
+                this.openSpecificJob(suggestion.jobData);
+                break;
+                
+            case 'filter':
+                // מילוי מסנן ספציפי
+                this.fillRelevantFilters(suggestion);
+                setTimeout(() => this.performSearch(), 100);
+                break;
+                
+            case 'search':
+            default:
+                // חיפוש רגיל
+                setTimeout(() => this.performSearch(), 100);
+                break;
+        }
+    }
+    
+    openSpecificJob(jobData) {
+        console.log('🎯 פותח משרה ספציפית:', jobData.title);
         
-        // ביצוע חיפוש
-        setTimeout(() => {
-            if (typeof filterJobs === 'function') {
-                filterJobs();
+        // מחפש את המשרה ברשימה המוצגת
+        if (window.currentDisplayedJobs && Array.isArray(window.currentDisplayedJobs)) {
+            const jobIndex = window.currentDisplayedJobs.findIndex(job => 
+                job.jobNumber === jobData.jobNumber
+            );
+            
+            if (jobIndex !== -1 && typeof window.openJobModal === 'function') {
+                // פותח את המודל
+                window.openJobModal(jobIndex);
+                return;
             }
-        }, 100);
+        }
+        
+        // אם המשרה לא נמצאת ברשימה הנוכחית, בצע חיפוש קודם
+        this.performSearch(() => {
+            // אחרי החיפוש, נסה שוב לפתוח
+            setTimeout(() => {
+                if (window.currentDisplayedJobs) {
+                    const jobIndex = window.currentDisplayedJobs.findIndex(job => 
+                        job.jobNumber === jobData.jobNumber
+                    );
+                    if (jobIndex !== -1 && typeof window.openJobModal === 'function') {
+                        window.openJobModal(jobIndex);
+                    }
+                }
+            }, 500);
+        });
     }
     
     fillRelevantFilters(suggestion) {
@@ -5201,6 +5262,7 @@ class SmartAutocomplete {
             case 'category':
                 if (categoryFilter) {
                     categoryFilter.value = suggestion.value;
+                    console.log('✅ מילוי קטגוריה:', suggestion.value);
                 }
                 break;
                 
@@ -5211,6 +5273,7 @@ class SmartAutocomplete {
                     for (let i = 0; i < regionFilter.options.length; i++) {
                         if (regionFilter.options[i].value === suggestion.value) {
                             regionFilter.value = suggestion.value;
+                            console.log('✅ מילוי עיר:', suggestion.value);
                             return;
                         }
                     }
@@ -5220,6 +5283,7 @@ class SmartAutocomplete {
                     for (let i = 0; i < areaFilter.options.length; i++) {
                         if (areaFilter.options[i].value === suggestion.value) {
                             areaFilter.value = suggestion.value;
+                            console.log('✅ מילוי אזור:', suggestion.value);
                             return;
                         }
                     }
@@ -5227,9 +5291,20 @@ class SmartAutocomplete {
                 break;
         }
     }
+    
+    performSearch(callback) {
+        console.log('🔍 מבצע חיפוש עם:', this.input.value);
+        
+        if (typeof window.filterJobs === 'function') {
+            window.filterJobs();
+            if (callback) callback();
+        } else {
+            console.warn('⚠️ פונקציית filterJobs לא נמצאה');
+        }
+    }
 }
 
-// =============== אתחול ההקלדה הדינמית ===============
+// =============== אתחול ההקלדה הדינמית המתוקנת ===============
 document.addEventListener('DOMContentLoaded', function() {
     // המתן לטעינת המשרות ואז אתחל
     const initAutocomplete = () => {
@@ -5237,6 +5312,7 @@ document.addEventListener('DOMContentLoaded', function() {
             window.searchAutocomplete = new SmartAutocomplete();
             console.log('🎯 הקלדה דינמית מופעלת עם', window.allJobs.length, 'משרות');
         } else {
+            console.log('⏳ ממתין לטעינת משרות...');
             // נסה שוב אחרי שנייה
             setTimeout(initAutocomplete, 1000);
         }
