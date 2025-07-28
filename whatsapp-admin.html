@@ -3500,6 +3500,148 @@ function showJobMatchingReport() {
     
     document.body.appendChild(modal);
 }
+        // פונקציות לשליחה מתוצאות הסריקה
+function sendJobFromScanResults(jobId) {
+    const job = correctJobsManager.findJobById(jobId);
+    if (!job) {
+        alert('❌ משרה לא נמצאה');
+        return;
+    }
+
+    const normalizedJob = correctJobsManager.normalizeJob(job);
+    const subscribers = adminPanel?.whatsappAlerts?.getSubscribers() || [];
+    const matchingSubscribers = correctJobsManager.findMatchingSubscribers(normalizedJob, subscribers);
+
+    if (matchingSubscribers.length === 0) {
+        alert('❌ אין מנויים מתאימים');
+        return;
+    }
+
+    // יצירת הודעה
+    const jobUrl = `https://www.mayeshpo.co.il/`;
+    const message = `🔥 משרה חדשה מתאימה עבורך!
+
+📋 ${normalizedJob.title}
+📍 ${normalizedJob.region}
+🎯 ${normalizedJob.category}
+🆔 מספר משרה: ${normalizedJob.jobNumber}
+
+🌐 לפרטים מלאים ולהגשת מועמדות:
+${jobUrl}
+
+🔍 באתר - חפש לפי מספר המשרה: ${normalizedJob.jobNumber}
+
+בהצלחה! 💪`;
+
+    // שליחה ישירה לכל המנויים המתאימים
+    let successCount = 0;
+    
+    matchingSubscribers.forEach(subscriber => {
+        const phoneNumber = subscriber.phone.replace(/^0/, '972').replace(/\D/g, '');
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        
+        // פתיחת כל הקישורים (מגבלת דפדפן: בדרך כלל עד 5-10 טאבים)
+        if (successCount < 5) {
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+            }, successCount * 1000); // השהייה של שנייה בין כל פתיחה
+            successCount++;
+        }
+    });
+
+    // הודעת הצלחה
+    if (matchingSubscribers.length <= 5) {
+        adminPanel?.showAlert(`✅ נפתחו ${successCount} חלונות WhatsApp לשליחה!`, 'success');
+    } else {
+        adminPanel?.showAlert(`✅ נפתחו ${successCount} חלונות WhatsApp מתוך ${matchingSubscribers.length} מנויים. השאר יש לשלוח ידנית.`, 'success');
+        
+        // הצגת רשימת המנויים הנוספים
+        const remainingSubscribers = matchingSubscribers.slice(5);
+        console.log('📱 מנויים נוספים לשליחה ידנית:');
+        remainingSubscribers.forEach(sub => {
+            console.log(`- ${sub.phone} (${sub.name || 'ללא שם'})`);
+        });
+    }
+
+    // עדכון סטטיסטיקות
+    const currentAlerts = parseInt(localStorage.getItem('whatsapp_total_alerts') || '0');
+    localStorage.setItem('whatsapp_total_alerts', (currentAlerts + matchingSubscribers.length).toString());
+    adminPanel?.updateStats();
+}
+
+function previewJobFromScan(jobId) {
+    const job = correctJobsManager.findJobById(jobId);
+    if (!job) {
+        alert('❌ משרה לא נמצאה');
+        return;
+    }
+
+    const normalizedJob = correctJobsManager.normalizeJob(job);
+    const subscribers = adminPanel?.whatsappAlerts?.getSubscribers() || [];
+    const matchingSubscribers = correctJobsManager.findMatchingSubscribers(normalizedJob, subscribers);
+
+    if (matchingSubscribers.length === 0) {
+        alert('❌ אין מנויים מתאימים');
+        return;
+    }
+
+    // יצירת הודעה
+    const jobUrl = `https://www.mayeshpo.co.il/`;
+    const message = `🔥 משרה חדשה מתאימה עבורך!
+
+📋 ${normalizedJob.title}
+📍 ${normalizedJob.region}
+🎯 ${normalizedJob.category}
+🆔 מספר משרה: ${normalizedJob.jobNumber}
+
+🌐 לפרטים מלאים ולהגשת מועמדות:
+${jobUrl}
+
+🔍 באתר - חפש לפי מספר המשרה: ${normalizedJob.jobNumber}
+
+בהצלחה! 💪`;
+
+    // הצגת תצוגה מקדימה
+    const modal = document.createElement('div');
+    modal.className = 'preview-modal';
+    modal.innerHTML = `
+        <div class="preview-content">
+            <h3><i class="fas fa-eye"></i> תצוגה מקדימה - ${normalizedJob.title}</h3>
+            
+            <div style="margin: 15px 0;">
+                <strong>משרה:</strong> ${normalizedJob.title} (${normalizedJob.jobNumber})<br>
+                <strong>נמענים:</strong> ${matchingSubscribers.length} מנויים מתאימים
+            </div>
+            
+            <h4>הודעה שתישלח:</h4>
+            <div class="whatsapp-message">
+                ${message.replace(/\n/g, '<br>')}
+            </div>
+            
+            <h4>רשימת נמענים (${matchingSubscribers.length > 5 ? 'ראשונים 5' : 'כולם'}):</h4>
+            <div style="max-height: 200px; overflow-y: auto; background: rgba(246, 152, 152, 0.1); padding: 10px; border-radius: 5px;">
+                ${matchingSubscribers.slice(0, 5).map(sub => 
+                    `<div>📱 ${sub.phone} - ${sub.name || 'ללא שם'}</div>`
+                ).join('')}
+                ${matchingSubscribers.length > 5 ? `<div style="color: #999; margin-top: 10px;">... ועוד ${matchingSubscribers.length - 5} מנויים</div>` : ''}
+            </div>
+            
+            <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn" onclick="sendJobFromScanResults('${normalizedJob.id}'); this.closest('.preview-modal').remove();">
+                    <i class="fas fa-paper-plane"></i> שלח לכל המנויים (${matchingSubscribers.length})
+                </button>
+                <button class="btn btn-outline" onclick="testJobLink('${normalizedJob.jobNumber}')">
+                    <i class="fas fa-external-link-alt"></i> בדוק קישור
+                </button>
+                <button class="close-btn" onclick="this.parentElement.parentElement.parentElement.remove()">
+                    <i class="fas fa-times"></i> סגור
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
     </script>
 </body>
 </html>
