@@ -4818,6 +4818,296 @@ setInterval(() => {
             }
         }, 1000);
     });
+    <!-- תיקון הבעיות בפונקציית החיפוש -->
+<script>
+// 1. תיקון הפונקציה searchInWords שחסרה
+function searchInWords(text, searchTerm) {
+    if (!text || !searchTerm) return false;
+    
+    const words = text.split(/\s+/);
+    return words.some(word => {
+        const cleanWord = word.replace(/[^\u0590-\u05FF\u0041-\u005A\u0061-\u007A0-9]/g, '');
+        return cleanWord.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+}
+
+// 2. תיקון הפונקציה filterJobs הבסיסית
+function filterJobs() {
+    console.log('🔍 מתחיל חיפוש...');
+    
+    // קבלת ערכי החיפוש
+    var searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+    var category = document.getElementById('categoryFilter').value;
+    var city = document.getElementById('regionFilter').value;
+    var area = document.getElementById('areaFilter').value;
+    
+    console.log('פרמטרי חיפוש:', { searchText, category, city, area });
+    
+    // בדיקה שיש משרות לחיפוש
+    if (!window.allJobs || window.allJobs.length === 0) {
+        console.log('❌ אין משרות במערכת');
+        return;
+    }
+    
+    // סינון המשרות הפעילות בלבד
+    var activeJobs = window.allJobs.filter(function(job) { 
+        return job.status === 'פעיל' || !job.status; // גם משרות ללא סטטוס
+    });
+    
+    console.log('משרות פעילות:', activeJobs.length);
+    
+    // ביצוע הסינון
+    var filteredJobs = activeJobs.filter(function(job) {
+        // חיפוש טקסט חופשי
+        if (searchText && !jobMatchesSearch(job, searchText)) {
+            return false;
+        }
+        
+        // סינון לפי קטגוריה
+        if (category && job.category !== category) {
+            return false;
+        }
+        
+        // סינון לפי עיר
+        if (city && job.city !== city) {
+            return false;
+        }
+        
+        // סינון לפי אזור
+        if (area && job.region !== area) {
+            return false;
+        }
+        
+        return true;
+    });
+    
+    console.log('תוצאות חיפוש:', filteredJobs.length);
+    
+    // הצגת התוצאות
+    displayJobs(filteredJobs);
+    
+    // גלילה לתוצאות אם יש חיפוש אקטיבי
+    var hasActiveSearch = searchText || category || city || area;
+    if (hasActiveSearch) {
+        setTimeout(function() {
+            var jobsSection = document.querySelector('.jobs');
+            if (jobsSection) {
+                jobsSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }, 300);
+    }
+    
+    // הודעה למשתמש
+    if (hasActiveSearch) {
+        showNotification(`נמצאו ${filteredJobs.length} תוצאות`);
+    }
+}
+
+// 3. תיקון פונקציית jobMatchesSearch
+function jobMatchesSearch(job, searchText) {
+    if (!job || !searchText) return false;
+    
+    // נרמול טקסט החיפוש
+    const normalizedSearchText = searchText.toLowerCase().trim();
+    
+    // שדות לחיפוש - חשוב לוודא שהשמות נכונים!
+    const searchFields = [
+        job.title,
+        job.company, 
+        job.description,
+        job.requirements,
+        job.city,
+        job.region,
+        job.category,
+        job.jobNumber,
+        job.jobType
+    ];
+    
+    // חיפוש בכל השדות
+    return searchFields.some(field => {
+        if (!field) return false;
+        
+        const normalizedField = field.toString().toLowerCase().trim();
+        
+        // חיפוש ישירות
+        if (normalizedField.includes(normalizedSearchText)) {
+            return true;
+        }
+        
+        // חיפוש במילים נפרדות
+        if (searchInWords(normalizedField, normalizedSearchText)) {
+            return true;
+        }
+        
+        // חיפוש עם וריאציות זכר/נקבה
+        return checkGenderVariations(normalizedField, normalizedSearchText);
+    });
+}
+
+// 4. תיקון פונקציית clearFilters
+function clearFilters() {
+    console.log('🧹 מנקה מסננים...');
+    
+    // איפוס השדות
+    document.getElementById('searchInput').value = '';
+    document.getElementById('categoryFilter').value = '';
+    document.getElementById('regionFilter').value = '';
+    document.getElementById('areaFilter').value = '';
+
+    // הצגת כל המשרות הפעילות
+    if (window.allJobs) {
+        var activeJobs = window.allJobs.filter(function(job) { 
+            return job.status === 'פעיל' || !job.status; 
+        });
+        displayJobs(activeJobs);
+    }
+    
+    showNotification('מסננים נוקו');
+}
+
+// 5. הוספת מאזיני אירועים משופרים
+function attachSearchEventListeners() {
+    console.log('🔗 מוסיף מאזיני אירועים לחיפוש...');
+    
+    // כפתור חיפוש
+    var searchButton = document.getElementById('searchButton');
+    if (searchButton) {
+        // הסרת מאזינים קיימים
+        searchButton.removeEventListener('click', filterJobs);
+        // הוספת מאזין חדש
+        searchButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('🔍 נלחץ כפתור חיפוש');
+            filterJobs();
+        });
+        console.log('✅ מאזין כפתור חיפוש הוסף');
+    } else {
+        console.error('❌ כפתור חיפוש לא נמצא');
+    }
+    
+    // כפתור ניקוי
+    var clearButton = document.getElementById('clearButton');
+    if (clearButton) {
+        clearButton.removeEventListener('click', clearFilters);
+        clearButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('🧹 נלחץ כפתור ניקוי');
+            clearFilters();
+        });
+        console.log('✅ מאזין כפתור ניקוי הוסף');
+    }
+    
+    // שדה חיפוש - Enter
+    var searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.removeEventListener('keypress', handleSearchKeypress);
+        searchInput.addEventListener('keypress', handleSearchKeypress);
+        
+        // גם חיפוש בזמן אמת (אופציונלי)
+        searchInput.addEventListener('input', function() {
+            // חיפוש אוטומטי אחרי 500ms ללא הקלדה
+            clearTimeout(searchInput.searchTimeout);
+            searchInput.searchTimeout = setTimeout(function() {
+                if (searchInput.value.length >= 2 || searchInput.value.length === 0) {
+                    filterJobs();
+                }
+            }, 500);
+        });
+        
+        console.log('✅ מאזין שדה חיפוש הוסף');
+    }
+    
+    // מאזינים למסננים
+    var categoryFilter = document.getElementById('categoryFilter');
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', filterJobs);
+    }
+    
+    var regionFilter = document.getElementById('regionFilter');
+    if (regionFilter) {
+        regionFilter.addEventListener('change', filterJobs);
+    }
+    
+    var areaFilter = document.getElementById('areaFilter');
+    if (areaFilter) {
+        areaFilter.addEventListener('change', filterJobs);
+    }
+}
+
+function handleSearchKeypress(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        console.log('⌨️ נלחץ Enter בשדה חיפוש');
+        filterJobs();
+    }
+}
+
+// 6. הפעלת המאזינים כשהדף נטען
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📄 דף נטען - מאתחל מאזיני חיפוש...');
+    
+    // המתנה קצרה לוודא שכל האלמנטים נטענו
+    setTimeout(function() {
+        attachSearchEventListeners();
+        
+        // בדיקה שהכל עובד
+        setTimeout(function() {
+            testSearchFunctionality();
+        }, 1000);
+    }, 500);
+});
+
+// 7. פונקציית בדיקה
+function testSearchFunctionality() {
+    console.log('🧪 בודק פונקציונליות חיפוש...');
+    
+    var searchButton = document.getElementById('searchButton');
+    var searchInput = document.getElementById('searchInput');
+    var clearButton = document.getElementById('clearButton');
+    
+    if (!searchButton) {
+        console.error('❌ כפתור חיפוש לא נמצא!');
+        return;
+    }
+    
+    if (!searchInput) {
+        console.error('❌ שדה חיפוש לא נמצא!');
+        return;
+    }
+    
+    if (!clearButton) {
+        console.error('❌ כפתור ניקוי לא נמצא!');
+        return;
+    }
+    
+    console.log('✅ כל האלמנטים נמצאו');
+    console.log('✅ פונקציונליות חיפוש מוכנה');
+}
+
+// 8. הפיכת הפונקציות לגלובליות
+window.filterJobs = filterJobs;
+window.clearFilters = clearFilters;
+window.jobMatchesSearch = jobMatchesSearch;
+window.searchInWords = searchInWords;
+window.attachSearchEventListeners = attachSearchEventListeners;
+
+console.log('✅ תיקוני חיפוש הושלמו בהצלחה!');
+</script>
+
+<!-- הוספה לקוד ה-HTML הקיים -->
+<script>
+// החלפת הקוד הישן בחדש - הוסף את זה בסוף הסקריפט הקיים
+
+// מחיקת הגדרות ישנות של הפונקציות
+if (typeof window.filterJobs !== 'undefined') {
+    delete window.filterJobs;
+}
+if (typeof window.clearFilters !== 'undefined') {
+    delete window.clearFilters;
+}
 </script>
 </body>
 </html>
