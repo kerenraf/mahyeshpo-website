@@ -3259,7 +3259,247 @@ ${jobUrl}
                 e.target.remove();
             }
         });
+// פונקציות סריקת משרות
+function scanAllJobsForAllSubscribers() {
+    const jobs = correctJobsManager.getAllJobs();
+    const subscribers = adminPanel?.whatsappAlerts?.getSubscribers() || [];
+    
+    if (jobs.length === 0) {
+        alert('❌ אין משרות לסריקה');
+        return;
+    }
+    
+    if (subscribers.length === 0) {
+        alert('❌ אין מנויים במערכת');
+        return;
+    }
 
+    console.log(`🔍 סורק ${jobs.length} משרות עבור ${subscribers.length} מנויים...`);
+    
+    let totalMatches = 0;
+    const matchResults = [];
+
+    jobs.forEach(job => {
+        const normalizedJob = correctJobsManager.normalizeJob(job);
+        const matchingSubscribers = correctJobsManager.findMatchingSubscribers(normalizedJob, subscribers);
+        
+        if (matchingSubscribers.length > 0) {
+            totalMatches += matchingSubscribers.length;
+            matchResults.push({
+                job: normalizedJob,
+                matches: matchingSubscribers.length,
+                subscribers: matchingSubscribers
+            });
+        }
+    });
+
+    // הצגת תוצאות
+    const resultsDiv = document.getElementById('jobScanResults');
+    resultsDiv.style.display = 'block';
+    resultsDiv.innerHTML = `
+        <div style="background: rgba(37, 211, 102, 0.1); padding: 20px; border-radius: 10px; border: 1px solid rgba(37, 211, 102, 0.3);">
+            <h3 style="color: #25D366; margin-bottom: 15px;">
+                <i class="fas fa-check-circle"></i> תוצאות סריקה
+            </h3>
+            
+            <div style="margin-bottom: 20px;">
+                <div><strong>סה"כ משרות:</strong> ${jobs.length}</div>
+                <div><strong>משרות עם התאמות:</strong> ${matchResults.length}</div>
+                <div><strong>סה"כ התאמות:</strong> ${totalMatches}</div>
+                <div><strong>מנויים במערכת:</strong> ${subscribers.length}</div>
+            </div>
+
+            ${matchResults.length > 0 ? `
+                <h4 style="color: #25D366; margin-bottom: 10px;">💼 המשרות המתאימות ביותר:</h4>
+                <div style="max-height: 300px; overflow-y: auto;">
+                    ${matchResults
+                        .sort((a, b) => b.matches - a.matches)
+                        .slice(0, 10)
+                        .map(result => `
+                            <div style="background: rgba(246, 152, 152, 0.1); padding: 15px; margin: 10px 0; border-radius: 8px;">
+                                <div style="font-weight: bold; color: var(--primary-color);">
+                                    ${result.job.title} (${result.job.jobNumber})
+                                </div>
+                                <div style="font-size: 0.9em; margin-top: 5px;">
+                                    📍 ${result.job.region} | 🎯 ${result.job.category}
+                                </div>
+                                <div style="color: #25D366; margin-top: 5px;">
+                                    ✅ ${result.matches} מנויים מתאימים
+                                </div>
+                            </div>
+                        `).join('')}
+                </div>
+            ` : '<div style="color: #999;">לא נמצאו התאמות</div>'}
+        </div>
+    `;
+
+    adminPanel?.showAlert(`✅ סריקה הושלמה! נמצאו ${totalMatches} התאמות`, 'success');
+}
+
+function scanNewJobsOnly() {
+    // סימולציה של משרות חדשות (במציאות זה יהיה חיפוש לפי תאריך)
+    const jobs = correctJobsManager.getAllJobs();
+    const newJobs = jobs.slice(0, 3); // נניח ש-3 הראשונות הן חדשות
+    
+    const subscribers = adminPanel?.whatsappAlerts?.getSubscribers() || [];
+    
+    if (newJobs.length === 0) {
+        alert('❌ אין משרות חדשות');
+        return;
+    }
+    
+    if (subscribers.length === 0) {
+        alert('❌ אין מנויים במערכת');
+        return;
+    }
+
+    console.log(`🔍 סורק ${newJobs.length} משרות חדשות עבור ${subscribers.length} מנויים...`);
+    
+    let totalMatches = 0;
+    const matchResults = [];
+
+    newJobs.forEach(job => {
+        const normalizedJob = correctJobsManager.normalizeJob(job);
+        const matchingSubscribers = correctJobsManager.findMatchingSubscribers(normalizedJob, subscribers);
+        
+        if (matchingSubscribers.length > 0) {
+            totalMatches += matchingSubscribers.length;
+            matchResults.push({
+                job: normalizedJob,
+                matches: matchingSubscribers.length,
+                subscribers: matchingSubscribers
+            });
+        }
+    });
+
+    // הצגת תוצאות
+    const resultsDiv = document.getElementById('jobScanResults');
+    resultsDiv.style.display = 'block';
+    resultsDiv.innerHTML = `
+        <div style="background: rgba(23, 162, 184, 0.1); padding: 20px; border-radius: 10px; border: 1px solid rgba(23, 162, 184, 0.3);">
+            <h3 style="color: #17a2b8; margin-bottom: 15px;">
+                <i class="fas fa-clock"></i> תוצאות סריקת משרות חדשות
+            </h3>
+            
+            <div style="margin-bottom: 20px;">
+                <div><strong>משרות חדשות נסרקו:</strong> ${newJobs.length}</div>
+                <div><strong>משרות עם התאמות:</strong> ${matchResults.length}</div>
+                <div><strong>סה"כ התאמות:</strong> ${totalMatches}</div>
+            </div>
+
+            ${matchResults.length > 0 ? `
+                <h4 style="color: #17a2b8; margin-bottom: 10px;">💼 משרות חדשות מתאימות:</h4>
+                <div style="max-height: 300px; overflow-y: auto;">
+                    ${matchResults.map(result => `
+                        <div style="background: rgba(246, 152, 152, 0.1); padding: 15px; margin: 10px 0; border-radius: 8px;">
+                            <div style="font-weight: bold; color: var(--primary-color);">
+                                🆕 ${result.job.title} (${result.job.jobNumber})
+                            </div>
+                            <div style="font-size: 0.9em; margin-top: 5px;">
+                                📍 ${result.job.region} | 🎯 ${result.job.category}
+                            </div>
+                            <div style="color: #25D366; margin-top: 5px;">
+                                ✅ ${result.matches} מנויים מתאימים
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            ` : '<div style="color: #999;">אין התאמות למשרות החדשות</div>'}
+        </div>
+    `;
+
+    adminPanel?.showAlert(`✅ סריקת משרות חדשות הושלמה! ${totalMatches} התאמות`, 'success');
+}
+
+function showJobMatchingReport() {
+    const jobs = correctJobsManager.getAllJobs();
+    const subscribers = adminPanel?.whatsappAlerts?.getSubscribers() || [];
+    
+    if (jobs.length === 0 || subscribers.length === 0) {
+        alert('צריך משרות ומנויים כדי ליצור דוח');
+        return;
+    }
+
+    // יצירת דוח מפורט
+    const categoryStats = {};
+    const areaStats = {};
+    let totalPossibleMatches = 0;
+    let actualMatches = 0;
+
+    jobs.forEach(job => {
+        const normalizedJob = correctJobsManager.normalizeJob(job);
+        const matchingSubscribers = correctJobsManager.findMatchingSubscribers(normalizedJob, subscribers);
+        
+        totalPossibleMatches += subscribers.length;
+        actualMatches += matchingSubscribers.length;
+        
+        // סטטיסטיקות קטגוריות
+        if (matchingSubscribers.length > 0) {
+            categoryStats[normalizedJob.category] = (categoryStats[normalizedJob.category] || 0) + matchingSubscribers.length;
+        }
+        
+        // סטטיסטיקות אזורים
+        if (matchingSubscribers.length > 0) {
+            areaStats[normalizedJob.region] = (areaStats[normalizedJob.region] || 0) + matchingSubscribers.length;
+        }
+    });
+
+    const matchRate = ((actualMatches / totalPossibleMatches) * 100).toFixed(1);
+
+    // הצגת הדוח
+    const modal = document.createElement('div');
+    modal.className = 'preview-modal';
+    modal.innerHTML = `
+        <div class="preview-content" style="max-width: 800px;">
+            <h3><i class="fas fa-chart-line"></i> דוח התאמות מפורט</h3>
+            
+            <div style="margin: 20px 0;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div style="background: rgba(246, 152, 152, 0.1); padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 2em; font-weight: bold; color: var(--primary-color);">${jobs.length}</div>
+                        <div>סה"כ משרות</div>
+                    </div>
+                    <div style="background: rgba(37, 211, 102, 0.1); padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 2em; font-weight: bold; color: #25D366;">${actualMatches}</div>
+                        <div>התאמות</div>
+                    </div>
+                    <div style="background: rgba(255, 193, 7, 0.1); padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 2em; font-weight: bold; color: #ffc107;">${matchRate}%</div>
+                        <div>אחוז התאמה</div>
+                    </div>
+                </div>
+
+                <h4 style="color: var(--primary-color);">📊 התאמות לפי קטגוריות:</h4>
+                <div style="max-height: 200px; overflow-y: auto; margin-bottom: 20px;">
+                    ${Object.entries(categoryStats)
+                        .sort((a, b) => b[1] - a[1])
+                        .map(([category, count]) => `
+                            <div style="background: rgba(246, 152, 152, 0.1); padding: 10px; margin: 5px 0; border-radius: 5px;">
+                                <strong>${category}:</strong> ${count} התאמות
+                            </div>
+                        `).join('')}
+                </div>
+
+                <h4 style="color: var(--primary-color);">🗺️ התאמות לפי אזורים:</h4>
+                <div style="max-height: 200px; overflow-y: auto;">
+                    ${Object.entries(areaStats)
+                        .sort((a, b) => b[1] - a[1])
+                        .map(([area, count]) => `
+                            <div style="background: rgba(37, 211, 102, 0.1); padding: 10px; margin: 5px 0; border-radius: 5px;">
+                                <strong>${area}:</strong> ${count} התאמות
+                            </div>
+                        `).join('')}
+                </div>
+            </div>
+            
+            <button class="close-btn" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i> סגור
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
     </script>
 </body>
 </html>
