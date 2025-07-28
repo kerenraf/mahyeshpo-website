@@ -3151,6 +3151,7 @@ if (hasActiveSearch) {
         }
 
 // פונקציית שיתוף משופרת
+// פונקציית שיתוף משופרת
 function shareJob(index) {
     var job = currentDisplayedJobs[index];
     if (!job) return;
@@ -3159,19 +3160,21 @@ function shareJob(index) {
     var jobUrl = baseUrl + '?job=' + encodeURIComponent(job.jobNumber);
     var location = job.city ? job.city + ', ' + (job.region || '') : (job.region || 'ישראל');
     
-    // טקסט שיתוף עם כל הפרטים
-    var shareTitle = 'דרוש/ה ' + job.title + ' ב' + location;
-    var shareText = '🎯 ' + shareTitle + 
-        '\n💼 ' + job.category + 
+    // 🎯 כותרת מותאמת לשיתוף
+    var shareTitle = job.shareTitle || ('💼 דרוש/ה ' + job.title + ' ב' + location);
+    
+    // 📋 תיאור מותאם לשיתוף
+    var shareDescription = job.shareDescription || (job.description ? job.description.substring(0, 150) + '...' : 'לפרטים נוספים צרו קשר');
+    
+    // טקסט שיתוף מלא עם כל הפרטים
+    var shareText = shareTitle + 
+        '\n\n📋 ' + shareDescription +
+        '\n\n💼 ' + job.category + 
+        '\n📍 ' + location +
         '\n📞 לפרטים נוספים: 055-550-4633' +
         '\n📱 לחצו לפרטים נוספים:' +
         '\n' + jobUrl;
-    
-    if (navigator.share) {
-        navigator.share({
-            title: shareTitle,
-            text: shareText,
-            url: jobUrl
+    }
         }).catch(function(err) { 
             console.log('שגיאה בשיתוף:', err);
             fallbackShare(job, shareText, jobUrl, shareTitle);
