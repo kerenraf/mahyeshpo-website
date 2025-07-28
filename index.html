@@ -1779,6 +1779,554 @@ padding-top: 20px;
     color: #F69898;
     font-weight: bold;
 }      
+
+    /* =============== סטיילים להקלדה דינמית =============== */
+.search-input-container {
+    position: relative;
+}
+
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #333333;
+    border: 2px solid #F69898;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.autocomplete-dropdown::-webkit-scrollbar {
+    width: 8px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-track {
+    background: #444;
+    border-radius: 4px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-thumb {
+    background: #F69898;
+    border-radius: 4px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-thumb:hover {
+    background: #e58080;
+}
+
+.autocomplete-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #444444;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 45px;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.selected {
+    background: rgba(246, 152, 152, 0.15);
+    color: #F69898;
+    font-weight: 500;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-main-text {
+    flex: 1;
+    font-size: 1rem;
+}
+
+.match-highlight {
+    background: rgba(246, 152, 152, 0.6);
+    color: white;
+    font-weight: bold;
+    border-radius: 3px;
+    padding: 1px 4px;
+}
+
+.item-type {
+    font-size: 0.8rem;
+    color: #aaa;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 12px;
+    white-space: nowrap;
+    margin-right: 10px;
+}
+
+/* עיצוב מיוחד לסוגי פריטים שונים */
+.item-type.job-number { 
+    background: rgba(255, 193, 7, 0.2); 
+    color: #FFC107; 
+}
+
+.item-type.job-title { 
+    background: rgba(76, 175, 80, 0.2); 
+    color: #4CAF50; 
+}
+
+.item-type.company { 
+    background: rgba(33, 150, 243, 0.2); 
+    color: #2196F3; 
+}
+
+.item-type.location { 
+    background: rgba(156, 39, 176, 0.2); 
+    color: #9C27B0; 
+}
+
+.item-type.category { 
+    background: rgba(255, 87, 34, 0.2); 
+    color: #FF5722; 
+}
+
+/* רספונסיבי */
+@media (max-width: 768px) {
+    .autocomplete-dropdown {
+        max-height: 250px;
+        font-size: 0.9rem;
+    }
+    
+    .autocomplete-item {
+        padding: 10px 12px;
+        min-height: 40px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    .item-type {
+        font-size: 0.7rem;
+        margin-right: 0;
+        align-self: flex-end;
+    }
+}
+
+/* סטיילים לגמדה החכמה */
+/* סטיילים לגמדה החכמה - משופרת ובולטת יותר */
+.smart-floating-gnome {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: auto;
+    height: auto;
+    cursor: pointer;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+    font-family: 'Assistant', sans-serif;
+    animation: gnomePulse 3s infinite ease-in-out, gnomeFloat 4s infinite ease-in-out;
+}
+
+@keyframes gnomePulse {
+    0%, 100% {
+        filter: drop-shadow(0 6px 20px rgba(246, 152, 152, 0.6));
+    }
+    50% {
+        filter: drop-shadow(0 8px 30px rgba(246, 152, 152, 0.9));
+    }
+}
+
+@keyframes gnomeFloat {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.smart-floating-gnome:hover {
+    transform: scale(1.15) translateY(-5px);
+    animation-play-state: paused;
+    filter: drop-shadow(0 10px 40px rgba(246, 152, 152, 1)) 
+            drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
+}
+
+.gnome-image {
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 20px rgba(246, 152, 152, 0.6));
+    transition: all 0.3s ease;
+}
+
+.smart-floating-gnome:hover .gnome-image {
+    filter: drop-shadow(0 8px 25px rgba(246, 152, 152, 0.8))
+            drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
+}
+
+.gnome-text {
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    margin-top: 8px;
+    font-weight: bold;
+    background: linear-gradient(135deg, rgba(246, 152, 152, 0.95), rgba(255, 158, 158, 0.95));
+    padding: 8px 12px;
+    border-radius: 15px;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 
+                0 2px 8px rgba(246, 152, 152, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.smart-floating-gnome:hover .gnome-text {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(246, 152, 152, 0.95));
+    color: #333;
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5),
+                0 3px 12px rgba(246, 152, 152, 0.8);
+}
+/* חלון השיחה */
+.smart-guide-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+}
+
+.guide-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #222222;
+    padding: 25px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 450px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    border: 2px solid #F69898;
+}
+
+.guide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #F69898;
+}
+
+.guide-header h3 {
+    margin: 0;
+    color: #F69898;
+    font-family: 'Assistant', sans-serif;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.close-btn {
+    background: #ff6b6b;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    background: #ff5252;
+    transform: scale(1.1);
+}
+.guide-messages {
+    margin-bottom: 20px;
+    max-height: 250px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.guide-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.guide-messages::-webkit-scrollbar-track {
+    background: #333;
+    border-radius: 3px;
+}
+
+.guide-messages::-webkit-scrollbar-thumb {
+    background: #F69898;
+    border-radius: 3px;
+}
+
+.guide-messages::-webkit-scrollbar-thumb:hover {
+    background: #e58080;
+}
+
+.guide-message {
+    margin-bottom: 15px;
+    padding: 12px 15px;
+    border-radius: 12px;
+    font-family: 'Assistant', sans-serif;
+    line-height: 1.4;
+    animation: messageSlideIn 0.3s ease-out;
+}
+
+@keyframes messageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.guide-message.bot {
+    background: linear-gradient(135deg, #333333, #2a2a2a);
+    color: white;
+    border-left: 4px solid #F69898;
+}
+
+.guide-message.user {
+    background: linear-gradient(135deg, #F69898, #ff9e9e);
+    color: white;
+    text-align: left;
+    margin-left: 20px;
+}
+
+.guide-options {
+    display: grid;
+    gap: 12px;
+}
+
+.guide-options button {
+    padding: 14px 16px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #F69898, #ff9e9e);
+    color: white;
+    font-family: 'Assistant', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(246, 152, 152, 0.3);
+}
+
+.guide-options button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(246, 152, 152, 0.4);
+    background: linear-gradient(135deg, #e58080, #ff8a8a);
+}
+
+.guide-options button:active {
+    transform: translateY(0);
+}
+
+.category-options, .location-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.category-options button, .location-options button {
+    padding: 10px 12px;
+    border: 2px solid #F69898;
+    border-radius: 8px;
+    background: #333333;
+    color: white;
+    font-family: 'Assistant', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.category-options button:hover, .location-options button:hover {
+    background: linear-gradient(135deg, #F69898, #ff9e9e);
+    color: white;
+    border-color: #e58080;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(246, 152, 152, 0.3);
+}
+/* טופס יצירת קשר - מתאים לעיצוב האתר */
+.contact-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #222222;
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 0;
+    z-index: 3000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    border: 3px solid #F69898;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.contact-form h4 {
+    margin: 0 0 20px 0;
+    color: #F69898;
+    text-align: center;
+    font-size: 1.2rem;
+    border-bottom: 2px solid #F69898;
+    padding-bottom: 10px;
+}
+
+.contact-form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #555;
+    border-radius: 8px;
+    font-family: 'Assistant', sans-serif;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    background: #333;
+    color: white;
+}
+
+.contact-form input:focus {
+    border-color: #F69898;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(246, 152, 152, 0.3);
+}
+
+.contact-form input::placeholder {
+    color: #ccc;
+}
+
+.contact-form button {
+    width: 48%;
+    padding: 12px;
+    margin: 5px 1%;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Assistant', sans-serif;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.contact-form button:first-of-type {
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    color: white;
+}
+
+.contact-form button:first-of-type:hover {
+    background: linear-gradient(135deg, #1ea952, #0f6b5c);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+.contact-form button:last-of-type {
+    background: linear-gradient(135deg, #666, #555);
+    color: white;
+}
+
+.contact-form button:last-of-type:hover {
+    background: linear-gradient(135deg, #777, #666);
+    transform: translateY(-1px);
+}
+
+/* כפתורי הבחירה */
+.category-options, .location-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.category-options button, .location-options button {
+    padding: 8px 12px;
+    border: 1px solid #ff6b9d;
+    border-radius: 5px;
+    background: white;
+    color: #ff6b9d;
+    font-family: 'Assistant', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* רספונסיבי */
+@media (max-width: 768px) {
+
+    .smart-floating-gnome {
+        bottom: 140px;
+        right: 25px;
+        transform: none;
+    }
+    
+    .gnome-image {
+        width: 110px;
+        height: 110px;
+    }
+    
+    .gnome-text {
+        font-size: 15px;
+        padding: 6px 10px;
+        margin-top: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .smart-floating-gnome {
+        bottom: 120px;
+        right: 20px;
+    }
+
+    .gnome-image {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .gnome-text {
+        font-size: 14px;
+        padding: 5px 8px;
+        margin-top: 5px;
+    }
+}    
+    .guide-content {
+        width: 95%;
+        padding: 15px;
+    }
+    
+    .category-options, .location-options {
+        grid-template-columns: 1fr;
+    }
 }    
     </style>
 </head>
@@ -1958,7 +2506,6 @@ padding-top: 20px;
                         <option value="">כל הערים</option>
                     </select>
                 </div>
-            </div>
             
 <div class="form-group">
     <label class="form-label">אזור</label>
@@ -1966,6 +2513,7 @@ padding-top: 20px;
         <option value="">כל האזורים</option>
     </select>
 </div>
+            </div>
             <div class="search-buttons">
                 <button class="btn" id="searchButton">חיפוש</button>
                 <button class="btn btn-secondary" id="clearButton">נקה</button>
@@ -2606,30 +3154,9 @@ openJobModal(displayedIndex);
             });
             
             if (currentValue && uniqueCities.indexOf(currentValue) !== -1) {
-                cityFilter.value = currentValue;
-            }
+                cityFilter.value = currentValue}
         }
 function updateAreaFilters() {
-    var areaFilter = document.getElementById('areaFilter');
-    if (!areaFilter) return;
-    
-    var currentValue = areaFilter.value;
-    
-    areaFilter.innerHTML = '<option value="">כל האזורים</option>';
-    
-    uniqueAreas.forEach(function(area) {
-        var option = document.createElement('option');
-        option.value = area;
-        option.textContent = area;
-        areaFilter.appendChild(option);
-    });
-    
-    if (currentValue && uniqueAreas.indexOf(currentValue) !== -1) {
-        areaFilter.value = currentValue;
-    }
-}
-
-        function updateAreaFilters() {
     var areaFilter = document.getElementById('areaFilter');
     if (!areaFilter) return;
     
@@ -2882,190 +3409,186 @@ function filterJobs() {
     
     displayJobs(filteredJobs);
     console.log('🔍 נמצאו ' + filteredJobs.length + ' תוצאות');
-}
-        
-// =============== החלפת הפונקציה jobMatchesSearch ===============
-// מצאי את הפונקציה הזו בקובץ שלך והחליפי אותה בקוד הזה:
-
-function jobMatchesSearch(job, searchText) {
-    // נרמול טקסט החיפוש
-    const normalizedSearchText = normalizeSearchText(searchText);
     
-    // שדות לחיפוש
-    const searchFields = [
-        job.title,
-        job.company, 
-        job.description,
-        job.requirements,
-        job.city,
-        job.region,
-        job.category
-    ];
-    
-    // חיפוש בכל השדות
-    return searchFields.some(field => {
-        if (!field) return false;
-        
-        const normalizedField = normalizeSearchText(field);
-        
-        // חיפוש רגיל
-        if (normalizedField.includes(normalizedSearchText)) {
-            return true;
-        }
-        
-        // חיפוש עם וריאציות זכר/נקבה
-        return checkGenderVariations(normalizedField, normalizedSearchText);
-    });
-}
-
-// =============== הוספת פונקציות עזר חדשות ===============
-// הוסיפי את הפונקציות האלה אחרי הפונקציה jobMatchesSearch:
-
-// נרמול טקסט - הסרת רווחים וסימנים
-function normalizeSearchText(text) {
-    if (!text) return '';
-    return text.toLowerCase()
-               .trim()
-               .replace(/\s+/g, ' '); // מחליף כמה רווחים ברווח אחד
-}
-
-// בדיקת וריאציות זכר/נקבה
-function checkGenderVariations(fieldText, searchText) {
-    // מילון וריאציות מקיף
-    const genderVariations = {
-        // מקצועות פיתוח וטכנולוגיה
-        'מפתח': ['מפתח/ת', 'מפתחת', 'מפתח', 'developer', 'programmer'],
-        'מפתחת': ['מפתח/ת', 'מפתח', 'מפתחת', 'developer'],
-        'מתכנת': ['מתכנת/ת', 'מתכנתת', 'מתכנת', 'programmer', 'coder'],
-        'מתכנתת': ['מתכנת/ת', 'מתכנת', 'מתכנתת', 'programmer'],
-        'מהנדס': ['מהנדס/ת', 'מהנדסת', 'מהנדס', 'engineer'],
-        'מהנדסת': ['מהנדס/ת', 'מהנדס', 'מהנדסת', 'engineer'],
-        'אנליסט': ['אנליסט/ית', 'אנליסטית', 'אנליסט', 'analyst'],
-        'אנליסטית': ['אנליסט/ית', 'אנליסט', 'אנליסטית'],
-        'טכנאי': ['טכנאי/ת', 'טכנאית', 'טכנאי', 'technician'],
-        'טכנאית': ['טכנאי/ת', 'טכנאי', 'טכנאית'],
-        
-        // מקצועות שירות ומסעדנות
-        'מלצר': ['מלצר/ית', 'מלצרית', 'מלצר', 'waiter', 'server'],
-        'מלצרית': ['מלצר/ית', 'מלצר', 'מלצרית', 'waitress'],
-        'ברמן': ['ברמן/ית', 'ברמנית', 'ברמן', 'bartender'],
-        'ברמנית': ['ברמן/ית', 'ברמן', 'ברמנית'],
-        'טבח': ['טבח/ית', 'טבחית', 'טבח', 'chef', 'cook'],
-        'טבחית': ['טבח/ית', 'טבח', 'טבחית'],
-        'קופאי': ['קופאי/ת', 'קופאית', 'קופאי', 'cashier'],
-        'קופאית': ['קופאי/ת', 'קופאי', 'קופאית'],
-        
-        // מקצועות חינוך ורפואה
-        'מורה': ['מורה', 'מורת', 'מחנך/ת', 'מחנכת', 'teacher'],
-        'מורת': ['מורה', 'מורת', 'מחנך/ת', 'מחנכת'],
-        'מחנך': ['מחנך/ת', 'מחנכת', 'מחנך', 'educator'],
-        'מחנכת': ['מחנך/ת', 'מחנך', 'מחנכת'],
-        'רופא': ['רופא/ה', 'רופאה', 'רופא', 'doctor'],
-        'רופאה': ['רופא/ה', 'רופא', 'רופאה', 'doctor'],
-        'אחות': ['אח/ות', 'אח', 'אחות', 'nurse'],
-        'אח': ['אח/ות', 'אחות', 'אח', 'nurse'],
-        'פיזיותרפיסט': ['פיזיותרפיסט/ית', 'פיזיותרפיסטית', 'פיזיותרפיסט'],
-        'פיזיותרפיסטית': ['פיזיותרפיסט/ית', 'פיזיותרפיסט', 'פיזיותרפיסטית'],
-        
-        // מקצועות ניהול ומכירות
-        'מנהל': ['מנהל/ת', 'מנהלת', 'מנהל', 'manager'],
-        'מנהלת': ['מנהל/ת', 'מנהל', 'מנהלת', 'manager'],
-        'מוכר': ['מוכר/ת', 'מוכרת', 'מוכר', 'salesperson'],
-        'מוכרת': ['מוכר/ת', 'מוכר', 'מוכרת', 'salesperson'],
-        'יועץ': ['יועץ/ת', 'יועצת', 'יועץ', 'consultant', 'advisor'],
-        'יועצת': ['יועץ/ת', 'יועץ', 'יועצת', 'consultant'],
-        'נציג': ['נציג/ה', 'נציגה', 'נציג', 'representative'],
-        'נציגה': ['נציג/ה', 'נציג', 'נציגה'],
-        'רכז': ['רכז/ת', 'רכזת', 'רכז', 'coordinator'],
-        'רכזת': ['רכז/ת', 'רכז', 'רכזת'],
-        
-        // מקצועות כלליים
-        'עובד': ['עובד/ת', 'עובדת', 'עובד', 'worker', 'employee'],
-        'עובדת': ['עובד/ת', 'עובד', 'עובדת', 'worker'],
-        'פקיד': ['פקיד/ה', 'פקידה', 'פקיד', 'clerk'],
-        'פקידה': ['פקיד/ה', 'פקיד', 'פקידה'],
-        'עוזר': ['עוזר/ת', 'עוזרת', 'עוזר', 'assistant'],
-        'עוזרת': ['עוזר/ת', 'עוזר', 'עוזרת', 'assistant'],
-        'מתאמן': ['מתאמן/ת', 'מתאמנת', 'מתאמן', 'trainee'],
-        'מתאמנת': ['מתאמן/ת', 'מתאמן', 'מתאמנת'],
-        
-        // מקצועות ספציפיים נוספים
-        'שמאי': ['שמאי/ת', 'שמאית', 'שמאי', 'appraiser'],
-        'שמאית': ['שמאי/ת', 'שמאי', 'שמאית'],
-        'עורך': ['עורך/ת', 'עורכת', 'עורך', 'editor', 'lawyer'],
-        'עורכת': ['עורך/ת', 'עורך', 'עורכת'],
-        'מעצב': ['מעצב/ת', 'מעצבת', 'מעצב', 'designer'],
-        'מעצבת': ['מעצב/ת', 'מעצב', 'מעצבת', 'designer'],
-        'צלם': ['צלם/ת', 'צלמת', 'צלם', 'photographer'],
-        'צלמת': ['צלם/ת', 'צלם', 'צלמת'],
-        'נהג': ['נהג/ת', 'נהגת', 'נהג', 'driver'],
-        'נהגת': ['נהג/ת', 'נהג', 'נהגת'],
-        'שומר': ['שומר/ת', 'שומרת', 'שומר', 'guard'],
-        'שומרת': ['שומר/ת', 'שומר', 'שומרת']
-    };
-    
-    // בדיקה ישירה במילון
-    const variations = genderVariations[searchText];
-    if (variations) {
-        return variations.some(variation => fieldText.includes(variation));
+    // גלול למטה רק אם המשתמש ביצע חיפוש אקטיבי
+    var hasActiveSearch = searchText || category || city || area;
+    if (hasActiveSearch) {
+        setTimeout(function() {
+            var jobsSection = document.querySelector('.jobs');
+            if (jobsSection) {
+                jobsSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }, 200);
     }
-    
-    // בדיקה הפוכה - אם יש במשרה מילה עם /
-    const wordsWithSlash = fieldText.match(/\S*\/\S*/g);
-    if (wordsWithSlash) {
-        return wordsWithSlash.some(word => {
-            // מפרק מילים עם / ובודק התאמה
-            const parts = word.split('/');
-            return parts.some(part => {
-                const cleanPart = part.replace(/[^\u0590-\u05FF\u0041-\u005A\u0061-\u007A]/g, '');
-                return cleanPart === searchText || 
-                       searchText.includes(cleanPart) || 
-                       cleanPart.includes(searchText);
-            });
-        });
-    }
-    
-    // חיפוש חלקי במילים
-    return partialWordMatch(fieldText, searchText);
 }
 
-// פונקציה עזר לחיפוש חלקי במילים
-function partialWordMatch(text, searchTerm) {
-    if (searchTerm.length < 3) return false; // חיפוש חלקי רק למילים של 3 אותיות או יותר
-    
-    const words = text.split(/\s+/);
-    return words.some(word => {
-        const cleanWord = word.replace(/[^\u0590-\u05FF\u0041-\u005A\u0061-\u007A]/g, '');
-        return cleanWord.includes(searchTerm) || searchTerm.includes(cleanWord);
-    });
-}
-        function clearFilters() {
-    document.getElementById('searchInput').value = '';
-    document.getElementById('categoryFilter').value = '';
-    document.getElementById('regionFilter').value = '';
-    document.getElementById('areaFilter').value = ''; // הוספה חדשה
-
-    // בדוק אם המשתמש ביצע חיפוש אקטיבי
-var hasActiveSearch = searchText || category || city || area;        
-    var activeJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; });
-    filteredJobs = [];
-    displayJobs(activeJobs);
-    
-    console.log('🧹 מסננים נוקו');
+        // =============== החלפת הפונקציה jobMatchesSearch - מתוקנת ומושלמת ===============
+        function jobMatchesSearch(job, searchText) {
+            // נרמול טקסט החיפוש
+            const normalizedSearchText = normalizeSearchText(searchText);
             
-}
- // גלול למטה רק אם המשתמש ביצע חיפוש אקטיבי
-if (hasActiveSearch) {
-    setTimeout(function() {
-        var jobsSection = document.querySelector('.jobs');
-        if (jobsSection) {
-            jobsSection.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start' 
+            // שדות לחיפוש
+            const searchFields = [
+                job.title,
+                job.company, 
+                job.description,
+                job.requirements,
+                job.city,
+                job.region,
+                job.category
+            ];
+            
+            // חיפוש בכל השדות
+            return searchFields.some(field => {
+                if (!field) return false;
+                
+                const normalizedField = normalizeSearchText(field);
+                
+                // חיפוש רגיל
+                if (normalizedField.includes(normalizedSearchText)) {
+                    return true;
+                }
+                
+                // חיפוש עם וריאציות זכר/נקבה
+                return checkGenderVariations(normalizedField, normalizedSearchText);
             });
         }
-    }, 200);
-}       
+
+        // נרמול טקסט - הסרת רווחים וסימנים
+        function normalizeSearchText(text) {
+            if (!text) return '';
+            return text.toLowerCase()
+                       .trim()
+                       .replace(/\s+/g, ' '); // מחליף כמה רווחים ברווח אחד
+        }
+
+        // בדיקת וריאציות זכר/נקבה
+        function checkGenderVariations(fieldText, searchText) {
+            // מילון וריאציות מקיף
+            const genderVariations = {
+                // מקצועות פיתוח וטכנולוגיה
+                'מפתח': ['מפתח/ת', 'מפתחת', 'מפתח', 'developer', 'programmer'],
+                'מפתחת': ['מפתח/ת', 'מפתח', 'מפתחת', 'developer'],
+                'מתכנת': ['מתכנת/ת', 'מתכנתת', 'מתכנת', 'programmer', 'coder'],
+                'מתכנתת': ['מתכנת/ת', 'מתכנת', 'מתכנתת', 'programmer'],
+                'מהנדס': ['מהנדס/ת', 'מהנדסת', 'מהנדס', 'engineer'],
+                'מהנדסת': ['מהנדס/ת', 'מהנדס', 'מהנדסת', 'engineer'],
+                'אנליסט': ['אנליסט/ית', 'אנליסטית', 'אנליסט', 'analyst'],
+                'אנליסטית': ['אנליסט/ית', 'אנליסט', 'אנליסטית'],
+                'טכנאי': ['טכנאי/ת', 'טכנאית', 'טכנאי', 'technician'],
+                'טכנאית': ['טכנאי/ת', 'טכנאי', 'טכנאית'],
+                
+                // מקצועות שירות ומסעדנות
+                'מלצר': ['מלצר/ית', 'מלצרית', 'מלצר', 'waiter', 'server'],
+                'מלצרית': ['מלצר/ית', 'מלצר', 'מלצרית', 'waitress'],
+                'ברמן': ['ברמן/ית', 'ברמנית', 'ברמן', 'bartender'],
+                'ברמנית': ['ברמן/ית', 'ברמן', 'ברמנית'],
+                'טבח': ['טבח/ית', 'טבחית', 'טבח', 'chef', 'cook'],
+                'טבחית': ['טבח/ית', 'טבח', 'טבחית'],
+                'קופאי': ['קופאי/ת', 'קופאית', 'קופאי', 'cashier'],
+                'קופאית': ['קופאי/ת', 'קופאי', 'קופאית'],
+                
+                // מקצועות חינוך ורפואה
+                'מורה': ['מורה', 'מורת', 'מחנך/ת', 'מחנכת', 'teacher'],
+                'מורת': ['מורה', 'מורת', 'מחנך/ת', 'מחנכת'],
+                'מחנך': ['מחנך/ת', 'מחנכת', 'מחנך', 'educator'],
+                'מחנכת': ['מחנך/ת', 'מחנך', 'מחנכת'],
+                'רופא': ['רופא/ה', 'רופאה', 'רופא', 'doctor'],
+                'רופאה': ['רופא/ה', 'רופא', 'רופאה', 'doctor'],
+                'אחות': ['אח/ות', 'אח', 'אחות', 'nurse'],
+                'אח': ['אח/ות', 'אחות', 'אח', 'nurse'],
+                'פיזיותרפיסט': ['פיזיותרפיסט/ית', 'פיזיותרפיסטית', 'פיזיותרפיסט'],
+                'פיזיותרפיסטית': ['פיזיותרפיסט/ית', 'פיזיותרפיסט', 'פיזיותרפיסטית'],
+                
+                // מקצועות ניהול ומכירות
+                'מנהל': ['מנהל/ת', 'מנהלת', 'מנהל', 'manager'],
+                'מנהלת': ['מנהל/ת', 'מנהל', 'מנהלת', 'manager'],
+                'מוכר': ['מוכר/ת', 'מוכרת', 'מוכר', 'salesperson'],
+                'מוכרת': ['מוכר/ת', 'מוכר', 'מוכרת', 'salesperson'],
+                'יועץ': ['יועץ/ת', 'יועצת', 'יועץ', 'consultant', 'advisor'],
+                'יועצת': ['יועץ/ת', 'יועץ', 'יועצת', 'consultant'],
+                'נציג': ['נציג/ה', 'נציגה', 'נציג', 'representative'],
+                'נציגה': ['נציג/ה', 'נציג', 'נציגה'],
+                'רכז': ['רכז/ת', 'רכזת', 'רכז', 'coordinator'],
+                'רכזת': ['רכז/ת', 'רכז', 'רכזת'],
+                
+                // מקצועות כלליים
+                'עובד': ['עובד/ת', 'עובדת', 'עובד', 'worker', 'employee'],
+                'עובדת': ['עובד/ת', 'עובד', 'עובדת', 'worker'],
+                'פקיד': ['פקיד/ה', 'פקידה', 'פקיד', 'clerk'],
+                'פקידה': ['פקיד/ה', 'פקיד', 'פקידה'],
+                'עוזר': ['עוזר/ת', 'עוזרת', 'עוזר', 'assistant'],
+                'עוזרת': ['עוזר/ת', 'עוזר', 'עוזרת', 'assistant'],
+                'מתאמן': ['מתאמן/ת', 'מתאמנת', 'מתאמן', 'trainee'],
+                'מתאמנת': ['מתאמן/ת', 'מתאמן', 'מתאמנת'],
+                
+                // מקצועות ספציפיים נוספים
+                'שמאי': ['שמאי/ת', 'שמאית', 'שמאי', 'appraiser'],
+                'שמאית': ['שמאי/ת', 'שמאי', 'שמאית'],
+                'עורך': ['עורך/ת', 'עורכת', 'עורך', 'editor', 'lawyer'],
+                'עורכת': ['עורך/ת', 'עורך', 'עורכת'],
+                'מעצב': ['מעצב/ת', 'מעצבת', 'מעצב', 'designer'],
+                'מעצבת': ['מעצב/ת', 'מעצב', 'מעצבת', 'designer'],
+                'צלם': ['צלם/ת', 'צלמת', 'צלם', 'photographer'],
+                'צלמת': ['צלם/ת', 'צלם', 'צלמת'],
+                'נהג': ['נהג/ת', 'נהגת', 'נהג', 'driver'],
+                'נהגת': ['נהג/ת', 'נהג', 'נהגת'],
+                'שומר': ['שומר/ת', 'שומרת', 'שומר', 'guard'],
+                'שומרת': ['שומר/ת', 'שומר', 'שומרת']
+            };
+            
+            // בדיקה ישירה במילון
+            const variations = genderVariations[searchText];
+            if (variations) {
+                return variations.some(variation => fieldText.includes(variation));
+            }
+            
+            // בדיקה הפוכה - אם יש במשרה מילה עם /
+            const wordsWithSlash = fieldText.match(/\S*\/\S*/g);
+            if (wordsWithSlash) {
+                return wordsWithSlash.some(word => {
+                    // מפרק מילים עם / ובודק התאמה
+                    const parts = word.split('/');
+                    return parts.some(part => {
+                        const cleanPart = part.replace(/[^\u0590-\u05FF\u0041-\u005A\u0061-\u007A]/g, '');
+                        return cleanPart === searchText || 
+                               searchText.includes(cleanPart) || 
+                               cleanPart.includes(searchText);
+                    });
+                });
+            }
+            
+            // חיפוש חלקי במילים
+            return partialWordMatch(fieldText, searchText);
+        }
+
+        // פונקציה עזר לחיפוש חלקי במילים
+        function partialWordMatch(text, searchTerm) {
+            if (searchTerm.length < 3) return false; // חיפוש חלקי רק למילים של 3 אותיות או יותר
+            
+            const words = text.split(/\s+/);
+            return words.some(word => {
+                const cleanWord = word.replace(/[^\u0590-\u05FF\u0041-\u005A\u0061-\u007A]/g, '');
+                return cleanWord.includes(searchTerm) || searchTerm.includes(cleanWord);
+            });
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('regionFilter').value = '';
+            document.getElementById('areaFilter').value = ''; // הוספה חדשה
+            
+            var activeJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; });
+            filteredJobs = [];
+            displayJobs(activeJobs);
+            
+            console.log('🧹 מסננים נוקו');
+        }
+       
         // פונקציות מערכת ניהול
         function openAdminLogin() {
             document.getElementById('admin-login-modal').style.display = 'block';
@@ -3098,8 +3621,6 @@ if (hasActiveSearch) {
                 }
             }
         }
-// ======================== פונקציות שיתוף ========================
-        
 // ======================== פונקציות שיתוף ========================
         
         // יצירת תמונת שיתוף דינמית
@@ -3343,7 +3864,6 @@ function fallbackShare(job, shareText, jobUrl, shareTitle) {
                 }
             });
         }
-
         // ======================== פונקציות נגישות ========================
 
         // הגדרות נגישות
@@ -3702,6 +4222,7 @@ function fallbackShare(job, shareText, jobUrl, shareTitle) {
             updateSimpleTimer();
         }, 3000);
         console.log('✅ הסקריפט נטען בהצלחה!');
+        
         // ======================== שיתוף האתר ========================
 
 var websiteShareConfig = {
@@ -3831,1496 +4352,295 @@ console.log('🚀 תכונת שיתוף האתר מוכנה!');
             <button onclick="guideBackToSearch()">⬅️ חזרה לחיפוש</button>
             <button onclick="guideScrollToTop()">⬆️ חזרה למעלה</button>
             <button onclick="showGuideContactForm()">📞 לא מצאתי מה שחיפשתי</button>
-            <button onclick="showGuideContactForm()">💬 צרו איתי קשר</button>
-        </div>
+            </div>
     </div>
 </div>
 
-<!-- טופס יצירת קשר -->
-<div id="contactForm" class="contact-form" style="display: none;">
-    <h4>📞 בואו נעזור לך למצוא עבודה!</h4>
-<input type="text" id="fullName" placeholder="שם מלא" required autocomplete="name">
-<input type="text" id="phone" placeholder="מספר טלפון" required autocomplete="tel">
-<input type="text" id="jobTitle" placeholder="תפקיד מבוקש" required autocomplete="organization-title">
-<input type="text" id="location" placeholder="אזור או ישוב" required autocomplete="address-level2">
-    <button onclick="sendGuideWhatsApp()">שלח בוואטסאפ 📱</button>
-    <button onclick="closeGuideContactForm()">ביטול</button>
+<!-- טופס יצירת קשר של הגמדה -->
+<div id="guideContactForm" class="guide-contact-form" style="display: none;">
+    <h4>📞 בואו נעזור לך!</h4>
+    <p>לא מצאת את מה שחיפשת? השאיר פרטים ונחזור אליך:</p>
+    <input type="text" id="guideName" placeholder="שם מלא" required>
+    <input type="tel" id="guidePhone" placeholder="טלפון" required>
+    <input type="email" id="guideEmail" placeholder="אימייל (אופציונלי)">
+    <textarea id="guideMessage" placeholder="איזה סוג עבודה את/ה מחפש/ת?" rows="3"></textarea>
+    <div class="guide-form-buttons">
+        <button onclick="submitGuideContact()" class="submit-btn">שלח</button>
+        <button onclick="hideGuideContactForm()" class="cancel-btn">ביטול</button>
+    </div>
 </div>
 
-<style>
-/* סטיילים לגמדה החכמה */
-/* סטיילים לגמדה החכמה - משופרת ובולטת יותר */
-.smart-floating-gnome {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: auto;
-    height: auto;
-    cursor: pointer;
-    z-index: 1001;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.4s ease;
-    font-family: 'Assistant', sans-serif;
-    animation: gnomePulse 3s infinite ease-in-out, gnomeFloat 4s infinite ease-in-out;
-}
-
-@keyframes gnomePulse {
-    0%, 100% {
-        filter: drop-shadow(0 6px 20px rgba(246, 152, 152, 0.6));
-    }
-    50% {
-        filter: drop-shadow(0 8px 30px rgba(246, 152, 152, 0.9));
-    }
-}
-
-@keyframes gnomeFloat {
-    0%, 100% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-8px);
-    }
-}
-
-.smart-floating-gnome:hover {
-    transform: scale(1.15) translateY(-5px);
-    animation-play-state: paused;
-    filter: drop-shadow(0 10px 40px rgba(246, 152, 152, 1)) 
-            drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
-}
-
-.gnome-image {
-    width: 130px;
-    height: 130px;
-    object-fit: contain;
-    filter: drop-shadow(0 6px 20px rgba(246, 152, 152, 0.6));
-    transition: all 0.3s ease;
-}
-
-.smart-floating-gnome:hover .gnome-image {
-    filter: drop-shadow(0 8px 25px rgba(246, 152, 152, 0.8))
-            drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
-}
-
-.gnome-text {
-    font-size: 16px;
-    color: white;
-    text-align: center;
-    margin-top: 8px;
-    font-weight: bold;
-    background: linear-gradient(135deg, rgba(246, 152, 152, 0.95), rgba(255, 158, 158, 0.95));
-    padding: 8px 12px;
-    border-radius: 15px;
-    white-space: nowrap;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 
-                0 2px 8px rgba(246, 152, 152, 0.6);
-    border: 2px solid rgba(255, 255, 255, 0.8);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
-}
-
-.smart-floating-gnome:hover .gnome-text {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(246, 152, 152, 0.95));
-    color: #333;
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5),
-                0 3px 12px rgba(246, 152, 152, 0.8);
-}
-/* חלון השיחה */
-.smart-guide-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(5px);
-    z-index: 2000;
-}
-
-.guide-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #222222;
-    padding: 25px;
-    border-radius: 15px;
-    width: 90%;
-    max-width: 450px;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-    border: 2px solid #F69898;
-}
-
-.guide-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #F69898;
-}
-
-.guide-header h3 {
-    margin: 0;
-    color: #F69898;
-    font-family: 'Assistant', sans-serif;
-    font-size: 1.4rem;
-    font-weight: bold;
-}
-
-.close-btn {
-    background: #ff6b6b;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    color: white;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.close-btn:hover {
-    background: #ff5252;
-    transform: scale(1.1);
-}
-.guide-messages {
-    margin-bottom: 20px;
-    max-height: 250px;
-    overflow-y: auto;
-    padding-right: 5px;
-}
-
-.guide-messages::-webkit-scrollbar {
-    width: 6px;
-}
-
-.guide-messages::-webkit-scrollbar-track {
-    background: #333;
-    border-radius: 3px;
-}
-
-.guide-messages::-webkit-scrollbar-thumb {
-    background: #F69898;
-    border-radius: 3px;
-}
-
-.guide-messages::-webkit-scrollbar-thumb:hover {
-    background: #e58080;
-}
-
-.guide-message {
-    margin-bottom: 15px;
-    padding: 12px 15px;
-    border-radius: 12px;
-    font-family: 'Assistant', sans-serif;
-    line-height: 1.4;
-    animation: messageSlideIn 0.3s ease-out;
-}
-
-@keyframes messageSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.guide-message.bot {
-    background: linear-gradient(135deg, #333333, #2a2a2a);
-    color: white;
-    border-left: 4px solid #F69898;
-}
-
-.guide-message.user {
-    background: linear-gradient(135deg, #F69898, #ff9e9e);
-    color: white;
-    text-align: left;
-    margin-left: 20px;
-}
-
-.guide-options {
-    display: grid;
-    gap: 12px;
-}
-
-.guide-options button {
-    padding: 14px 16px;
-    border: none;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #F69898, #ff9e9e);
-    color: white;
-    font-family: 'Assistant', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 3px 10px rgba(246, 152, 152, 0.3);
-}
-
-.guide-options button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(246, 152, 152, 0.4);
-    background: linear-gradient(135deg, #e58080, #ff8a8a);
-}
-
-.guide-options button:active {
-    transform: translateY(0);
-}
-
-.category-options, .location-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin: 15px 0;
-}
-
-.category-options button, .location-options button {
-    padding: 10px 12px;
-    border: 2px solid #F69898;
-    border-radius: 8px;
-    background: #333333;
-    color: white;
-    font-family: 'Assistant', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    min-height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.category-options button:hover, .location-options button:hover {
-    background: linear-gradient(135deg, #F69898, #ff9e9e);
-    color: white;
-    border-color: #e58080;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(246, 152, 152, 0.3);
-}
-/* טופס יצירת קשר - מתאים לעיצוב האתר */
-.contact-form {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #222222;
-    padding: 25px;
-    border-radius: 15px;
-    margin-top: 0;
-    z-index: 3000;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-    border: 3px solid #F69898;
-    width: 90%;
-    max-width: 400px;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-.contact-form h4 {
-    margin: 0 0 20px 0;
-    color: #F69898;
-    text-align: center;
-    font-size: 1.2rem;
-    border-bottom: 2px solid #F69898;
-    padding-bottom: 10px;
-}
-
-.contact-form input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 2px solid #555;
-    border-radius: 8px;
-    font-family: 'Assistant', sans-serif;
-    box-sizing: border-box;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
-    background: #333;
-    color: white;
-}
-
-.contact-form input:focus {
-    border-color: #F69898;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(246, 152, 152, 0.3);
-}
-
-.contact-form input::placeholder {
-    color: #ccc;
-}
-
-.contact-form button {
-    width: 48%;
-    padding: 12px;
-    margin: 5px 1%;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: 'Assistant', sans-serif;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.contact-form button:first-of-type {
-    background: linear-gradient(135deg, #25D366, #128C7E);
-    color: white;
-}
-
-.contact-form button:first-of-type:hover {
-    background: linear-gradient(135deg, #1ea952, #0f6b5c);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-}
-
-.contact-form button:last-of-type {
-    background: linear-gradient(135deg, #666, #555);
-    color: white;
-}
-
-.contact-form button:last-of-type:hover {
-    background: linear-gradient(135deg, #777, #666);
-    transform: translateY(-1px);
-}
-
-/* כפתורי הבחירה */
-.category-options, .location-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin: 10px 0;
-}
-
-.category-options button, .location-options button {
-    padding: 8px 12px;
-    border: 1px solid #ff6b9d;
-    border-radius: 5px;
-    background: white;
-    color: #ff6b9d;
-    font-family: 'Assistant', sans-serif;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-/* רספונסיבי */
-@media (max-width: 768px) {
-
-    .smart-floating-gnome {
-        bottom: 140px;
-        right: 25px;
-        transform: none;
-    }
-    
-    .gnome-image {
-        width: 110px;
-        height: 110px;
-    }
-    
-    .gnome-text {
-        font-size: 15px;
-        padding: 6px 10px;
-        margin-top: 6px;
-    }
-}
-
-@media (max-width: 480px) {
-    .smart-floating-gnome {
-        bottom: 120px;
-        right: 20px;
-    }
-
-    .gnome-image {
-        width: 100px;
-        height: 100px;
-    }
-    
-    .gnome-text {
-        font-size: 14px;
-        padding: 5px 8px;
-        margin-top: 5px;
-    }
-}    
-    .guide-content {
-        width: 95%;
-        padding: 15px;
-    }
-    
-    .category-options, .location-options {
-        grid-template-columns: 1fr;
-    }
-}
-
-    /* =============== סטיילים להקלדה דינמית =============== */
-.search-input-container {
-    position: relative;
-}
-
-.autocomplete-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: #333333;
-    border: 2px solid #F69898;
-    border-top: none;
-    border-radius: 0 0 8px 8px;
-    z-index: 1000;
-    max-height: 300px;
-    overflow-y: auto;
-    display: none;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-}
-
-.autocomplete-dropdown::-webkit-scrollbar {
-    width: 8px;
-}
-
-.autocomplete-dropdown::-webkit-scrollbar-track {
-    background: #444;
-    border-radius: 4px;
-}
-
-.autocomplete-dropdown::-webkit-scrollbar-thumb {
-    background: #F69898;
-    border-radius: 4px;
-}
-
-.autocomplete-dropdown::-webkit-scrollbar-thumb:hover {
-    background: #e58080;
-}
-
-.autocomplete-item {
-    padding: 12px 15px;
-    cursor: pointer;
-    border-bottom: 1px solid #444444;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 45px;
-}
-
-.autocomplete-item:hover,
-.autocomplete-item.selected {
-    background: rgba(246, 152, 152, 0.15);
-    color: #F69898;
-    font-weight: 500;
-}
-
-.autocomplete-item:last-child {
-    border-bottom: none;
-}
-
-.autocomplete-main-text {
-    flex: 1;
-    font-size: 1rem;
-}
-
-.match-highlight {
-    background: rgba(246, 152, 152, 0.6);
-    color: white;
-    font-weight: bold;
-    border-radius: 3px;
-    padding: 1px 4px;
-}
-
-.item-type {
-    font-size: 0.8rem;
-    color: #aaa;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 2px 8px;
-    border-radius: 12px;
-    white-space: nowrap;
-    margin-right: 10px;
-}
-
-/* עיצוב מיוחד לסוגי פריטים שונים */
-.item-type.job-number { 
-    background: rgba(255, 193, 7, 0.2); 
-    color: #FFC107; 
-}
-
-.item-type.job-title { 
-    background: rgba(76, 175, 80, 0.2); 
-    color: #4CAF50; 
-}
-
-.item-type.company { 
-    background: rgba(33, 150, 243, 0.2); 
-    color: #2196F3; 
-}
-
-.item-type.location { 
-    background: rgba(156, 39, 176, 0.2); 
-    color: #9C27B0; 
-}
-
-.item-type.category { 
-    background: rgba(255, 87, 34, 0.2); 
-    color: #FF5722; 
-}
-
-/* רספונסיבי */
-@media (max-width: 768px) {
-    .autocomplete-dropdown {
-        max-height: 250px;
-        font-size: 0.9rem;
-    }
-    
-    .autocomplete-item {
-        padding: 10px 12px;
-        min-height: 40px;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
-    }
-    
-    .item-type {
-        font-size: 0.7rem;
-        margin-right: 0;
-        align-self: flex-end;
-    }
-}
-</style>
-    
-
 <script>
-// הגמדה החכמה - קוד JavaScript מתוקן ודינמי
-let gnomeSelectedCategory = '';
-let gnomeSelectedLocation = '';
+// ======================== פונקציות הגמדה החכמה ========================
 
-// פתיחת המדריכה
+var guideState = {
+    isOpen: false,
+    currentStep: 'initial',
+    searchData: {}
+};
+
 function openSmartGuide() {
-    console.log('🧙‍♀️ פותח גמדה חכמה');
-    const modal = document.getElementById('smartGuideModal');
+    var modal = document.getElementById('smartGuideModal');
     if (modal) {
         modal.style.display = 'block';
+        guideState.isOpen = true;
         document.body.style.overflow = 'hidden';
         
-        // איפוס הודעות וכפתורים
-        resetGuideMessages();
-        resetGuideOptions();
+        // אנימציה של הגמדה
+        var gnome = document.getElementById('smartGnome');
+        if (gnome) {
+            gnome.style.transform = 'scale(1.1) rotate(10deg)';
+            setTimeout(function() {
+                gnome.style.transform = 'scale(1) rotate(0deg)';
+            }, 300);
+        }
     }
 }
 
-// איפוס הודעות
-function resetGuideMessages() {
-    const messagesDiv = document.getElementById('guideMessages');
-    if (messagesDiv) {
-        messagesDiv.innerHTML = '<div class="guide-message bot">שלום! אני הגמדה החכמה 🧙‍♀️<br>איך אני יכולה לעזור לך למצוא עבודה?</div>';
+function closeSmartGuide() {
+    var modal = document.getElementById('smartGuideModal');
+    if (modal) {
+        modal.style.display = 'none';
+        guideState.isOpen = false;
+        document.body.style.overflow = 'auto';
+        
+        // איפוס המצב אם נדרש
+        hideGuideContactForm();
     }
 }
 
-// איפוס כפתורי אפשרויות
-function resetGuideOptions() {
-    const optionsDiv = document.getElementById('guideOptions');
-    if (optionsDiv) {
-        optionsDiv.innerHTML = `
+function addGuideMessage(message, isBot = true) {
+    var messagesContainer = document.getElementById('guideMessages');
+    if (messagesContainer) {
+        var messageDiv = document.createElement('div');
+        messageDiv.className = 'guide-message ' + (isBot ? 'bot' : 'user');
+        messageDiv.innerHTML = message;
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+}
+
+function startGuideJobSearch() {
+    addGuideMessage('מעולה! בואי נתחיל לחפש עבודה יחד 🔍<br>איזה תחום מעניין אותך?');
+    
+    var optionsContainer = document.getElementById('guideOptions');
+    if (optionsContainer) {
+        optionsContainer.innerHTML = `
+            <button onclick="selectGuideCategory('טכנולוגיה')">💻 טכנולוגיה</button>
+            <button onclick="selectGuideCategory('שיווק ומכירות')">📈 שיווק ומכירות</button>
+            <button onclick="selectGuideCategory('חינוך')">📚 חינוך</button>
+            <button onclick="selectGuideCategory('בריאות')">🏥 בריאות</button>
+            <button onclick="selectGuideCategory('אחר')">🔍 תחום אחר</button>
+        `;
+    }
+}
+
+function selectGuideCategory(category) {
+    guideState.searchData.category = category;
+    addGuideMessage('בחרת ב' + category + ' 👍', false);
+    addGuideMessage('איזה אזור מעניין אותך?');
+    
+    var optionsContainer = document.getElementById('guideOptions');
+    if (optionsContainer) {
+        optionsContainer.innerHTML = `
+            <button onclick="selectGuideArea('תל אביב')">🏙️ תל אביב</button>
+            <button onclick="selectGuideArea('ירושלים')">🕊️ ירושלים</button>
+            <button onclick="selectGuideArea('חיפה')">⛵ חיפה</button>
+            <button onclick="selectGuideArea('באר שבע')">🏜️ באר שבע</button>
+            <button onclick="selectGuideArea('עבודה מהבית')">🏠 עבודה מהבית</button>
+            <button onclick="selectGuideArea('לא משנה')">🌍 לא משנה לי</button>
+        `;
+    }
+}
+
+function selectGuideArea(area) {
+    guideState.searchData.area = area;
+    addGuideMessage('בחרת ב' + area + ' 📍', false);
+    
+    // ביצוע החיפוש
+    performGuideSearch();
+}
+
+function performGuideSearch() {
+    addGuideMessage('מחפשת עבורך משרות... ⏳');
+    
+    setTimeout(function() {
+        // סימולציה של חיפוש
+        var category = guideState.searchData.category;
+        var area = guideState.searchData.area;
+        
+        // עדכון שדות החיפוש באתר
+        var searchInput = document.getElementById('searchInput');
+        if (searchInput && category !== 'אחר') {
+            searchInput.value = category;
+        }
+        
+        var citySelect = document.getElementById('cityFilter');
+        if (citySelect && area !== 'לא משנה' && area !== 'עבודה מהבית') {
+            for (var i = 0; i < citySelect.options.length; i++) {
+                if (citySelect.options[i].text.includes(area)) {
+                    citySelect.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+        
+        // ביצוע החיפוש
+        filterJobs();
+        
+        // הודעה על התוצאות
+        addGuideMessage('מצאתי משרות מתאימות! 🎉<br>גללי למטה לראות את התוצאות או לחצי על "חזרה לחיפוש" כדי לראות אותן.');
+        
+        // עדכון האפשרויות
+        var optionsContainer = document.getElementById('guideOptions');
+        if (optionsContainer) {
+            optionsContainer.innerHTML = `
+                <button onclick="guideBackToSearch()">👀 ראה תוצאות</button>
+                <button onclick="startNewGuideSearch()">🔄 חיפוש חדש</button>
+                <button onclick="showGuideContactForm()">📞 דרוש עזרה נוספת</button>
+                <button onclick="closeSmartGuide()">✅ סיום</button>
+            `;
+        }
+    }, 2000);
+}
+
+function guideBackToSearch() {
+    closeSmartGuide();
+    // גלילה לאזור החיפוש
+    var searchSection = document.getElementById('search');
+    if (searchSection) {
+        searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+function guideScrollToTop() {
+    closeSmartGuide();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function startNewGuideSearch() {
+    guideState = { isOpen: true, currentStep: 'initial', searchData: {} };
+    
+    var messagesContainer = document.getElementById('guideMessages');
+    if (messagesContainer) {
+        messagesContainer.innerHTML = `
+            <div class="guide-message bot">
+                שלום! אני הגמדה החכמה 🧙‍♀️<br>איך אני יכולה לעזור לך למצוא עבודה?
+            </div>
+        `;
+    }
+    
+    var optionsContainer = document.getElementById('guideOptions');
+    if (optionsContainer) {
+        optionsContainer.innerHTML = `
             <button onclick="startGuideJobSearch()">🔍 חיפוש עבודה</button>
-            <button onclick="window.open('salary-ranges.html', '_blank')">💰 טווחי שכר</button>
             <button onclick="guideBackToSearch()">⬅️ חזרה לחיפוש</button>
             <button onclick="guideScrollToTop()">⬆️ חזרה למעלה</button>
             <button onclick="showGuideContactForm()">📞 לא מצאתי מה שחיפשתי</button>
-            <button onclick="showGuideContactForm()">💬 צרו איתי קשר</button>
-            
-        `;
-    }
-}
-    
-// סגירת המדריכה
-function closeSmartGuide() {
-    console.log('🚪 סוגר גמדה חכמה');
-    const modal = document.getElementById('smartGuideModal');
-    if (modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-    
-    // הסתר טופס
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.style.display = 'none';
-    }
-}
-
-// הוספת הודעה של הבוט
-function addGuideBotMessage(message) {
-    const messagesDiv = document.getElementById('guideMessages');
-    if (messagesDiv) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'guide-message bot';
-        messageDiv.innerHTML = message;
-        messagesDiv.appendChild(messageDiv);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-}
-
-// הוספת הודעה של המשתמש
-function addGuideUserMessage(message) {
-    const messagesDiv = document.getElementById('guideMessages');
-    if (messagesDiv) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'guide-message user';
-        messageDiv.innerHTML = message;
-        messagesDiv.appendChild(messageDiv);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-}
-
-// קבלת קטגוריות דינמיות מהמערכת
-function getDynamicCategories() {
-    const categorySelect = document.getElementById('categoryFilter');
-    let categories = [];
-    
-    if (categorySelect && categorySelect.options) {
-        for (let i = 1; i < categorySelect.options.length; i++) { // מתחיל מ-1 כדי לדלג על "כל הקטגוריות"
-            const option = categorySelect.options[i];
-            if (option.value && option.value.trim()) {
-                categories.push({
-                    value: option.value,
-                    text: option.text
-                });
-            }
-        }
-    }
-    
-    // אם אין קטגוריות במערכת, תחזיר ברירת מחדל
-    if (categories.length === 0) {
-        categories = [
-            { value: 'פיתוח ותוכנה', text: 'פיתוח ותוכנה' },
-            { value: 'מכירות ושיווק', text: 'מכירות ושיווק' },
-            { value: 'חינוך והוראה', text: 'חינוך והוראה' },
-            { value: 'מזון ומסעדנות', text: 'מזון ומסעדנות' },
-            { value: 'בריאות ורפואה', text: 'בריאות ורפואה' },
-            { value: 'אחר', text: 'אחר' }
-        ];
-    }
-    
-    return categories;
-}
-
-// קבלת אזורים דינמיים מהמערכת
-function getDynamicAreas() {
-    let areas = [];
-
-    const areaSelect = document.getElementById('areaFilter');
-
-    if (areaSelect && areaSelect.options) {
-        for (let i = 1; i < areaSelect.options.length; i++) {
-            const option = areaSelect.options[i];
-            if (option.value && option.value.trim()) {
-                areas.push({
-                    value: option.value,
-                    text: option.text
-                });
-            }
-        }
-    }
-
-    if (areas.length === 0) {
-        areas = [
-            { value: 'מרכז', text: 'מרכז' },
-            { value: 'צפון', text: 'צפון' },
-            { value: 'דרום', text: 'דרום' },
-            { value: 'שרון', text: 'שרון' },
-            { value: 'גליל', text: 'גליל' },
-            { value: 'נגב', text: 'נגב' },
-            { value: 'שומרון', text: 'שומרון' },
-            { value: 'יהודה', text: 'יהודה' }
-        ];
-    }
-
-    return areas;
-}
-
-// התחלת חיפוש עבודה עם קטגוריות דינמיות
-function startGuideJobSearch() {
-    addGuideUserMessage("אני רוצה לחפש עבודה");
-    addGuideBotMessage("מעולה! בואו נתחיל בחיפוש. באיזה תחום אתה מעוניין לעבוד?");
-    
-    const categories = getDynamicCategories();
-    
-    let categoryButtons = '<div class="category-options">';
-categories.forEach(category => { // כל הקטגוריות
-    const icon = getCategoryIcon(category.text);
-        categoryButtons += `<button onclick="selectGuideCategory('${category.value}')">${icon} ${category.text}</button>`;
-    });
-    categoryButtons += '</div>';
-    
-    addGuideBotMessage(categoryButtons);
-}
-
-// פונקציה לקבלת אייקון לפי קטגוריה
-function getCategoryIcon(categoryText) {
-    const icons = {
-        'פיתוח': '💻',
-        'מכירות': '📈', 
-        'שיווק': '📈',
-        'חינוך': '📚',
-        'הוראה': '📚',
-        'מזון': '🍽️',
-        'מסעדנות': '🍽️',
-        'בריאות': '🏥',
-        'רפואה': '🏥',
-        'בנייה': '🏗️',
-        'הנדסה': '⚙️',
-        'עיצוב': '🎨',
-        'אבטחה': '🛡️',
-        'ניהול': '👔',
-        'משפט': '⚖️',
-        'כספים': '💰',
-        'נהיגה': '🚗',
-        'תחבורה': '🚛'
-    };
-    
-    for (const [key, icon] of Object.entries(icons)) {
-        if (categoryText.includes(key)) {
-            return icon;
-        }
-    }
-    return '💼'; // אייקון ברירת מחדל
-}
-
-// בחירת קטגוריה
-function selectGuideCategory(category) {
-    gnomeSelectedCategory = category;
-    addGuideUserMessage(category);
-    addGuideBotMessage("נהדר! באיזה אזור אתה מעוניין לעבוד?");
-    
-    const areas = getDynamicAreas();
-    
-    let locationButtons = '<div class="location-options">';
-areas.forEach(area => { // כל האזורים
-    const icon = getAreaIcon(area.text);
-        locationButtons += `<button onclick="selectGuideLocation('${area.value}')">${icon} ${area.text}</button>`;
-    });
-    locationButtons += '</div>';
-    
-    addGuideBotMessage(locationButtons);
-}
-
-// פונקציה לקבלת אייקון לפי אזור
-function getAreaIcon(areaText) {
-    const icons = {
-        'תל אביב': '🏙️',
-        'ירושלים': '🕌',
-        'חיפה': '🌊',
-        'באר שבע': '🏜️',
-        'מרכז': '📍',
-        'צפון': '🌲',
-        'דרום': '🏜️',
-        'שרון': '🌿',
-        'גליל': '⛰️',
-        'נגב': '🏜️',
-        'יהודה': '🏛️',
-        'שומרון': '🏔️'
-    };
-    
-    for (const [key, icon] of Object.entries(icons)) {
-        if (areaText.includes(key)) {
-            return icon;
-        }
-    }
-    return '📍'; // אייקון ברירת מחדל
-}
-
-// בחירת מיקום
-function selectGuideLocation(location) {
-    gnomeSelectedLocation = location;
-    addGuideUserMessage(location);
-    
-    // מילוי השדות במערכת החיפוש
-    fillSearchFieldsAutomatically();
-    
-    addGuideBotMessage(`מושלם! מילאתי עבורך את שדות החיפוש ב${gnomeSelectedCategory} באזור ${gnomeSelectedLocation}. האם תרצה שאבצע את החיפוש?`);
-    
-    const optionsDiv = document.getElementById('guideOptions');
-    if (optionsDiv) {
-        optionsDiv.innerHTML = `
-            <button onclick="performGuideSearch()">🔍 בצע חיפוש</button>
-            <button onclick="startGuideOver()">🔄 התחל מחדש</button>
-            <button onclick="closeSmartGuide()">❌ סגור</button>
         `;
     }
 }
 
-// מילוי שדות החיפוש אוטומטית
-function fillSearchFieldsAutomatically() {
-    const categoryField = document.getElementById('categoryFilter');
-    if (categoryField && gnomeSelectedCategory) {
-        categoryField.value = gnomeSelectedCategory;
-    }
-
-    const areaField = document.getElementById('areaFilter');
-    if (areaField && gnomeSelectedLocation) {
-        for (let i = 0; i < areaField.options.length; i++) {
-            if (areaField.options[i].value === gnomeSelectedLocation) {
-                areaField.value = gnomeSelectedLocation;
-                break;
-            }
-        }
-    }
-
-    // אין יותר regionFilter
-}
-
-// ביצוע החיפוש
-function performGuideSearch() {
-    addGuideUserMessage("כן, בצע חיפוש");
-    addGuideBotMessage("מבצע חיפוש... 🚀");
-    
-    // קריאה לפונקציית החיפוש של המערכת
-    if (typeof filterJobs === 'function') {
-        filterJobs();
-        
-        // הוספת הערה חשובה לאחר החיפוש
-        setTimeout(() => {
-            addGuideBotMessage(`מעולה! ביצעתי את החיפוש בשבילך. גלול למטה לראות את התוצאות! 🎉
-            
-💡 <strong>טיפ חשוב:</strong> אם מצאת משרה שמעניינת אותך ואין מספיק פרטים - לחץ/י על כפתור הווצאפ או SMS בכרטיס המשרה והיא תישלח אלייך ישירות!`);
-        }, 1000);
-        
-    } else {
-        // אם הפונקציה לא קיימת, נקרא לכפתור החיפוש
-        const searchButton = document.getElementById('searchButton');
-        if (searchButton) {
-            searchButton.click();
-            
-            setTimeout(() => {
-                addGuideBotMessage(`מעולה! ביצעתי את החיפוש בשבילך. גלול למטה לראות את התוצאות! 🎉
-                
-💡 <strong>טיפ חשוב:</strong> אם מצאת משרה שמעניינת אותך ואין מספיק פרטים - לחץ/י על כפתור הווצאפ או SMS בכרטיס המשרה והיא תישלח אלייך ישירות!`);
-            }, 1000);
-        }
-    }
-    
-    setTimeout(() => {
-        const jobsSection = document.querySelector('.jobs');
-        if (jobsSection) {
-            jobsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        closeSmartGuide();
-    }, 6000);
-}
-// התחלה מחדש
-function startGuideOver() {
-    gnomeSelectedCategory = '';
-    gnomeSelectedLocation = '';
-    resetGuideMessages();
-    resetGuideOptions();
-}
-
-// חזרה לחיפוש
-function guideBackToSearch() {
-    addGuideUserMessage("חזרה לחיפוש");
-    const searchSection = document.getElementById('search');
-    if (searchSection) {
-        searchSection.scrollIntoView({ behavior: 'smooth' });
-        addGuideBotMessage("חוזרים לחיפוש! 🔍");
-    }
-    setTimeout(closeSmartGuide, 1500);
-}
-
-// חזרה למעלה
-function guideScrollToTop() {
-    addGuideUserMessage("חזרה למעלה");
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    addGuideBotMessage("חוזרים למעלה! ⬆️");
-    setTimeout(closeSmartGuide, 1500);
-}
-
-// הצגת טופס יצירת קשר - תיקון הבעיה!
 function showGuideContactForm() {
-    // זיהוי איזה כפתור לחץ המשתמש
-    const clickedButton = event.target.textContent;
-    
-    if (clickedButton.includes('לא מצאתי')) {
-        addGuideUserMessage("לא מצאתי מה שחיפשתי");
-        addGuideBotMessage("אל תדאג! בואו נעזור לך למצוא בדיוק מה שאתה מחפש:");
-    } else if (clickedButton.includes('צרו איתי קשר')) {
-        addGuideUserMessage("אני רוצה ליצור קשר");
-        addGuideBotMessage("כמובן! אשמח לעזור לך. בואו נמלא פרטים ונחזור אליך:");
-    }
-    
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.style.display = 'block';
-        console.log('✅ טופס יצירת קשר נפתח');
-        
-        // מיקוד על השדה הראשון
-        setTimeout(() => {
-            const firstInput = contactForm.querySelector('input');
-            if (firstInput) {
-                firstInput.focus();
-            }
-        }, 300);
-    } else {
-        console.error('❌ טופס יצירת קשר לא נמצא');
-        addGuideBotMessage("שגיאה: לא ניתן לפתוח את הטופס. אנא צרו קשר ישירות בוואטסאפ: 055-550-4633");
-    }
-}
-// סגירת טופס יצירת קשר
-function closeGuideContactForm() {
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.style.display = 'none';
-        
-        // נקה שדות
-        const inputs = contactForm.querySelectorAll('input');
-        inputs.forEach(input => input.value = '');
+    var form = document.getElementById('guideContactForm');
+    if (form) {
+        form.style.display = 'block';
+        addGuideMessage('מלאת את הטופס למטה ואנחנו נחזור אליך בהקדם! 📝');
     }
 }
 
-// שליחת וואטסאפ
-function sendGuideWhatsApp() {
-    const fullName = document.getElementById('fullName')?.value?.trim();
-    const phone = document.getElementById('phone')?.value?.trim();
-    const jobTitle = document.getElementById('jobTitle')?.value?.trim();
-    const location = document.getElementById('location')?.value?.trim();
+function hideGuideContactForm() {
+    var form = document.getElementById('guideContactForm');
+    if (form) {
+        form.style.display = 'none';
+    }
+}
+
+function submitGuideContact() {
+    var name = document.getElementById('guideName').value;
+    var phone = document.getElementById('guidePhone').value;
+    var email = document.getElementById('guideEmail').value;
+    var message = document.getElementById('guideMessage').value;
     
-    if (!fullName || !phone || !jobTitle || !location) {
-        alert('אנא מלא את כל השדות');
+    if (!name || !phone) {
+        alert('נא למלא שם וטלפון');
         return;
     }
     
-    const message = `שלום! 👋
-
-אני ${fullName} ואני מחפש/ת עבודה:
-
-🎯 תפקיד מבוקש: ${jobTitle}
-📍 אזור מועדף: ${location}
-📱 טלפון: ${phone}
-
-הגמדה החכמה של האתר הפנתה אותי אליכם.
-אשמח לקבל עזרה במציאת משרות מתאימות!
-
-תודה! 😊`;
-
-    const whatsappUrl = `https://wa.me/972555504633?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    // כאן תהיה שליחה לשרת
+    console.log('Contact form submitted:', { name, phone, email, message });
     
-    addGuideBotMessage("נהדר! הפניתי אותך לוואטסאפ עם כל הפרטים. מישהו יחזור אליך בקרוב! 📱");
-    closeGuideContactForm();
-    setTimeout(closeSmartGuide, 3000);
+    addGuideMessage('תודה ' + name + '! 🙏<br>קיבלנו את הפרטים ונחזור אליך בהקדם.');
+    hideGuideContactForm();
+    
+    setTimeout(function() {
+        closeSmartGuide();
+    }, 2000);
 }
 
-// סגירה בלחיצה על הרקע או ESC
-document.addEventListener('click', function(e) {
-    const modal = document.getElementById('smartGuideModal');
-    if (modal && e.target === modal) {
+// הפיכת הפונקציות לגלובליות
+window.openSmartGuide = openSmartGuide;
+window.closeSmartGuide = closeSmartGuide;
+window.startGuideJobSearch = startGuideJobSearch;
+window.selectGuideCategory = selectGuideCategory;
+window.selectGuideArea = selectGuideArea;
+window.guideBackToSearch = guideBackToSearch;
+window.guideScrollToTop = guideScrollToTop;
+window.startNewGuideSearch = startNewGuideSearch;
+window.showGuideContactForm = showGuideContactForm;
+window.hideGuideContactForm = hideGuideContactForm;
+window.submitGuideContact = submitGuideContact;
+
+// מאזיני אירועים להגמדה
+window.addEventListener('click', function(event) {
+    var modal = document.getElementById('smartGuideModal');
+    if (modal && event.target === modal) {
         closeSmartGuide();
     }
 });
 
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        const modal = document.getElementById('smartGuideModal');
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        var modal = document.getElementById('smartGuideModal');
         if (modal && modal.style.display === 'block') {
             closeSmartGuide();
         }
     }
 });
 
-// טקסט דינמי לגמדה
-// טקסט דינמי לגמדה - עם יותר אפקטים
-const gnomeTexts = [
-    '🧙‍♀️ מדריכה חכמה', 
-    '🎯 עזרה אישית', 
-    '🔍 חיפוש מותאם', 
-    '⚡ תמיכה 24/7', 
-    '💼 מציאת עבודה',
-    '🚀 גמדה חכמה',
-    '✨ עוזרת מתקדמת'
-];
-let gnomeTextIndex = 0;
+console.log('🧙‍♀️ הגמדה החכמה מוכנה לפעולה!');
 
-setInterval(() => {
-    const gnomeTextElement = document.querySelector('.gnome-text');
-    if (gnomeTextElement) {
-        gnomeTextElement.style.transition = 'all 0.4s ease';
-        gnomeTextElement.style.opacity = '0.3';
-        gnomeTextElement.style.transform = 'scale(0.9)';
-        setTimeout(() => {
-            gnomeTextElement.textContent = gnomeTexts[gnomeTextIndex];
-            gnomeTextElement.style.opacity = '1';
-            gnomeTextElement.style.transform = 'scale(1)';
-            gnomeTextIndex = (gnomeTextIndex + 1) % gnomeTexts.length;
-        }, 200);
-    }
-}, 3500);
-    console.log('🧙‍♀️ הגמדה החכמה הופעלה בהצלחה עם פונקציונליות מלאה!');
-</script>
-    
-<link rel="stylesheet" href="css/whatsapp-alerts.css">
-<script src="js/whatsapp-alerts.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(() => {
-            if (typeof WhatsAppAlerts !== 'undefined') {
-                window.whatsappAlerts = new WhatsAppAlerts({
-                    buttonText: 'התראות משרות',
-                    position: 'bottom-left'
-                });
-                
-                // מיקום מעל כפתור הנגישות
-                setTimeout(() => {
-                    const button = document.getElementById('whatsapp-alerts-button');
-                    if (button) button.style.bottom = '90px';
-                }, 500);
-            }
-        }, 1000);
-    });
-// =============== מערכת הקלדה דינמית מתוקנת ===============
+// ======================== סיום פונקציות הגמדה החכמה ========================
 
-class SmartAutocomplete {
-    constructor(inputElement, searchInputId = 'searchInput') {
-        this.input = inputElement || document.getElementById(searchInputId);
-        this.dropdown = null;
-        this.selectedIndex = -1;
-        this.suggestions = [];
-        this.currentValue = '';
-        
-        this.init();
-    }
-    
-    init() {
-        if (!this.input) {
-            console.warn('🔍 שדה החיפוש לא נמצא');
-            return;
-        }
-        
-        // מציאת הדרופדאון הקיים
-        this.dropdown = document.getElementById('autocompleteDropdown');
-        if (!this.dropdown) {
-            console.warn('🔍 רשימת הצעות לא נמצאה');
-            return;
-        }
-        
-        // הוספת מאזיני אירועים
-        this.attachEvents();
-        
-        console.log('✅ הקלדה דינמית מוכנה');
-    }
-    
-    attachEvents() {
-        // הקלדה
-        this.input.addEventListener('input', (e) => {
-            this.handleInput(e.target.value);
-        });
-        
-        // מקלדת
-        this.input.addEventListener('keydown', (e) => {
-            this.handleKeydown(e);
-        });
-        
-        // איבוד פוקוס
-        this.input.addEventListener('blur', () => {
-            setTimeout(() => this.hideDropdown(), 200);
-        });
-        
-        // פוקוס
-        this.input.addEventListener('focus', () => {
-            if (this.input.value.trim()) {
-                this.handleInput(this.input.value);
-            }
-        });
-        
-        // לחיצה מחוץ לאלמנט
-        document.addEventListener('click', (e) => {
-            if (!this.input.parentElement.contains(e.target)) {
-                this.hideDropdown();
-            }
-        });
-    }
-    
-    handleInput(value) {
-        this.currentValue = value.trim();
-        
-        if (this.currentValue.length < 1) {
-            this.hideDropdown();
-            return;
-        }
-        
-        // יצירת הצעות
-        this.suggestions = this.generateSuggestions(this.currentValue);
-        
-        if (this.suggestions.length > 0) {
-            this.showSuggestions();
-        } else {
-            this.hideDropdown();
-        }
-    }
-    
-    generateSuggestions(query) {
-        const suggestions = [];
-        const queryLower = query.toLowerCase();
-        const seenSuggestions = new Set();
-        
-        if (!window.allJobs || !Array.isArray(window.allJobs)) {
-            console.log('🔍 אין משרות זמינות עדיין');
-            return suggestions;
-        }
-        
-        // סינון משרות פעילות
-        const activeJobs = window.allJobs.filter(job => job.status === 'פעיל');
-        console.log('🔍 חיפוש ב-' + activeJobs.length + ' משרות פעילות');
-        
-        activeJobs.forEach(job => {
-            // מספר משרה (עדיפות גבוהה) - פתיחה ישירה של המשרה
-            if (job.jobNumber && job.jobNumber.toLowerCase().includes(queryLower)) {
-                const key = `job-${job.jobNumber}`;
-                if (!seenSuggestions.has(key)) {
-                    suggestions.push({
-                        text: job.jobNumber,
-                        fullText: `${job.jobNumber} - ${job.title}`,
-                        type: 'job-number',
-                        typeLabel: 'מספר',
-                        value: job.jobNumber,
-                        priority: 10,
-                        jobData: job, // ✅ הוספנו את נתוני המשרה
-                        action: 'openJob' // ✅ פעולה מיוחדת
-                    });
-                    seenSuggestions.add(key);
-                }
-            }
+        // אתחול האתר
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 מתחיל לטעון את האתר...');
             
-            // כותרת משרה - חיפוש רגיל
-            if (job.title && job.title.toLowerCase().includes(queryLower)) {
-                const key = `title-${job.title}`;
-                if (!seenSuggestions.has(key)) {
-                    suggestions.push({
-                        text: job.title,
-                        fullText: job.title,
-                        type: 'job-title',
-                        typeLabel: 'משרה',
-                        value: job.title,
-                        priority: 8,
-                        action: 'search' // ✅ חיפוש רגיל
-                    });
-                    seenSuggestions.add(key);
-                }
-            }
+            // טעינת נתונים
+            loadJobsData();
+            loadAccessibilitySettings();
             
-            // שם חברה - חיפוש רגיל
-            if (job.company && job.company.toLowerCase().includes(queryLower)) {
-                const key = `company-${job.company}`;
-                if (!seenSuggestions.has(key)) {
-                    suggestions.push({
-                        text: job.company,
-                        fullText: job.company,
-                        type: 'company',
-                        typeLabel: 'חברה',
-                        value: job.company,
-                        priority: 6,
-                        action: 'search'
-                    });
-                    seenSuggestions.add(key);
-                }
-            }
-            
-            // מיקום (עיר) - מילוי מסנן
-            if (job.city && job.city.toLowerCase().includes(queryLower)) {
-                const key = `city-${job.city}`;
-                if (!seenSuggestions.has(key)) {
-                    suggestions.push({
-                        text: job.city,
-                        fullText: job.city,
-                        type: 'location',
-                        typeLabel: 'עיר',
-                        value: job.city,
-                        priority: 5,
-                        action: 'filter'
-                    });
-                    seenSuggestions.add(key);
-                }
-            }
-            
-            // אזור - מילוי מסנן
-            if (job.region && job.region.toLowerCase().includes(queryLower)) {
-                const key = `region-${job.region}`;
-                if (!seenSuggestions.has(key)) {
-                    suggestions.push({
-                        text: job.region,
-                        fullText: job.region,
-                        type: 'location',
-                        typeLabel: 'אזור',
-                        value: job.region,
-                        priority: 4,
-                        action: 'filter'
-                    });
-                    seenSuggestions.add(key);
-                }
-            }
-            
-            // קטגוריה - מילוי מסנן
-            if (job.category && job.category.toLowerCase().includes(queryLower)) {
-                const key = `category-${job.category}`;
-                if (!seenSuggestions.has(key)) {
-                    suggestions.push({
-                        text: job.category,
-                        fullText: job.category,
-                        type: 'category',
-                        typeLabel: 'תחום',
-                        value: job.category,
-                        priority: 3,
-                        action: 'filter'
-                    });
-                    seenSuggestions.add(key);
-                }
-            }
-        });
-        
-        console.log('🔍 נמצאו ' + suggestions.length + ' הצעות');
-        
-        // מיון לפי עדיפות ומגבלה של 8 תוצאות
-        return suggestions
-            .sort((a, b) => b.priority - a.priority)
-            .slice(0, 8);
-    }
-    
-    showSuggestions() {
-        this.dropdown.innerHTML = '';
-        this.selectedIndex = -1;
-        
-        this.suggestions.forEach((suggestion, index) => {
-            const item = document.createElement('div');
-            item.className = 'autocomplete-item';
-            item.dataset.index = index;
-            
-            const highlightedText = this.highlightMatch(suggestion.fullText, this.currentValue);
-            
-            // אייקון מיוחד למספר משרה
-            const icon = suggestion.type === 'job-number' ? '🎯 ' : '';
-            
-            item.innerHTML = `
-                <div class="autocomplete-main-text">${icon}${highlightedText}</div>
-                <div class="item-type ${suggestion.type}">${suggestion.typeLabel}</div>
-            `;
-            
-            item.addEventListener('click', () => {
-                this.selectSuggestion(suggestion);
-            });
-            
-            this.dropdown.appendChild(item);
-        });
-        
-        this.dropdown.style.display = 'block';
-    }
-    
-    highlightMatch(text, query) {
-        if (!query) return text;
-        
-        const regex = new RegExp(`(${this.escapeRegex(query)})`, 'gi');
-        return text.replace(regex, '<span class="match-highlight">$1</span>');
-    }
-    
-    escapeRegex(string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    }
-    
-    hideDropdown() {
-        if (this.dropdown) {
-            this.dropdown.style.display = 'none';
-        }
-        this.selectedIndex = -1;
-    }
-    
-    handleKeydown(e) {
-        if (this.dropdown.style.display === 'none') return;
-        
-        const items = this.dropdown.querySelectorAll('.autocomplete-item');
-        
-        switch (e.key) {
-            case 'ArrowDown':
-                e.preventDefault();
-                this.selectedIndex = Math.min(this.selectedIndex + 1, items.length - 1);
-                this.updateSelection(items);
-                break;
+            setTimeout(function() {
+                // הוספת מאזיני אירועים
+                attachEventListeners();
                 
-            case 'ArrowUp':
-                e.preventDefault();
-                this.selectedIndex = Math.max(this.selectedIndex - 1, -1);
-                this.updateSelection(items);
-                break;
+                // אתחול תכונות נוספות
+                updateSimpleTimer();
                 
-            case 'Enter':
-                e.preventDefault();
-                if (this.selectedIndex >= 0 && this.selectedIndex < this.suggestions.length) {
-                    this.selectSuggestion(this.suggestions[this.selectedIndex]);
-                } else {
-                    // ביצוע חיפוש עם הטקסט הנוכחי
-                    this.hideDropdown();
-                    this.performSearch();
-                }
-                break;
+                console.log('✅ האתר נטען בהצלחה!');
                 
-            case 'Escape':
-                this.hideDropdown();
-                break;
-        }
-    }
-    
-    updateSelection(items) {
-        items.forEach((item, index) => {
-            if (index === this.selectedIndex) {
-                item.classList.add('selected');
-                item.scrollIntoView({ block: 'nearest' });
-            } else {
-                item.classList.remove('selected');
-            }
-        });
-    }
-    
-    selectSuggestion(suggestion) {
-        console.log('✅ נבחרה הצעה:', suggestion);
-        
-        // הוספת ההצעה לשדה החיפוש
-        this.input.value = suggestion.value;
-        this.hideDropdown();
-        
-        // ביצוע הפעולה לפי סוג ההצעה
-        switch (suggestion.action) {
-            case 'openJob':
-                // פתיחת משרה ספציפית
-                this.openSpecificJob(suggestion.jobData);
-                break;
+                // הודעת ברוכים הבאים
+                setTimeout(function() {
+                    showNotification('ברוכים הבאים למה יש פה! 🎉');
+                }, 1000);
                 
-            case 'filter':
-                // מילוי מסנן ספציפי
-                this.fillRelevantFilters(suggestion);
-                setTimeout(() => this.performSearch(), 100);
-                break;
-                
-            case 'search':
-            default:
-                // חיפוש רגיל
-                setTimeout(() => this.performSearch(), 100);
-                break;
-        }
-    }
-    
-    openSpecificJob(jobData) {
-        console.log('🎯 פותח משרה ספציפית:', jobData.title);
-        
-        // מחפש את המשרה ברשימה המוצגת
-        if (window.currentDisplayedJobs && Array.isArray(window.currentDisplayedJobs)) {
-            const jobIndex = window.currentDisplayedJobs.findIndex(job => 
-                job.jobNumber === jobData.jobNumber
-            );
-            
-            if (jobIndex !== -1 && typeof window.openJobModal === 'function') {
-                // פותח את המודל
-                window.openJobModal(jobIndex);
-                return;
-            }
-        }
-        
-        // אם המשרה לא נמצאת ברשימה הנוכחית, בצע חיפוש קודם
-        this.performSearch(() => {
-            // אחרי החיפוש, נסה שוב לפתוח
-            setTimeout(() => {
-                if (window.currentDisplayedJobs) {
-                    const jobIndex = window.currentDisplayedJobs.findIndex(job => 
-                        job.jobNumber === jobData.jobNumber
-                    );
-                    if (jobIndex !== -1 && typeof window.openJobModal === 'function') {
-                        window.openJobModal(jobIndex);
-                    }
-                }
             }, 500);
         });
-    }
-    
-    fillRelevantFilters(suggestion) {
-        // איפוס שדות אחרים קודם
-        const categoryFilter = document.getElementById('categoryFilter');
-        const regionFilter = document.getElementById('regionFilter');
-        const areaFilter = document.getElementById('areaFilter');
-        
-        if (categoryFilter) categoryFilter.value = '';
-        if (regionFilter) regionFilter.value = '';
-        if (areaFilter) areaFilter.value = '';
-        
-        // מילוי השדה המתאים
-        switch (suggestion.type) {
-            case 'category':
-                if (categoryFilter) {
-                    categoryFilter.value = suggestion.value;
-                    console.log('✅ מילוי קטגוריה:', suggestion.value);
-                }
-                break;
-                
-            case 'location':
-                // בדיקה אם זה עיר או אזור
-                if (regionFilter) {
-                    // נסה למצוא בערים
-                    for (let i = 0; i < regionFilter.options.length; i++) {
-                        if (regionFilter.options[i].value === suggestion.value) {
-                            regionFilter.value = suggestion.value;
-                            console.log('✅ מילוי עיר:', suggestion.value);
-                            return;
-                        }
-                    }
-                }
-                if (areaFilter) {
-                    // אם לא נמצא בערים, נסה באזורים  
-                    for (let i = 0; i < areaFilter.options.length; i++) {
-                        if (areaFilter.options[i].value === suggestion.value) {
-                            areaFilter.value = suggestion.value;
-                            console.log('✅ מילוי אזור:', suggestion.value);
-                            return;
-                        }
-                    }
-                }
-                break;
-        }
-    }
-    
-    performSearch(callback) {
-        console.log('🔍 מבצע חיפוש עם:', this.input.value);
-        
-        if (typeof window.filterJobs === 'function') {
-            window.filterJobs();
-            if (callback) callback();
-        } else {
-            console.warn('⚠️ פונקציית filterJobs לא נמצאה');
-        }
-    }
-}
 
-// =============== אתחול ההקלדה הדינמית המתוקנת ===============
-document.addEventListener('DOMContentLoaded', function() {
-    // המתן לטעינת המשרות ואז אתחל
-    const initAutocomplete = () => {
-        if (window.allJobs && window.allJobs.length > 0) {
-            window.searchAutocomplete = new SmartAutocomplete();
-            console.log('🎯 הקלדה דינמית מופעלת עם', window.allJobs.length, 'משרות');
-        } else {
-            console.log('⏳ ממתין לטעינת משרות...');
-            // נסה שוב אחרי שנייה
-            setTimeout(initAutocomplete, 1000);
-        }
-    };
-    
-    // התחל אתחול אחרי 2 שניות כדי לוודא שהמשרות נטענו
-    setTimeout(initAutocomplete, 2000);
-});
-</script>
+        // שמירה על זמינות הפונקציות
+        console.log('📋 רשימת פונקציות זמינות:', Object.keys(window).filter(key => typeof window[key] === 'function' && key.indexOf('guide') === -1 && key.indexOf('accessibility') === -1).slice(0, 20));
+        
+    </script>
+
 </body>
 </html>
