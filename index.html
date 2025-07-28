@@ -4352,7 +4352,92 @@ console.log('🚀 תכונת שיתוף האתר מוכנה!');
             <button onclick="guideBackToSearch()">⬅️ חזרה לחיפוש</button>
             <button onclick="guideScrollToTop()">⬆️ חזרה למעלה</button>
             <button onclick="showGuideContactForm()">📞 לא מצאתי מה שחיפשתי</button>
+</div>
+    </div>
+</div>
+
+<!-- מודל התראות משרות -->
+<div id="jobAlertsModal" class="modal job-alerts-modal">
+    <div class="modal-content alerts-modal-content">
+        <div class="modal-header">
+            <h3>🔔 התראות משרות</h3>
+            <span class="close" onclick="closeJobAlertsModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="alerts-tabs">
+                <button class="alert-tab active" onclick="switchAlertsTab('create')">יצירת התראה</button>
+                <button class="alert-tab" onclick="switchAlertsTab('manage')">ניהול התראות</button>
             </div>
+            
+            <!-- טאב יצירת התראה -->
+            <div id="createAlertTab" class="alert-tab-content active">
+                <form id="alertForm">
+                    <div class="form-group">
+                        <label for="alertEmail">כתובת אימייל:</label>
+                        <input type="email" id="alertEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="alertKeywords">מילות מפתח:</label>
+                        <input type="text" id="alertKeywords" placeholder="דוגמה: מתכנת, תל אביב, Python">
+                        <small>הפרידו מילות מפתח בפסיקים</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="alertCategory">תחום:</label>
+                        <select id="alertCategory">
+                            <option value="">כל התחומים</option>
+                            <option value="טכנולוגיה">טכנולוגיה</option>
+                            <option value="שיווק ומכירות">שיווק ומכירות</option>
+                            <option value="חינוך">חינוך</option>
+                            <option value="בריאות">בריאות</option>
+                            <option value="הנדסה">הנדסה</option>
+                            <option value="כספים">כספים</option>
+                            <option value="משאבי אנוש">משאבי אנוש</option>
+                            <option value="דיגיטל">דיגיטל</option>
+                            <option value="אחר">אחר</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="alertCity">עיר:</label>
+                        <select id="alertCity">
+                            <option value="">כל הערים</option>
+                            <option value="תל אביב">תל אביב</option>
+                            <option value="ירושלים">ירושלים</option>
+                            <option value="חיפה">חיפה</option>
+                            <option value="ראשון לציון">ראשון לציון</option>
+                            <option value="פתח תקווה">פתח תקווה</option>
+                            <option value="אשדוד">אשדוד</option>
+                            <option value="נתניה">נתניה</option>
+                            <option value="באר שבע">באר שבע</option>
+                            <option value="בני ברק">בני ברק</option>
+                            <option value="הרצליה">הרצליה</option>
+                            <option value="עבודה מהבית">עבודה מהבית</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="alertFrequency">תדירות התראות:</label>
+                        <select id="alertFrequency">
+                            <option value="daily">יומי</option>
+                            <option value="weekly">שבועי</option>
+                            <option value="immediately">מיידי</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="create-alert-btn">צור התראה</button>
+                </form>
+            </div>
+            
+            <!-- טאב ניהול התראות -->
+            <div id="manageAlertsTab" class="alert-tab-content">
+                <div class="manage-alerts-container">
+                    <div class="alert-search">
+                        <input type="email" id="manageEmail" placeholder="הכנס אימייל לחיפוש התראות">
+                        <button onclick="loadUserAlerts()">חפש</button>
+                    </div>
+                    <div id="userAlertsList" class="user-alerts-list">
+                        <p class="no-alerts">הכנס אימייל כדי לראות את ההתראות שלך</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
