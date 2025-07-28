@@ -301,19 +301,23 @@ ownerPhone: '972555504633', // המספר הנכון שלך
         });
     }
 
-    // יצירת הודעת משרה
-    createJobMessage(jobData) {
-        return `🔥 משרה חדשה!
+// יצירת הודעת משרה
+createJobMessage(jobData) {
+    // יצירת קישור ישיר למשרה באתר
+    const jobUrl = `https://www.mayeshpo.co.il/job/${jobData.id || jobData.jobNumber}`;
+    
+    return `🔥 משרה חדשה!
 
 📋 ${jobData.title}
 📍 ${jobData.region || jobData.area || 'לא צוין'}
 🎯 ${jobData.category || 'לא צוין'}
+🆔 מספר משרה: ${jobData.jobNumber || jobData.id}
 
-${jobData.description ? `💬 ${jobData.description}\n\n` : ''}לפרטים נוספים: https://www.mayeshpo.co.il
+${jobData.description ? `💬 ${jobData.description}\n\n` : ''}🔗 לפרטים מלאים: ${jobUrl}
 
 בהצלחה! 💪`;
-    }
-
+}
+    
     // שליחת התראה על משרה
     sendJobAlert(jobData) {
         const matchingSubscribers = this.findMatchingSubscribers(jobData);
