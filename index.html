@@ -2850,35 +2850,77 @@ document.getElementById('modal-job-requirements').textContent = requirements;
         }
 
 function filterJobs() {
+    console.log('🔍 מתחיל חיפוש...');
+    
+    // קבלת ערכי החיפוש
     var searchText = document.getElementById('searchInput').value.trim().toLowerCase();
     var category = document.getElementById('categoryFilter').value;
     var city = document.getElementById('regionFilter').value;
-    var area = document.getElementById('areaFilter').value; // הוספה חדשה
+    var area = document.getElementById('areaFilter').value;
     
-    var activeJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; });
+    console.log('פרמטרי חיפוש:', { searchText, category, city, area });
     
-    filteredJobs = activeJobs.filter(function(job) {
+    // בדיקה שיש משרות לחיפוש
+    if (!window.allJobs || window.allJobs.length === 0) {
+        console.log('❌ אין משרות במערכת');
+        return;
+    }
+    
+    // סינון המשרות הפעילות בלבד
+    var activeJobs = window.allJobs.filter(function(job) { 
+        return job.status === 'פעיל' || !job.status; // גם משרות ללא סטטוס
+    });
+    
+    console.log('משרות פעילות:', activeJobs.length);
+    
+    // ביצוע הסינון
+    var filteredJobs = activeJobs.filter(function(job) {
+        // חיפוש טקסט חופשי
         if (searchText && !jobMatchesSearch(job, searchText)) {
             return false;
         }
         
+        // סינון לפי קטגוריה
         if (category && job.category !== category) {
             return false;
         }
         
+        // סינון לפי עיר
         if (city && job.city !== city) {
             return false;
         }
         
-        if (area && job.region !== area) { // הוספה חדשה
+        // סינון לפי אזור
+        if (area && job.region !== area) {
             return false;
         }
         
         return true;
     });
     
+    console.log('תוצאות חיפוש:', filteredJobs.length);
+    
+    // הצגת התוצאות
     displayJobs(filteredJobs);
-    console.log('🔍 נמצאו ' + filteredJobs.length + ' תוצאות');
+    
+    // גלילה לתוצאות אם יש חיפוש אקטיבי
+    var hasActiveSearch = searchText || category || city || area;
+    if (hasActiveSearch) {
+        setTimeout(function() {
+            var jobsSection = document.querySelector('.jobs');
+            if (jobsSection) {
+                jobsSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }, 300);
+    }
+    
+    // הודעה למשתמש
+    if (hasActiveSearch) {
+        showNotification(`נמצאו ${filteredJobs.length} תוצאות`);
+    }
 }
         
 // =============== החלפת הפונקציה jobMatchesSearch ===============
