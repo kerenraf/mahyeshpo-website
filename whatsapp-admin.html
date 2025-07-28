@@ -2578,10 +2578,11 @@ ${jobUrl}
                     note: 'טיפול בסלאש עם תחומים שונים'
                 },
                 {
-                    jobCategory: 'מפתח/ת Full Stack',
-                    subscriberCategories: ['פיתוח ותוכנה'],
-                    expected: true,
-note: 'זכר/נקבה עם טכנולוגי'
+{
+    jobCategory: 'מפתח/ת Full Stack',
+    subscriberCategories: ['פיתוח ותוכנה'],
+    expected: true,
+    note: 'זכר/נקבה עם טכנולוגיה'
 },
                 {
                     jobCategory: 'מכירות ושיווק',
@@ -3323,10 +3324,18 @@ function scanAllJobsForAllSubscribers() {
                                 <div style="font-size: 0.9em; margin-top: 5px;">
                                     📍 ${result.job.region} | 🎯 ${result.job.category}
                                 </div>
-                                <div style="color: #25D366; margin-top: 5px;">
-                                    ✅ ${result.matches} מנויים מתאימים
-                                </div>
-                            </div>
+<div style="color: #25D366; margin-top: 5px;">
+    ✅ ${result.matches} מנויים מתאימים
+</div>
+<div style="margin-top: 10px;">
+    <button class="btn btn-small" onclick="sendJobFromScanResults('${result.job.id}')">
+        <i class="fas fa-paper-plane"></i> שלח ל-${result.matches} מנויים
+    </button>
+    <button class="btn btn-small btn-outline" onclick="previewJobFromScan('${result.job.id}')">
+        <i class="fas fa-eye"></i> תצוגה מקדימה
+    </button>
+</div>
+</div>
                         `).join('')}
                 </div>
             ` : '<div style="color: #999;">לא נמצאו התאמות</div>'}
