@@ -1265,6 +1265,7 @@
             title="העתק מספר לווטסאפ">📋 העתק</button>
     <span>${subscriber.phone}</span>
 </div>
+
                             <div style="display: flex; gap: 5px;">
                                 <button class="btn btn-small btn-secondary" onclick="contactSubscriber('${subscriber.phone}')" title="שלח הודעה">
                                     <i class="fab fa-whatsapp"></i>
@@ -1656,6 +1657,12 @@
 const jobUrl = `https://www.mayeshpo.co.il/job/${normalizedJob.id || normalizedJob.jobNumber}`;
 
 // יצירת הודעה עם קישור ישיר
+// יצירת קישור ישיר למשרה
+const jobUrl = `https://www.mayeshpo.co.il/job/${normalizedJob.id || normalizedJob.jobNumber}`;
+
+// יצירת קישור ישיר למשרה
+const jobUrl = `https://www.mayeshpo.co.il/job/${normalizedJob.id || normalizedJob.jobNumber}`;
+
 const message = `🔥 משרה חדשה מתאימה עבורך!
 
 📋 ${normalizedJob.title}
@@ -1667,6 +1674,7 @@ const message = `🔥 משרה חדשה מתאימה עבורך!
 ${jobUrl}
 
 בהצלחה! 💪`;
+            
             // הצגת תצוגה מקדימה
             showPreview(message, matchingSubscribers, normalizedJob);
         }
@@ -3469,6 +3477,68 @@ ${jobUrl}
                 e.target.remove();
             }
         });
+        // פונקציות כפתור העתקה
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopyConfirmation();
+                }).catch(err => {
+                    console.error('שגיאה בהעתקה:', err);
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        // פתרון גיבוי להעתקה
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showCopyConfirmation();
+            } catch (err) {
+                console.error('שגיאה בהעתקה:', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        // הצגת הודעת אישור העתקה
+        function showCopyConfirmation() {
+            const confirmation = document.createElement('div');
+            confirmation.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #25D366;
+                    color: white;
+                    padding: 10px 15px;
+                    border-radius: 5px;
+                    z-index: 10002;
+                    font-size: 14px;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                    animation: slideIn 0.3s ease;
+                ">
+                    ✅ המספר הועתק ללוח!
+                </div>
+                <style>
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                </style>
+            `;
+            
+            document.body.appendChild(confirmation);
+            
+            setTimeout(() => {
+                confirmation.remove();
+            }, 3000);
+        }
 
     </script>
 </body>
