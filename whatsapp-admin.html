@@ -2545,54 +2545,52 @@ ${jobUrl}
             document.body.appendChild(modal);
         }
 
-        function testCategoryMatching() {
-            const testCases = [
-                {
-                    jobCategory: 'לוגיסטיקה, מחסנים, שילוח ורכש',
-                    subscriberCategories: ['לוגיסטיקה'],
-                    expected: true,
-                    note: 'התאמה חלקית - קטגוריה מוכלת'
-                },
-                {
-                    jobCategory: 'לוגיסטיקה, מחסנים, שילוח ורכש',
-                    subscriberCategories: ['נהיגה'],
-                    expected: true,
-                    note: 'התאמה לפי מילות מפתח'
-                },
-                {
-                    jobCategory: 'פיתוח ותוכנה',
-                    subscriberCategories: ['מפתח'],
-                    expected: true,
-                    note: 'התאמה לפי מילות מפתח'
-                },
-                {
-                    jobCategory: 'נהג/ת משאית',
-                    subscriberCategories: ['לוגיסטיקה'],
-                    expected: true,
-                    note: 'טיפול בסלאש לזכר/נקבה'
-                },
-                {
-                    jobCategory: 'מורה/מחנך לחינוך מיוחד',
-                    subscriberCategories: ['חינוך והוראה'],
-                    expected: true,
-                    note: 'טיפול בסלאש עם תחומים שונים'
-                },
-                {
-{
-    jobCategory: 'מפתח/ת Full Stack',
-    subscriberCategories: ['פיתוח ותוכנה'],
-    expected: true,
-note: 'זכר/נקבה עם טכנולוגיה'
-},
-{
-                {
-                    jobCategory: 'מכירות ושיווק',
-                    subscriberCategories: ['חינוך והוראה'],
-                    expected: false,
-                    note: 'אין התאמה - תחומים שונים'
-                }
-            ];
-            
+function testCategoryMatching() {
+    const testCases = [
+        {
+            jobCategory: 'לוגיסטיקה, מחסנים, שילוח ורכש',
+            subscriberCategories: ['לוגיסטיקה'],
+            expected: true,
+            note: 'התאמה חלקית - קטגוריה מוכלת'
+        },
+        {
+            jobCategory: 'לוגיסטיקה, מחסנים, שילוח ורכש',
+            subscriberCategories: ['נהיגה'],
+            expected: true,
+            note: 'התאמה לפי מילות מפתח'
+        },
+        {
+            jobCategory: 'פיתוח ותוכנה',
+            subscriberCategories: ['מפתח'],
+            expected: true,
+            note: 'התאמה לפי מילות מפתח'
+        },
+        {
+            jobCategory: 'נהג/ת משאית',
+            subscriberCategories: ['לוגיסטיקה'],
+            expected: true,
+            note: 'טיפול בסלאש לזכר/נקבה'
+        },
+        {
+            jobCategory: 'מורה/מחנך לחינוך מיוחד',
+            subscriberCategories: ['חינוך והוראה'],
+            expected: true,
+            note: 'טיפול בסלאש עם תחומים שונים'
+        },
+        {
+            jobCategory: 'מפתח/ת Full Stack',
+            subscriberCategories: ['פיתוח ותוכנה'],
+            expected: true,
+            note: 'זכר/נקבה עם טכנולוגיה'
+        },
+        {
+            jobCategory: 'מכירות ושיווק',
+            subscriberCategories: ['חינוך והוראה'],
+            expected: false,
+            note: 'אין התאמה - תחומים שונים'
+        }
+    ];
+                
             console.log('🧪 בדיקת מערכת התאמת קטגוריות:');
             const results = [];
             
