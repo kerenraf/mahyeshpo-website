@@ -2880,16 +2880,6 @@ function filterJobs() {
     displayJobs(filteredJobs);
     console.log('🔍 נמצאו ' + filteredJobs.length + ' תוצאות');
 }
-// גלילה לתוצאות החיפוש אחרי שהן מוצגות
-setTimeout(function() {
-    var jobsSection = document.querySelector('.jobs');
-    if (jobsSection) {
-        jobsSection.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start' 
-        });
-    }
-}, 200);
         
 // =============== החלפת הפונקציה jobMatchesSearch ===============
 // מצאי את הפונקציה הזו בקובץ שלך והחליפי אותה בקוד הזה:
@@ -3051,14 +3041,28 @@ function partialWordMatch(text, searchTerm) {
     document.getElementById('categoryFilter').value = '';
     document.getElementById('regionFilter').value = '';
     document.getElementById('areaFilter').value = ''; // הוספה חדשה
-    
+
+    // בדוק אם המשתמש ביצע חיפוש אקטיבי
+var hasActiveSearch = searchText || category || city || area;        
     var activeJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; });
     filteredJobs = [];
     displayJobs(activeJobs);
     
     console.log('🧹 מסננים נוקו');
+            
 }
-        
+ // גלול למטה רק אם המשתמש ביצע חיפוש אקטיבי
+if (hasActiveSearch) {
+    setTimeout(function() {
+        var jobsSection = document.querySelector('.jobs');
+        if (jobsSection) {
+            jobsSection.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }
+    }, 200);
+}       
         // פונקציות מערכת ניהול
         function openAdminLogin() {
             document.getElementById('admin-login-modal').style.display = 'block';
