@@ -2882,13 +2882,12 @@ function filterJobs() {
 }
         
 // =============== החלפת הפונקציה jobMatchesSearch ===============
-// מצאי את הפונקציה הזו בקובץ שלך והחליפי אותה בקוד הזה:
 
 function jobMatchesSearch(job, searchText) {
     // נרמול טקסט החיפוש
     const normalizedSearchText = normalizeSearchText(searchText);
     
-    // שדות לחיפוש
+    // שדות לחיפוש - כולל כל הווריאציות של מספר משרה!
     const searchFields = [
         job.title,
         job.company, 
@@ -2896,7 +2895,14 @@ function jobMatchesSearch(job, searchText) {
         job.requirements,
         job.city,
         job.region,
-        job.category
+        job.category,
+        job.jobNumber,           // אנגלית
+        job.id,                  // מזהה
+        job['מס\' משרה'],        // עברית עם רווח
+        job['מס׳ משרה'],         // עברית עם ׳
+        job['מספר משרה'],        // עברית מלא
+        job.jobId,               // ווריאציה נוספת
+        job.number               // פשוט
     ];
     
     // חיפוש בכל השדות
@@ -2905,7 +2911,19 @@ function jobMatchesSearch(job, searchText) {
         
         const normalizedField = normalizeSearchText(field);
         
-        // חיפוש רגיל
+        // חיפוש מדויק במספר משרה (כל הווריאציות)
+        if (field === job.jobNumber || 
+            field === job.id || 
+            field === job['מס\' משרה'] || 
+            field === job['מס׳ משרה'] || 
+            field === job['מספר משרה'] ||
+            field === job.jobId ||
+            field === job.number) {
+            return normalizedField.includes(normalizedSearchText) || 
+                   normalizedSearchText.includes(normalizedField);
+        }
+        
+        // חיפוש רגיל בשאר השדות
         if (normalizedField.includes(normalizedSearchText)) {
             return true;
         }
@@ -2915,6 +2933,20 @@ function jobMatchesSearch(job, searchText) {
     });
 }
 
+// גם תוסיף את הפונקציה הזו לבדיקה מה השם המדויק של השדה:
+function debugJobFields() {
+    if (window.allJobs && window.allJobs.length > 0) {
+        const firstJob = window.allJobs[0];
+        console.log('🔍 שדות במשרה הראשונה:', Object.keys(firstJob));
+        console.log('📋 דוגמת משרה:', firstJob);
+    }
+}
+
+// הוסף לקונסול כדי לבדוק מה השם המדויק של השדה
+setTimeout(() => {
+    debugJobFields();
+}, 3000);
+        
 // =============== הוספת פונקציות עזר חדשות ===============
 // הוסיפי את הפונקציות האלה אחרי הפונקציה jobMatchesSearch:
 
