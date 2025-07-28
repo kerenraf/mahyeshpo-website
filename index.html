@@ -2271,78 +2271,88 @@ padding-top: 20px;
         var quickEditPassword = "yarin080708";
 
         // משרות דוגמה
-        var sampleJobs = [
-            {
-                id: 1,
-                jobNumber: "JS001",
-                title: "מפתח/ת Full Stack",
-                company: "טכנולוגיות מתקדמות בע\"מ",
-                category: "פיתוח ותוכנה",
-                city: "תל אביב",
-                region: "מרכז",
-                jobType: "משרה מלאה",
-                description: "אנו מחפשים מפתח/ת Full Stack עם ניסיון בטכנולוגיות React, Node.js ו-MongoDB. התפקיד כולל פיתוח מערכות מורכבות ועבודה בצוות מקצועי.",
-                requirements: "ניסיון של 3+ שנים בפיתוח Full Stack\nידע מעמיק ב-JavaScript\nניסיון עם React ו-Node.js\nיכולת עבודה בצוות\nאנגלית ברמה טובה",
-                status: "פעיל",
-                featured: true
-            },
-            {
-                id: 2,
-                jobNumber: "WS002",
-                title: "מלצר/ית למסעדה יוקרתית",
-                company: "מסעדת השף",
-                category: "מזון ומסעדנות",
-                city: "חיפה",
-                region: "חיפה קריות והצפון",
-                jobType: "משרה חלקית",
-                description: "דרושים מלצרים/ות למסעדה יוקרתית בחיפה. ניסיון קודם - יתרון. העבודה במשמרות גמישות ואווירה נעימה.",
-                requirements: "ניסיון קודם בהגשה - יתרון\nיחסי אנוש מעולים\nזמינות לעבודה בערבים וסופי שבוע\nיכולת עבודה בצוות",
-                status: "פעיל",
-                featured: false
-            },
-            {
-                id: 3,
-                jobNumber: "TE003",
-                title: "מורה לאנגלית",
-                company: "בית ספר יסודי",
-                category: "חינוך והוראה",
-                city: "ירושלים",
-                region: "ירושלים והסביבה",
-                jobType: "משרה מלאה",
-                description: "דרוש/ה מורה לאנגלית לבית ספר יסודי בירושלים. המשרה כוללת הוראת אנגלית לכיתות א'-ו'.",
-                requirements: "תואר ראשון בהוראת אנגלית\nתעודת הוראה\nניסיון בהוראה - יתרון\nיחסי אנוש מעולים",
-                status: "פעיל",
-                featured: true
-            },
-            {
-                id: 4,
-                jobNumber: "SH004",
-                title: "מנהל/ת חנות",
-                company: "רשת אופנה",
-                category: "מכירות ושיווק",
-                city: "רחובות",
-                region: "שפלה",
-                jobType: "משרה מלאה",
-                description: "דרוש/ה מנהל/ת חנות לרשת אופנה. התפקיד כולל ניהול צוות, מכירות ושירות לקוחות.",
-                requirements: "ניסיון בניהול\nכישורי מכירה\nיחסי אנוש מעולים\nזמינות לעבודה בסופי שבוע",
-                status: "פעיל",
-                featured: false
-            },
-            {
-                id: 5,
-                jobNumber: "NT005",
-                title: "מפתח/ת אפליקציות",
-                company: "חברת סטארטאפ",
-                category: "פיתוח ותוכנה", 
-                city: "נתניה",
-                region: "שרון",
-                jobType: "משרה מלאה",
-                description: "דרוש/ה מפתח/ת אפליקציות מובייל עם ניסיון ב-React Native.",
-                requirements: "ניסיון בפיתוח מובייל\nידע ב-React Native\nיכולת עבודה בצוות",
-                status: "פעיל",
-                featured: true
-            }
-        ];
+var sampleJobs = [
+    {
+        id: 1,
+        jobNumber: "JS001",
+        title: "מפתח/ת Full Stack",
+        shareTitle: "💻 הזדמנות זהב! דרוש/ה מפתח/ת Full Stack",
+        shareDescription: "חברת הייטק מובילה מחפשת מפתח/ת מוכשר/ת! עבודה עם React, Node.js ו-MongoDB, צוות מעולה ותנאים מעולים 🚀",
+        company: "טכנולוגיות מתקדמות בע\"מ",
+        category: "פיתוח ותוכנה",
+        city: "תל אביב",
+        region: "מרכז",
+        jobType: "משרה מלאה",
+        description: "אנו מחפשים מפתח/ת Full Stack עם ניסיון בטכנולוגיות React, Node.js ו-MongoDB. התפקיד כולל פיתוח מערכות מורכבות ועבודה בצוות מקצועי.",
+        requirements: "ניסיון של 3+ שנים בפיתוח Full Stack\nידע מעמיק ב-JavaScript\nניסיון עם React ו-Node.js\nיכולת עבודה בצוות\nאנגלית ברמה טובה",
+        status: "פעיל",
+        featured: true
+    },
+    {
+        id: 2,
+        jobNumber: "WS002",
+        title: "מלצר/ית למסעדה יוקרתית",
+        shareTitle: "🍽️ מלצר/ית למסעדה יוקרתית בחיפה!",
+        shareDescription: "משמרות גמישות באווירה נעימה! ניסיון קודם יתרון אך לא חובה. הזדמנות נהדרת להתחיל קריירה בתחום המסעדנות",
+        company: "מסעדת השף",
+        category: "מזון ומסעדנות",
+        city: "חיפה",
+        region: "חיפה קריות והצפון",
+        jobType: "משרה חלקית",
+        description: "דרושים מלצרים/ות למסעדה יוקרתית בחיפה. ניסיון קודם - יתרון. העבודה במשמרות גמישות ואווירה נעימה.",
+        requirements: "ניסיון קודם בהגשה - יתרון\nיחסי אנוש מעולים\nזמינות לעבודה בערבים וסופי שבוע\nיכולת עבודה בצוות",
+        status: "פעיל",
+        featured: false
+    },
+    {
+        id: 3,
+        jobNumber: "TE003",
+        title: "מורה לאנגלית",
+        shareTitle: "📚 דרוש/ה מורה לאנגלית מנוסה!",
+        shareDescription: "בית ספר יסודי מוביל בירושלים מחפש מורה מוקדש/ת לאנגלית. עבודה עם כיתות א'-ו' בסביבה תומכת ומקצועית",
+        company: "בית ספר יסודי",
+        category: "חינוך והוראה",
+        city: "ירושלים",
+        region: "ירושלים והסביבה",
+        jobType: "משרה מלאה",
+        description: "דרוש/ה מורה לאנגלית לבית ספר יסודי בירושלים. המשרה כוללת הוראת אנגלית לכיתות א'-ו'.",
+        requirements: "תואר ראשון בהוראת אנגלית\nתעודת הוראה\nניסיון בהוראה - יתרון\nיחסי אנוש מעולים",
+        status: "פעיל",
+        featured: true
+    },
+    {
+        id: 4,
+        jobNumber: "SH004",
+        title: "מנהל/ת חנות",
+        shareTitle: "👔 מנהל/ת חנות לרשת אופנה מובילה!",
+        shareDescription: "הזדמנות לנהל חנות אופנה בעיר שוקקת! ניהול צוות, מכירות ושירות לקוחות. תנאים מעולים וסביבת עבודה דינמית",
+        company: "רשת אופנה",
+        category: "מכירות ושיווק",
+        city: "רחובות",
+        region: "שפלה",
+        jobType: "משרה מלאה",
+        description: "דרוש/ה מנהל/ת חנות לרשת אופנה. התפקיד כולל ניהול צוות, מכירות ושירות לקוחות.",
+        requirements: "ניסיון בניהול\nכישורי מכירה\nיחסי אנוש מעולים\nזמינות לעבודה בסופי שבוע",
+        status: "פעיל",
+        featured: false
+    },
+    {
+        id: 5,
+        jobNumber: "NT005",
+        title: "מפתח/ת אפליקציות",
+        shareTitle: "📱 מפתח/ת אפליקציות מובייל - סטארטאפ חם!",
+        shareDescription: "חברת סטארטאפ צעירה ודינמית מחפשת מפתח/ת React Native מוכשר/ת! הזדמנות להיות חלק מהצוות המייסד",
+        company: "חברת סטארטאפ",
+        category: "פיתוח ותוכנה", 
+        city: "נתניה",
+        region: "שרון",
+        jobType: "משרה מלאה",
+        description: "דרוש/ה מפתח/ת אפליקציות מובייל עם ניסיון ב-React Native.",
+        requirements: "ניסיון בפיתוח מובייל\nידע ב-React Native\nיכולת עבודה בצוות",
+        status: "פעיל",
+        featured: true
+    }
+];
 
         // פונקציות בסיסיות
 function toggleMobileMenu() {
@@ -2571,6 +2581,49 @@ openJobModal(displayedIndex);
         function getCategoryColor(category) {
             return categoryColors[category] || '#7c3aed';
         }
+
+        function getCategoryEmoji(category) {
+    if (!category) return '💼';
+    
+    var categoryEmojis = {
+        'פיתוח ותוכנה': '💻',
+        'מכירות ושיווק': '📈', 
+        'חינוך והוראה': '📚',
+        'מזון ומסעדנות': '🍽️',
+        'בריאות ורפואה': '🏥',
+        'בנייה והנדסה': '🏗️',
+        'עיצוב וקריאייטיב': '🎨',
+        'אבטחה ושמירה': '🛡️',
+        'ניהול': '👔',
+        'כספים וחשבונאות': '💰',
+        'משאבי אנוש': '👥',
+        'לוגיסטיקה ותחבורה': '🚛',
+        'שירות לקוחות': '🎧',
+        'תיירות ונופש': '✈️',
+        'ספורט ופנוי': '⚽',
+        'טכנולוגיה': '⚙️',
+        'משפט': '⚖️',
+        'תקשורת ומדיה': '📺',
+        'נדלן': '🏠',
+        'ביטוח': '🛡️',
+        'סביבה וטבע': '🌱',
+        'אנרגיה': '⚡',
+        'תעשייה וייצור': '🏭',
+        'חקלאות': '🌾',
+        'אמנות ותרבות': '🎭'
+    };
+    
+    // חיפוש במילות מפתח
+    var categoryLower = category.toLowerCase();
+    for (var key in categoryEmojis) {
+        if (categoryLower.includes(key.toLowerCase()) || key.toLowerCase().includes(categoryLower)) {
+            return categoryEmojis[key];
+        }
+    }
+    
+    return '💼'; // ברירת מחדל
+}
+
 
         function updateCategoryFilters() {
             var categoryFilter = document.getElementById('categoryFilter');
@@ -3152,195 +3205,187 @@ if (hasActiveSearch) {
 
 // פונקציית שיתוף משופרת
 function shareJob(index) {
+    console.log('🔗 מתחיל שיתוף משרה, אינדקס:', index);
+    
+    // בדיקת תקינות הנתונים
+    if (!currentDisplayedJobs || !currentDisplayedJobs[index]) {
+        console.error('❌ לא נמצאה משרה באינדקס:', index);
+        showNotification('שגיאה בשיתוף המשרה', 'error');
+        return;
+    }
+    
     var job = currentDisplayedJobs[index];
-    if (!job) return;
+    console.log('📋 משרה לשיתוף:', job.title);
     
-    var baseUrl = window.location.origin + window.location.pathname;
-    var jobUrl = baseUrl + '?job=' + encodeURIComponent(job.jobNumber);
-    var location = job.city ? job.city + ', ' + (job.region || '') : (job.region || 'ישראל');
-    
-    // טקסט שיתוף עם כל הפרטים
-    var shareTitle = 'דרוש/ה ' + job.title + ' ב' + location;
-    var shareText = '🎯 ' + shareTitle + 
-        '\n💼 ' + job.category + 
-        '\n📞 לפרטים נוספים: 055-550-4633' +
-        '\n📱 לחצו לפרטים נוספים:' +
-        '\n' + jobUrl;
-    
-    if (navigator.share) {
-        navigator.share({
-            title: shareTitle,
-            text: shareText,
-            url: jobUrl
-        }).catch(function(err) { 
-            console.log('שגיאה בשיתוף:', err);
+    try {
+        var baseUrl = window.location.origin + window.location.pathname;
+        var jobUrl = baseUrl + '?job=' + encodeURIComponent(job.jobNumber);
+        var location = '';
+        
+        // בניית מיקום בצורה בטוחה
+        if (job.city && job.region) {
+            location = job.city + ', ' + job.region;
+        } else if (job.city) {
+            location = job.city;
+        } else if (job.region) {
+            location = job.region;
+        } else {
+            location = 'ישראל';
+        }
+        
+        // קבלת אימוגי לקטגוריה
+        var categoryEmoji = getCategoryEmoji(job.category);
+        
+        // 🎯 כותרת לשיתוף - אם קיימת כותרת מותאמת, אחרת כותרת רגילה
+        var shareTitle = '';
+        if (job.shareTitle && job.shareTitle.trim()) {
+            shareTitle = job.shareTitle.trim();
+        } else {
+            shareTitle = categoryEmoji + ' דרוש/ה ' + job.title + ' ב' + location;
+        }
+        
+        // 📋 תיאור לשיתוף - אם קיים תיאור מותאם, אחרת תיאור רגיל
+        var shareDescription = '';
+        if (job.shareDescription && job.shareDescription.trim()) {
+            shareDescription = job.shareDescription.trim();
+        } else if (job.description && job.description.trim()) {
+            var desc = job.description.trim();
+            shareDescription = desc.length > 120 ? desc.substring(0, 120) + '...' : desc;
+        } else {
+            shareDescription = 'לפרטים נוספים צרו קשר איתנו';
+        }
+        
+        // טקסט שיתוף מלא
+        var shareText = shareTitle + 
+            '\n\n📋 ' + shareDescription +
+            '\n\n💼 קטגוריה: ' + job.category + 
+            '\n📍 מיקום: ' + location +
+            '\n📞 לפרטים: 055-550-4633' +
+            '\n🔗 פרטים מלאים: ' + jobUrl;
+        
+        console.log('✅ טקסט שיתוף הוכן:', shareText.substring(0, 100) + '...');
+        
+        // ניסיון שיתוף מתקדם
+        if (navigator.share) {
+            navigator.share({
+                title: shareTitle,
+                text: shareDescription,
+                url: jobUrl
+            }).then(function() {
+                console.log('✅ שיתוף הצליח');
+                showNotification('המשרה שותפה בהצלחה!');
+            }).catch(function(err) { 
+                console.log('⚠️ שיתוף מתקדם נכשל:', err);
+                fallbackShare(job, shareText, jobUrl, shareTitle);
+            });
+        } else {
+            // שיתוף חלופי
             fallbackShare(job, shareText, jobUrl, shareTitle);
-        });
-    } else {
-        fallbackShare(job, shareText, jobUrl, shareTitle);
+        }
+        
+    } catch (error) {
+        console.error('❌ שגיאה בשיתוף:', error);
+        showNotification('שגיאה בשיתוף המשרה', 'error');
     }
 }
 
 // פונקציית שיתוף חלופית
 function fallbackShare(job, shareText, jobUrl, shareTitle) {
+    console.log('🔄 מעבר לשיתוף חלופי');
+    
     // העתק טקסט אוטומטי
     copyToClipboard(shareText);
     
-    // הצג אפשרויות שיתוף
-    var location = job.city ? job.city + ', ' + (job.region || '') : (job.region || 'ישראל');
+    var location = '';
+    if (job.city && job.region) {
+        location = job.city + ', ' + job.region;
+    } else if (job.city) {
+        location = job.city;
+    } else if (job.region) {
+        location = job.region;
+    } else {
+        location = 'ישראל';
+    }
+    
     var whatsappText = encodeURIComponent(shareText);
     var whatsappShare = 'https://wa.me/?text=' + whatsappText;
+    var facebookShare = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(jobUrl);
+    var telegramShare = 'https://t.me/share/url?url=' + encodeURIComponent(jobUrl) + '&text=' + whatsappText;
     
     var shareModal = document.createElement('div');
     shareModal.className = 'modal';
     shareModal.style.display = 'block';
     shareModal.innerHTML = 
-        '<div class="modal-content" style="max-width: 400px;">' +
+        '<div class="modal-content" style="max-width: 480px;">' +
             '<div class="modal-header">' +
                 '<h3 class="modal-title"><i class="fas fa-share-alt"></i> שתף משרה</h3>' +
                 '<span class="close" onclick="this.closest(\'.modal\').remove()">&times;</span>' +
             '</div>' +
-            '<div style="padding: 20px;">' +
-                '<h4 style="color: #F69898; margin-bottom: 15px;">דרוש/ה ' + job.title + '</h4>' +
-                '<p style="color: #ccc; margin-bottom: 15px;">📍 ' + location + '</p>' +
-                '<p style="background: #333; padding: 10px; border-radius: 5px; font-size: 0.9rem; margin-bottom: 15px;">הטקסט הועתק אוטומטי! עכשיו פשוט הדביקו בוואטסאפ או ברשת החברתית שלכם</p>' +
-                '<div style="display: grid; gap: 15px;">' +
-                    '<a href="' + whatsappShare + '" target="_blank" class="contact-method-btn whatsapp-btn" style="text-decoration: none;">' +
-                        '<i class="fab fa-whatsapp"></i>' +
-                        '<span>שתף בוואטסאפ</span>' +
+            '<div style="padding: 25px;">' +
+                '<div style="text-align: center; margin-bottom: 20px;">' +
+                    '<h4 style="color: #F69898; margin-bottom: 8px; font-size: 1.1rem;">' + (job.shareTitle || job.title) + '</h4>' +
+                    '<p style="color: #aaa; font-size: 0.9rem; margin-bottom: 15px;">📍 ' + location + '</p>' +
+                '</div>' +
+                '<div style="background: linear-gradient(145deg, #333, #2a2a2a); padding: 15px; border-radius: 10px; font-size: 0.9rem; margin-bottom: 20px; max-height: 120px; overflow-y: auto; border: 1px solid #444;">' +
+                    '<strong style="color: #F69898;">תצוגה מקדימה:</strong><br><br>' +
+                    '<span style="color: #ddd; line-height: 1.4;">' + (job.shareDescription || shareText.split('\\n\\n')[1] || 'תיאור המשרה...') + '</span>' +
+                '</div>' +
+                '<div style="background: rgba(246, 152, 152, 0.1); padding: 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; border: 1px solid rgba(246, 152, 152, 0.3); text-align: center;">' +
+                    '<i class="fas fa-check-circle" style="color: #4CAF50; margin-left: 5px;"></i>' +
+                    '<strong>הטקסט הועתק אוטומטית!</strong><br>' +
+                    'פשוט הדביקו בוואטסאפ או ברשת החברתית שלכם' +
+                '</div>' +
+                '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">' +
+                    '<a href="' + whatsappShare + '" target="_blank" class="contact-method-btn whatsapp-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center; padding: 12px; font-size: 0.9rem;">' +
+                        '<i class="fab fa-whatsapp" style="margin-left: 8px;"></i>' +
+                        '<span>וואטסאפ</span>' +
                     '</a>' +
-                    '<button onclick="copyToClipboard(\'' + shareText.replace(/'/g, "\\'") + '\'); showNotification(\'הועתק שוב!\')" class="contact-method-btn" style="background: linear-gradient(135deg, #6c757d, #545b62); border: none; cursor: pointer;">' +
-                        '<i class="fas fa-copy"></i>' +
+                    '<a href="' + facebookShare + '" target="_blank" class="contact-method-btn" style="background: linear-gradient(135deg, #3b5998, #2d4373); text-decoration: none; display: flex; align-items: center; justify-content: center; padding: 12px; font-size: 0.9rem; color: white;">' +
+                        '<i class="fab fa-facebook-f" style="margin-left: 8px;"></i>' +
+                        '<span>פייסבוק</span>' +
+                    '</a>' +
+                '</div>' +
+                '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">' +
+                    '<a href="' + telegramShare + '" target="_blank" class="contact-method-btn" style="background: linear-gradient(135deg, #0088cc, #006699); text-decoration: none; display: flex; align-items: center; justify-content: center; padding: 12px; font-size: 0.9rem; color: white;">' +
+                        '<i class="fab fa-telegram-plane" style="margin-left: 8px;"></i>' +
+                        '<span>טלגרם</span>' +
+                    '</a>' +
+                    '<button onclick="copyToClipboard(\'' + shareText.replace(/'/g, "\\'").replace(/\n/g, '\\n') + '\'); showNotification(\'הועתק שוב!\')" class="contact-method-btn" style="background: linear-gradient(135deg, #6c757d, #545b62); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 12px; font-size: 0.9rem; color: white;">' +
+                        '<i class="fas fa-copy" style="margin-left: 8px;"></i>' +
                         '<span>העתק שוב</span>' +
                     '</button>' +
+                '</div>' +
+                '<div style="text-align: center; margin-top: 15px; font-size: 0.8rem; color: #888;">' +
+                    'מס\' משרה: ' + job.jobNumber + ' | קטגוריה: ' + job.category +
                 '</div>' +
             '</div>' +
         '</div>';
     
     document.body.appendChild(shareModal);
     
+    // מניעת גלילה ברקע
+    document.body.style.overflow = 'hidden';
+    
+    // סגירה בלחיצה על הרקע
     shareModal.addEventListener('click', function(e) {
         if (e.target === shareModal) {
             shareModal.remove();
+            document.body.style.overflow = 'auto';
         }
     });
+    
+    // הוספת כפתור ESC לסגירה
+    var escapeHandler = function(e) {
+        if (e.key === 'Escape') {
+            shareModal.remove();
+            document.body.style.overflow = 'auto';
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    };
+    document.addEventListener('keydown', escapeHandler);
+    
+    console.log('✅ חלון שיתוף חלופי נפתח');
 }
-        
-        function copyToClipboard(text) {
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(text).then(function() {
-                    showNotification('הועתק ללוח!');
-                }).catch(function() {
-                    fallbackCopyTextToClipboard(text);
-                });
-            } else {
-                fallbackCopyTextToClipboard(text);
-            }
-        }
-        
-        function fallbackCopyTextToClipboard(text) {
-            var textArea = document.createElement('textarea');
-            textArea.value = text;
-            textArea.style.position = 'fixed';
-            textArea.style.top = '-9999px';
-            textArea.style.left = '-9999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
-            try {
-                var successful = document.execCommand('copy');
-                if (successful) {
-                    showNotification('הועתק ללוח!');
-                } else {
-                    showNotification('לא ניתן להעתיק', 'error');
-                }
-            } catch (err) {
-                showNotification('לא ניתן להעתיק', 'error');
-            }
-            
-            document.body.removeChild(textArea);
-        }
-
-        // פונקציה להצגת הודעות
-        function showNotification(message, type) {
-            type = type || 'success';
-            var notification = document.createElement('div');
-            notification.style.cssText = 
-                'position: fixed;' +
-                'top: 20px;' +
-                'right: 20px;' +
-                'background: ' + (type === 'success' ? 'linear-gradient(135deg, #28a745, #20c997)' : 'linear-gradient(135deg, #dc3545, #e74c3c)') + ';' +
-                'color: white;' +
-                'padding: 15px 20px;' +
-                'border-radius: 8px;' +
-                'z-index: 10000;' +
-                'font-weight: bold;' +
-                'box-shadow: 0 4px 12px rgba(0,0,0,0.3);' +
-                'animation: slideInNotification 0.3s ease-out;';
-            notification.textContent = message;
-            
-            var style = document.createElement('style');
-            style.textContent = 
-                '@keyframes slideInNotification {' +
-                    'from { transform: translateX(100%); opacity: 0; }' +
-                    'to { transform: translateX(0); opacity: 1; }' +
-                '}';
-            document.head.appendChild(style);
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(function() {
-                notification.remove();
-                style.remove();
-            }, 3000);
-        }
-
-        function showShareOptions(job, shareText, jobUrl) {
-            var whatsappShare = 'https://wa.me/?text=' + encodeURIComponent(shareText);
-            var facebookShare = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(jobUrl);
-            
-            var shareModal = document.createElement('div');
-            shareModal.className = 'modal';
-            shareModal.style.display = 'block';
-            shareModal.innerHTML = 
-                '<div class="modal-content" style="max-width: 400px;">' +
-                    '<div class="modal-header">' +
-                        '<h3 class="modal-title"><i class="fas fa-share-alt"></i> שתף משרה</h3>' +
-                        '<span class="close" onclick="this.closest(\'.modal\').remove()">&times;</span>' +
-                    '</div>' +
-                    '<div style="padding: 20px;">' +
-                        '<h4 style="color: #F69898; margin-bottom: 15px;">' + job.title + '</h4>' +
-'<p style="background: #333; padding: 10px; border-radius: 5px; font-size: 0.9rem; margin-bottom: 15px;">' +
-    '👆 לפרטים נוספים לחצו על התמונה ועל כפתור הוואטסאפ/SMS<br>' +
-    'קישור: ' + jobUrl +
-'</p>' +
-                '<div style="display: grid; gap: 15px;">' +
-                            '<a href="' + whatsappShare + '" target="_blank" class="contact-method-btn whatsapp-btn" style="text-decoration: none;">' +
-                                '<i class="fab fa-whatsapp"></i>' +
-                                '<span>שתף בוואטסאפ</span>' +
-                            '</a>' +
-                            '<a href="' + facebookShare + '" target="_blank" class="contact-method-btn" style="background: linear-gradient(135deg, #3b5998, #2d4373); text-decoration: none;">' +
-                                '<i class="fab fa-facebook-f"></i>' +
-                                '<span>שתף בפייסבוק</span>' +
-                            '</a>' +
-                            '<button onclick="copyToClipboard(\'' + shareText.replace(/'/g, "\\'") + '\'); showNotification(\'הקישור הועתק!\')" class="contact-method-btn" style="background: linear-gradient(135deg, #6c757d, #545b62); border: none; cursor: pointer;">' +
-                                '<i class="fas fa-copy"></i>' +
-                                '<span>העתק קישור</span>' +
-                            '</button>' +
-                        '</div>' +
-                    '</div>' +
-                '</div>';
-            
-            document.body.appendChild(shareModal);
-            
-            shareModal.addEventListener('click', function(e) {
-                if (e.target === shareModal) {
-                    shareModal.remove();
-                }
-            });
-        }
-
         // ======================== פונקציות נגישות ========================
 
         // הגדרות נגישות
