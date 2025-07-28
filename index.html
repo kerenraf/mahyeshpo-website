@@ -2887,7 +2887,7 @@ function jobMatchesSearch(job, searchText) {
     // נרמול טקסט החיפוש
     const normalizedSearchText = normalizeSearchText(searchText);
     
-    // שדות לחיפוש - כולל כל הווריאציות של מספר משרה!
+    // שדות לחיפוש - כולל jobNumber!
     const searchFields = [
         job.title,
         job.company, 
@@ -2896,13 +2896,7 @@ function jobMatchesSearch(job, searchText) {
         job.city,
         job.region,
         job.category,
-        job.jobNumber,           // אנגלית
-        job.id,                  // מזהה
-        job['מס\' משרה'],        // עברית עם רווח
-        job['מס׳ משרה'],         // עברית עם ׳
-        job['מספר משרה'],        // עברית מלא
-        job.jobId,               // ווריאציה נוספת
-        job.number               // פשוט
+        job.jobNumber    // ✅ זה השדה הנכון!
     ];
     
     // חיפוש בכל השדות
@@ -2911,14 +2905,8 @@ function jobMatchesSearch(job, searchText) {
         
         const normalizedField = normalizeSearchText(field);
         
-        // חיפוש מדויק במספר משרה (כל הווריאציות)
-        if (field === job.jobNumber || 
-            field === job.id || 
-            field === job['מס\' משרה'] || 
-            field === job['מס׳ משרה'] || 
-            field === job['מספר משרה'] ||
-            field === job.jobId ||
-            field === job.number) {
+        // חיפוש מדויק במספר משרה
+        if (field === job.jobNumber) {
             return normalizedField.includes(normalizedSearchText) || 
                    normalizedSearchText.includes(normalizedField);
         }
@@ -2932,7 +2920,6 @@ function jobMatchesSearch(job, searchText) {
         return checkGenderVariations(normalizedField, normalizedSearchText);
     });
 }
-
 // גם תוסיף את הפונקציה הזו לבדיקה מה השם המדויק של השדה:
 function debugJobFields() {
     if (window.allJobs && window.allJobs.length > 0) {
