@@ -1662,17 +1662,19 @@ let hasLocalChanges = false;
         }
 
         // אתחול מערכת הניהול
-        function initializeAdminSystem() {
-            document.getElementById('currentGitHubUrl').textContent = githubUrl;
-            showNotification('טוען מ-GitHub...', 'warning');
-            showLoading();
-            
-            syncFromGitHub()
-                .then(() => {
-                    updateStatistics();
-                    showNotification('המערכת מוכנה לשימוש!', 'success');
-                })
-                .catch(error => {
+function initializeAdminSystem() {
+    document.getElementById('currentGitHubUrl').textContent = githubUrl;
+    showNotification('טוען מ-GitHub...', 'warning');
+    showLoading();
+    
+    syncFromGitHub()
+        .then(() => {
+            updateFormSelects(); // הוסף קריאה לפונקציה החדשה
+            updateStatistics();
+            showNotification('המערכת מוכנה לשימוש!', 'success');
+        })
+
+        .catch(error => {
                     console.error('שגיאה באתחול:', error);
                     showNotification('שגיאה בטעינה מ-GitHub', 'error');
                 })
@@ -2278,26 +2280,35 @@ updateFormSelects();
             );
         }
 
-        function editJobAdvanced(index) {
-            const job = jobs[index];
-            
-            document.getElementById('edit-modal-title').innerHTML = '<i class="fas fa-edit"></i> עריכת משרה';
-            document.getElementById('edit-job-id').value = index;
-            document.getElementById('edit-job-number').value = job.jobNumber || '';
-            document.getElementById('edit-job-title').value = job.title || '';
-            document.getElementById('edit-job-category').value = job.category || 'אחר';
-            document.getElementById('edit-job-city').value = job.city || '';
-            document.getElementById('edit-job-region').value = job.region || 'מרכז';
-            document.getElementById('edit-job-status').value = job.status || 'פעיל';
-            document.getElementById('edit-job-description').value = job.description || '';
-            document.getElementById('edit-job-requirements').value = job.requirements || '';
-            
-            featuredJobId = job.featured;
-            updateFeaturedToggle();
-            
-            document.getElementById('job-edit-modal').style.display = 'block';
-        }
-
+function editJobAdvanced(index) {
+    const job = jobs[index];
+    
+    document.getElementById('edit-modal-title').innerHTML = '<i class="fas fa-edit"></i> עריכת משרה';
+    document.getElementById('edit-job-id').value = index;
+    document.getElementById('edit-job-number').value = job.jobNumber || '';
+    document.getElementById('edit-job-title').value = job.title || '';
+    
+    // שמור את הערכים הנוכחיים לפני העדכון
+    const currentCategory = job.category || 'אחר';
+    const currentRegion = job.region || 'מרכז';
+    const currentStatus = job.status || 'פעיל';
+    
+    // הוסף קריאה לפונקציה החדשה שמעדכנת את הרשימות
+    setupDynamicFormFields();
+    
+    // הגדר את הערכים הנוכחיים לאחר עדכון הרשימות
+    document.getElementById('edit-job-city').value = job.city || '';
+    document.getElementById('edit-job-category').value = currentCategory;
+    document.getElementById('edit-job-region').value = currentRegion;
+    document.getElementById('edit-job-status').value = currentStatus;
+    document.getElementById('edit-job-description').value = job.description || '';
+    document.getElementById('edit-job-requirements').value = job.requirements || '';
+    
+    featuredJobId = job.featured;
+    updateFeaturedToggle();
+    
+    document.getElementById('job-edit-modal').style.display = 'block';
+}        
         function viewJobAdvanced(index) {
             const job = jobs[index];
             let details = '';
@@ -2326,17 +2337,19 @@ updateFormSelects();
         }
 
         // פונקציות מודל
-        function openAddJobModal() {
-            document.getElementById('edit-modal-title').innerHTML = '<i class="fas fa-plus"></i> הוספת משרה חדשה';
-            document.getElementById('job-edit-form').reset();
-            document.getElementById('edit-job-id').value = '';
-            
-            featuredJobId = false;
-            updateFeaturedToggle();
-            
-            document.getElementById('job-edit-modal').style.display = 'block';
-        }
-
+function openAddJobModal() {
+    document.getElementById('edit-modal-title').innerHTML = '<i class="fas fa-plus"></i> הוספת משרה חדשה';
+    document.getElementById('job-edit-form').reset();
+    document.getElementById('edit-job-id').value = '';
+    
+    featuredJobId = false;
+    updateFeaturedToggle();
+    
+    setupDynamicFormFields(); // הוסף את השורה הזו
+    
+    document.getElementById('job-edit-modal').style.display = 'block';
+}
+        
         function closeEditModal() {
             document.getElementById('job-edit-modal').style.display = 'none';
         }
