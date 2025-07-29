@@ -4062,6 +4062,37 @@ console.log('🚀 תכונת שיתוף האתר מוכנה!');
     <button onclick="closeGuideContactForm()">ביטול</button>
 </div>
 
+    /* הסתרת כפתור SMS בכרטיסי משרות במחשב */
+.sms-button {
+    display: none !important;  /* מוסתר כברירת מחדל במחשב */
+}
+
+/* הסתרת כפתור SMS במודל המשרה במחשב */
+.sms-btn {
+    display: none !important;  /* מוסתר כברירת מחדל במחשב */
+}
+
+/* הצגת כפתורי SMS רק במובייל */
+@media (max-width: 768px) {
+    .sms-button {
+        display: flex !important;  /* מוצג במובייל */
+    }
+    
+    .sms-btn {
+        display: flex !important;  /* מוצג במובייל */
+    }
+}
+
+/* תיקון מרווחים בכפתורי יצירת קשר כשיש פחות כפתורים */
+.contact-buttons {
+    justify-content: flex-end;  /* כדי שהכפתורים יהיו מיושרים לצד שמאל */
+}
+
+.job-modal-actions {
+    justify-content: center;
+    gap: 15px;
+}
+
 <style>
 /* סטיילים לגמדה החכמה */
 /* סטיילים לגמדה החכמה - משופרת ובולטת יותר */
