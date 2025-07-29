@@ -818,47 +818,61 @@ padding-top: 20px;
             margin-top: 30px;
         }
 
-        .job-card {
-            background: linear-gradient(145deg, #3a3a3a, #333333);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            min-height: 320px;
-            border: 1px solid #444444;
-            padding-bottom: 90px;
-        }
+.job-card {
+    background: linear-gradient(145deg, #3a3a3a, #333333);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 480px;
+    min-height: 420px;
+    position: relative;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+    margin-bottom: 30px;
+    padding: 25px;
+    padding-bottom: 90px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
 
-        .job-card.featured {
-            background: linear-gradient(145deg, 
-                rgba(246, 152, 152, 0.08) 0%, 
-                rgba(58, 58, 58, 1) 50%, 
-                rgba(246, 152, 152, 0.05) 100%);
-            border: 2px solid rgba(246, 152, 152, 0.3);
-            box-shadow: 0 8px 25px rgba(246, 152, 152, 0.15);
-            animation: none;
-            order: -1;
-        }
+.job-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+.job-card.featured {
+    background: linear-gradient(145deg, 
+        rgba(246, 152, 152, 0.08) 0%, 
+        rgba(58, 58, 58, 1) 50%, 
+        rgba(246, 152, 152, 0.05) 100%);
+    border: 2px solid rgba(246, 152, 152, 0.3);
+    box-shadow: 0 8px 30px rgba(246, 152, 152, 0.2);
+    margin-top: 20px; /* הוספת מרווח למעלה */
+    padding-top: 35px; /* הגדלת הריפוד העליון */
+}
 
-        .job-card.featured::before {
-            content: "⭐ מומלצת";
-            position: absolute;
-            top: -12px;
-            right: 20px;
-            background: linear-gradient(135deg, #F69898, #e58080);
-            color: white;
-            padding: 6px 16px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            z-index: 10;
-            box-shadow: 0 2px 8px rgba(246, 152, 152, 0.3);
-            animation: none;
-            background-size: 100% 100%;
-        }
-
+.job-card.featured:hover {
+    background: linear-gradient(145deg, 
+        rgba(246, 152, 152, 0.12) 0%, 
+        rgba(68, 68, 68, 1) 50%, 
+        rgba(246, 152, 152, 0.08) 100%);
+    box-shadow: 0 15px 35px rgba(246, 152, 152, 0.25);
+}
+    
+.job-card.featured::before {
+    content: "⭐ מומלצת";
+    position: absolute;
+    top: -12px;
+    right: 25px;
+    background: linear-gradient(135deg, #F69898, #e58080);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    z-index: 100; /* ערך גבוה יותר להבטחת נראות */
+    box-shadow: 0 4px 10px rgba(246, 152, 152, 0.3);
+    transform: translateY(10px); /* דחיפה כלפי מטה */
+}
+    
         .job-card.featured:hover {
             background: linear-gradient(145deg, 
                 rgba(246, 152, 152, 0.12) 0%, 
@@ -892,14 +906,14 @@ padding-top: 20px;
             z-index: 2;
         }
 
-        .job-title {
-            color: #F69898;
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 12px;
-            margin-top: 35px;
-        }
-
+.job-title {
+    color: #F69898;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    margin-top: 35px;
+    line-height: 1.2;
+}
         .job-location {
             color: #aaaaaa;
             font-size: 0.9rem;
@@ -909,15 +923,15 @@ padding-top: 20px;
             gap: 5px;
         }
 
-        .job-description {
-            color: #cccccc;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            line-height: 1.5;
-            height: 60px;
-            overflow: hidden;
-        }
-
+.job-description {
+    color: #e0e0e0;
+    font-size: 1.05rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    min-height: 80px;
+    max-height: 150px;
+    overflow: hidden;
+}
         .job-badge {
             color: #333333;
             padding: 8px 16px;
@@ -942,95 +956,109 @@ padding-top: 20px;
             z-index: 20;
         }
 
-        .job-card-gnome {
-            width: 55px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            z-index: 25;
-            position: relative;
-        }
+.job-card-gnome {
+    width: 75px;
+    cursor: pointer;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    z-index: 25;
+    position: relative;
+}
 
-        .job-card-gnome:hover {
-            transform: scale(1.1);
-        }
+.job-card-gnome:hover {
+    transform: scale(1.15);
+}
 
-        .job-card-gnome img {
-            width: 100%;
-            height: auto;
-            filter: drop-shadow(0 3px 10px rgba(246, 152, 152, 0.5));
-        }
+.job-card-gnome img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 5px 15px rgba(246, 152, 152, 0.5));
+}
+    
+.job-card-gnome-text {
+    text-align: center;
+    font-size: 14px;
+    color: white;
+    font-weight: bold;
+    margin-top: 6px;
+    background: rgba(246, 152, 152, 0.9);
+    border-radius: 12px;
+    padding: 8px 12px;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    min-width: 90px;
+    line-height: 1.2;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: fit-content;
+}
+    
+.job-card-pointing-gnome {
+    position: absolute;
+    top: 85px;
+    left: 45px;
+    width: 80px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    z-index: 30;
+    transform: rotate(10deg);
+}
 
-        .job-card-gnome-text {
-            text-align: center;
-            font-size: 8px;
-            color: white;
-            font-weight: bold;
-            margin-top: 4px;
-            background: rgba(246, 152, 152, 0.9);
-            border-radius: 12px;
-            padding: 4px 8px;
-            white-space: nowrap;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            min-width: 70px;
-            line-height: 1.2;
-        }
+.job-card-pointing-gnome:hover {
+    transform: rotate(10deg) scale(1.15);
+    filter: drop-shadow(0 6px 15px rgba(246, 152, 152, 0.6));
+}
 
-        .job-card-pointing-gnome {
-            position: absolute;
-        top: 80px;
-        left: 40px;
-        width: 60px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            z-index: 30;
-            transform: rotate(10deg);
-        }
-
-        .job-card-pointing-gnome:hover {
-            transform: rotate(10deg) scale(1.1);
-        }
-
-        .job-card-pointing-gnome img {
-            width: 100%;
-            height: auto;
-            filter: drop-shadow(0 3px 10px rgba(246, 152, 152, 0.4));
-        }
-        
+.job-card-pointing-gnome img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 4px 12px rgba(246, 152, 152, 0.4));
+}
+    
         .contact-buttons {
             display: flex;
             gap: 12px;
             z-index: 15;
         }
 
-        .contact-button {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            border: none;
-            cursor: pointer;
-        }
+.contact-button {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    font-size: 22px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+    border: none;
+    cursor: pointer;
+}
 
-        .contact-button:hover {
-            transform: scale(1.15);
-        }
-
+.contact-button:hover {
+    transform: scale(1.15) translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+    
         .whatsapp-button {
             background: linear-gradient(135deg, #25D366, #128C7E);
         }
 
-        .sms-button {
-            background: linear-gradient(135deg, #3B5998, #2d4373);
-            display: none;
-        }
+.sms-button {
+    background: linear-gradient(135deg, #3B5998, #2d4373);
+    display: none; /* מוסתר בדסקטופ */
+}
 
+/* מופיע רק במובייל */
+@media (max-width: 768px) {
+    .sms-button {
+        display: flex !important;
+        background: linear-gradient(135deg, #3B5998, #2d4373);
+    }
+}
+    
         .share-button {
             background: linear-gradient(135deg, #FF6B6B, #EE5A52) !important;
         }
