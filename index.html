@@ -3099,7 +3099,91 @@ if (hasActiveSearch) {
             });
         }
     }, 200);
-}       
+}   
+
+        // פונקציה חדשה לסינון בזמן אמת
+function filterJobsRealTime() {
+    var searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+    var category = document.getElementById('categoryFilter').value;
+    var city = document.getElementById('regionFilter').value;
+    var area = document.getElementById('areaFilter').value;
+    
+    var activeJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; });
+    
+    filteredJobs = activeJobs.filter(function(job) {
+        if (searchText && !jobMatchesSearch(job, searchText)) {
+            return false;
+        }
+        
+        if (category && job.category !== category) {
+            return false;
+        }
+        
+        if (city && job.city !== city) {
+            return false;
+        }
+        
+        if (area && job.region !== area) {
+            return false;
+        }
+        
+        return true;
+    });
+    
+    displayJobs(filteredJobs);
+    showSearchCounter(searchText, filteredJobs.length, activeJobs.length);
+    console.log('🔍 סינון בזמן אמת: ' + filteredJobs.length + ' משרות');
+}
+
+// פונקציה להצגת מונה תוצאות
+function showSearchCounter(searchQuery, filteredCount, totalCount) {
+    let counterDiv = document.getElementById('search-counter');
+    
+    if (!counterDiv) {
+        counterDiv = document.createElement('div');
+        counterDiv.id = 'search-counter';
+        counterDiv.style.cssText = `
+            text-align: center;
+            padding: 12px 20px;
+            margin: 15px 0;
+            background: linear-gradient(135deg, rgba(246, 152, 152, 0.1), rgba(246, 152, 152, 0.05));
+            border-radius: 12px;
+            color: #F69898;
+            font-weight: bold;
+            border: 2px solid rgba(246, 152, 152, 0.2);
+            font-size: 1rem;
+        `;
+        
+        const jobsSection = document.querySelector('.jobs');
+        if (jobsSection) {
+            jobsSection.parentNode.insertBefore(counterDiv, jobsSection);
+        }
+    }
+    
+    if (searchQuery || filteredCount !== totalCount) {
+        let message = '';
+        
+        if (searchQuery) {
+            message = `🔍 נמצאו ${filteredCount} משרות עבור "${searchQuery}"`;
+        } else {
+            message = `📋 מציג ${filteredCount} משרות`;
+        }
+        
+        if (filteredCount === 0) {
+            message = `❌ לא נמצאו משרות`;
+            if (searchQuery) {
+                message += ` עבור "${searchQuery}"`;
+            }
+            message += '. נסה חיפוש אחר';
+        }
+        
+        counterDiv.innerHTML = message;
+        counterDiv.style.display = 'block';
+    } else {
+        counterDiv.style.display = 'none';
+    }
+}
+        
         // פונקציות מערכת ניהול
         function openAdminLogin() {
             document.getElementById('admin-login-modal').style.display = 'block';
