@@ -2767,17 +2767,14 @@ var shortDescription = fullContent
                                 'onerror="this.src=\'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XkNee15XXmDwvdGV4dD48L3N2Zz4i\'>">' +
                             '<div class="job-card-gnome-text">פרטים נוספים</div>' +
                         '</div>' +
-                        '<div class="contact-buttons">' +
-                            '<a href="' + whatsappLink + '" class="contact-button whatsapp-button" target="_blank" title="פנייה בוואטסאפ" onclick="event.stopPropagation();">' +
-                                '<i class="fab fa-whatsapp"></i>' +
-                            '</a>' +
-                            '<a href="' + smsLink + '" class="contact-button sms-button" title="פנייה ב-SMS" onclick="event.stopPropagation();">' +
-                                '<i class="fas fa-sms"></i>' +
-                            '</a>' +
-                            '<button class="contact-button share-button" title="שתף משרה" onclick="event.stopPropagation(); shareJob(' + index + ')" style="background: linear-gradient(135deg, #FF6B6B, #EE5A52);">' +
-                                '<i class="fas fa-share-alt"></i>' +
-                            '</button>' +
-                        '</div>' +
+'<div class="contact-buttons">' +
+    '<a href="' + whatsappLink + '" class="contact-button whatsapp-button" target="_blank" title="פנייה בוואטסאפ" onclick="event.stopPropagation();">' +
+        '<i class="fab fa-whatsapp"></i>' +
+    '</a>' +
+    '<button class="contact-button share-button" title="שתף משרה" onclick="event.stopPropagation(); shareJob(' + index + ')" style="background: linear-gradient(135deg, #FF6B6B, #EE5A52);">' +
+        '<i class="fas fa-share-alt"></i>' +
+    '</button>' +
+'</div>' +
                     '</div>';
                 
                 jobCard.addEventListener('click', function() {
