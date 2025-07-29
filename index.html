@@ -3070,22 +3070,25 @@ function partialWordMatch(text, searchTerm) {
         return cleanWord.includes(searchTerm) || searchTerm.includes(cleanWord);
     });
 }
-        function clearFilters() {
+function clearFilters() {
     document.getElementById('searchInput').value = '';
     document.getElementById('categoryFilter').value = '';
     document.getElementById('regionFilter').value = '';
-    document.getElementById('areaFilter').value = ''; // הוספה חדשה
+    document.getElementById('areaFilter').value = '';
 
-    // בדוק אם המשתמש ביצע חיפוש אקטיבי
-var hasActiveSearch = searchText || category || city || area;        
+    // הסתר מונה תוצאות
+    const counterDiv = document.getElementById('search-counter');
+    if (counterDiv) {
+        counterDiv.style.display = 'none';
+    }
+    
     var activeJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; });
     filteredJobs = [];
     displayJobs(activeJobs);
     
     console.log('🧹 מסננים נוקו');
-            
 }
- // גלול למטה רק אם המשתמש ביצע חיפוש אקטיבי
+        // גלול למטה רק אם המשתמש ביצע חיפוש אקטיבי
 if (hasActiveSearch) {
     setTimeout(function() {
         var jobsSection = document.querySelector('.jobs');
@@ -3708,88 +3711,187 @@ function selectSuggestion(suggestion) {
 
         // מאזיני אירועים
         function attachEventListeners() {
-            var searchButton = document.getElementById('searchButton');
-            if (searchButton) {
-                searchButton.addEventListener('click', filterJobs);
+    var searchButton = document.getElementById('searchButton');
+    if (searchButton) {
+        searchButton.addEventListener('click', filterJobs);
+    }
+    
+    var clearButton = document.getElementById('clearButton');
+    if (clearButton) {
+        clearButton.addEventListener('click', clearFilters);
+    }
+    
+    // *** החיפוש הדינמי החדש ***
+    var searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        let searchTimeout;
+        
+        // חיפוש בזמן אמת - כרטיסי משרות מלאים
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.trim();
+            
+            // ביטול timeout קודם
+            clearTimeout(searchTimeout);
+            
+            // חיפוש עם דיליי קטן
+            searchTimeout = setTimeout(() => {
+                filterJobsRealTime();
+            }, 150);
+        });
+        
+        // גם בלחיצת Enter
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                clearTimeout(searchTimeout);
+                filterJobsRealTime();
             }
-            
-            var clearButton = document.getElementById('clearButton');
-            if (clearButton) {
-                clearButton.addEventListener('click', clearFilters);
+        });
+    }
+    
+    // הוסף מאזינים למסננים הנוספים
+    var categoryFilter = document.getElementById('categoryFilter');
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', filterJobsRealTime);
+    }
+    
+    var regionFilter = document.getElementById('regionFilter');
+    if (regionFilter) {
+        regionFilter.addEventListener('change', filterJobsRealTime);
+    }
+    
+    var areaFilter = document.getElementById('areaFilter');
+    if (areaFilter) {
+        areaFilter.addEventListener('change', filterJobsRealTime);
+    }
+    
+    // הוספת מאזין למקש Enter במודל ניהול
+    document.addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            var adminModal = document.getElementById('admin-login-modal');
+            if (adminModal && adminModal.style.display === 'block') {
+                checkAdminAccess();
             }
-            
-            var searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        filterJobs();
-                    }
-                });
-            }
-            
-            // הוספת מאזין למקש Enter במודל ניהול
-            document.addEventListener('keyup', function(event) {
-                if (event.key === 'Enter') {
-                    var adminModal = document.getElementById('admin-login-modal');
-                    if (adminModal && adminModal.style.display === 'block') {
-                        checkAdminAccess();
-                    }
-                }
-            });
-            
-            // סגירת מודלים בלחיצה על הרקע או ESC
-            window.addEventListener('click', function(event) {
-                var modals = ['job-modal', 'about-modal', 'admin-login-modal'];
-                for (var i = 0; i < modals.length; i++) {
-                    var modal = document.getElementById(modals[i]);
-                    if (modal && event.target === modal) {
-                        modal.style.display = 'none';
-                        document.body.style.overflow = 'auto';
-                    }
-                }
-            });
-            
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape') {
-                    var modals = ['job-modal', 'about-modal', 'admin-login-modal'];
-                    for (var i = 0; i < modals.length; i++) {
-                        var modal = document.getElementById(modals[i]);
-                        if (modal && modal.style.display === 'block') {
-                            modal.style.display = 'none';
-                            document.body.style.overflow = 'auto';
-                        }
-                    }
-                }
-            });
-            
-            // גלילה חלקה לקישורים
-            var anchorLinks = document.querySelectorAll('a[href^="#"]');
-            for (var i = 0; i < anchorLinks.length; i++) {
-                anchorLinks[i].addEventListener('click', function(e) {
-                    var href = this.getAttribute('href');
-                    if (href !== '#' && href !== 'javascript:void(0);') {
-                        e.preventDefault();
-                        var target = document.querySelector(href);
-                        if (target) {
-                            target.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'start'
-                            });
-                        }
-                    }
-                });
-            }
-
-            // הוספת תמיכה במקלדת לטוגלים
-            document.addEventListener('keydown', function(e) {
-                if (e.target.classList.contains('accessibility-toggle') && (e.key === 'Enter' || e.key === ' ')) {
-                    e.preventDefault();
-                    e.target.click();
-                }
-            });
-            
-            console.log('✅ מאזיני אירועים הוספו');
         }
+    });
+    
+    // סגירת מודלים בלחיצה על הרקע או ESC
+    window.addEventListener('click', function(event) {
+        var modals = ['job-modal', 'about-modal', 'admin-login-modal'];
+        for (var i = 0; i < modals.length; i++) {
+            var modal = document.getElementById(modals[i]);
+            if (modal && event.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+    });
+    
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            var modals = ['job-modal', 'about-modal', 'admin-login-modal'];
+            for (var i = 0; i < modals.length; i++) {
+                var modal = document.getElementById(modals[i]);
+                if (modal && modal.style.display === 'block') {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            }
+        }
+    });
+    
+    // גלילה חלקה לקישורים
+    var anchorLinks = document.querySelectorAll('a[href^="#"]');
+    for (var i = 0; i < anchorLinks.length; i++) {
+        anchorLinks[i].addEventListener('click', function(e) {
+            var href = this.getAttribute('href');
+            if (href !== '#' && href !== 'javascript:void(0);') {
+                e.preventDefault();
+                var target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
+    }
+
+    // הוספת תמיכה במקלדת לטוגלים
+    document.addEventListener('keydown', function(e) {
+        if (e.target.classList.contains('accessibility-toggle') && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            e.target.click();
+        }
+    });
+    
+    console.log('✅ מאזיני אירועים הוספו עם חיפוש דינמי');
+}
+
+        // פונקציה חדשה לסינון בזמן אמת
+function filterJobs() {
+    filterJobsRealTime();
+    
+    // גלול לתוצאות
+    setTimeout(function() {
+        var jobsSection = document.querySelector('.jobs');
+        if (jobsSection) {
+            jobsSection.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }
+    }, 300);
+}
+        
+// פונקציה להצגת מונה תוצאות
+function showSearchCounter(searchQuery, filteredCount, totalCount) {
+    let counterDiv = document.getElementById('search-counter');
+    
+    if (!counterDiv) {
+        counterDiv = document.createElement('div');
+        counterDiv.id = 'search-counter';
+        counterDiv.style.cssText = `
+            text-align: center;
+            padding: 12px 20px;
+            margin: 15px 0;
+            background: linear-gradient(135deg, rgba(246, 152, 152, 0.1), rgba(246, 152, 152, 0.05));
+            border-radius: 12px;
+            color: #F69898;
+            font-weight: bold;
+            border: 2px solid rgba(246, 152, 152, 0.2);
+            font-size: 1rem;
+        `;
+        
+        const jobsSection = document.querySelector('.jobs');
+        if (jobsSection) {
+            jobsSection.parentNode.insertBefore(counterDiv, jobsSection);
+        }
+    }
+    
+    if (searchQuery || filteredCount !== totalCount) {
+        let message = '';
+        
+        if (searchQuery) {
+            message = `🔍 נמצאו ${filteredCount} משרות עבור "${searchQuery}"`;
+        } else {
+            message = `📋 מציג ${filteredCount} משרות`;
+        }
+        
+        if (filteredCount === 0) {
+            message = `❌ לא נמצאו משרות`;
+            if (searchQuery) {
+                message += ` עבור "${searchQuery}"`;
+            }
+            message += '. נסה חיפוש אחר';
+        }
+        
+        counterDiv.innerHTML = message;
+        counterDiv.style.display = 'block';
+    } else {
+        counterDiv.style.display = 'none';
+    }
+}
 
         // הפיכת הפונקציות לגלובליות
         window.openJobModal = openJobModal;
