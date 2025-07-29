@@ -892,14 +892,14 @@ padding-top: 20px;
             z-index: 2;
         }
 
-.job-title {
-    color: #F69898;
-    font-size: 1.6rem; /* הגדלתי מ-1.3rem */
-    font-weight: bold;
-    margin-bottom: 12px;
-    margin-top: 35px;
-}
-    
+        .job-title {
+            color: #F69898;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            margin-top: 35px;
+        }
+
         .job-location {
             color: #aaaaaa;
             font-size: 0.9rem;
@@ -909,28 +909,15 @@ padding-top: 20px;
             gap: 5px;
         }
 
-.job-description {
-    color: #cccccc;
-    font-size: 0.9rem;
-    margin-bottom: 15px;
-    line-height: 1.5;
-    height: 60px;
-    overflow: hidden;
-}
+        .job-description {
+            color: #cccccc;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            height: 60px;
+            overflow: hidden;
+        }
 
-/* הודעת הנחיה בכרטיס */
-.job-instruction {
-    background: rgba(246, 152, 152, 0.1);
-    border: 1px solid rgba(246, 152, 152, 0.3);
-    border-radius: 8px;
-    padding: 8px 12px;
-    margin-bottom: 15px;
-    font-size: 0.8rem;
-    color: #F69898;
-    text-align: center;
-    font-weight: 500;
-    line-height: 1.3;
-}
         .job-badge {
             color: #333333;
             padding: 8px 16px;
@@ -955,14 +942,14 @@ padding-top: 20px;
             z-index: 20;
         }
 
-.job-card-gnome {
-    width: 100px; /* הגדלתי עוד ל-100px */
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    z-index: 25;
-    position: relative;
-}
-    
+        .job-card-gnome {
+            width: 55px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 25;
+            position: relative;
+        }
+
         .job-card-gnome:hover {
             transform: scale(1.1);
         }
@@ -973,20 +960,21 @@ padding-top: 20px;
             filter: drop-shadow(0 3px 10px rgba(246, 152, 152, 0.5));
         }
 
-.job-card-gnome-text {
-    text-align: center;
-    font-size: 14px; /* הגדלתי עוד ל-14px */
-    color: white;
-    font-weight: bold;
-    margin-top: 8px; /* הגדלתי מ-6px */
-    background: rgba(246, 152, 152, 0.9);
-    border-radius: 18px; /* הגדלתי מ-15px */
-    padding: 10px 16px; /* הגדלתי מ-8px 14px */
-    white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* הגדלתי את הצל */
-    min-width: 110px; /* הגדלתי מ-95px */
-    line-height: 1.4; /* הגדלתי מ-1.3 */
-}    
+        .job-card-gnome-text {
+            text-align: center;
+            font-size: 8px;
+            color: white;
+            font-weight: bold;
+            margin-top: 4px;
+            background: rgba(246, 152, 152, 0.9);
+            border-radius: 12px;
+            padding: 4px 8px;
+            white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            min-width: 70px;
+            line-height: 1.2;
+        }
+
         .job-card-pointing-gnome {
             position: absolute;
         top: 80px;
@@ -2753,12 +2741,8 @@ var shortDescription = fullContent
                     '<div class="job-location">' +
                         '<i class="fas fa-map-marker-alt"></i> ' + location +
                     '</div>' +
-'<div class="job-description">' + shortDescription + '</div>' +
-'<div class="job-instruction">' +
-    '<i class="fas fa-hand-point-left"></i> ' +
-    'יש עניין במשרה? לחצ/י על כפתור הווצאפ או SMS למטה!' +
-'</div>' +
-'<div class="job-badge" style="background: ' + categoryColor + ';">' + job.category + '</div>' +
+                    '<div class="job-description">' + shortDescription + '</div>' +
+                    '<div class="job-badge" style="background: ' + categoryColor + ';">' + job.category + '</div>' +
                     '<div class="job-card-bottom">' +
                         '<div class="job-card-gnome" onclick="event.stopPropagation(); openJobModal(' + index + ')">' +
                             '<img src="https://mayeshpo.co.il/images/gnome.png" ' +
@@ -2766,17 +2750,17 @@ var shortDescription = fullContent
                                 'onerror="this.src=\'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiNGNjk4OTgiLz48dGV4dCB4PSI1MCIgeT0iNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0Ij7XkNee15XXmDwvdGV4dD48L3N2Zz4i\'>">' +
                             '<div class="job-card-gnome-text">פרטים נוספים</div>' +
                         '</div>' +
-'<div class="contact-buttons">' +
-    '<a href="' + whatsappLink + '" class="contact-button whatsapp-button" target="_blank" title="פנייה בוואטסאפ" onclick="event.stopPropagation();">' +
-        '<i class="fab fa-whatsapp"></i>' +
-    '</a>' +
-    '<a href="' + smsLink + '" class="contact-button sms-button" title="פנייה ב-SMS" onclick="event.stopPropagation();">' +
-        '<i class="fas fa-sms"></i>' +
-    '</a>' +
-    '<button class="contact-button share-button" title="שתף משרה" onclick="event.stopPropagation(); shareJob(' + index + ')" style="background: linear-gradient(135deg, #FF6B6B, #EE5A52);">' +
-        '<i class="fas fa-share-alt"></i>' +
-    '</button>' +
-'</div>' +
+                        '<div class="contact-buttons">' +
+                            '<a href="' + whatsappLink + '" class="contact-button whatsapp-button" target="_blank" title="פנייה בוואטסאפ" onclick="event.stopPropagation();">' +
+                                '<i class="fab fa-whatsapp"></i>' +
+                            '</a>' +
+                            '<a href="' + smsLink + '" class="contact-button sms-button" title="פנייה ב-SMS" onclick="event.stopPropagation();">' +
+                                '<i class="fas fa-sms"></i>' +
+                            '</a>' +
+                            '<button class="contact-button share-button" title="שתף משרה" onclick="event.stopPropagation(); shareJob(' + index + ')" style="background: linear-gradient(135deg, #FF6B6B, #EE5A52);">' +
+                                '<i class="fas fa-share-alt"></i>' +
+                            '</button>' +
+                        '</div>' +
                     '</div>';
                 
                 jobCard.addEventListener('click', function() {
