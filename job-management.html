@@ -1590,7 +1590,112 @@ let hasLocalChanges = false;
             'featured': { label: 'משרה מומלצת', required: false, type: 'boolean' }
         };
 
+        // אוסף הקטגוריות והאזורים הייחודיים מהמשרות הקיימות
+function extractUniqueValuesFromJobs() {
+    const categories = new Set();
+    const regions = new Set();
+    const cities = new Set();
+    
+    // מעבר על כל המשרות ואיסוף הערכים הייחודיים
+    jobs.forEach(job => {
+        if (job.category) categories.add(job.category);
+        if (job.region) regions.add(job.region);
+        if (job.city) cities.add(job.city);
+    });
+    
+    return {
+        categories: Array.from(categories).sort(),
+        regions: Array.from(regions).sort(),
+        cities: Array.from(cities).sort()
+    };
+}
+
+// עדכון רשימות הבחירה בטופס
+function updateFormSelects() {
+    const { categories, regions, cities } = extractUniqueValuesFromJobs();
+    
+    // עדכון רשימת הקטגוריות
+    const categorySelect = document.getElementById('edit-job-category');
+    if (categorySelect) {
+        const currentCategory = categorySelect.value;
         
+        categorySelect.innerHTML = '';
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = category;
+            categorySelect.appendChild(option);
+        });
+        
+        // הוספת אופציית "אחר" אם היא לא קיימת
+        if (!categories.includes('אחר')) {
+            const otherOption = document.createElement('option');
+            otherOption.value = 'אחר';
+            otherOption.textContent = 'אחר';
+            categorySelect.appendChild(otherOption);
+        }
+        
+        // שמירה על הבחירה הנוכחית אם קיימת
+        if (currentCategory && categories.includes(currentCategory)) {
+            categorySelect.value = currentCategory;
+        }
+    }
+    
+    // עדכון רשימת האזורים
+    const regionSelect = document.getElementById('edit-job-region');
+    if (regionSelect) {
+        const currentRegion = regionSelect.value;
+        
+        regionSelect.innerHTML = '';
+        regions.forEach(region => {
+            const option = document.createElement('option');
+            option.value = region;
+            option.textContent = region;
+            regionSelect.appendChild(option);
+        });
+        
+        // שמירה על הבחירה הנוכחית אם קיימת
+        if (currentRegion && regions.includes(currentRegion)) {
+            regionSelect.value = currentRegion;
+        }
+    }
+    
+    // יצירת רשימת ערים להשלמה אוטומטית
+    const citiesList = document.getElementById('citiesList');
+    if (citiesList) {
+        citiesList.innerHTML = '';
+        
+        cities.forEach(city => {
+            const option = document.createElement('option');
+            option.value = city;
+            citiesList.appendChild(option);
+        });
+    }
+}
+
+// פונקציה להתקנת רשימת ערים להשלמה אוטומטית
+function setupCityAutocomplete() {
+    // בדיקה שה-datalist קיים
+    const citiesList = document.getElementById('citiesList');
+    if (!citiesList) {
+        // יצירת datalist אם אינו קיים
+        const datalist = document.createElement('datalist');
+        datalist.id = 'citiesList';
+        document.body.appendChild(datalist);
+    }
+    
+    // קישור ה-datalist לשדה העיר
+    const cityInput = document.getElementById('edit-job-city');
+    if (cityInput) {
+        cityInput.setAttribute('list', 'citiesList');
+    }
+}
+
+// פונקציה שיש לקרוא בעת פתיחת מודל הוספת/עריכת משרה
+function setupDynamicFormFields() {
+    setupCityAutocomplete();
+    updateFormSelects();
+}
 
         // אתחול מיפוי אוטומטי חכם
         function initializeSmartMapping(sourceFields) {
@@ -2681,112 +2786,6 @@ function openAddJobModal() {
             }
         });
 
-        // אוסף הקטגוריות והאזורים הייחודיים מהמשרות הקיימות
-function extractUniqueValuesFromJobs() {
-    const categories = new Set();
-    const regions = new Set();
-    const cities = new Set();
-    
-    // מעבר על כל המשרות ואיסוף הערכים הייחודיים
-    jobs.forEach(job => {
-        if (job.category) categories.add(job.category);
-        if (job.region) regions.add(job.region);
-        if (job.city) cities.add(job.city);
-    });
-    
-    return {
-        categories: Array.from(categories).sort(),
-        regions: Array.from(regions).sort(),
-        cities: Array.from(cities).sort()
-    };
-}
-
-// עדכון רשימות הבחירה בטופס
-function updateFormSelects() {
-    const { categories, regions, cities } = extractUniqueValuesFromJobs();
-    
-    // עדכון רשימת הקטגוריות
-    const categorySelect = document.getElementById('edit-job-category');
-    if (categorySelect) {
-        const currentCategory = categorySelect.value;
-        
-        categorySelect.innerHTML = '';
-        categories.forEach(category => {
-            const option = document.createElement('option');
-            option.value = category;
-            option.textContent = category;
-            categorySelect.appendChild(option);
-        });
-        
-        // הוספת אופציית "אחר" אם היא לא קיימת
-        if (!categories.includes('אחר')) {
-            const otherOption = document.createElement('option');
-            otherOption.value = 'אחר';
-            otherOption.textContent = 'אחר';
-            categorySelect.appendChild(otherOption);
-        }
-        
-        // שמירה על הבחירה הנוכחית אם קיימת
-        if (currentCategory && categories.includes(currentCategory)) {
-            categorySelect.value = currentCategory;
-        }
-    }
-    
-    // עדכון רשימת האזורים
-    const regionSelect = document.getElementById('edit-job-region');
-    if (regionSelect) {
-        const currentRegion = regionSelect.value;
-        
-        regionSelect.innerHTML = '';
-        regions.forEach(region => {
-            const option = document.createElement('option');
-            option.value = region;
-            option.textContent = region;
-            regionSelect.appendChild(option);
-        });
-        
-        // שמירה על הבחירה הנוכחית אם קיימת
-        if (currentRegion && regions.includes(currentRegion)) {
-            regionSelect.value = currentRegion;
-        }
-    }
-    
-    // יצירת רשימת ערים להשלמה אוטומטית
-    const citiesList = document.getElementById('citiesList');
-    if (citiesList) {
-        citiesList.innerHTML = '';
-        
-        cities.forEach(city => {
-            const option = document.createElement('option');
-            option.value = city;
-            citiesList.appendChild(option);
-        });
-    }
-}
-
-// פונקציה להתקנת רשימת ערים להשלמה אוטומטית
-function setupCityAutocomplete() {
-    // בדיקה שה-datalist קיים
-    const citiesList = document.getElementById('citiesList');
-    if (!citiesList) {
-        // יצירת datalist אם אינו קיים
-        const datalist = document.createElement('datalist');
-        datalist.id = 'citiesList';
-        document.body.appendChild(datalist);
-    }
-    
-    // קישור ה-datalist לשדה העיר
-    const cityInput = document.getElementById('edit-job-city');
-    if (cityInput) {
-        cityInput.setAttribute('list', 'citiesList');
-    }
-}
-
-// פונקציה שיש לקרוא בעת פתיחת מודל הוספת/עריכת משרה
-function setupDynamicFormFields() {
-    setupCityAutocomplete();
-    updateFormSelects();
-}
 
         // פונקציות גלובליות
         window.checkAdminPassword = checkAdminPassword;
