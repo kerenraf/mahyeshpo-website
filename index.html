@@ -2410,6 +2410,36 @@ document.addEventListener('click', function(event) {
             loadJobsFromGitHub(specificJobNumber);
             attachEventListeners();
         }
+        var searchInput = document.getElementById('searchInput');
+if (searchInput) {
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            filterJobs();
+        }
+    });
+}
+        // ✨ הוספה חדשה - חיפוש דינמי
+if (searchInput) {
+    let searchTimeout;
+    
+    searchInput.addEventListener('input', function(e) {
+        const query = e.target.value.trim();
+        
+        // ביטול timeout קודם
+        clearTimeout(searchTimeout);
+        
+        // חיפוש עם דיליי
+        searchTimeout = setTimeout(() => {
+            if (query.length >= 2 || query.length === 0) {
+                filterJobs();
+            }
+        }, 300);
+    });
+    
+    // הצגת הצעות חיפוש
+    searchInput.addEventListener('focus', showSearchSuggestions);
+    searchInput.addEventListener('blur', hideSearchSuggestions);
+}
 
         // יצירת גמדה
         function createGnome() {
@@ -2885,10 +2915,9 @@ function filterJobs() {
 // מצאי את הפונקציה הזו בקובץ שלך והחליפי אותה בקוד הזה:
 
 function jobMatchesSearch(job, searchText) {
-    // נרמול טקסט החיפוש
     const normalizedSearchText = normalizeSearchText(searchText);
     
-    // שדות לחיפוש
+    // שדות לחיפוש מורחבים
     const searchFields = [
         job.title,
         job.company, 
@@ -2898,6 +2927,11 @@ function jobMatchesSearch(job, searchText) {
         job.region,
         job.category
     ];
+    
+    // הוסף מילות מפתח אם קיימות
+    if (job.keywords && Array.isArray(job.keywords)) {
+        searchFields.push(...job.keywords);
+    }
     
     // חיפוש בכל השדות
     return searchFields.some(field => {
@@ -3554,7 +3588,122 @@ function fallbackShare(job, shareText, jobUrl, shareTitle) {
                 document.removeEventListener('mousemove', updateReadingLine);
             }
         }
+// ========== פונקציות הצעות חיפוש ==========
 
+function showSearchSuggestions() {
+    const searchInput = document.getElementById('searchInput');
+    const query = searchInput.value.trim();
+    
+    if (query.length < 2) return;
+    
+    const suggestions = generateSearchSuggestions(query);
+    if (suggestions.length === 0) return;
+    
+    // יצירת קונטיינר הצעות אם לא קיים
+    let suggestionsContainer = document.getElementById('searchSuggestions');
+    if (!suggestionsContainer) {
+        suggestionsContainer = document.createElement('div');
+        suggestionsContainer.id = 'searchSuggestions';
+        suggestionsContainer.className = 'search-suggestions';
+        searchInput.parentElement.appendChild(suggestionsContainer);
+    }
+    
+    // הוספת CSS אם לא קיים
+    if (!document.getElementById('searchSuggestionsCSS')) {
+        const style = document.createElement('style');
+        style.id = 'searchSuggestionsCSS';
+        style.textContent = `
+            .search-suggestions {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #222;
+                border: 2px solid #F69898;
+                border-radius: 12px;
+                max-height: 200px;
+                overflow-y: auto;
+                z-index: 1000;
+                display: none;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            }
+            .search-suggestions.show {
+                display: block;
+            }
+            .suggestion-item {
+                padding: 10px 15px;
+                cursor: pointer;
+                border-bottom: 1px solid #444;
+                transition: background 0.2s ease;
+                color: white;
+            }
+            .suggestion-item:hover {
+                background: rgba(246, 152, 152, 0.2);
+            }
+            .suggestion-item:last-child {
+                border-bottom: none;
+            }
+            .suggestion-highlight {
+                background: rgba(246, 152, 152, 0.3);
+                color: #F69898;
+                font-weight: bold;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // מילוי הצעות
+    suggestionsContainer.innerHTML = suggestions.map(suggestion => 
+        `<div class="suggestion-item" onclick="selectSuggestion('${suggestion.replace(/'/g, "\\'")}')">${highlightSuggestion(suggestion, query)}</div>`
+    ).join('');
+    
+    suggestionsContainer.classList.add('show');
+}
+
+function hideSearchSuggestions() {
+    setTimeout(() => {
+        const suggestionsContainer = document.getElementById('searchSuggestions');
+        if (suggestionsContainer) {
+            suggestionsContainer.classList.remove('show');
+        }
+    }, 200);
+}
+
+function generateSearchSuggestions(query) {
+    const suggestions = [];
+    const queryLower = query.toLowerCase();
+    
+    // הצעות מתפקידים
+    const jobTitles = [...new Set(allJobs.map(job => job.title))]
+        .filter(title => title.toLowerCase().includes(queryLower))
+        .slice(0, 3);
+    
+    // הצעות מחברות
+    const companies = [...new Set(allJobs.map(job => job.company))]
+        .filter(company => company && company.toLowerCase().includes(queryLower))
+        .slice(0, 2);
+    
+    // הצעות מערים
+    const cities = [...new Set(allJobs.map(job => job.city))]
+        .filter(city => city && city.toLowerCase().includes(queryLower))
+        .slice(0, 2);
+    
+    return [...jobTitles, ...companies, ...cities].slice(0, 6);
+}
+
+function highlightSuggestion(text, query) {
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<span class="suggestion-highlight">$1</span>');
+}
+
+function selectSuggestion(suggestion) {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.value = suggestion;
+        filterJobs();
+        hideSearchSuggestions();
+    }
+}
         // ======================== סיום פונקציות נגישות ========================
 
         // מאזיני אירועים
@@ -4260,6 +4409,84 @@ console.log('🚀 תכונת שיתוף האתר מוכנה!');
     
     .category-options, .location-options {
         grid-template-columns: 1fr;
+    }
+}
+    /* ========== חיפוש דינמי ========== */
+.search-input-wrapper {
+    position: relative;
+}
+
+.form-control {
+    position: relative;
+    z-index: 1;
+}
+
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #222;
+    border: 2px solid #F69898;
+    border-radius: 12px;
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    margin-top: 2px;
+}
+
+.search-suggestions.show {
+    display: block;
+}
+
+.suggestion-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #444;
+    transition: all 0.2s ease;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.suggestion-item:hover {
+    background: rgba(246, 152, 152, 0.2);
+    color: #F69898;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-highlight {
+    background: rgba(246, 152, 152, 0.4);
+    color: #F69898;
+    font-weight: bold;
+    padding: 1px 3px;
+    border-radius: 3px;
+}
+
+/* חיפוש טוען */
+.search-loading {
+    position: absolute;
+    left: 45px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #F69898;
+    font-size: 14px;
+    z-index: 2;
+}
+
+@media (max-width: 768px) {
+    .search-suggestions {
+        max-height: 200px;
+        border-radius: 8px;
+    }
+    
+    .suggestion-item {
+        padding: 10px 12px;
+        font-size: 0.85rem;
     }
 }
 </style>
