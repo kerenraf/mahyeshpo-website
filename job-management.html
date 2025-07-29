@@ -1355,56 +1355,44 @@
                 <form id="job-edit-form" onsubmit="return saveJob(event)">
                     <input type="hidden" id="edit-job-id">
                     
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">מספר משרה</label>
-                            <input type="text" id="edit-job-number" class="form-input" placeholder="יוגדר אוטומטי אם ריק">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">כותרת משרה <span class="form-required">*</span></label>
-                            <input type="text" id="edit-job-title" class="form-input" required placeholder="למשל: מפתח/ת Full Stack">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">קטגוריה</label>
-                            <select id="edit-job-category" class="form-input">
-                                <option value="מזון ומסעדנות">מזון ומסעדנות</option>
-                                <option value="חינוך והוראה">חינוך והוראה</option>
-                                <option value="פיתוח ותוכנה">פיתוח ותוכנה</option>
-                                <option value="לוגיסטיקה, מחסנים, שילוח ורכש">לוגיסטיקה ומחסנים</option>
-                                <option value="שיווק ומכירות">שיווק ומכירות</option>
-                                <option value="בריאות ורפואה">בריאות ורפואה</option>
-                                <option value="מנהל ואדמיניסטרציה">מנהל ואדמיניסטרציה</option>
-                                <option value="אחר">אחר</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">עיר <span class="form-required">*</span></label>
-                            <input type="text" id="edit-job-city" class="form-input" required placeholder="עיר המשרה">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">אזור <span class="form-required">*</span></label>
-                            <select id="edit-job-region" class="form-input" required>
-                                <option value="מרכז">מרכז</option>
-                                <option value="צפון">צפון</option>
-                                <option value="חיפה קריות והצפון">חיפה קריות והצפון</option>
-                                <option value="ירושלים והסביבה">ירושלים והסביבה</option>
-                                <option value="דרום">דרום</option>
-                                <option value="שרון">שרון</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">סטטוס</label>
-                            <select id="edit-job-status" class="form-input">
-                                <option value="פעיל">פעיל</option>
-                                <option value="לא פעיל">לא פעיל</option>
-                            </select>
-                        </div>
-                    </div>
+<div class="form-grid">
+    <div class="form-group">
+        <label class="form-label">מספר משרה</label>
+        <input type="text" id="edit-job-number" class="form-input" placeholder="יוגדר אוטומטי אם ריק">
+    </div>
+    
+    <div class="form-group">
+        <label class="form-label">כותרת משרה <span class="form-required">*</span></label>
+        <input type="text" id="edit-job-title" class="form-input" required placeholder="למשל: מפתח/ת Full Stack">
+    </div>
+    
+    <div class="form-group">
+        <label class="form-label">קטגוריה</label>
+        <select id="edit-job-category" class="form-input">
+            <!-- יתמלא דינמית -->
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label class="form-label">עיר <span class="form-required">*</span></label>
+        <input type="text" id="edit-job-city" class="form-input" required placeholder="עיר המשרה" list="citiesList">
+    </div>
+    
+    <div class="form-group">
+        <label class="form-label">אזור <span class="form-required">*</span></label>
+        <select id="edit-job-region" class="form-input" required>
+            <!-- יתמלא דינמית -->
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label class="form-label">סטטוס</label>
+        <select id="edit-job-status" class="form-input">
+            <option value="פעיל">פעיל</option>
+            <option value="לא פעיל">לא פעיל</option>
+        </select>
+    </div>
+</div>
                     
                     <!-- הגדרה כמשרה מומלצת -->
                     <div style="padding: 0 2rem;">
@@ -1548,6 +1536,10 @@
                 </div>
             </div>
         </div>
+        
+    <datalist id="citiesList">
+    <!-- יתמלא דינמית -->
+</datalist>
 
         <footer class="footer">
             <div class="container">
@@ -2063,6 +2055,9 @@ function executeImport() {
             selectedJobs.clear();
             currentPage = 1;
         }
+
+        // עדכון רשימות הבחירה הדינמיות
+updateFormSelects();
         
         markLocalChanges();
         updateAllDisplays();
@@ -2700,6 +2695,10 @@ function executeImport() {
         window.updateMapping = updateMapping;
         window.executeImport = executeImport;
         window.toggleAutoSplit = toggleAutoSplit;
+        window.extractUniqueValuesFromJobs = extractUniqueValuesFromJobs;
+window.updateFormSelects = updateFormSelects;
+window.setupCityAutocomplete = setupCityAutocomplete;
+window.setupDynamicFormFields = setupDynamicFormFields;
 
         console.log('🚀 מערכת ניהול GitHub עם מיפוי שדות נטענה בהצלחה!');
     </script>
