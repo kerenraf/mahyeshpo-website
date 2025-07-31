@@ -2939,8 +2939,12 @@ document.getElementById('modal-job-requirements').textContent = requirements;
         // =============== פונקציות חיפוש מתקדמות ===============
         
 // פונקציה פשוטה ומדויקת לחיפוש
+// פונקציה פשוטה ומדויקת לחיפוש
         function jobMatchesSearch(job, searchText) {
-            if (!searchText || searchText.trim() === '') return true;
+            // אם אין טקסט חיפוש - הצג הכל
+            if (!searchText || searchText.trim() === '') {
+                return true;
+            }
             
             const normalizedSearch = searchText.toLowerCase().trim();
             
@@ -2956,27 +2960,50 @@ document.getElementById('modal-job-requirements').textContent = requirements;
                 job.requirements || ''
             ];
             
-            // חיפוש פשוט - אם הטקסט מופיע באחד מהשדות
-            return searchableFields.some(field => {
+            // חיפוש מדויק - חייב למצוא התאמה באחד מהשדות
+            for (let i = 0; i < searchableFields.length; i++) {
+                const field = searchableFields[i];
+                if (!field) continue;
+                
                 const normalizedField = field.toLowerCase().trim();
                 
-                // חיפוש ישר במחרוזת
+                // חיפוש ישיר במחרוזת
                 if (normalizedField.includes(normalizedSearch)) {
                     return true;
                 }
                 
-                // חיפוש במילים נפרדות
+                // חיפוש במילים - כל מילת חיפוש חייבת להיות בשדה
                 const fieldWords = normalizedField.split(/\s+/);
                 const searchWords = normalizedSearch.split(/\s+/);
                 
-                // בדיקה אם כל מילות החיפוש מופיעות בשדה
-                return searchWords.every(searchWord => 
-                    fieldWords.some(fieldWord => 
-                        fieldWord.includes(searchWord) || searchWord.includes(fieldWord)
-                    )
-                );
-            });
+                let allWordsFound = true;
+                for (let j = 0; j < searchWords.length; j++) {
+                    const searchWord = searchWords[j];
+                    let wordFound = false;
+                    
+                    for (let k = 0; k < fieldWords.length; k++) {
+                        const fieldWord = fieldWords[k];
+                        if (fieldWord.includes(searchWord) || searchWord.includes(fieldWord)) {
+                            wordFound = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!wordFound) {
+                        allWordsFound = false;
+                        break;
+                    }
+                }
+                
+                if (allWordsFound) {
+                    return true;
+                }
+            }
+            
+            // אם לא נמצאה התאמה - החזר false
+            return false;
         }
+        
         // חיפוש וסינון
         function selectCategory(category) {
             var categoryFilter = document.getElementById('categoryFilter');
@@ -3077,6 +3104,8 @@ document.getElementById('modal-job-requirements').textContent = requirements;
         }
 
 // פונקציה משופרת לסינון בזמן אמת - פשוטה ומדויקת
+// פונקציה משופרת לסינון בזמן אמת - מתוקנת
+// פונקציה משופרת לסינון בזמן אמת - מתוקנת
         function filterJobsRealTime() {
             showSearchLoading(true);
             
@@ -3088,35 +3117,39 @@ document.getElementById('modal-job-requirements').textContent = requirements;
                 
                 var activeJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; });
                 
-                // סינון פשוט ומדויק
+                console.log('🔍 מבצע חיפוש עבור:', searchText);
+                
+                // סינון מדויק
                 filteredJobs = activeJobs.filter(function(job) {
-                    // בדיקת טקסט חיפוש
-                    if (searchText && !jobMatchesSearch(job, searchText)) {
-                        return false;
+                    // בדיקת טקסט חיפוש - אם יש טקסט, חייב למצוא התאמה
+                    if (searchText && searchText.length > 0) {
+                        if (!jobMatchesSearch(job, searchText)) {
+                            return false;
+                        }
                     }
                     
                     // בדיקת קטגוריה
-                    if (category && job.category !== category) {
+                    if (category && category.trim() !== '' && job.category !== category) {
                         return false;
                     }
                     
                     // בדיקת עיר
-                    if (city && job.city !== city) {
+                    if (city && city.trim() !== '' && job.city !== city) {
                         return false;
                     }
                     
                     // בדיקת אזור
-                    if (area && job.region !== area) {
+                    if (area && area.trim() !== '' && job.region !== area) {
                         return false;
                     }
                     
                     return true;
                 });
                 
+                console.log('📊 תוצאות:', filteredJobs.length, 'מתוך', activeJobs.length);
                 displayJobs(filteredJobs);
                 showSearchCounter(searchText, filteredJobs.length, activeJobs.length);
                 showSearchLoading(false);
-                console.log('🔍 סינון מדויק: ' + filteredJobs.length + ' משרות מתוך ' + activeJobs.length);
             }, 150);
         }
         
