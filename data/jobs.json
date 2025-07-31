@@ -66,149 +66,6 @@
     "featured": false
   },
   {
-    "jobNumber": "A-25787",
-    "title": "מזכיר/ה משפטית",
-    "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
-    "city": "צריפין",
-    "region": "השפלה",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "A-25788",
-    "title": "קניינ/ית רכש",
-    "category": "לוגיסטיקה, מחסנים, שילוח ורכש",
-    "city": "צריפין",
-    "region": "השפלה",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "A-25788",
-    "title": "קניינ/ית רכש",
-    "category": "לוגיסטיקה, מחסנים, שילוח ורכש",
-    "city": "פתח תקווה",
-    "region": "גוש דן",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "A-25791",
-    "title": "בוחנ/ת רכב",
-    "category": "רכב ותחבורה",
-    "city": "פתח תקווה",
-    "region": "גוש דן",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "A-25792",
-    "title": "נהג/ת שינוע",
-    "category": "רכב ותחבורה",
-    "city": "פתח תקווה",
-    "region": "גוש דן",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "A-25794",
-    "title": "דייל/ת לשירות פרונטלי",
-    "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
-    "city": "נתב\"ג",
-    "region": "מרכז",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "A-25795",
-    "title": "נהג/ת שינוע",
-    "category": "רכב ותחבורה",
-    "city": "נתב\"ג",
-    "region": "מרכז",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "A-25796",
-    "title": "מתאמ/ת הפניות",
-    "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
-    "city": "נתב\"ג",
-    "region": "מרכז",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "A-25797",
-    "title": "נהג/ת שינוע",
-    "category": "רכב ותחבורה",
-    "city": "חולון",
-    "region": "גוש דן",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "A-25801",
-    "title": "נהג/ת שינוע",
-    "category": "רכב ותחבורה",
-    "city": "ביל\"ו",
-    "region": "לא ידוע",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "A-25802",
-    "title": "נציג הזמנות",
-    "category": "רכב ותחבורה",
-    "city": "צריפין",
-    "region": "השפלה",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "A-25803",
-    "title": "מסלק/ת מיישב/ת תביעות",
-    "category": "פיננסים וביטוח",
-    "city": "צריפין",
-    "region": "השפלה",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "A-25804",
-    "title": "מסלק/ת תביעות",
-    "category": "פיננסים וביטוח",
-    "city": "צריפין",
-    "region": "השפלה",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
     "jobNumber": "A-25855",
     "title": "נהג/ת חלוקה עד 12 טון",
     "category": "לוגיסטיקה, מחסנים, שילוח ורכש",
@@ -665,17 +522,6 @@
     "category": "קמעונאות ומסחר",
     "city": "נתניה",
     "region": "שרון",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "A-25793",
-    "title": "מנהל/ת תיקי לקוחות",
-    "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
-    "city": "צריפין",
-    "region": "השפלה",
     "description": "",
     "requirements": "",
     "status": "פעיל",
@@ -1237,17 +1083,6 @@
     "category": "ייצור ותעשייה",
     "city": "מושב מצליח",
     "region": "השפלה",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "J-5901",
-    "title": "מנהל/ת שירות",
-    "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
-    "city": "חיפה",
-    "region": "חיפה והצפון",
     "description": "",
     "requirements": "",
     "status": "פעיל",
@@ -1969,83 +1804,6 @@
     "featured": false
   },
   {
-    "jobNumber": "J-5520",
-    "title": "נציג/ת נסיעות התרשמות (אולם תצוגה)",
-    "category": "רכב ותחבורה",
-    "city": "הרצליה",
-    "region": "שרון",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "J-6214",
-    "title": "נציג/ת נסיעות התרשמות (מבחן)",
-    "category": "רכב ותחבורה",
-    "city": "הרצליה",
-    "region": "שרון",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "J-5927",
-    "title": "נציג תפעול ואדמינסטרציה",
-    "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
-    "city": "פתח תקווה",
-    "region": "גוש דן",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "J-5116",
-    "title": "נציג/ת מוקד שירות חווית לקוח",
-    "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
-    "city": "פתח תקווה",
-    "region": "גוש דן",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "J-6203",
-    "title": "נציג/ת נסיעות התרשמות (מבחן)",
-    "category": "רכב ותחבורה",
-    "city": "תל אביב",
-    "region": "גוש דן",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "J-5815",
-    "title": "יועצ/ת בכיר לתחום פחחות",
-    "category": "רכב ותחבורה",
-    "city": "פתח תקווה",
-    "region": "גוש דן",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "J-5817",
-    "title": "יועצ/ת שירות",
-    "category": "רכב ותחבורה",
-    "city": "פתח תקווה",
-    "region": "גוש דן",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
     "jobNumber": "J-5800",
     "title": "בודק/ת ויזואלי",
     "category": "איכות ובקרה",
@@ -2552,17 +2310,6 @@
     "featured": false
   },
   {
-    "jobNumber": "J-5433",
-    "title": "רפרנט/ית למוקד רכב חליפי בצריפין",
-    "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
-    "city": "צריפין",
-    "region": "השפלה",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
     "jobNumber": "J-5355",
     "title": "נציג/ה למוקד הזמנות",
     "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
@@ -2626,7 +2373,7 @@
     "description": "",
     "requirements": "",
     "status": "פעיל",
-    "featured": true
+    "featured": false
   },
   {
     "jobNumber": "עדיסול",
@@ -2887,28 +2634,6 @@
     "category": "רכב ותחבורה",
     "city": "תל אביב",
     "region": "גוש דן",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "J-6167",
-    "title": "נציג/ת מכירות פרונטאליות של רכבים חדשים",
-    "category": "שיווק ומכירות",
-    "city": "אשדוד",
-    "region": "דרום",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "J-6434",
-    "title": "נציג/ת שינוע והשכרה",
-    "category": "רכב ותחבורה",
-    "city": "נתניה",
-    "region": "שרון",
     "description": "",
     "requirements": "",
     "status": "פעיל",
@@ -5313,17 +5038,6 @@
     "featured": false
   },
   {
-    "jobNumber": "J-5448",
-    "title": "נהג/ת מובילית מעל 15 טון",
-    "category": "רכב ותחבורה",
-    "city": "ראשון לציון",
-    "region": "השפלה",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
     "jobNumber": "J-6530",
     "title": "נציג/ת שינוע",
     "category": "רכב ותחבורה",
@@ -5362,17 +5076,6 @@
     "category": "רכב ותחבורה",
     "city": "ירושלים",
     "region": "ירושלים",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "J-6529",
-    "title": "נציג/ת שינוע ושירות ליסינג",
-    "category": "רכב ותחבורה",
-    "city": "כפר סבא",
-    "region": "שרון",
     "description": "",
     "requirements": "",
     "status": "פעיל",
@@ -5483,17 +5186,6 @@
     "category": "רכב ותחבורה",
     "city": "גוש דן",
     "region": "צפון",
-    "description": "",
-    "requirements": "",
-    "status": "פעיל",
-    "featured": false
-  },
-  {
-    "jobNumber": "J-6055",
-    "title": "נציג/ת בית לקוח",
-    "category": "רכב ותחבורה",
-    "city": "רמת השרון",
-    "region": "גוש דן",
     "description": "",
     "requirements": "",
     "status": "פעיל",
@@ -5750,7 +5442,7 @@
     "description": "במסגרת התפקיד:\nניהול ותיאום פרויקטים: אחריות מלאה על ניהול פרויקטים מהתחלה ועד הסוף, כולל תכנון, ביצוע, בקרה וסגירה.\nתיאום צוותים: עבודה צמודה עם מהנדסי פיתוח, צוותי איכות, ותמיכה טכנית, תוך ניהול וליווי צוותים רב-תחומיים.\nמעקב אחר לוחות זמנים ותקציבים: קביעת יעדים, ניתוח סטיות וביצוע פעולות מתקנות.\nתיעוד ודיווח: הכנת דוחות מצב, תיעוד תהליכים והעברת מידע למנהלים בכירים.\nתיאום עם גורמים חיצוניים: עבודה מול ספקים ולקוחות להבטחת עמידה בדרישות ובסטנדרטים.\nמשרה מלאה, פונה לשני המינים.",
     "requirements": "השכלה: מהנדס/ת אלקטרוניקה – רקע טכני מעמיק בתחומי האלקטרוניקה והחשמל- חובה! \nלפחות 3-5 שנות ניסיון בניהול פרויקטים בתחום הטכנולוגיה או ההנדסה, עם יכולת הוכחתית להצלחה והובלת צוותים.\nיכולת תכנון, ארגון וניהול פרויקטים מורכבים תוך עמידה בלוחות זמנים ותקציבים.\nיכולת לנהל משא ומתן ולהעביר מידע בצורה ברורה ויעילה לגורמים טכניים ולא טכניים.\nיכולת ניתוח נתונים וקבלת החלטות מבוססות.\n יכולת התמודדות עם מצבים דינמיים ושינויים בסביבת העבודה.\nמיומנויות טכנולוגיות: היכרות עם כלים ותוכנות ניהול פרויקטים, תכנון ובקרה.",
     "status": "פעיל",
-    "featured": true
+    "featured": false
   },
   {
     "jobNumber": "L-681892",
@@ -6443,7 +6135,7 @@
     "description": "לחברה מובילה בתחומה באזור בית שמש דרוש/ה מלגזן/ית חרוצ/ה לעבודה בסביבת מחסן לוגיסטי מסודרת ונעימה.\n🕒 ימים ושעות העבודה:\nבוקר: 07:00 - 15:30\nערב: 15:30-23:30\n💸 שכר:\nבוקר: 50 ₪ לשעה\nערב 50 ש\"ח +3 ש\"ח פרמייה שעתית\nעבודה על מלגזה\nהעמסה, פריקה וסידור סחורה במחסן\nשינוע סחורה בהתאם לצרכים הלוגיסטיים\nעבודה בצוות ובאווירה משפחתית",
     "requirements": "רישיון על מלגזה – חובה\nניסיון קודם בעבודת מחסן – יתרון משמעותי\nאחריות, דייקנות ויכולת עבודה בצוות\nזמינות מיידית – יתרון",
     "status": "פעיל",
-    "featured": true
+    "featured": false
   },
   {
     "jobNumber": "A-26836",
@@ -7480,6 +7172,17 @@
     "featured": false
   },
   {
+    "jobNumber": "A-25983",
+    "title": "מחסנאי/ת מלקט/ת עם רישיון מלגזה",
+    "category": "לוגיסטיקה, מחסנים, שילוח ורכש",
+    "city": "בית שמש",
+    "region": "ירושלים",
+    "description": "🛠️ הגדרת התפקיד:\n• קבלת סחורה מספקים\n• עבודה על מלגזה וליקוט סחורה\n• סידור משטחים\n• עבודה פיזית ושעות מרובות\n• שמירה על סדר וניקיון במחסן\n\n🕒 שעות עבודה:\n🔹 אפשרות 1 – משמרות בוקר בלבד:\n\n06:30–18:30\n\nימי שלישי וחמישי: 06:30–16:00\n\n🔹 אפשרות 2 – משמרות (בוקר ולילה):\n\nשבועיים בוקר: 06:30–18:30\n\nימי שלישי וחמישי: 06:30–16:00\n\nשבוע לילה:\n  ראשון–רביעי: 18:50–06:50\n  חמישי: 16:00–00:00",
+    "requirements": "✔️ רישיון מלגזה + ניסיון כמחסנאי/ת מלגזן/ית\n✔️ ניסיון קודם בתעשייה – יתרון\n✔️ ניסיון במערכת Priority – יתרון\n✔️ רישיון נהיגה בתוקף – חובה\n✔️ קריאה וכתיבה בעברית ברמה טובה\n✔️ אנגלית בסיסית\n✔️ שליטה בעבודה מול מחשב",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
     "jobNumber": "A-26642",
     "title": "מפעיל/ת חדר בקרת בצקים/קרם",
     "category": "ייצור ותעשייה",
@@ -7488,7 +7191,7 @@
     "description": "🛠️ תיאור התפקיד:\n• אחריות על תפעול חדר הכנת בצקים וחדר קרם\n• הפעלת מכונות תעשייתיות\n• ביצוע משימות בקרה שוטפות\n• איתור תקלות בזמן אמת\n• עבודה בסביבה ממוחשבת ודינאמית\n• עבודה בהתאם לנהלי GMP\n\n💵 שכר:\n40–50 ₪ לשעה (בהתאם לניסיון)",
     "requirements": "✔️ ניסיון בעבודה מול מחשב\n✔️ יכולת טכנית גבוהה\n✔️ אחריות ומוסר עבודה\n✔️ עברית – קריאה וכתיבה\n✔️ ניסיון קודם בתפקיד דומה – יתרון משמעותי\n🕒 נכונות לעבודה במשמרות",
     "status": "פעיל",
-    "featured": true
+    "featured": false
   },
   {
     "jobNumber": "A-26409",
@@ -7576,7 +7279,7 @@
     "description": "📦 דרוש/ה פלנר/ית הפצה לחברה מעולה בנתניה – משרה מאתגרת עם עתודה ניהולית מהיום הראשון!\nמתאים גם לג’וניור/ית ללא ניסיון!\n\n📋 מה כולל התפקיד?\n\nתכנון קווי חלוקה והעמסת משאיות בהתאם לנתונים הבאים:\n 🚛 קיבולת המשאית ומשקל ההזמנות\n ⏰ חלונות זמן אספקה של כל לקוח\n ⚠️ טיפול בהזמנות דחופות וחריגות\n 👥 התאמה לאילוצי מצבת כוח האדם\n\n🕒 היקף המשרה:\nימים א'-ה'\n\nמשמרות:\n 🌅 05:00–14:30\n 🌇 11:00–19:30\n🎁 תנאים מעולים:\n\nביטוח שיניים ובריאות חינם לאחר שנה\n\nקרן השתלמות לאחר שנה\n\n2 תיבות שתייה חינם בחודש\n\nאופק קידום ניהולי",
     "requirements": "✅ בוגר/ת הנדסאי/ת או תואר בתעשייה וניהול / לוגיסטיקה / כלכלה / מנהל עסקים – חובה\n✅ שליטה ב-SAP – יתרון\n✅ יכולת תכנון גבוהה\n✅ רצון ומוטיבציה להתפתח בארגון גדול",
     "status": "פעיל",
-    "featured": true
+    "featured": false
   },
   {
     "jobNumber": "L-946289",
@@ -7598,7 +7301,7 @@
     "description": "🖧 לחברה גדולה ומובילה בתחומה בתל אביב דרוש/ה מומחה/ית Cisco SDA מנוסה.\n📌 התפקיד כולל אחריות על תכנון, הטמעה, תחזוקה ופתרון תקלות של פתרונות Cisco SDA בסביבת ארגון מורכבת וקריטית.",
     "requirements": "✅ לפחות 3 שנות ניסיון מוכח בתפקיד מהנדס/מומחה תקשורת עם התמחות בפתרונות Cisco\n✅ ניסיון מעשי ומוכח בתכנון, הטמעה ותפעול של פתרונות Cisco SDA – חובה\n✅ היכרות מעמיקה עם רכיבי Cisco SDA:\n\nDNA Center\n\nISE (כולל AuthC/AuthZ, Segmentation, Profiling)\n\nרכיבי רשת Cisco – מתגים, נתבים, WLCs\n\n🌐 הבנה עמוקה בפרוטוקולי תקשורת:\nTCP/IP, Routing, Switching, Security\n\n🎓 הסמכות:\n\nCCNA / CCNP (R&S או Security) – יתרון משמעותי\n\nCCIE Enterprise Infrastructure / Security – יתרון עצום\n\n👥 יכולת עבודה עצמאית ובצוות\n🗣️ תודעת שירות גבוהה ואנגלית מצוינת",
     "status": "פעיל",
-    "featured": true
+    "featured": false
   },
   {
     "jobNumber": "A-25983",
@@ -7620,17 +7323,413 @@
     "description": "📦🏍️ דרוש/ה שליח/ה ואיש/ת אחזקה לבית השקעות מוביל בתל אביב\n\n💼 הזדמנות להשתלב בבית השקעות מהשורה הראשונה בתפקיד שמשלב עבודת שטח ופעילות תפעולית פנים‑ארגונית.\n\n✅ ביצוע שליחויות פנים וחוץ ארגוניות באזור המרכז – עם דיסקרטיות, אחריות וניהול זמן יעיל\n✅ סיוע תפעולי למגוון מחלקות כחלק מצוות מקצועי ותומך\n✅ עבודה בסביבה עסקית מתקדמת עם אפשרויות קידום והתפתחות מקצועית לאורך זמן\n\n🎁 תנאים סוציאליים מעולים:\n\nעובד/ת חברה מהיום הראשון\n\nקרן השתלמות וביטוח בריאות\n\nתן ביס, מתנות בחגים וימי הולדת\n\nבונוסים שנתיים ונופש חברה\n\n🕐 שעות עבודה:\n\n08:00–17:00\n\n08:30–17:30\n\n09:00–18:00\n\n10,000 ₪ ברוטו + תנאים סוציאליים מעולים",
     "requirements": "✔ רישיון מינימום 250 סמ\"ק + רישיון רכב – חובה\n✔ ניסיון בשליחויות – יתרון\n✔ ניסיון בעבודות אחזקה – יתרון\n\n👤 אישיות נדרשת:\n\nתודעת שירות גבוהה\n\nחריצות ואמינות\n\nתקתקנות\n\nזמינות למשרה מלאה – 9 שעות ביום",
     "status": "פעיל",
-    "featured": true
+    "featured": false
   },
   {
     "jobNumber": "A-26944",
-    "title": "סוכן/ת מכירות שטח",
+    "title": "סוכנ/ת מכירות שטח",
     "category": "שיווק ומכירות",
     "city": "רחובות",
     "region": "השפלה",
-    "status": "פעיל",
-    "description": "🚗 דרוש/ה סוכן/ת מכירות שטח – חברת מזון מובילה 🚗\n📍 אזור עבודה: ירושלים – באר שבע\n📍 אזור גיוס: השפלה (ראשון לציון, רחובות וכד')\n📝 תיאור המשרה:\n✅ טיפול ותחזוקת נקודות מכירה\n✅ שימור לקוחות קיימים והגדלת סל ומגוון מוצרים בסניפים קיימים\n✅ גיוס לקוחות חדשים ואיתור לקוחות פוטנציאליים\n✅ ביצוע הזמנות ובקרה יומית על הזמנות\n✅ תפעול מבצעים בסניפים\n✅ התאמת פלנוגרמות לפי מגוון, גודל וצרכי הסניף\n✅ עמידה ביעדי מכירות, מגוון, נראות ומלאי בסניפים\n🕐 שעות וימי עבודה:\nא'‑ה' 08:00‑17:30\nו' 08:00‑12:30 (6 ימי עבודה בשבוע)\n🚗 תנאים נלווים:\nרכב צמוד בליסינג + נייד\nעובד/ת חברה מהיום הראשון\n💰 שכר ותמריצים:\nשכר בסיס: 8,500 ₪ אש\"ל: 500 ₪\nבונוסים על עמידה ביעדים (לקוחות חדשים, גבייה, חוות דעת מנהל)\nשכר פוטנציאלי עד 12,000 ₪",
+    "description": "✅ טיפול ותחזוקת נקודות מכירה\n✅ שימור לקוחות קיימים והגדלת סל ומגוון מוצרים בסניפים קיימים\n✅ גיוס לקוחות חדשים ואיתור לקוחות פוטנציאליים\n✅ ביצוע הזמנות ובקרה יומית על הזמנות\n✅ תפעול מבצעים בסניפים\n✅ התאמת פלנוגרמות לפי מגוון, גודל וצרכי הסניף\n✅ עמידה ביעדי מכירות, מגוון, נראות ומלאי בסניפים\n\n🕐 שעות וימי עבודה:\nא'–ה': 08:00–17:30\n\nו': 08:00–12:30\n(6 ימי עבודה בשבוע)\n\n🚗 תנאים נלווים:\nרכב צמוד בליסינג\n\nטלפון נייד\n\nעובד/ת חברה מהיום הראשון\n\n💰 שכר ותמריצים:\nשכר בסיס: 8,500 ₪\n\nאש\"ל: 500 ₪\n\nבונוסים על עמידה ביעדים (לקוחות חדשים, גבייה, חוות דעת מנהל)\n\n💸 שכר פוטנציאלי עד 12,000 ₪",
     "requirements": "",
-    "featured": true
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6570",
+    "title": "יועצ/ת שירות בסוכנות רכבי יוקרה",
+    "category": "רכב ותחבורה",
+    "city": "ירושלים",
+    "region": "ירושלים",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6571",
+    "title": "איש / אשת דיאגנוסטיקה",
+    "category": "רכב ותחבורה",
+    "city": "ירושלים",
+    "region": "ירושלים",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6572",
+    "title": "מנהל/ת מרכז שירות בתחום הרכב",
+    "category": "נהול ובכירים",
+    "city": "ירושלים",
+    "region": "ירושלים",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6568",
+    "title": "עוזר/ת מנהל אתר אינטרנט בתחום הרכב",
+    "category": "מחשבים וטכנולוגיה",
+    "city": "שוהם",
+    "region": "מרכז",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6567",
+    "title": "מנהל/ת מערכת WMS / ERP",
+    "category": "מערכות מידע ותפעול",
+    "city": "שוהם",
+    "region": "מרכז",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6578",
+    "title": "נציג/ת שירות (בק אופיס)",
+    "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
+    "city": "נשר",
+    "region": "לא ידוע",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6377",
+    "title": "מזכיר/ת אגף",
+    "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
+    "city": "לוד",
+    "region": "השפלה",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6557",
+    "title": "חתמ/ת אשראי",
+    "category": "פיננסים וביטוח",
+    "city": "לוד",
+    "region": "השפלה",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6558",
+    "title": "מנהל/ת מחלקת מכירות טרייד",
+    "category": "רכב ותחבורה",
+    "city": "לוד",
+    "region": "השפלה",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-5132",
+    "title": "סוכנ/ת מכירות ליסינג תפעולי",
+    "category": "רכב ותחבורה",
+    "city": "חולון",
+    "region": "גוש דן",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-5916",
+    "title": "נציג/ת הזמנות במוקד",
+    "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
+    "city": "חולון",
+    "region": "גוש דן",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6294",
+    "title": "מסלק/ת תביעות רכב",
+    "category": "רכב ותחבורה",
+    "city": "חולון",
+    "region": "גוש דן",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-5131",
+    "title": "נהג/ת שינוע",
+    "category": "רכב ותחבורה",
+    "city": "תל אביב",
+    "region": "גוש דן",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-4352",
+    "title": "מתקינ/ת מערכות אבזור רכבים",
+    "category": "תפעול ותחזוקה",
+    "city": "אשדוד",
+    "region": "דרום",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-5674",
+    "title": "אחראי/ת מחסן ממוחשב בונדד",
+    "category": "לוגיסטיקה, מחסנים, שילוח ורכש",
+    "city": "אשדוד",
+    "region": "דרום",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6121",
+    "title": "ראש/ת צוות סגנ/ית מנהל אתר אשדוד",
+    "category": "נהול ובכירים",
+    "city": "אשדוד",
+    "region": "דרום",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6466",
+    "title": "ראש/ת צוות סגנ/ית מנהל פארק ראם",
+    "category": "נהול ובכירים",
+    "city": "פארק ראם",
+    "region": "דרום",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6109",
+    "title": "מתקינ/ה למרכז שירות",
+    "category": "תפעול ותחזוקה",
+    "city": "תל אביב",
+    "region": "גוש דן",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6138",
+    "title": "נהג/ת משאית עד 12/15 טון",
+    "category": "לוגיסטיקה, מחסנים, שילוח ורכש",
+    "city": "קיסריה",
+    "region": "שרון",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-5914",
+    "title": "נהג/ת השכרה",
+    "category": "רכב ותחבורה",
+    "city": "נתב\"ג",
+    "region": "מרכז",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-5434",
+    "title": "נהג/ת תפעול שטח",
+    "category": "רכב ותחבורה",
+    "city": "מרכז",
+    "region": "לא ידוע",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-5354",
+    "title": "נהג/ת סניף השכרה",
+    "category": "רכב ותחבורה",
+    "city": "תל אביב",
+    "region": "גוש דן",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6575",
+    "title": "מנהל/ת חשבונות בתחום התיירות",
+    "category": "פיננסים וביטוח",
+    "city": "צריפין",
+    "region": "השפלה",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6556",
+    "title": "עו\"ד מזכיר/ת חברה",
+    "category": "נהול ובכירים",
+    "city": "צריפין",
+    "region": "השפלה",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6477",
+    "title": "נציג/ת תיאום נסיעות",
+    "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
+    "city": "הרצליה",
+    "region": "שרון",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6545",
+    "title": "מנהל/ת אולם תצוגה",
+    "category": "נהול ובכירים",
+    "city": "ירושלים",
+    "region": "ירושלים",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6547",
+    "title": "אחראי/ת תפעול ואדמינסטרציה",
+    "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
+    "city": "פתח תקווה",
+    "region": "גוש דן",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6339",
+    "title": "מנהל/ת מוסך",
+    "category": "נהול ובכירים",
+    "city": "פתח תקווה",
+    "region": "גוש דן",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6546",
+    "title": "בוחנ/ת רכב",
+    "category": "רכב ותחבורה",
+    "city": "פתח תקווה",
+    "region": "גוש דן",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6340",
+    "title": "דייל/ת קבלה",
+    "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
+    "city": "פתח תקווה",
+    "region": "גוש דן",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6475",
+    "title": "קניינ/ית רכבים",
+    "category": "רכב ותחבורה",
+    "city": "פתח תקווה",
+    "region": "גוש דן",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6523",
+    "title": "מכונאי/ת רכב",
+    "category": "רכב ותחבורה",
+    "city": "פתח תקווה",
+    "region": "גוש דן",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6402",
+    "title": "נציג/ת מכירות פרונטאליות",
+    "category": "שיווק ומכירות",
+    "city": "פתח תקווה",
+    "region": "גוש דן",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6548",
+    "title": "עוזר/ת אדמינסטרטיבית למנכ\"ל",
+    "category": "אדמיניסטרציה, שירות לקוחות ומשאבי אנוש",
+    "city": "ראשון לציון",
+    "region": "השפלה",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6503",
+    "title": "מפתח/ת למידה - החלפה לחל\"ד",
+    "category": "רכב ותחבורה",
+    "city": "ראשון לציון",
+    "region": "השפלה",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
+  },
+  {
+    "jobNumber": "J-6502",
+    "title": "נציג/ת מכירות פרונטאליות",
+    "category": "שיווק ומכירות",
+    "city": "גלילות",
+    "region": "צפון",
+    "description": "",
+    "requirements": "",
+    "status": "פעיל",
+    "featured": false
   }
 ]
