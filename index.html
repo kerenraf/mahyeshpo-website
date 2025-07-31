@@ -2938,166 +2938,45 @@ document.getElementById('modal-job-requirements').textContent = requirements;
 
         // =============== פונקציות חיפוש מתקדמות ===============
         
-        // פונקציה חכמה לחיפוש - תומכת במספרי משרות וחיפוש חלקי
+// פונקציה פשוטה ומדויקת לחיפוש
         function jobMatchesSearch(job, searchText) {
-            const normalizedSearchText = normalizeSearchText(searchText);
+            if (!searchText || searchText.trim() === '') return true;
             
-            // חיפוש במספר משרה (חדש!)
-            if (job.jobNumber && job.jobNumber.toLowerCase().includes(normalizedSearchText)) {
-                return true;
-            }
+            const normalizedSearch = searchText.toLowerCase().trim();
             
-            // שדות לחיפוש מורחבים
-            const searchFields = [
-                job.title,
-                job.company, 
-                job.description,
-                job.requirements,
-                job.city,
-                job.region,
-                job.category
+            // שדות לחיפוש - רק הרלוונטיים
+            const searchableFields = [
+                job.title || '',
+                job.company || '',
+                job.category || '',
+                job.city || '',
+                job.region || '',
+                job.jobNumber || '',
+                job.description || '',
+                job.requirements || ''
             ];
             
-            // הוסף מילות מפתח אם קיימות
-            if (job.keywords && Array.isArray(job.keywords)) {
-                searchFields.push(...job.keywords);
-            }
-            
-            // חיפוש בכל השדות
-            return searchFields.some(field => {
-                if (!field) return false;
+            // חיפוש פשוט - אם הטקסט מופיע באחד מהשדות
+            return searchableFields.some(field => {
+                const normalizedField = field.toLowerCase().trim();
                 
-                const normalizedField = normalizeSearchText(field);
-                
-                // חיפוש רגיל
-                if (normalizedField.includes(normalizedSearchText)) {
+                // חיפוש ישר במחרוזת
+                if (normalizedField.includes(normalizedSearch)) {
                     return true;
                 }
                 
-                // חיפוש עם וריאציות זכר/נקבה
-                return checkGenderVariations(normalizedField, normalizedSearchText);
+                // חיפוש במילים נפרדות
+                const fieldWords = normalizedField.split(/\s+/);
+                const searchWords = normalizedSearch.split(/\s+/);
+                
+                // בדיקה אם כל מילות החיפוש מופיעות בשדה
+                return searchWords.every(searchWord => 
+                    fieldWords.some(fieldWord => 
+                        fieldWord.includes(searchWord) || searchWord.includes(fieldWord)
+                    )
+                );
             });
         }
-
-// נרמול טקסט - הסרת רווחים וסימנים
-        function normalizeSearchText(text) {
-            if (!text) return '';
-            return text.toLowerCase()
-                       .trim()
-                       .replace(/\s+/g, ' '); // מחליף כמה רווחים ברווח אחד
-        }
-
-        // בדיקת וריאציות זכר/נקבה
-        function checkGenderVariations(fieldText, searchText) {
-            // מילון וריאציות מקיף
-            const genderVariations = {
-                // מקצועות פיתוח וטכנולוגיה
-                'מפתח': ['מפתח/ת', 'מפתחת', 'מפתח', 'developer', 'programmer'],
-                'מפתחת': ['מפתח/ת', 'מפתח', 'מפתחת', 'developer'],
-                'מתכנת': ['מתכנת/ת', 'מתכנתת', 'מתכנת', 'programmer', 'coder'],
-                'מתכנתת': ['מתכנת/ת', 'מתכנת', 'מתכנתת', 'programmer'],
-                'מהנדס': ['מהנדס/ת', 'מהנדסת', 'מהנדס', 'engineer'],
-                'מהנדסת': ['מהנדס/ת', 'מהנדס', 'מהנדסת', 'engineer'],
-                'אנליסט': ['אנליסט/ית', 'אנליסטית', 'אנליסט', 'analyst'],
-                'אנליסטית': ['אנליסט/ית', 'אנליסט', 'אנליסטית'],
-                'טכנאי': ['טכנאי/ת', 'טכנאית', 'טכנאי', 'technician'],
-                'טכנאית': ['טכנאי/ת', 'טכנאי', 'טכנאית'],
-                
-                // מקצועות שירות ומסעדנות
-                'מלצר': ['מלצר/ית', 'מלצרית', 'מלצר', 'waiter', 'server'],
-                'מלצרית': ['מלצר/ית', 'מלצר', 'מלצרית', 'waitress'],
-                'ברמן': ['ברמן/ית', 'ברמנית', 'ברמן', 'bartender'],
-                'ברמנית': ['ברמן/ית', 'ברמן', 'ברמנית'],
-                'טבח': ['טבח/ית', 'טבחית', 'טבח', 'chef', 'cook'],
-                'טבחית': ['טבח/ית', 'טבח', 'טבחית'],
-                'קופאי': ['קופאי/ת', 'קופאית', 'קופאי', 'cashier'],
-                'קופאית': ['קופאי/ת', 'קופאי', 'קופאית'],
-                
-                // מקצועות חינוך ורפואה
-                'מורה': ['מורה', 'מורת', 'מחנך/ת', 'מחנכת', 'teacher'],
-                'מורת': ['מורה', 'מורת', 'מחנך/ת', 'מחנכת'],
-                'מחנך': ['מחנך/ת', 'מחנכת', 'מחנך', 'educator'],
-                'מחנכת': ['מחנך/ת', 'מחנך', 'מחנכת'],
-                'רופא': ['רופא/ה', 'רופאה', 'רופא', 'doctor'],
-                'רופאה': ['רופא/ה', 'רופא', 'רופאה', 'doctor'],
-                'אחות': ['אח/ות', 'אח', 'אחות', 'nurse'],
-                'אח': ['אח/ות', 'אחות', 'אח', 'nurse'],
-                'פיזיותרפיסט': ['פיזיותרפיסט/ית', 'פיזיותרפיסטית', 'פיזיותרפיסט'],
-                'פיזיותרפיסטית': ['פיזיותרפיסט/ית', 'פיזיותרפיסט', 'פיזיותרפיסטית'],
-                
-                // מקצועות ניהול ומכירות
-                'מנהל': ['מנהל/ת', 'מנהלת', 'מנהל', 'manager'],
-                'מנהלת': ['מנהל/ת', 'מנהל', 'מנהלת', 'manager'],
-                'מוכר': ['מוכר/ת', 'מוכרת', 'מוכר', 'salesperson'],
-                'מוכרת': ['מוכר/ת', 'מוכר', 'מוכרת', 'salesperson'],
-                'יועץ': ['יועץ/ת', 'יועצת', 'יועץ', 'consultant', 'advisor'],
-                'יועצת': ['יועץ/ת', 'יועץ', 'יועצת', 'consultant'],
-                'נציג': ['נציג/ה', 'נציגה', 'נציג', 'representative'],
-                'נציגה': ['נציג/ה', 'נציג', 'נציגה'],
-                'רכז': ['רכז/ת', 'רכזת', 'רכז', 'coordinator'],
-                'רכזת': ['רכז/ת', 'רכז', 'רכזת'],
-                
-                // מקצועות כלליים
-                'עובד': ['עובד/ת', 'עובדת', 'עובד', 'worker', 'employee'],
-                'עובדת': ['עובד/ת', 'עובד', 'עובדת', 'worker'],
-                'פקיד': ['פקיד/ה', 'פקידה', 'פקיד', 'clerk'],
-                'פקידה': ['פקיד/ה', 'פקיד', 'פקידה'],
-                'עוזר': ['עוזר/ת', 'עוזרת', 'עוזר', 'assistant'],
-                'עוזרת': ['עוזר/ת', 'עוזר', 'עוזרת', 'assistant'],
-                'מתאמן': ['מתאמן/ת', 'מתאמנת', 'מתאמן', 'trainee'],
-                'מתאמנת': ['מתאמן/ת', 'מתאמן', 'מתאמנת'],
-                
-                // מקצועות ספציפיים נוספים
-                'שמאי': ['שמאי/ת', 'שמאית', 'שמאי', 'appraiser'],
-                'שמאית': ['שמאי/ת', 'שמאי', 'שמאית'],
-                'עורך': ['עורך/ת', 'עורכת', 'עורך', 'editor', 'lawyer'],
-                'עורכת': ['עורך/ת', 'עורך', 'עורכת'],
-                'מעצב': ['מעצב/ת', 'מעצבת', 'מעצב', 'designer'],
-                'מעצבת': ['מעצב/ת', 'מעצב', 'מעצבת', 'designer'],
-                'צלם': ['צלם/ת', 'צלמת', 'צלם', 'photographer'],
-                'צלמת': ['צלם/ת', 'צלם', 'צלמת'],
-                'נהג': ['נהג/ת', 'נהגת', 'נהג', 'driver'],
-                'נהגת': ['נהג/ת', 'נהג', 'נהגת'],
-                'שומר': ['שומר/ת', 'שומרת', 'שומר', 'guard'],
-                'שומרת': ['שומר/ת', 'שומר', 'שומרת']
-            };
-            
-            // בדיקה ישירה במילון
-            const variations = genderVariations[searchText];
-            if (variations) {
-                return variations.some(variation => fieldText.includes(variation));
-            }
-            
-            // בדיקה הפוכה - אם יש במשרה מילה עם /
-            const wordsWithSlash = fieldText.match(/\S*\/\S*/g);
-            if (wordsWithSlash) {
-                return wordsWithSlash.some(word => {
-                    // מפרק מילים עם / ובודק התאמה
-                    const parts = word.split('/');
-                    return parts.some(part => {
-                        const cleanPart = part.replace(/[^\u0590-\u05FF\u0041-\u005A\u0061-\u007A]/g, '');
-                        return cleanPart === searchText || 
-                               searchText.includes(cleanPart) || 
-                               cleanPart.includes(searchText);
-                    });
-                });
-            }
-            
-            // חיפוש חלקי במילים
-            return partialWordMatch(fieldText, searchText);
-        }
-
-        // פונקציה עזר לחיפוש חלקי במילים
-        function partialWordMatch(text, searchTerm) {
-            if (searchTerm.length < 3) return false; // חיפוש חלקי רק למילים של 3 אותיות או יותר
-            
-            const words = text.split(/\s+/);
-            return words.some(word => {
-                const cleanWord = word.replace(/[^\u0590-\u05FF\u0041-\u005A\u0061-\u007A]/g, '');
-                return cleanWord.includes(searchTerm) || searchTerm.includes(cleanWord);
-            });
-        }
-
         // חיפוש וסינון
         function selectCategory(category) {
             var categoryFilter = document.getElementById('categoryFilter');
@@ -3147,34 +3026,39 @@ document.getElementById('modal-job-requirements').textContent = requirements;
             }, 200);
         }
 
-        // יצירת הצעות חיפוש
+// יצירת הצעות חיפוש פשוטות ומדויקות
         function generateSearchSuggestions(query) {
             const suggestions = [];
-            const queryLower = query.toLowerCase();
+            const queryLower = query.toLowerCase().trim();
             
-            // הצעות מתפקידים
-            const jobTitles = [...new Set(allJobs.map(job => job.title))]
+            if (queryLower.length < 2) return suggestions;
+            
+            // הצעות מתפקידים - חיפוש מדויק
+            const jobTitles = [...new Set(allJobs
+                .map(job => job.title)
                 .filter(title => title && title.toLowerCase().includes(queryLower))
-                .slice(0, 3);
+            )].slice(0, 3);
             
             // הצעות מחברות
-            const companies = [...new Set(allJobs.map(job => job.company))]
+            const companies = [...new Set(allJobs
+                .map(job => job.company)
                 .filter(company => company && company.toLowerCase().includes(queryLower))
-                .slice(0, 2);
+            )].slice(0, 2);
             
             // הצעות מערים
-            const cities = [...new Set(allJobs.map(job => job.city))]
+            const cities = [...new Set(allJobs
+                .map(job => job.city)
                 .filter(city => city && city.toLowerCase().includes(queryLower))
-                .slice(0, 2);
+            )].slice(0, 2);
             
             // הצעות ממספרי משרה
-            const jobNumbers = [...new Set(allJobs.map(job => job.jobNumber))]
+            const jobNumbers = [...new Set(allJobs
+                .map(job => job.jobNumber)
                 .filter(num => num && num.toLowerCase().includes(queryLower))
-                .slice(0, 2);
+            )].slice(0, 2);
             
-            return [...jobTitles, ...companies, ...cities, ...jobNumbers].slice(0, 6);
+            return [...jobTitles, ...companies, ...cities, ...jobNumbers].slice(0, 5);
         }
-
         // הדגשת מילות חיפוש בהצעות
         function highlightSuggestion(text, query) {
             if (!text) return '';
@@ -3192,31 +3076,36 @@ document.getElementById('modal-job-requirements').textContent = requirements;
             }
         }
 
-        // פונקציה משופרת לסינון בזמן אמת
+// פונקציה משופרת לסינון בזמן אמת - פשוטה ומדויקת
         function filterJobsRealTime() {
             showSearchLoading(true);
             
             setTimeout(() => {
-                var searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+                var searchText = document.getElementById('searchInput').value.trim();
                 var category = document.getElementById('categoryFilter').value;
                 var city = document.getElementById('regionFilter').value;
                 var area = document.getElementById('areaFilter').value;
                 
                 var activeJobs = allJobs.filter(function(job) { return job.status === 'פעיל'; });
                 
+                // סינון פשוט ומדויק
                 filteredJobs = activeJobs.filter(function(job) {
+                    // בדיקת טקסט חיפוש
                     if (searchText && !jobMatchesSearch(job, searchText)) {
                         return false;
                     }
                     
+                    // בדיקת קטגוריה
                     if (category && job.category !== category) {
                         return false;
                     }
                     
+                    // בדיקת עיר
                     if (city && job.city !== city) {
                         return false;
                     }
                     
+                    // בדיקת אזור
                     if (area && job.region !== area) {
                         return false;
                     }
@@ -3227,10 +3116,10 @@ document.getElementById('modal-job-requirements').textContent = requirements;
                 displayJobs(filteredJobs);
                 showSearchCounter(searchText, filteredJobs.length, activeJobs.length);
                 showSearchLoading(false);
-                console.log('🔍 סינון בזמן אמת: ' + filteredJobs.length + ' משרות');
-            }, 300);
+                console.log('🔍 סינון מדויק: ' + filteredJobs.length + ' משרות מתוך ' + activeJobs.length);
+            }, 150);
         }
-
+        
         // הצגת/הסתרת אנימציית טעינה
         function showSearchLoading(show) {
             const loader = document.getElementById('searchLoading');
@@ -3757,25 +3646,25 @@ function fallbackShare(job, shareText, jobUrl, shareTitle) {
 
         // מאזיני אירועים
         function attachEventListeners() {
-    // מאזיני אירועים למערכת החיפוש המשופרת
+// מאזיני אירועים למערכת החיפוש המשופרת
     var searchInput = document.getElementById('searchInput');
     if (searchInput) {
         let searchTimeout;
         
-        // חיפוש בזמן אמת - כרטיסי משרות מלאים
+        // חיפוש בזמן אמת - מהיר ומדויק
         searchInput.addEventListener('input', function(e) {
             const query = e.target.value.trim();
             
             // ביטול timeout קודם
             clearTimeout(searchTimeout);
             
-            // חיפוש עם דיליי קטן
+            // חיפוש עם דיליי קצר
             searchTimeout = setTimeout(() => {
                 filterJobsRealTime();
-            }, 300);
+            }, 200); // הקטנתי מ-300 ל-200
         });
         
-        // גם בלחיצת Enter
+        // חיפוש מיידי בלחיצת Enter
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 clearTimeout(searchTimeout);
@@ -3783,11 +3672,16 @@ function fallbackShare(job, shareText, jobUrl, shareTitle) {
             }
         });
         
-        // הצעות חיפוש
-        searchInput.addEventListener('focus', showSearchSuggestions);
+        // הצעות חיפוש - פשוטות יותר
+        searchInput.addEventListener('focus', function() {
+            const query = this.value.trim();
+            if (query.length >= 2) {
+                showSearchSuggestions();
+            }
+        });
         searchInput.addEventListener('blur', hideSearchSuggestions);
     }
-    
+            
     // הוסף מאזינים למסננים הנוספים
     var categoryFilter = document.getElementById('categoryFilter');
     if (categoryFilter) {
